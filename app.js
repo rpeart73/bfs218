@@ -112,10 +112,10 @@ function readingMedia(r){ return '<div class="aspect">'+videoEmbed({provider:r.p
 
 /* ---------- slideshow ---------- */
 function kpHTML(wk,cur){
-  var pts=((wk.slides||{}).points)||[], count=(wk.slides||{}).count||0, kp=pts[cur-1];
-  var h='<div class="eyebrow">Key point &middot; slide '+cur+' of '+count+'</div>';
-  if(!kp||(!kp.heading&&!((kp.points||[]).length))) return h+'<p class="muted" style="margin:0">Follow the narration for this slide.</p>';
-  return h+(kp.heading?'<h4 style="margin:.1em 0 .4em">'+esc(kp.heading)+'</h4>':'')+((kp.points&&kp.points.length)?'<ul style="margin:0;padding-left:1.1em;line-height:1.6">'+kp.points.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>':'');
+  var s=wk.slides||{}, ins=(s.insights||[])[cur-1], count=s.count||0;
+  var h='<div class="eyebrow">The deeper point &middot; slide '+cur+' of '+count+'</div>';
+  if(!ins) return h+'<p class="muted" style="margin:0">Follow the narration for this slide.</p>';
+  return h+'<p style="margin:.2em 0 0;font-size:1.02rem;line-height:1.55">'+esc(ins)+'</p>';
 }
 function slideBlock(wk){
   var s=wk.slides||{};
@@ -161,9 +161,9 @@ function structList(arr){
   return (arr||[]).map(function(it){ return it.type==='head' ? '<h4 style="margin:14px 0 6px">'+esc(it.text)+'</h4>' : '<p style="margin:.45em 0">'+esc(it.text)+'</p>'; }).join('');
 }
 function readingLink(r){
-  if(r.url) return '<a class="rlink" href="'+esc(r.url)+'" target="_blank" rel="noopener">Open the document</a>';
+  if(r.url) return '<a class="rlink" href="'+esc(r.url)+'" target="_blank" rel="noopener">Access Reading</a>';
   var q=encodeURIComponent(String(r.text||'').replace(/\s+/g,' ').slice(0,180));
-  return '<a class="rlink" href="https://scholar.google.com/scholar?q='+q+'" target="_blank" rel="noopener">Find this reading</a>';
+  return '<a class="rlink" href="https://scholar.google.com/scholar?q='+q+'" target="_blank" rel="noopener">Access Reading</a>';
 }
 function weekView(n){
   var wk=week(n); if(!wk) return '<p>Week not found.</p>';

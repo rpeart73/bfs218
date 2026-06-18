@@ -442,6 +442,22 @@ window.BFS218 = {
        "Crenshaw, K. (1991). Mapping the margins: Intersectionality, identity politics, and violence against women of color. Stanford Law Review, 43(6), 1241-1299."
       ]
      }
+    ],
+    "insights": [
+     "This course is not about hating technology. It is about learning to read it, the way you would read a person's intentions, so the tools you use every day stop feeling automatic and start feeling like choices someone made.",
+     "Notice what the promise really costs you. Once you can see how a search bar or a loan decision sorts people, you cannot unsee it, and that discomfort is the point: clarity here is a one-way door.",
+     "Moving the question from the heart to the design is a power move. It means no one gets off the hook by saying they did not mean it, and it shifts blame from feelings (which we cannot prove) to outcomes (which we can measure).",
+     "Design, data, and defaults are exactly the parts we treat as boring plumbing, so no one inspects them. That invisibility is not an accident; a bias hidden in the wiring is far safer than a bias someone says out loud.",
+     "The most damning word here is neutral. A system that simply works worse on some faces did not need a racist programmer; it just needed practice data that quietly assumed whose face counted as the default.",
+     "Pay attention to why the appearance of objectivity is what makes it dangerous. The old harm at least announced itself; the new version hides inside a tool we are taught to trust, so we defend it instead of questioning it.",
+     "The trick is that progressive and objective are not lies you have to expose; they are the disguise itself. The system can be genuinely faster and fairer-looking and still carry the old exclusion forward, all at once.",
+     "Notice that default discrimination needs no villain at all. If harm can come from a default nobody chose on purpose, then waiting to find someone to blame is exactly how the harm keeps running unchallenged.",
+     "Intersectionality is not just adding categories together. The harm at the overlap is often worse than race and gender separately would predict, which is why looking at one axis at a time can make the deepest damage statistically disappear.",
+     "Watch the shape of the course: it moves from naming the problem to earning hope, not assuming it. That order is a quiet argument that hope you have not worked for is just comfort, and comfort is what kept the problem invisible.",
+     "Grading you on noticing rather than the right answer is itself a lesson about technology: the dangerous systems are the ones we stopped noticing. Your real skill this term is staying awake to what has become invisible.",
+     "Pattern, not villain, is the whole strategy. Hunting for a single bad actor lets you relax once you find one; training your eye on the pattern keeps you suspicious of the calm, helpful, neutral-looking systems that never get caught.",
+     "Sit with what neutral is keeping you from seeing. The feeling that a system is just neutral is not the absence of a viewpoint; it is a viewpoint so common you stopped noticing it had one, which is exactly when to look harder.",
+     "Notice that all three anchors are Black women scholars naming harms that systems were built to make invisible. The reading list is itself an argument: the people a system fails most are often the ones who see it most clearly."
     ]
    }
   },
@@ -775,6 +791,22 @@ window.BFS218 = {
        "Crenshaw, K. (1991). Mapping the margins: Intersectionality, identity politics, and violence against women of color. Stanford Law Review, 43(6), 1241-1299."
       ]
      }
+    ],
+    "insights": [
+     "Last week gave you a name for the problem; this week gives you the theory that explains why it keeps happening. A name lets you point at harm, but a theory lets you predict where it will show up next.",
+     "Notice the order: you learn to see before you learn to act. That is deliberate, because most people who want to fix a system never paused to understand how it actually fails, and end up fixing the wrong thing.",
+     "Moving from intent to outcomes is not letting anyone off easy; it is the opposite. Intent is private and deniable, but outcomes are public and countable, so this shift makes harm something you can actually prove.",
+     "The claim that racism works best when a system looks neutral should unsettle you. It means the cleaner, fairer, and more modern a system appears, the more cover it has, so polish itself becomes a reason to look closer.",
+     "We notice the open bigot because he is rare and dramatic, which is exactly why he is a distraction. Focusing on the visible villain lets the ordinary, structural version run quietly in the background, unexamined.",
+     "The gap between what you see and what it does is the whole danger. A system can be honestly described as just math and still produce a colour line, because the math learned from a world that already had one.",
+     "The throughline is that the work stayed the same while the form kept changing: from segregation, to mass incarceration, to code. If the function survives every change of form, then fixing only the latest form was never going to be enough.",
+     "Sit with the idea that neutrality is not a side effect but the hiding place. The appearance of fairness is not the system failing to be racist; it is the feature that lets the racism keep operating without objection.",
+     "Here is the practical payoff of the whole theory: stop asking did they mean it, and start asking who pays. Intent is often unanswerable, but the burden of harm always lands somewhere specific, and that you can trace.",
+     "Asking who a system harms most, not just who it harms, changes who shows up in your data. Looking only at single categories can average away the worst harm, leaving the people at the overlap statistically invisible and politically ignored.",
+     "Picture the axes crossing: the harm is not spread evenly, it pools at the intersection. This is why a fix aimed at race alone, or gender alone, can miss the exact people the system fails hardest.",
+     "Reading your own map through the CRT lens is the real test of the theory: it only matters if it works on your actual life, not just famous cases. Whose world did your everyday system quietly assume, and what happened when you were not it?",
+     "Sit with the part about how much it will have sorted before anyone can name it. By the time a neutral-looking system is visible enough to question, it has already made decisions about people, which is why learning to spot the disguise early is the whole skill.",
+     "Notice the same two names anchor both weeks: Benjamin and Crenshaw. The course is quietly showing you that the lens you carry into every future week was built by the scholars who studied the harm from inside its reach."
     ]
    }
   },
@@ -1063,6 +1095,21 @@ window.BFS218 = {
        "Benjamin, R. (2019). Race after technology: Abolitionist tools for the New Jim Code. Polity Press. (Engineered inequity; the chapter Are Robots Racist?)"
       ]
      }
+    ],
+    "insights": [
+     "Notice the order Benjamin chose: engineered inequity comes first because it is the most visible form. Once you can see harm that is built on purpose, you are ready to spot the quieter kinds hiding in later weeks.",
+     "Taking the New Jim Code apart one dimension at a time is itself an argument. It tells you the problem is not one bad app but a pattern with parts, and a pattern can be named, mapped, and resisted.",
+     "These four are not a ranking from worst to mildest. They are four doorways into the same house, so a single real-world system can show up in more than one dimension at once.",
+     "If the harm is in the design, then no individual confession will ever explain it. That is why you should study the blueprint, not hunt for a villain, when something keeps failing the same group.",
+     "The word amplify is doing heavy lifting here. An amplifier needs a signal already playing, which means society wrote the inequality first and the technology just turned up the volume and the speed.",
+     "Asking whether robots can be racist sounds like a yes-or-no question, but Benjamin reframes it so the real question becomes what the machine inherited. Ask that of any tool and you stop waiting for a machine to feel guilty.",
+     "Notice that doing nothing is still a choice here. Treating an unequal world as normal is not neutral; the decision to not design against the gap is the design choice that forwards the harm.",
+     "The third question, who benefits and who pays when it is wrong, is the sharpest one. Errors are never spread evenly, so following the cost downhill usually shows you who the system was really built for.",
+     "Stacked harm is not just race plus class plus gender added together. Where the axes meet, the harm changes shape, so a system can pass a single-axis fairness test and still fail the person standing at the crossing.",
+     "Choosing a system from your own digital life is the whole point. The New Jim Code looks neutral precisely because it is woven into tools you already trust, so the hardest entry to write is often the one closest to you.",
+     "The privacy-safe rule is not just a formality. Describing the system instead of a person keeps your focus where the analysis belongs, on the design that produces the harm, not on the individual who happened to get caught by it.",
+     "The question of where fault lives is uncomfortable on purpose. If the answer turns out to be the choice not to design against the gap, then someone could have chosen differently, and that means a different design is still possible.",
+     "One source carries this whole week, so treat Benjamin's chapter as a conversation you are joining, not a fact to memorize. Your Living Cartography entry is you talking back to it with evidence from your own life."
     ]
    }
   },
@@ -1350,6 +1397,21 @@ window.BFS218 = {
        "Benjamin, R. (2019). Race after technology: Abolitionist tools for the New Jim Code. Polity Press. (Default discrimination; the chapter Is the Glitch Systemic? and the section Automating Anti-Blackness.)"
       ]
      }
+    ],
+    "insights": [
+     "Last week the harm was loud and on purpose; this week it arrives quietly through settings nobody questions. Default discrimination is harder to fight precisely because it does not look like a decision at all.",
+     "The phrase when no one is looking is the key. Engineered inequity needs someone to build the gap wider, but default discrimination needs only that everyone looked away and left the old inequity sitting in the defaults.",
+     "Watch how the dimensions trade visibility for reach. As you move down the list, the harm gets quieter and easier to defend as accidental, which is exactly what makes the later dimensions harder to hold anyone responsible for.",
+     "Here is the trap: you do not need a racist designer, only a passive one. That means firing the bad apple fixes nothing, because the harm was never in a person's heart, it was sitting in the defaults waiting.",
+     "Pay attention to who gets to call something a glitch. The word is not neutral; it is a verdict that closes the case before anyone asks whether the failure is rare bad luck or the system doing exactly what it was built to do.",
+     "Reading Malcolm X as Malcolm Ten sounds tiny, but it reveals whose knowledge the system treats as obvious. The default is invisible to the people it fits and a daily friction to everyone it does not.",
+     "Calling design worldbuilding flips who is in charge. Programmers are not just storing data, they are deciding who counts as normal, so every default is a small claim about whose world the rest of us have to live inside.",
+     "The third question is the most demanding because naming one default to change forces you past complaint into design. It is easy to say a system is unfair; it is harder, and more useful, to say what normal you would rebuild.",
+     "Notice these tools sort people without ever using a slur. That is the point: when a credit score quietly stands in for race or class, the bias hides inside a number that looks objective and gets to skip the argument.",
+     "When you pick a failure that was waved away as a glitch, you are testing whether the word was hiding a pattern. The strongest entries are ones where the same group keeps getting caught by the same accident.",
+     "Patching glitches forever is not a bug in the response, it is a business model that looks like care. If the default keeps making harm, then every patch buys quiet while leaving the source untouched, so ask why no one changes the default.",
+     "Asking who benefits from the word glitch points the analysis at power, not code. The label protects whoever built the default, because if the harm is just an accident, then no one has to redesign and no one has to answer for it.",
+     "Benjamin pairs Is the Glitch Systemic with Automating Anti-Blackness for a reason. One names the cover story, the other shows the scale, and together they argue that the small glitch and the giant system are the same thing seen up close and far away."
     ]
    }
   },
@@ -1644,6 +1706,21 @@ window.BFS218 = {
        "Buolamwini, J., and Gebru, T. (2018). Gender shades: Intersectional accuracy disparities in commercial gender classification. Proceedings of Machine Learning Research, 81, 1-15."
       ]
      }
+    ],
+    "insights": [
+     "Notice the word 'asynchronous.' You are learning about systems that decide who gets seen on a platform that itself decides what to show you and when. The course is happening inside its own subject.",
+     "Each dimension you have met is a different doorway into the same building. Engineered inequity is about who gets sorted, defaults are about who gets harmed by accident, and this week is about who even gets noticed in the first place.",
+     "These four are not a ranking from worst to least bad. They are four moves the same code can make at once, so a single system can sort you, fail you by default, and watch you all in the same breath.",
+     "Here is the trap in Benjamin's question: we usually treat being seen as a kind of respect or safety. Ask yourself whether a system that finally 'sees' you is offering you protection or just a clearer target.",
+     "The cruel part of a double bind is that there is no safe move. You cannot simply ask to be seen more, or less, because both directions carry a cost, and that is exactly how the system stays unaccountable.",
+     "Benjamin is not just being clever with language. When one word holds 'on display' and 'unprotected' at the same time, it tells you something true: for some people, being shown and being endangered are not two events but one.",
+     "Sit with what that webcam user did. She did not blame the engineers; she blamed herself, her own Blackness, for the machine's failure. That is how the New Jim Code hides, by teaching the harmed person to feel like the problem.",
+     "The error climbing as skin darkens and gender shifts is not a glitch on the edges. It maps the makers' blind spot, so the real question is not 'how do we fix the data' but 'whose face did the room assume was the default human.'",
+     "These three questions do real work because over-watching and under-seeing usually live in the same system, not in two different ones. The same camera that cannot find a dark face in a meeting can find it with ease in a police lineup.",
+     "When you name both harms on one entry, you are doing what most reporting fails to do. Most stories pick one (too watched, or unseen) and miss that the same community is often caught in both at once.",
+     "This is the slide that breaks the easy fix. If the answer were just 'make the cameras more accurate,' techno-racism would already be solved. Better recognition can mean better service or a tighter net, and accuracy tells you nothing about which.",
+     "Hold onto why Benjamin leaves this open. A question you keep changes how you read every system after it; an answer you are handed lets you stop thinking. She is training your attention, not closing the case.",
+     "Read who is cited here, not just what. Buolamwini and Gebru are Black women who studied the very systems built to miss faces like theirs. That is the course's point in miniature: the people made invisible by the code often expose it."
     ]
    }
   },
@@ -1965,6 +2042,21 @@ window.BFS218 = {
        "Ewert v Canada, 2018 SCC 30. Singh, S. (2021). Algorithmic policing technologies in Canada."
       ]
      }
+    ],
+    "insights": [
+     "The phrase 'in our backyard' is doing quiet work. It pulls techno-racism out of the safe distance of 'American tech companies' and puts it under Canadian law, which many of us are taught to trust as fairer. Watch that assumption this week.",
+     "'It is here' is the whole argument of the week in three words. The temptation is always to locate racism somewhere else, in another country or another decade, because that lets us off the hook. Naming it locally removes the exit.",
+     "Notice these are not three separate problems but one logic wearing three uniforms. If the same pattern shows up at the border, in policing, and in housing, that is not bad luck, it is a system doing what it was built to do.",
+     "Molnar's phrase 'testing ground' should chill you. Tools tried on migrants, the people least able to say no, do not stay at the border. Rights stripped from the most vulnerable tend to become normal for everyone else next.",
+     "When powerful tools get green-lit by court rulings instead of laws debated in public, the public never got to vote on being watched. Ask who was in the room when these decisions were made, and who was only ever the subject of them.",
+     "The Privacy Commissioner's finding matters, but look at the timing: the violation was named after billions of faces were already scraped and used. By the time the law caught up, the harm was done, which is the pattern, not the exception.",
+     "Ewert is the New Jim Code in a single case. A tool that looks neutral and scientific, an 'actuarial risk score,' was never tested for the people it judged, so its objectivity was just an assumption dressed up as math.",
+     "This slide is the payoff of the last five weeks: the Canadian cases are not new ideas, they are your dimensions caught in the act. If you can name the dimension behind each case, the abstract theory just became a tool you can use.",
+     "That third question, about oversight, is the one most people forget to ask. We argue about whether a tool is biased and skip whether anyone can actually stop it. A harm with no accountability body is not a mistake, it is a design choice.",
+     "Adding campus life to that list is not filler. It quietly asks whether the same logics you are studying at a distance are running on the very systems that track your attendance, your logins, and your grades right now.",
+     "This is the deepest point of the week: the gap between fast tech and slow law is not an accident waiting to be fixed, it is the space where harm lives and profits. Whoever gains from a tool will deploy it before the rules arrive.",
+     "Benjamin's question turns knowledge into responsibility. Once you can name the New Jim Code in your own city, you cannot un-see it, and the week is really asking what you now feel obligated to do with that sight.",
+     "Look at where these sources come from: the Citizen Lab, a privacy commissioner, a Supreme Court ruling. The evidence for techno-racism in Canada is not fringe or foreign, it sits in our own courts and watchdog offices, already documented and public."
     ]
    }
   },
@@ -2259,6 +2351,21 @@ window.BFS218 = {
        "Buolamwini, J., and Gebru, T. (2018). Gender shades. PMLR, 81. Robertson, Khoo, and Song (2020). To surveil and predict. Citizen Lab and IHRP. Molnar, P. (2023). Digital border technologies. International Migration."
       ]
      }
+    ],
+    "insights": [
+     "If you only remember one thing from this course, let it be the move you are learning here: a tool can look fair and forward-thinking on the surface while quietly doing the same sorting that older, uglier systems did out loud.",
+     "Notice that the course built the toolkit before handing it to you. That order is the point: you cannot challenge a system you cannot first name, so naming is not busywork, it is the first act of power.",
+     "These three questions are portable. You can carry them out of this classroom and aim them at the banking app, the hiring portal, or the campus card reader, which is exactly what the next assignment asks you to do.",
+     "The word 'amplify' is your defense against a common dodge: when someone says the technology did not invent racism, they are right, and that is the trap. A neutral-looking design can widen an old gap without ever inventing a new one.",
+     "Calling something a 'glitch' is a way of dodging blame, because a glitch sounds like an accident no one chose. Ask instead whether the harm shows up every time, for the same people, because that pattern is not a bug, it is the build.",
+     "The sharp twist here is that both being watched and being invisible can hurt the same person. A system that scans your face too eagerly and a system that cannot see you at all are two sides of one unequal coin.",
+     "Real systems rarely stay in one box, so do not stop reading a tool once you have labeled it. The honest analysis is the harder one: showing how a single system stacks two or three harms at once.",
+     "Hold onto the question waiting in the fourth dimension, because it is the trickiest one: harm that looks neutral is easier to spot than harm that arrives wearing the costume of help, which is why it comes last.",
+     "The video flips you from reader to analyst, and that is the real test. Anyone can recite three dimensions back to me. The skill that matters is aiming them at a system you chose and defending what you find out loud.",
+     "Narrating in your own voice is not just a format rule, it is proof the thinking is yours. When you have to explain a harm to someone else, you find out fast whether you actually understand it or only recognize the words.",
+     "Watch the verbs change between the two parts: Part II asks you to see, Part III asks you to answer. Seeing clearly is the foundation, but the course does not let you stop at a diagnosis that changes nothing.",
+     "Sit with the gap in that reflection question, because it is the gap this whole field lives inside: naming a harm and ending a harm are different acts, and pretending the first is the second is its own quiet failure.",
+     "Notice who these sources are: researchers documenting specific Canadian systems, not distant theory. The anatomy you learned was built from real, named cases, which is why you can trust it to read the system in front of you."
     ]
    }
   },
@@ -2554,6 +2661,20 @@ window.BFS218 = {
        "OCAP is described from its published principles; consult the First Nations Information Governance Centre for the primary statement."
       ]
      }
+    ],
+    "insights": [
+     "Notice the course does not open Part III with a better algorithm or a fairness fix. Starting with a whole different relationship to data signals that some problems cannot be patched from inside the same system that made them.",
+     "This is the hinge of the entire term: for seven weeks you asked whether a system was biased, and now you ask who should govern it at all. Those are not the same question, and the second one is far harder to dodge.",
+     "Watch the quiet assumption buried in 'whoever collects the data owns it,' because it turns living communities into raw material. Sovereignty rejects that the moment data leaves you, you stop being a person and become a resource someone else mines.",
+     "The four principles only work as a set, so resist treating them like a menu. A system can grant one and withhold the rest, which looks generous on paper while keeping all the real power exactly where it was.",
+     "This is the test of whether a promise of data rights is genuine: ask what someone can actually withhold, refuse, or undo. Rights you can see but never exercise are decoration, and decoration is what unjust systems offer instead of change.",
+     "Thomas King reframes data as a story with an author, which is sharper than it sounds. If every dataset is a story told about people, then the fight over data is really a fight over who gets to narrate someone else's life.",
+     "Pair this with what you already learned: a biased algorithm is the New Jim Code working badly, but algorithmic colonialism is it working exactly as designed, with the benefit flowing back to the people who built it.",
+     "Here is the catch the chapter forces you to hold: you cannot govern data you cannot even reach. Sovereignty without infrastructure is a right on paper, which is why the digital divide is not a separate issue but part of this one.",
+     "These four questions are your portable tool for the week, and notice how they shift the burden. Instead of asking a community to prove it was harmed, you ask the system to justify why it, and not the community, holds the pen.",
+     "The care instruction here is itself part of the lesson. Representing an Indigenous framework loosely or as a generic toolkit would repeat the very extraction OCAP exists to refuse, so handling it with accuracy is the assignment, not a footnote.",
+     "Make that reflection personal on purpose: ask who has been telling your community's story and what they got to decide. The pivot from 'their data' to 'my data' is where this stops being theory and starts being yours.",
+     "Read the source note carefully, because it models the respect the week teaches: it points you to the First Nations Information Governance Centre for the real statement rather than letting a course slide stand in for the community's own words."
     ]
    }
   },
@@ -2828,6 +2949,20 @@ window.BFS218 = {
        "Benjamin, R. (2019). Race after technology: Abolitionist tools for the New Jim Code. Polity Press. (Technological benevolence; the section Raising Robots.)"
       ]
      }
+    ],
+    "insights": [
+     "Notice that Benjamin places this last on purpose. The hardest harm to fight is not the one that looks cruel, but the one that walks in wearing a smile and calls itself progress.",
+     "Ask yourself why the most dangerous dimension is the one saved for the turn toward fixing things. If help can hide harm, then every solution you are offered is also a claim you should test.",
+     "Having the whole anatomy is not the finish line, it is the toolkit. Real systems rarely show you one clean dimension at a time, so your job now is to spot several working together in one tool.",
+     "The word benevolence is doing quiet political work here. When harm is dressed as a gift, refusing it makes you look ungrateful, and that discomfort is exactly what keeps the harm in place.",
+     "This is why naming matters so much in this course. A harm you cannot name, you cannot organize against, so the language of help is not just spin, it is a defense system for the harm underneath.",
+     "Hold onto that phrase about owning real estate with eyes before bodies. It shows that who we are willing to risk and who we are willing to spare is never just a technical choice, it is a racial one.",
+     "Carry this question into your own life, not just the readings. When you next hear a fix promised at school, at work, or in an app, ask who carries the cost now and whether that actually changed.",
+     "If benevolence travels with the other three, then a tool that calls itself helpful deserves more suspicion, not less. The friendly label is your cue to look harder, not to relax.",
+     "These three questions are not a quiz, they are a habit. The goal is that you start asking them automatically, before you are sold on a system rather than after it has already shaped your life.",
+     "Choosing your own example is the point. When you can name the benevolence trap in a tool you actually use, the theory stops being Benjamin's argument and becomes a lens you own.",
+     "Sit with how unsettling that reflection is. If the most dangerous systems arrive as help, then staying a little skeptical of kindness from technology may be one of the most caring things you can do.",
+     "Even a reference slide carries a lesson here. Benjamin built this argument from one sustained book, which is a reminder that careful sourcing is what separates real analysis from a hot take."
     ]
    }
   },
@@ -3119,6 +3254,20 @@ window.BFS218 = {
        "Noble, S. U. (2018). Algorithms of oppression. NYU Press. Referenced from its widely cited argument; consult the book for direct quotations."
       ]
      }
+    ],
+    "insights": [
+     "Notice the shift this week. We move from describing the New Jim Code to catching it where it actually decides futures, which means the stakes stop being abstract and start being someone's job, loan, or seat.",
+     "Hiring, lending, and education are not random examples. They are the three gates that compound, because being shut out of one often shuts you out of the next, and bias at the gate quietly stacks across a life.",
+     "Watch what scale and speed do to fairness. A human might sort a few people and second-guess each one, but a gate that sorts thousands in an instant turns one biased rule into thousands of identical harms.",
+     "The cruelest part is hidden in plain sight. The person kept out usually never learns it happened, so the harm is not only the rejection, it is being denied the chance to even know there was a decision to fight.",
+     "This finding should give you pause, because the tool meant to help students was studied and still reinforced racial inequity. Good intentions, the help framing from last week, do not protect anyone from biased outcomes.",
+     "Devlin's point cuts deeper than fixing the data. If the people building these gates and the people judged by them are different populations, then debiasing the math still leaves the power imbalance untouched.",
+     "Noble shows that a ranking is a gate even when nothing is formally denied. Deciding what gets seen, trusted, and found shapes opportunity just as surely as a yes or no, while looking like a neutral tool.",
+     "This is the quiet heart of the week. Losing someone to ask is not a side effect, it is the harm, because accountability dies the moment no human can be made to give you a reason or change their mind.",
+     "Make the second question your sharpest one. Plenty of systems keep some people out, but the New Jim Code shows up specifically when that exclusion tracks race, gender, or class instead of falling randomly.",
+     "Picking a gate from your own life is what makes this real. The most useful question is often the simplest: when that system decided about you, was there anyone you could actually call to explain or appeal it?",
+     "Hold the phrase quietly, at scale together. The deepest danger of these gates is not loud injustice but silent sorting, harm spread so thin and so wide that no single rejection ever makes the news.",
+     "Even the source note teaches method here. Pointing to Noble's book rather than paraphrasing loosely models the honesty this course asks of you: represent an argument carefully or send people to the original."
     ]
    }
   },
@@ -3412,6 +3561,20 @@ window.BFS218 = {
        "Benjamin, R. (2019). Race after technology: Abolitionist tools for the New Jim Code. Polity Press."
       ]
      }
+    ],
+    "insights": [
+     "If a whole course on naming harm can fit into eleven weeks, ask yourself why the building part gets only one. That imbalance is the real lesson: it is far easier to critique a system than to imagine a fairer one, and this week asks the harder thing.",
+     "Notice what this turn costs you. Seeing harm lets you stay a critic on the outside, but building forces you to commit to a vision and own its flaws. The tools are not neutral; picking them up means taking a side.",
+     "The quiet trap is that reform can feel like progress while keeping the same people in charge. Ask of any fix: after this change, who still decides? If the answer is unchanged, you have polished the gate, not removed it.",
+     "This flips how we usually judge technology. A designer who 'meant well' gets no credit here; only the lived result counts. That is why the New Jim Code keeps spreading, because good intentions keep getting mistaken for good outcomes.",
+     "Read these as a transfer of power, not a checklist. 'Expert in their own experience' means the community stops being data to study and becomes the authority that decides. Who in your own examples is usually treated as a problem rather than an expert?",
+     "Here is the sharpest move of the week: an abolitionist tool can be a refusal. Sometimes the most just design is to not build the thing at all. Which technologies you have studied this term should simply not exist?",
+     "This is where the course argument completes itself. If communities are only ever the harmed, we still hold the power to fix them. Seeing Black youth as designers breaks that, because the people closest to the harm become the ones who redesign the system.",
+     "Use this test on solutions that sound generous. 'More diverse data' or 'a fairness audit' can ease harm while the same company keeps deciding everything. Real repair is uncomfortable precisely because someone has to give power up.",
+     "The added step is the whole point of the course. Anyone can spot what is broken; the harder skill is proposing a change and saying honestly whether it shifts power or just softens the blow. Hold your own answer to the reform-or-repair test.",
+     "Choosing the response is harder than mapping the harm, and that difficulty is the lesson. When you struggle to name a move that changes who decides, you are feeling how deeply these systems are built to keep power where it is.",
+     "Sit with why these are different. You can refuse a bad system and still have nothing better to put in its place. The course is asking for both, and the second is the harder, more hopeful work that most critics never reach.",
+     "Notice these three voices together: a designer, a teacher, and Benjamin herself, all arguing that the fix is structural, not technical. When sources from different fields converge on the same point, that agreement is itself a kind of evidence."
     ]
    }
   },
@@ -3691,6 +3854,20 @@ window.BFS218 = {
        "Ortiz, C. (2024). The Decolonial Intelligence Algorithmic (DIA) framework."
       ]
      }
+    ],
+    "insights": [
+     "This week is where critique grows teeth. Naming harm changes minds, but law changes what companies are allowed to do. Ask yourself which technologies you have studied would actually stop if the rules said they must.",
+     "The hard truth here is that a single good fix can be perfectly legal to ignore. If the rules permit the harm, then accountability has to climb above the individual system, or every fix you proposed last week stays optional.",
+     "Notice the direction of power. The single system, where we began, sits at the bottom, and human rights sits at the top. The higher the level, the harder it is for any one company to opt out, which is exactly why this week matters.",
+     "Here is the uncomfortable point: a law can exist, get praised as leadership, and still leave whole groups exposed through its gaps. When you study any rule, the gaps are not failures of detail; they are quiet decisions about whose harm does not count.",
+     "This is the difference between an apology and an obligation. Calling techno-racism a 'glitch' asks the company to please do better; calling it a rights violation makes a state legally answerable. Language here is not soft; it decides who can be forced to act.",
+     "This is last week's design justice grown up into governance. Building accountability in from the start, rather than patching after harm, is the same refusal at a bigger scale: not 'how do we fix the gate' but 'who governs whether the gate is built'.",
+     "The timing choice is really a power choice. 'Regulate after' sounds reasonable, but by then the technology is entrenched and the company sets the terms. Waiting is never neutral; delay itself is a decision that favours whoever is already winning.",
+     "These four questions are a single tool: follow the power. Gaps, the missing people at the table, and unprotected groups all point to the same thing, who the rule was written to serve. Apply this to a law you actually trust and see what it reveals.",
+     "Read this as the course's answer, not just a wish list. Every piece here, communities at the table, enforceable rights, justice built in, names a power that has to move. A 'just future' is not nicer technology; it is a different set of hands on the controls.",
+     "Notice why public laws and reports are the right sources here. Accountability has to be something others can check, point to, and enforce. A harm no one can name in public record is a harm with no leverage behind it.",
+     "Sit with the phrase 'late and from above'. The whole arc of Part III has been about flipping both: acting before harm, and deciding from below. As you move to your own map, ask how your sense of who should decide has changed since Week 1.",
+     "These three sources span a national law, a UN body, and a decolonial framework, three very different scales answering one question. That range is the argument: techno-racism cannot be governed at a single level, because it operates at all of them."
     ]
    }
   },
@@ -3972,6 +4149,20 @@ window.BFS218 = {
        "Anchors: Benjamin (2019), Race after technology; Costanza-Chock (2020), Design justice."
       ]
      }
+    ],
+    "insights": [
+     "Notice the structure hiding in plain sight: the course did not save the easiest task for last. Looking honestly at how much your own mind has shifted is harder than judging any system out there.",
+     "Coming home is its own kind of skill. It is easy to keep aiming criticism outward at companies and policies, but turning that same clear gaze on your own earlier blind spots takes a steadier nerve.",
+     "Here is the quiet proof the New Jim Code is real: harm that needed no villain and no change in the machine, only a viewer who finally learned to read it. Your growth is the evidence.",
+     "This is why you were asked to keep entries you could not fully explain at the time. A map made only of polished, finished thoughts would have erased the very journey it was supposed to record.",
+     "When four tests become one reflex, you have crossed from studying a theory to owning a way of seeing. Ask yourself: can you now spot the pattern in a tool nobody assigned you to question?",
+     "Seeing without acting can curdle into despair or smugness, both useless. The course pushes past seeing on purpose, because clear sight that changes nothing leaves the harmful systems exactly as comfortable as it found them.",
+     "The capstone is not a memory test of course content; it is asking you to witness yourself. The hardest part may be admitting, on camera, what you genuinely could not see in Week 1.",
+     "Narrating in your own voice is a guard against borrowed insight. If you can only repeat the textbook words, the seeing has not fully landed yet, so let the recording reveal where it has.",
+     "The gap between then and now is worth more than either snapshot alone. A confident wrong reading you have outgrown often teaches more than an entry you happened to get right by luck.",
+     "Rereading start to finish is different from skimming for a grade; it lets the arc surprise you. Watch for the moment your notes stop sounding uncertain and start naming things outright.",
+     "That reflection question is built to resist a tidy answer for a reason. Clear sight has a real cost, since you can no longer enjoy systems as harmless once you know who they quietly harm.",
+     "Notice what this empty reading list is telling you: you have become a source. The course is signalling that your own thinking now carries enough weight to stand beside the scholars you started with."
     ]
    }
   },
@@ -4255,6 +4446,20 @@ window.BFS218 = {
        "Full course citations are in the weekly Key Concepts files for Weeks 1 to 12."
       ]
      }
+    ],
+    "insights": [
+     "A closing is not the same as an ending. The course is built to hand you a practice you keep using, so treat this week as a launch into your field, not a final exam to forget.",
+     "The thing you lacked in Week 1 was not information; it was a way of organizing it. Plenty of people know facts about bias in tech, yet still cannot read a new system on sight.",
+     "Watch how the answer matured: not from yes to no, but from a vague shrug to a precise account. The real shift is that you can now say exactly why, and point to the design that does it.",
+     "Lay the four parts side by side and the course's spine appears: harm starts with a default, not a hatred, so the cure cannot just be hiring nicer people. It has to redesign the defaults themselves.",
+     "A single lens is portable in a way four checklists never are. The test is whether you reach for it without being asked, on a tool released long after this course is a distant memory.",
+     "Your final task asks for less polish than honesty. A messy walkthrough that shows real change will always outweigh a smooth one that hides whether you actually learned to see.",
+     "This is the whole course folded into four questions you can carry anywhere. Memorize that sequence and you no longer need the course, because you have become the thing it was trying to build.",
+     "A map that only lived inside the course would have been an assignment, not a habit. The real measure of your learning is whether you make a new entry when nobody is grading it.",
+     "Small and concrete wins because vague promises quietly expire. Ask the honest question: which version of your commitment would still be true a year from now when no one is checking?",
+     "Sitting with the discomfort of seeing what is built to look neutral is the rare part. Most people stop at it looks fine to me, and that comfort is exactly what the New Jim Code counts on.",
+     "This last question is the course's real exam, and it has no deadline. The hard moment is not spotting the harm; it is holding your read when everyone around you insists nothing is wrong.",
+     "Keeping a single anchor source is the point, not a shortcut. Benjamin gave you the lens, but from here the work of pointing it at the world is yours, and it does not come with a reading list."
     ]
    }
   }
