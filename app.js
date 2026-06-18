@@ -159,8 +159,8 @@ function home(){
     cards:['#6E8B6A','Self-check cards','Practice recalling the ideas in your own words','#/cards','R'],
     cases:['#B07A57','Case studies','Real Canadian examples, tied to the concepts','#/cases','C']};
   var hero='<section id="hero">'+contourSVG()+
-    '<div style="position:relative"><div class="htag">'+esc(c.code)+' &middot; '+esc(c.institution||'Seneca Polytechnic')+' &middot; Online, self-paced</div>'+
-    '<h1>'+esc(c.title||'')+'</h1><p class="hsub">'+esc(c.subtitle||'')+'. Read, watch, and work through the course at your own pace, with tools that help the ideas take hold.</p>'+
+    '<div style="position:relative"><div class="htag">'+esc(c.code)+' &middot; '+esc(c.institution||'Seneca Polytechnic')+' &middot; '+esc(c.mode||'Online reference')+'</div>'+
+    '<h1>'+esc(c.title||'')+'</h1><p class="hsub">'+esc(c.subtitle||'')+'. Read, watch, and work through the course materials, with tools that help the ideas take hold.</p>'+
     '<div class="hactions"><a class="btn btn-primary" href="#/week/1">Start with Week 1</a><a class="btn" href="#/glossary">Explore the tools</a></div></div></section>';
   var tools='<h2>Learning tools</h2><div class="toolgrid">'+Object.keys(toolMeta).map(function(k){var t=toolMeta[k];return '<a class="toolcard" href="'+t[3]+'"><div class="ic" style="background:'+t[0]+'22;color:'+t[0]+'">'+t[4]+'</div><b>'+esc(t[1])+'</b><p style="margin:.3em 0 0;color:#4A4A4A;font-size:.92rem">'+esc(t[2])+'</p></a>';}).join('')+'</div>';
   var bands=(D.phases||[]).map(function(p){

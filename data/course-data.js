@@ -89,7 +89,7 @@ window.BFS218 = {
     },
     {
      "type": "text",
-     "text": "This is the self-paced, online-asynchronous section. There is no live class meeting. Work through the Week 1 materials in order at your own pace: start with the Key Concepts and Readings, then move through the lecture deck with the narration while you fill in your Guided Notes, and carry the week’s question with you: Can a machine be racist? Use the Asynchronous Learning Guide as your checklist, and reach out during virtual office hours if you need help."
+     "text": "Use this reference guide to work through the Week 1 materials in order: start with the Key Concepts and Readings, then move through the lecture deck with the narration while you fill in your Guided Notes, and carry the week’s question with you: Can a machine be racist? Use Blackboard for official course instructions and submission details, and reach out during virtual office hours if you need help."
     },
     {
      "type": "head",
@@ -305,7 +305,7 @@ window.BFS218 = {
       "points": [
        "Introduction to the Course",
        "Racism and the Digital Age: Understanding Techno-Racism",
-       "Online-Asynchronous section"
+       "Course reference site"
       ]
      },
      {
@@ -474,7 +474,7 @@ window.BFS218 = {
     },
     {
      "type": "text",
-     "text": "This is the self-paced, online-asynchronous section. Work through this week's materials in order, at your own pace: start with the Key Concepts and Readings, then move through the lecture deck with the narration while you fill in your Guided Notes, and carry the week’s question with you: Can a machine be racist? Your Personal Cartography is due this week, so leave time to complete it. Use the Asynchronous Learning Guide as your checklist."
+     "text": "Use this reference guide to work through this week's materials in order: start with the Key Concepts and Readings, then move through the lecture deck with the narration while you fill in your Guided Notes, and carry the week’s question with you: Can a machine be racist? Your Personal Cartography is due this week, so leave time to complete it. Use Blackboard for official course instructions and submission details."
     },
     {
      "type": "head",
@@ -658,7 +658,7 @@ window.BFS218 = {
       "points": [
        "Critical Race Theory and the New Jim Code",
        "Racism and the Digital Age: Understanding Techno-Racism",
-       "Online-Asynchronous section"
+       "Course reference site"
       ]
      },
      {
@@ -823,7 +823,7 @@ window.BFS218 = {
     },
     {
      "type": "text",
-     "text": "This is the self-paced, online-asynchronous section. Work through this week's materials in order at your own pace: the Key Concepts and Readings, then the lecture deck with the narration while you fill the Guided Notes, then the Reflection Corner. Use the Asynchronous Learning Guide as your checklist."
+     "text": "Use this reference guide to work through this week's materials in order: the Key Concepts and Readings, then the lecture deck with the narration while you fill the Guided Notes, then the Reflection Corner. Use Blackboard for official course instructions and submission details."
     },
     {
      "type": "head",
@@ -982,7 +982,7 @@ window.BFS218 = {
       "points": [
        "Engineered Inequity",
        "Part II: The Anatomy of the New Jim Code, dimension one",
-       "Online-Asynchronous section"
+       "Course reference site"
       ]
      },
      {
@@ -1126,7 +1126,7 @@ window.BFS218 = {
     },
     {
      "type": "text",
-     "text": "This is the self-paced, online-asynchronous section. Work through the materials in order at your own pace: the Key Concepts and Readings, then the lecture deck with the narration while you fill in the Guided Notes, then the videos, and add your weekly entry to the Living Cartography."
+     "text": "Use this reference guide to work through the materials in order: the Key Concepts and Readings, then the lecture deck with the narration while you fill in the Guided Notes, then the videos, and add your weekly entry to the Living Cartography."
     },
     {
      "type": "head",
@@ -1280,7 +1280,7 @@ window.BFS218 = {
       "points": [
        "Default Discrimination",
        "Part II: The Anatomy of the New Jim Code, dimension two",
-       "Online-Asynchronous section"
+       "Course reference site"
       ]
      },
      {
@@ -1428,7 +1428,7 @@ window.BFS218 = {
     },
     {
      "type": "text",
-     "text": "This is the self-paced, online-asynchronous section. Work through the materials in order at your own pace: the Key Concepts and Readings, then the lecture deck with the narration while you fill in the Guided Notes, then the videos, and add your weekly entry to the Living Cartography."
+     "text": "Use this reference guide to work through the materials in order: the Key Concepts and Readings, then the lecture deck with the narration while you fill in the Guided Notes, then the videos, and add your weekly entry to the Living Cartography."
     },
     {
      "type": "head",
@@ -1590,7 +1590,7 @@ window.BFS218 = {
       "points": [
        "Coded Exposure",
        "Part II: The Anatomy of the New Jim Code, dimension three",
-       "Online-Asynchronous section"
+       "Course reference site"
       ]
      },
      {
@@ -1729,7 +1729,7 @@ window.BFS218 = {
    "overview": [
     {
      "type": "text",
-     "text": "Borders, Policing, and Housing   |   Online-Asynchronous section"
+     "text": "Borders, Policing, and Housing"
     },
     {
      "type": "text",
@@ -1741,7 +1741,7 @@ window.BFS218 = {
     },
     {
      "type": "text",
-     "text": "This is the self-paced, online-asynchronous section. Work through the materials in order at your own pace: the Key Concepts and Readings, then the lecture deck with the narration while you fill in the Guided Notes, then the videos, and add your weekly entry to the Living Cartography."
+     "text": "Use this reference guide to work through the materials in order: the Key Concepts and Readings, then the lecture deck with the narration while you fill in the Guided Notes, then the videos, and add your weekly entry to the Living Cartography."
     },
     {
      "type": "head",
@@ -1924,7 +1924,7 @@ window.BFS218 = {
       "points": [
        "Algorithms in Canada",
        "The code in our backyard: borders, policing, and housing",
-       "Online-Asynchronous section"
+       "Course reference site"
       ]
      },
      {
@@ -2065,7 +2065,7 @@ window.BFS218 = {
    "overview": [
     {
      "type": "text",
-     "text": "Part II Consolidation, plus your first Knowledge Check video   |   Online-Asynchronous section"
+     "text": "Part II Consolidation, plus your first Knowledge Check video"
     },
     {
      "type": "text",
@@ -2077,7 +2077,7 @@ window.BFS218 = {
     },
     {
      "type": "text",
-     "text": "This is the self-paced, online-asynchronous section. There is no new reading; you revisit Weeks 3 to 6, move through the consolidation deck and videos, and complete the Knowledge Check video on your own schedule."
+     "text": "Use this reference guide to revisit Weeks 3 to 6, move through the consolidation deck and videos, and complete the Knowledge Check video according to the official Blackboard instructions."
     },
     {
      "type": "head",
@@ -2235,7 +2235,7 @@ window.BFS218 = {
       "points": [
        "Assembling the Anatomy",
        "Part II consolidation, plus your first Knowledge Check video",
-       "Online-Asynchronous section"
+       "Course reference site"
       ]
      },
      {
@@ -2371,7 +2371,7 @@ window.BFS218 = {
    "overview": [
     {
      "type": "text",
-     "text": "OCAP and a Different Relation to Data   |   Online-Asynchronous section"
+     "text": "OCAP and a Different Relation to Data"
     },
     {
      "type": "text",
@@ -2383,7 +2383,7 @@ window.BFS218 = {
     },
     {
      "type": "text",
-     "text": "This is the self-paced, online-asynchronous section. Work through the materials in order at your own pace: the Key Concepts and Readings, then the lecture deck with the narration while you fill in the Guided Notes, then the videos, and add your weekly entry to the Living Cartography."
+     "text": "Use this reference guide to work through the materials in order: the Key Concepts and Readings, then the lecture deck with the narration while you fill in the Guided Notes, then the videos, and add your weekly entry to the Living Cartography."
     },
     {
      "type": "head",
@@ -2553,7 +2553,7 @@ window.BFS218 = {
       "points": [
        "Indigenous Data Sovereignty",
        "Part III opens: OCAP and a different relation to data",
-       "Online-Asynchronous section"
+       "Course reference site"
       ]
      },
      {
@@ -2680,7 +2680,7 @@ window.BFS218 = {
    "overview": [
     {
      "type": "head",
-     "text": "The False Promise of Help   |   Online-Asynchronous section"
+     "text": "The False Promise of Help"
     },
     {
      "type": "text",
@@ -2692,7 +2692,7 @@ window.BFS218 = {
     },
     {
      "type": "text",
-     "text": "This is the self-paced, online-asynchronous section. Work through the materials in order at your own pace: the Key Concepts and Readings, then the lecture deck with the narration while you fill in the Guided Notes, then the videos, and add your weekly entry to the Living Cartography."
+     "text": "Use this reference guide to work through the materials in order: the Key Concepts and Readings, then the lecture deck with the narration while you fill in the Guided Notes, then the videos, and add your weekly entry to the Living Cartography."
     },
     {
      "type": "head",
@@ -2846,7 +2846,7 @@ window.BFS218 = {
       "points": [
        "Technological Benevolence",
        "Part III: the fourth dimension, and the false promise of help",
-       "Online-Asynchronous section"
+       "Course reference site"
       ]
      },
      {
@@ -2968,7 +2968,7 @@ window.BFS218 = {
    "overview": [
     {
      "type": "head",
-     "text": "Who Is Let Through the Gate   |   Online-Asynchronous section"
+     "text": "Who Is Let Through the Gate"
     },
     {
      "type": "text",
@@ -2980,7 +2980,7 @@ window.BFS218 = {
     },
     {
      "type": "text",
-     "text": "This is the self-paced, online-asynchronous section. Work through the materials in order at your own pace: the Key Concepts and Readings, then the lecture deck with the narration while you fill in the Guided Notes, then the videos, and add your weekly entry to the Living Cartography."
+     "text": "Use this reference guide to work through the materials in order: the Key Concepts and Readings, then the lecture deck with the narration while you fill in the Guided Notes, then the videos, and add your weekly entry to the Living Cartography."
     },
     {
      "type": "head",
@@ -3143,7 +3143,7 @@ window.BFS218 = {
       "points": [
        "Algorithmic Gatekeeping",
        "Part III: who is let through the gate, in hiring, lending, and education",
-       "Online-Asynchronous section"
+       "Course reference site"
       ]
      },
      {
@@ -3272,7 +3272,7 @@ window.BFS218 = {
    "overview": [
     {
      "type": "text",
-     "text": "The Fight Back, plus your second Knowledge Check video   |   Online-Asynchronous section"
+     "text": "The Fight Back, plus your second Knowledge Check video"
     },
     {
      "type": "text",
@@ -3284,7 +3284,7 @@ window.BFS218 = {
     },
     {
      "type": "text",
-     "text": "This is the self-paced, online-asynchronous section. Work through the materials in order at your own pace, then complete the second Knowledge Check video on your own schedule."
+     "text": "Use this reference guide to work through the materials in order, then complete the second Knowledge Check video according to the official Blackboard instructions."
     },
     {
      "type": "head",
@@ -3452,7 +3452,7 @@ window.BFS218 = {
       "points": [
        "Resistance and Abolitionist Tools",
        "Part III: the fight back, and building differently",
-       "Online-Asynchronous section"
+       "Course reference site"
       ]
      },
      {
@@ -3579,7 +3579,7 @@ window.BFS218 = {
    "overview": [
     {
      "type": "text",
-     "text": "Building the Alternatives at the Level of Law and Institutions   |   Online-Asynchronous section"
+     "text": "Building the Alternatives at the Level of Law and Institutions"
     },
     {
      "type": "text",
@@ -3591,7 +3591,7 @@ window.BFS218 = {
     },
     {
      "type": "text",
-     "text": "This is the self-paced, online-asynchronous section. Work through the materials in order at your own pace: the Key Concepts and Readings, then the lecture deck with the narration while you fill in the Guided Notes, then the videos, and add your weekly entry to the Living Cartography."
+     "text": "Use this reference guide to work through the materials in order: the Key Concepts and Readings, then the lecture deck with the narration while you fill in the Guided Notes, then the videos, and add your weekly entry to the Living Cartography."
     },
     {
      "type": "head",
@@ -3734,7 +3734,7 @@ window.BFS218 = {
       "points": [
        "Tech Accountability and Policy Futures",
        "Part III closes: building alternatives at the level of law and institutions",
-       "Online-Asynchronous section"
+       "Course reference site"
       ]
      },
      {
@@ -3854,7 +3854,7 @@ window.BFS218 = {
    "overview": [
     {
      "type": "head",
-     "text": "The Return   |   Online-Asynchronous section"
+     "text": "The Return"
     },
     {
      "type": "text",
@@ -3866,7 +3866,7 @@ window.BFS218 = {
     },
     {
      "type": "text",
-     "text": "This is the self-paced, online-asynchronous section. There is no new reading; you reread your own Living Cartography, move through the closing deck and videos, and begin the Final Revisiting Cartography video on your own schedule."
+     "text": "Use this reference guide to reread your own Living Cartography, move through the closing deck and videos, and begin the Final Revisiting Cartography video according to the official Blackboard instructions."
     },
     {
      "type": "head",
@@ -4025,7 +4025,7 @@ window.BFS218 = {
       "points": [
        "Revisiting Your Cartography, Part 1",
        "Part IV: the return, reading your own map again",
-       "Online-Asynchronous section"
+       "Course reference site"
       ]
      },
      {
@@ -4148,7 +4148,7 @@ window.BFS218 = {
    "overview": [
     {
      "type": "text",
-     "text": "The Close: The Question Re-Answered   |   Online-Asynchronous section"
+     "text": "The Close: The Question Re-Answered"
     },
     {
      "type": "text",
@@ -4160,7 +4160,7 @@ window.BFS218 = {
     },
     {
      "type": "text",
-     "text": "This is the self-paced, online-asynchronous section. You finish and submit the Final Revisiting Cartography video, move through the closing deck and videos, and post a final reflection in the Blackboard Map Exchange. The Final video is due this week."
+     "text": "Use this reference guide to finish the Final Revisiting Cartography video, move through the closing deck and videos, and prepare the final reflection for the Blackboard Map Exchange. Check Blackboard for the official due date and submission instructions."
     },
     {
      "type": "head",
@@ -4321,7 +4321,7 @@ window.BFS218 = {
       "points": [
        "Revisiting Your Cartography, Part 2",
        "The close: the question re-answered",
-       "Online-Asynchronous section"
+       "Course reference site"
       ]
      },
      {
