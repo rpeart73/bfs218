@@ -241,7 +241,7 @@ window.BFS218 = {
     {
      "type": "cite",
      "text": "Buolamwini, J., & Gebru, T. (2018). Gender shades: Intersectional accuracy disparities in commercial gender classification. Proceedings of Machine Learning Research, 81, 1 to 15.",
-     "url": "https://proceedings.mlr.press/v81/buolamwini18a.html"
+     "url": "https://proceedings.mlr.press/v81/buolamwini18a/buolamwini18a.pdf"
     },
     {
      "type": "text",
@@ -1543,7 +1543,7 @@ window.BFS218 = {
     {
      "type": "cite",
      "text": "Buolamwini, J., and Gebru, T. (2018). Gender shades: Intersectional accuracy disparities in commercial gender classification. Proceedings of Machine Learning Research, 81, 1-15.",
-     "url": "https://proceedings.mlr.press/v81/buolamwini18a.html"
+     "url": "https://proceedings.mlr.press/v81/buolamwini18a/buolamwini18a.pdf"
     },
     {
      "type": "text",
@@ -1868,7 +1868,7 @@ window.BFS218 = {
     {
      "type": "cite",
      "text": "Office of the Privacy Commissioner of Canada. (2021). Police use of facial recognition technology in Canada and the way forward. Special report to Parliament.",
-     "url": "https://www.priv.gc.ca/en/opc-actions-and-decisions/ar_index/202021/sr_rcmp/"
+     "url": "https://publications.gc.ca/collections/collection_2021/cpvp-opc/IP54-110-2021-eng.pdf"
     },
     {
      "type": "text",
@@ -2495,7 +2495,7 @@ window.BFS218 = {
     {
      "type": "cite",
      "text": "Mohamed, S., Png, M.-T., and Isaac, W. (2020). Decolonial AI: Decolonial theory as sociotechnical foresight in artificial intelligence. Philosophy & Technology, 33, 659-684.",
-     "url": "https://arxiv.org/abs/2007.04068"
+     "url": "https://arxiv.org/pdf/2007.04068"
     },
     {
      "type": "text",
@@ -3096,7 +3096,7 @@ window.BFS218 = {
     {
      "type": "cite",
      "text": "Devlin, K. (2023). Power in AI: Inequality within and without the algorithm. Wiley-Blackwell.",
-     "url": "https://doi.org/10.1002/9781119800729.ch8"
+     "url": "https://kclpure.kcl.ac.uk/ws/portalfiles/portal/243355629/Devlin_AI_Power_prepublishedversion.pdf"
     },
     {
      "type": "head",
@@ -3402,7 +3402,7 @@ window.BFS218 = {
     {
      "type": "cite",
      "text": "Tanksley, T. (2023). Employing an abolitionist, critical race pedagogy in CS. Journal of Computer Science Integration, 6(1).",
-     "url": "https://digitalcommons.chapman.edu/jcsi/vol6/iss1/9/"
+     "url": "https://digitalcommons.chapman.edu/cgi/viewcontent.cgi?article=1020&context=jcsi"
     },
     {
      "type": "head",

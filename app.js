@@ -37,6 +37,9 @@ var CSS = [
 ".cite{font-size:.85rem;color:#4A4A4A;border-left:3px solid var(--hair);padding-left:10px;margin:.5em 0 0}",
 ".rlink{font-weight:600;font-size:.9rem}",
 ".slideshow-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;align-items:start}",
+".herogrid{display:grid;grid-template-columns:1.6fr 1fr;gap:24px;align-items:center}",
+".heroimg img{width:100%;max-height:260px;object-fit:cover;border-radius:14px;box-shadow:0 8px 24px rgba(26,26,26,.14)}",
+"@media (max-width:760px){.herogrid{grid-template-columns:1fr}.heroimg{display:none}}",
 ".slide-kp{background:var(--raised);border:1px solid var(--hair);border-radius:12px;padding:16px}",
 "@media (max-width:760px){.slideshow-grid{grid-template-columns:1fr}}",
 "@media (max-width:640px){.toolgrid{grid-template-columns:1fr}}"
@@ -156,16 +159,19 @@ function home(){
     cards:['#6E8B6A','Self-check cards','Practice recalling the ideas in your own words','#/cards','R'],
     cases:['#B07A57','Case studies','Real Canadian examples, tied to the concepts','#/cases','C']};
   var hero='<section id="hero">'+contourSVG()+
-    '<div style="position:relative"><div class="htag">'+esc(c.code)+' &middot; '+esc(c.institution||'Seneca Polytechnic')+' &middot; Online, self-paced</div>'+
+    '<div class="herogrid"><div style="position:relative"><div class="htag">'+esc(c.code)+' &middot; '+esc(c.institution||'Seneca Polytechnic')+' &middot; Online, self-paced</div>'+
     '<h1>'+esc(c.title||'')+'</h1><p class="hsub">'+esc(c.subtitle||'')+'. Read, watch, and work through the course at your own pace, with tools that help the ideas take hold.</p>'+
-    '<div class="hactions"><a class="btn btn-primary" href="#/week/1">Start with Week 1</a><a class="btn" href="#/glossary">Explore the tools</a></div></div></section>';
+    '<div class="hactions"><a class="btn btn-primary" href="#/week/1">Start with Week 1</a><a class="btn" href="#/glossary">Explore the tools</a></div></div>'+
+    '<div class="heroimg" style="position:relative"><img src="assets/img/bfs-home-1.jpg" alt="Abstract glowing network strands suggesting digital data and connectivity."></div></div></section>';
   var tools='<h2>Learning tools</h2><div class="toolgrid">'+Object.keys(toolMeta).map(function(k){var t=toolMeta[k];return '<a class="toolcard" href="'+t[3]+'"><div class="ic" style="background:'+t[0]+'22;color:'+t[0]+'">'+t[4]+'</div><b>'+esc(t[1])+'</b><p style="margin:.3em 0 0;color:#4A4A4A;font-size:.92rem">'+esc(t[2])+'</p></a>';}).join('')+'</div>';
   var bands=(D.phases||[]).map(function(p){
     var tiles=(p.weeks||[]).map(function(n){var wk=week(n);if(!wk)return '';return '<a class="wktile" href="#/week/'+n+'" style="background:'+p.fill+'"><span class="wn" style="color:'+p.accent+'">WEEK '+pad(n)+'</span><b>'+esc(wk.title||'')+'</b><span class="muted" style="font-size:.8rem">'+esc(wk.concept||'')+'</span></a>';}).join('');
     return '<h3 style="margin:18px 0 8px;color:'+p.accent+'">'+esc(p.name)+' <span class="muted" style="font-weight:400">Weeks '+p.weeks[0]+' to '+p.weeks[p.weeks.length-1]+'</span></h3><div class="wkgrid">'+tiles+'</div>';
   }).join('');
   var foot='<div class="card" style="margin-top:24px"><div class="eyebrow">A companion, not the gradebook</div><p style="margin:0">This site holds the learning materials and tools. Your grades, the discussion board, and handing work in all live in Blackboard. Nothing here is graded, and nothing you do here is tracked.</p></div>';
-  return hero+tools+'<h2 style="margin-top:26px">The 14 weeks</h2>'+bands+foot;
+  var band='<div style="margin:22px 0 0;border-radius:14px;overflow:hidden;border:1px solid var(--hair)"><img src="assets/img/bfs-home-3.jpg" alt="A diverse group of students collaborating around a laptop." style="width:100%;max-height:230px;object-fit:cover;display:block;object-position:center 35%"></div>';
+  var credits='<p class="muted" style="font-size:.8rem;margin-top:16px">Images: Photo by JJ Ying and Photo by Vitaly Gariev on Unsplash (Unsplash License).</p>';
+  return hero+tools+band+'<h2 style="margin-top:26px">The 14 weeks</h2>'+bands+foot+credits;
 }
 
 /* ---------- week page ---------- */
