@@ -159,19 +159,16 @@ function home(){
     cards:['#6E8B6A','Self-check cards','Practice recalling the ideas in your own words','#/cards','R'],
     cases:['#B07A57','Case studies','Real Canadian examples, tied to the concepts','#/cases','C']};
   var hero='<section id="hero">'+contourSVG()+
-    '<div class="herogrid"><div style="position:relative"><div class="htag">'+esc(c.code)+' &middot; '+esc(c.institution||'Seneca Polytechnic')+' &middot; Online, self-paced</div>'+
+    '<div style="position:relative"><div class="htag">'+esc(c.code)+' &middot; '+esc(c.institution||'Seneca Polytechnic')+' &middot; Online, self-paced</div>'+
     '<h1>'+esc(c.title||'')+'</h1><p class="hsub">'+esc(c.subtitle||'')+'. Read, watch, and work through the course at your own pace, with tools that help the ideas take hold.</p>'+
-    '<div class="hactions"><a class="btn btn-primary" href="#/week/1">Start with Week 1</a><a class="btn" href="#/glossary">Explore the tools</a></div></div>'+
-    '<div class="heroimg" style="position:relative"><img src="assets/img/bfs-home-1.jpg" alt="A facial recognition system reading a human face into a machine readout."></div></div></section>';
+    '<div class="hactions"><a class="btn btn-primary" href="#/week/1">Start with Week 1</a><a class="btn" href="#/glossary">Explore the tools</a></div></div></section>';
   var tools='<h2>Learning tools</h2><div class="toolgrid">'+Object.keys(toolMeta).map(function(k){var t=toolMeta[k];return '<a class="toolcard" href="'+t[3]+'"><div class="ic" style="background:'+t[0]+'22;color:'+t[0]+'">'+t[4]+'</div><b>'+esc(t[1])+'</b><p style="margin:.3em 0 0;color:#4A4A4A;font-size:.92rem">'+esc(t[2])+'</p></a>';}).join('')+'</div>';
   var bands=(D.phases||[]).map(function(p){
     var tiles=(p.weeks||[]).map(function(n){var wk=week(n);if(!wk)return '';return '<a class="wktile" href="#/week/'+n+'" style="background:'+p.fill+'"><span class="wn" style="color:'+p.accent+'">WEEK '+pad(n)+'</span><b>'+esc(wk.title||'')+'</b><span class="muted" style="font-size:.8rem">'+esc(wk.concept||'')+'</span></a>';}).join('');
     return '<h3 style="margin:18px 0 8px;color:'+p.accent+'">'+esc(p.name)+' <span class="muted" style="font-weight:400">Weeks '+p.weeks[0]+' to '+p.weeks[p.weeks.length-1]+'</span></h3><div class="wkgrid">'+tiles+'</div>';
   }).join('');
   var foot='<div class="card" style="margin-top:24px"><div class="eyebrow">A companion, not the gradebook</div><p style="margin:0">This site holds the learning materials and tools. Your grades, the discussion board, and handing work in all live in Blackboard. Nothing here is graded, and nothing you do here is tracked.</p></div>';
-  var band='<div style="margin:22px 0 0;border-radius:14px;overflow:hidden;border:1px solid var(--hair)"><img src="assets/img/bfs-home-2.jpg" alt="Two surveillance cameras watching a public space." style="width:100%;max-height:230px;object-fit:cover;display:block;object-position:center 40%"></div>';
-  var credits='<p class="muted" style="font-size:.8rem;margin-top:16px">Images: Photo by Maxim Tolchinskiy and Photo by Milosz Klinowski on Unsplash (Unsplash License).</p>';
-  return hero+tools+band+'<h2 style="margin-top:26px">The 14 weeks</h2>'+bands+foot+credits;
+  return hero+tools+'<h2 style="margin-top:26px">The 14 weeks</h2>'+bands+foot;
 }
 
 /* ---------- week page ---------- */
