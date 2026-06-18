@@ -3627,8 +3627,7 @@ window.BFS218 = {
     "outcomes": [
      "Explain why accountability for technology must operate at the level of law and institutions, not only individual fixes.",
      "Identify one documented gap in Canada's proposed Artificial Intelligence and Data Act, after Attard-Frost (2023).",
-     "Summarise how the UN frames racial discrimination in digital technologies as a human rights issue.",
-     "Describe what it means to build justice into AI governance from the start, after Ortiz (2024), and add a policy entry to your Living Cartography."
+     "Summarise how the UN frames racial discrimination in digital technologies as a human rights issue."
     ]
    },
    "guiding": [
@@ -3754,7 +3753,6 @@ window.BFS218 = {
        "Accountability for technology can operate at four levels. This week we work the top three.",
        "International human rights (UN)",
        "National law (Canada: AIDA)",
-       "Institutions and frameworks (DIA)",
        "The single system (where we began)"
       ]
      },
@@ -3777,7 +3775,6 @@ window.BFS218 = {
      {
       "heading": "Building justice in from the start",
       "points": [
-       "Christian Ortiz's (2024) Decolonial Intelligence Algorithmic framework proposes designing AI through epistemic decolonization and intersectional justice.",
        "Accountability is built in from the beginning, not added after harm.",
        "It is the governance counterpart to last week's design justice."
       ]
@@ -3831,7 +3828,7 @@ window.BFS218 = {
       "points": [
        "Attard-Frost, B. (2023). Generative AI systems: Impacts on artists and creators and related gaps in the Artificial Intelligence and Data Act. Submission to the Standing Committee on Industry and Technology.",
        "United Nations Human Rights Council. (2020). Racial discrimination and emerging digital technologies: A human rights analysis (A/HRC/44/57).",
-       "Ortiz, C. (2024). The Decolonial Intelligence Algorithmic (DIA) framework."
+       "(2024)."
       ]
      }
     ],
