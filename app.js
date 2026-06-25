@@ -178,7 +178,7 @@ function home(){
     '<div style="flex:1;min-width:280px"><div class="mono" style="font-size:.75rem;letter-spacing:.06em;color:var(--amber);margin-bottom:10px">'+esc(c.code||'BFS218')+' &middot; '+esc(c.institution||'Seneca Polytechnic')+'</div>'+
     '<h1 style="font-size:2.05rem;line-height:1.14;font-weight:600;margin:0 0 10px;color:#fff">'+esc(c.title||'')+'</h1>'+
     '<p style="font-size:1rem;line-height:1.6;color:rgba(255,255,255,.8);margin:0;max-width:60ch">'+esc(c.subtitle||'')+'. Read, watch, and work through the course week by week, with tools that help the ideas take hold.</p>'+
-    '<div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap"><a href="#/week/1" style="background:var(--red);color:#fff;text-decoration:none;border-radius:999px;padding:11px 20px;font-weight:600;font-size:.95rem">Start with Week 1</a><a href="#/glossary" style="background:rgba(255,255,255,.12);color:#fff;text-decoration:none;border-radius:999px;padding:11px 20px;font-weight:600;font-size:.95rem">Explore the tools</a></div></div>'+
+    '</div>'+
     '<div style="display:flex;gap:10px;flex:none">'+stats.map(function(st){return '<div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:12px 16px;text-align:center;min-width:78px"><div class="mono" style="font-size:1.7rem;font-weight:600;line-height:1">'+st[1]+'</div><div style="font-size:.6875rem;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.6);margin-top:5px">'+st[0]+'</div></div>';}).join('')+'</div>'+
     '</div></section>';
   var bands=(D.phases||[]).map(function(p){
@@ -264,14 +264,9 @@ function allConcepts(){ var out=[]; (D.weeks||[]).forEach(function(w){ (w.concep
 function conceptById(id){ var a=allConcepts(); for(var i=0;i<a.length;i++) if(a[i].id===id) return a[i]; return null; }
 function cmpToggle(id){ var i=CMP.indexOf(id); if(i>=0){ CMP.splice(i,1); } else { if(CMP.length>=3){ toast('Compare holds three ideas at a time.'); return; } CMP.push(id); } SHOWSYN=false; saveCmp(); render(); }
 function cmpSynth(items){
-  function trim(s){ return String(s||'').replace(/\s+/g,' ').trim(); }
-  function firstSentence(s){ s=trim(s); var m=s.match(/^.*?[.!?](\s|$)/); return (m?m[0]:s).trim(); }
-  function lower(s){ return s?s.charAt(0).toLowerCase()+s.slice(1):s; }
   var named=items.map(function(c){ return c.term; });
-  var lead=items.length===2?('You are holding '+named[0]+' next to '+named[1]+'.'):('You are holding '+named.slice(0,-1).join(', ')+', and '+named[named.length-1]+' together.');
-  var each=items.map(function(c){ return c.term+' is about '+lower(trim(firstSentence(c.text)).replace(/\.$/,''))+'.'; }).join(' ');
-  var close='Read them together and ask where they reinforce one another, and where one names something the others leave out. That tension is the through line of the course: technology is never neutral, and neither is the data it learns from.';
-  return lead+' '+each+' '+close;
+  var list=items.length===2?(named[0]+' and '+named[1]):(named.slice(0,-1).join(', ')+', and '+named[named.length-1]);
+  return 'Put '+list+' in the same frame and read the explanations above against one real technology, a hiring tool, a facial recognition system, a predictive model. Ask three things. Where do these concepts reinforce one another, naming the same force from different angles? Where does one make visible what the others leave in the dark, a harm, a history, or a person the system was never built for? And what would you miss if you reached for only one of them? The work of this course is to hold them together: technology is never neutral, and neither is the data it learns from.';
 }
 function compareView(){
   var picked=CMP.map(conceptById).filter(Boolean), all=allConcepts();
