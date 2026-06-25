@@ -9,10 +9,10 @@ var OVERLAY = document.getElementById('overlay');
 
 /* ---------- injected styles for richer components ---------- */
 var CSS = [
-"#hero{position:relative;overflow:hidden;border-radius:18px;padding:40px clamp(20px,5vw,56px);margin-bottom:26px;color:#1A1A1A;background:linear-gradient(135deg,#FBFAF7 0%,#E8EEF1 38%,#E9EFE7 62%,#ECE7F1 100%);border:1px solid var(--hair)}",
-"#hero .htag{font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:#54585A}",
-"#hero h1{font-size:clamp(1.9rem,4.4vw,2.9rem);margin:.18em 0 .12em}",
-"#hero .hsub{font-size:1.15rem;color:#3a3f45}",
+"#hero{position:relative;overflow:hidden;border-radius:16px;padding:32px clamp(22px,5vw,42px);margin-bottom:22px;color:#fff;background:#1B2A4A;border:1px solid #1B2A4A}",
+"#hero .htag{font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:#F2A900}",
+"#hero h1{font-size:clamp(1.9rem,4.4vw,2.9rem);margin:.18em 0 .12em;color:#fff}",
+"#hero .hsub{font-size:1.15rem;color:rgba(255,255,255,.82)}",
 "#hero .hcontour{position:absolute;inset:0;opacity:.5;pointer-events:none}",
 "#hero .hactions{margin-top:20px;display:flex;flex-wrap:wrap;gap:10px}",
 ".toolgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}",
@@ -71,7 +71,7 @@ function pad(n){ return (n<10?'0':'')+n; }
 function toast(msg){ OVERLAY.insertAdjacentHTML('beforeend','<div class="toast" role="status">'+esc(msg)+'</div>'); var t=OVERLAY.lastChild; setTimeout(function(){ if(t&&t.parentNode) t.parentNode.removeChild(t); },2600); }
 function dl(name,text){ var b=new Blob([text],{type:'application/json'}); var u=URL.createObjectURL(b); var a=document.createElement('a'); a.href=u; a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){URL.revokeObjectURL(u);},1000); }
 function contourSVG(){ return '<svg class="hcontour" viewBox="0 0 1200 400" preserveAspectRatio="none" aria-hidden="true">'+
-  [40,90,150,220,300].map(function(y,i){ return '<path d="M0 '+y+' C 200 '+(y-30)+', 420 '+(y+34)+', 640 '+y+' S 1020 '+(y-26)+', 1200 '+(y+10)+'" fill="none" stroke="#5B7A8C" stroke-opacity="0.16" stroke-width="1.5"/>'; }).join('')+'</svg>'; }
+  [40,90,150,220,300].map(function(y,i){ return '<path d="M0 '+y+' C 200 '+(y-30)+', 420 '+(y+34)+', 640 '+y+' S 1020 '+(y-26)+', 1200 '+(y+10)+'" fill="none" stroke="#FFFFFF" stroke-opacity="0.14" stroke-width="1.5"/>'; }).join('')+'</svg>'; }
 
 /* ---------- modal with focus trap + return ---------- */
 var lastFocus=null;
@@ -97,12 +97,10 @@ function closeModal(){ OVERLAY.innerHTML=''; document.removeEventListener('keydo
 var ROUTES=[
   {sec:'Course'},
   {id:'home',label:'Home',hash:'#/home'},
-  {id:'assignments',label:'Assignments',hash:'#/assignments'},
   {sec:'Learning tools'},
   {id:'glossary',label:'Glossary and Thinkers',hash:'#/glossary'},
   {id:'cartography',label:'Living Cartography',hash:'#/cartography'},
-  {id:'cards',label:'Self-check cards',hash:'#/cards'},
-  {id:'cases',label:'Case studies',hash:'#/cases'}
+  {id:'cards',label:'Self-check cards',hash:'#/cards'}
 ];
 function renderNav(active){
   NAV.innerHTML=ROUTES.map(function(r){
@@ -156,8 +154,7 @@ function home(){
   var c=D.course||{},inst=D.instructor||{};
   var toolMeta={glossary:['#5B7A8C','Glossary and Thinkers','Every concept and the people behind it, week by week','#/glossary','A'],
     cartography:['#7C6A93','Living Cartography','Map techno-racism in your own digital life','#/cartography','M'],
-    cards:['#6E8B6A','Self-check cards','Practice recalling the ideas in your own words','#/cards','R'],
-    cases:['#B07A57','Case studies','Real Canadian examples, tied to the concepts','#/cases','C']};
+    cards:['#6E8B6A','Self-check cards','Practice recalling the ideas in your own words','#/cards','R']};
   var hero='<section id="hero">'+contourSVG()+
     '<div style="position:relative"><div class="htag">'+esc(c.code)+' &middot; '+esc(c.institution||'Seneca Polytechnic')+' &middot; '+esc(c.mode||'Online reference')+'</div>'+
     '<h1>'+esc(c.title||'')+'</h1><p class="hsub">'+esc(c.subtitle||'')+'. Read, watch, and work through the course materials, with tools that help the ideas take hold.</p>'+
@@ -185,11 +182,9 @@ function weekView(n){
   function sec(id,title,inner){ return '<section id="sec-'+id+'" class="card" style="scroll-margin-top:14px" aria-labelledby="h-'+id+'"><h2 id="h-'+id+'" style="margin-top:0">'+esc(title)+'</h2>'+inner+'</section>'; }
   function li(x){ return '<li>'+esc(x)+'</li>'; }
   var head='<a class="btn btn-quiet" href="#/home">&#8592; All weeks</a><p class="eyebrow" style="margin-top:14px">Week '+pad(n)+' &middot; <span style="color:'+p.accent+'">'+esc(p.name)+'</span></p><h1>'+esc(wk.title||'')+'</h1><p><span class="tag" style="background:'+p.fill+'"><span class="dot" style="background:'+p.accent+'"></span>'+esc(wk.concept||'')+'</span></p>';
-  var defs=[['overview','Overview'],['purpose','Purpose and Learning Outcomes'],['guiding','Guiding Questions'],['concepts','Weekly Concepts'],['readings','Readings'],['slideshow','Interactive Slideshow'],['case','Case Study'],['reflect','Reflection Corner'],['references','References']];
+  var defs=[['overview','Overview'],['purpose','Purpose and Learning Outcomes'],['guiding','Guiding Questions'],['concepts','Weekly Concepts'],['readings','Readings'],['slideshow','Interactive Slideshow'],['reflect','Reflection Corner'],['references','References']];
   var jump='<nav class="section-tabs" aria-label="On this page">'+defs.map(function(s){return '<button data-action="jump" data-target="sec-'+s[0]+'">'+esc(s[1])+'</button>';}).join('')+'</nav>';
   var pu=wk.purpose||{statement:[],outcomes:[]};
-  var wcases=(D.cases||[]).filter(function(c){return (c.weeks||[]).indexOf(n)>=0;});
-  var caseInner=wcases.length?wcases.map(function(c){return '<div style="margin-bottom:14px"><div class="eyebrow">'+esc(c.concept||'')+' &middot; '+esc(c.where||'')+'</div><b>'+esc(c.title)+'</b><p style="margin:.3em 0 0">'+esc(c.summary)+'</p></div>';}).join(''):'<p class="muted">A case study for this week will appear here.</p>';
   var s=
     sec('overview','Overview', (wk.overview&&wk.overview.length)?structList(wk.overview):'<p class="muted">Overview coming soon.</p>')+
     sec('purpose','Purpose and Learning Outcomes', ((pu.statement||[]).map(function(x){return '<p>'+esc(x)+'</p>';}).join(''))+((pu.outcomes&&pu.outcomes.length)?'<div class="eyebrow">By the end of this week you will be able to:</div><ul style="line-height:1.7">'+pu.outcomes.map(li).join('')+'</ul>':''))+
@@ -197,7 +192,6 @@ function weekView(n){
     sec('concepts','Weekly Concepts', (wk.concepts&&wk.concepts.length)?wk.concepts.map(function(c,ci){return '<div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--hair)"><h3 style="margin:0 0 .4em">'+esc((ci+1)+'. '+c.term)+'</h3>'+((c.paras||[]).map(function(x){return '<p style="margin:.5em 0">'+esc(x)+'</p>';}).join(''))+((c.cites&&c.cites.length)?'<p class="cite"><b>Reference (APA 7th):</b><br>'+c.cites.map(function(x){return esc(x);}).join('<br>')+'</p>':'')+'</div>';}).join(''):'<p class="muted">Concepts coming soon.</p>')+
     sec('readings','Readings', (function(){var rs=wk.readings||[];if(!rs.length)return '<p class="muted">Readings will be listed here.</p>';return rs.map(function(r){if(r.type==='head')return '<h4 style="margin:16px 0 6px">'+esc(r.text)+'</h4>';if(r.type==='video')return '<div class="reading">'+(r.label?'<p style="margin:0 0 8px"><b>'+esc(r.label)+'</b></p>':'')+readingMedia(r)+'</div>';if(r.type==='cite')return '<div class="reading"><p style="margin:0 0 .4em">'+linkify(r.text)+'</p>'+readingLink(r)+'</div>';return '<p style="margin:.45em 0">'+esc(r.text)+'</p>';}).join('');})())+
     sec('slideshow','Interactive Slideshow', slideBlock(wk)+'<h3 style="margin-top:18px">Narrated walkthrough</h3>'+videoBlock(wk)+'<div class="notebar" style="margin-top:12px"><b>Pause and notice.</b> As you move through the slides, stop on one that surprises you and ask: who does this system assume I am, and who does it leave out?</div>')+
-    sec('case','Case Study', caseInner)+
     sec('reflect','Reflection Corner', '<p class="muted">One question to carry through the whole course. It is not a quiz. There is no right answer. It is here to make you think.</p><blockquote style="border-left:4px solid '+p.accent+';margin:14px 0 0;padding:6px 0 6px 18px;font-size:1.2rem;line-height:1.5">'+esc((D.course||{}).reflectionQuestion||'')+'</blockquote>')+
     sec('references','References', (function(){var rf=wk.references||[];return rf.length?rf.map(function(r){return '<div class="reading"><p style="margin:0">'+linkify(r)+'</p></div>';}).join(''):'<p class="muted">References will be listed here.</p>';})());
   var cta='<div class="card"><div class="eyebrow">Make it yours</div><p>'+esc(wk.mapPrompt||'Add a moment from your own digital life to your Living Cartography this week.')+'</p><a class="btn btn-primary" href="#/cartography?week='+n+'">Add this week to your Living Cartography</a></div>';
@@ -245,16 +239,6 @@ function cardGrid(wk){
   return '<div class="grid grid-2">'+cs.map(function(c){return '<div class="flip" data-action="flip" tabindex="0" role="button" aria-label="Flashcard: '+esc(c.front)+'. Activate to flip."><div class="flip-inner"><div class="flip-face"><div class="eyebrow">Recall</div><b style="font-size:1.1rem">'+esc(c.front)+'</b><span class="muted" style="margin-top:auto;font-size:.8rem">Click to flip</span></div><div class="flip-face flip-back"><div class="eyebrow">Definition</div><p style="margin:0">'+esc(c.back)+'</p></div></div></div>';}).join('')+'</div>';
 }
 
-/* ---------- case studies ---------- */
-function cases(){
-  return '<h1>Case studies</h1><p class="lede">Real Canadian examples of techno-racism, as worked cases you can connect to the concepts.</p>'+(D.cases||[]).map(function(c){return '<div class="card"><div class="eyebrow">'+esc(c.concept||'')+' &middot; '+esc(c.where||'')+'</div><h3 style="margin:.2em 0 .4em">'+esc(c.title)+'</h3><p style="margin:0 0 .6em">'+esc(c.summary)+'</p><div class="mono" style="font-size:.72rem;color:#54585A">Weeks: '+(c.weeks||[]).map(function(n){return '<a href="#/week/'+n+'">W'+pad(n)+'</a>';}).join(', ')+'</div></div>';}).join('');
-}
-
-function assignments(){
-  var as=D.assignments||[];
-  return '<h1>Assignments</h1><p class="lede">A preparation overview for the main course tasks. Use this page to plan your work, then use Blackboard for official instructions, submission, and course records.</p>'+as.map(function(a){return '<div class="card"><div class="eyebrow">Blackboard task</div><h3 style="margin:.1em 0 .4em">'+esc(a.name)+'</h3><p style="margin:0">'+esc(a.blurb||'')+'</p></div>';}).join('')+'<div class="card"><div class="eyebrow">Where you hand in</div><p style="margin:0">All official instructions and submission points live in Blackboard. This page is a preparation guide.</p></div>';
-}
-
 /* ---------- living cartography (visual + save) ---------- */
 function cartography(){
   var pre=(location.hash.split('?week=')[1])||'';
@@ -294,8 +278,6 @@ function render(){
   else if(path==='glossary'){ active='glossary'; html=glossary(); }
   else if(path==='cartography'){ active='cartography'; html=cartography(); }
   else if(path==='cards'){ active='cards'; html=cards(); }
-  else if(path==='cases'){ active='cases'; html=cases(); }
-  else if(path==='assignments'){ active='assignments'; html=assignments(); }
   else { active='home'; html=home(); }
   renderNav(active); MAIN.innerHTML=html; MAIN.focus(); window.scrollTo(0,0);
 }
