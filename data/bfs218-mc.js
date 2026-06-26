@@ -8,7 +8,8 @@ window.BFS218_MC = {
     "A law passed to replace the original Jim Crow segregation statutes"
    ],
    "answer": 0,
-   "why": "Benjamin's exact definition is the employment of new technologies that reflect and reproduce existing inequities but are promoted and perceived as more objective or progressive than the discriminatory systems of a previous era."
+   "why": "Benjamin's exact definition is the employment of new technologies that reflect and reproduce existing inequities but are promoted and perceived as more objective or progressive than the discriminatory systems of a previous era.",
+   "skill": "concepts"
   },
   {
    "q": "What are Benjamin's four dimensions of the New Jim Code?",
@@ -18,7 +19,8 @@ window.BFS218_MC = {
     "Hardware, software, network, and data"
    ],
    "answer": 1,
-   "why": "The book develops the New Jim Code through four dimensions: engineered inequity, default discrimination, coded exposure, and technological benevolence."
+   "why": "The book develops the New Jim Code through four dimensions: engineered inequity, default discrimination, coded exposure, and technological benevolence.",
+   "skill": "concepts"
   },
   {
    "q": "What does the subtitle, Abolitionist Tools, signal about Benjamin's response to techno-racism?",
@@ -28,7 +30,8 @@ window.BFS218_MC = {
     "Refuse the unjust system and build a just alternative, rather than reform a biased system to run more smoothly"
    ],
    "answer": 2,
-   "why": "An abolitionist tool, in Benjamin's framing, refuses the unjust system and helps build a just alternative, as opposed to a reform that preserves the structure."
+   "why": "An abolitionist tool, in Benjamin's framing, refuses the unjust system and helps build a just alternative, as opposed to a reform that preserves the structure.",
+   "skill": "argument"
   },
   {
    "q": "According to Benjamin, can a system carry racism forward without anyone intending it?",
@@ -38,7 +41,8 @@ window.BFS218_MC = {
     "No, racist outcomes always require a racist person making each decision"
    ],
    "answer": 0,
-   "why": "Benjamin shows that a system can carry racism forward by design without any individual intending it, which is why she studies design rather than intent."
+   "why": "Benjamin shows that a system can carry racism forward by design without any individual intending it, which is why she studies design rather than intent.",
+   "skill": "argument"
   },
   {
    "q": "What role does Race After Technology play in BFS218?",
@@ -48,7 +52,8 @@ window.BFS218_MC = {
     "It is an optional supplementary reading mentioned only in passing"
    ],
    "answer": 1,
-   "why": "The abstract states the book is the spine of the course, with its four dimensions forming the framework other readings connect to."
+   "why": "The abstract states the book is the spine of the course, with its four dimensions forming the framework other readings connect to.",
+   "skill": "significance"
   }
  ],
  "crenshaw1991": [
@@ -60,7 +65,8 @@ window.BFS218_MC = {
     "Identity categories should be studied strictly one at a time for accuracy"
    ],
    "answer": 0,
-   "why": "Crenshaw shows that women of color sit at the intersection of race and gender and are missed by single-axis analysis, which is the core intersectional move."
+   "why": "Crenshaw shows that women of color sit at the intersection of race and gender and are missed by single-axis analysis, which is the core intersectional move.",
+   "skill": "argument"
   },
   {
    "q": "Why does BFS218 read Crenshaw before studying technology?",
@@ -70,7 +76,8 @@ window.BFS218_MC = {
     "Because Crenshaw built the first facial-recognition system"
    ],
    "answer": 1,
-   "why": "The course uses Crenshaw's lens to ask not only how race shapes technology but how race, gender, and class shape it together."
+   "why": "The course uses Crenshaw's lens to ask not only how race shapes technology but how race, gender, and class shape it together.",
+   "skill": "significance"
   },
   {
    "q": "Crenshaw's essay is a cornerstone of which framework?",
@@ -80,7 +87,8 @@ window.BFS218_MC = {
     "Critical race theory"
    ],
    "answer": 2,
-   "why": "Mapping the Margins is a cornerstone of critical race theory, which holds that racism is ordinary and structural."
+   "why": "Mapping the Margins is a cornerstone of critical race theory, which holds that racism is ordinary and structural.",
+   "skill": "concepts"
   },
   {
    "q": "Whose experience is at the centre of Crenshaw's argument in Mapping the Margins?",
@@ -90,7 +98,8 @@ window.BFS218_MC = {
     "White women facing gender discrimination alone"
    ],
    "answer": 0,
-   "why": "Crenshaw argues that violence against women of color cannot be understood by looking at race or gender one at a time, because those women sit at the intersection of both."
+   "why": "Crenshaw argues that violence against women of color cannot be understood by looking at race or gender one at a time, because those women sit at the intersection of both.",
+   "skill": "context"
   },
   {
    "q": "What does a single-axis analysis do to the people Crenshaw is concerned with?",
@@ -100,7 +109,8 @@ window.BFS218_MC = {
     "It overstates the harm they face compared to other groups"
    ],
    "answer": 1,
-   "why": "Crenshaw shows that women hit hardest fall through the gaps of single-axis analysis, which is why intersectionality looks where systems overlap."
+   "why": "Crenshaw shows that women hit hardest fall through the gaps of single-axis analysis, which is why intersectionality looks where systems overlap.",
+   "skill": "argument"
   }
  ],
  "noble2018": [
@@ -112,7 +122,8 @@ window.BFS218_MC = {
     "They refused to return any results about race"
    ],
    "answer": 0,
-   "why": "Noble shows that search engines, presented as neutral information tools, returned demeaning and stereotyped results for Black women and girls."
+   "why": "Noble shows that search engines, presented as neutral information tools, returned demeaning and stereotyped results for Black women and girls.",
+   "skill": "argument"
   },
   {
    "q": "How does Noble's argument relate to Benjamin's?",
@@ -122,7 +133,8 @@ window.BFS218_MC = {
     "Noble argues the problem is purely individual prejudice"
    ],
    "answer": 1,
-   "why": "Noble's work pairs with Benjamin's to show that the problem is structural rather than a one-off glitch."
+   "why": "Noble's work pairs with Benjamin's to show that the problem is structural rather than a one-off glitch.",
+   "skill": "significance"
   },
   {
    "q": "What makes a supposedly neutral search tool able to carry bias forward?",
@@ -132,7 +144,8 @@ window.BFS218_MC = {
     "Users trust it to be fair, so the neutral framing hides the bias in its ranking and data"
    ],
    "answer": 2,
-   "why": "Noble's point is that the appearance of neutrality is part of the harm, because a trusted, supposedly objective tool can encode racism at scale."
+   "why": "Noble's point is that the appearance of neutrality is part of the harm, because a trusted, supposedly objective tool can encode racism at scale.",
+   "skill": "concepts"
   },
   {
    "q": "Where does Noble locate the racism she documents in search engines?",
@@ -142,7 +155,8 @@ window.BFS218_MC = {
     "In a small number of malicious individual users"
    ],
    "answer": 0,
-   "why": "Noble treats racism as built into ranking and data rather than as a one-off glitch, locating it in the design of the system itself."
+   "why": "Noble treats racism as built into ranking and data rather than as a one-off glitch, locating it in the design of the system itself.",
+   "skill": "argument"
   },
   {
    "q": "What does Noble suggest companies gain from how their systems sort information?",
@@ -152,7 +166,8 @@ window.BFS218_MC = {
     "They lose money whenever results are biased"
    ],
    "answer": 1,
-   "why": "The abstract notes the problem sits in the design of systems that profit from how they sort and surface information."
+   "why": "The abstract notes the problem sits in the design of systems that profit from how they sort and surface information.",
+   "skill": "concepts"
   }
  ],
  "buolamwini2018": [
@@ -164,7 +179,8 @@ window.BFS218_MC = {
     "All groups equally, at about 17 percent"
    ],
    "answer": 0,
-   "why": "Buolamwini and Gebru found darker-skinned women were the most misclassified group, with error rates up to 34.7 percent."
+   "why": "Buolamwini and Gebru found darker-skinned women were the most misclassified group, with error rates up to 34.7 percent.",
+   "skill": "argument"
   },
   {
    "q": "What was the maximum error rate for lighter-skinned men?",
@@ -174,7 +190,8 @@ window.BFS218_MC = {
     "34.7 percent"
    ],
    "answer": 1,
-   "why": "The study reports a maximum error rate of 0.8 percent for lighter-skinned males, against up to 34.7 percent for darker-skinned females."
+   "why": "The study reports a maximum error rate of 0.8 percent for lighter-skinned males, against up to 34.7 percent for darker-skinned females.",
+   "skill": "concepts"
   },
   {
    "q": "Why is the Gender Shades audit described as intersectional?",
@@ -184,7 +201,8 @@ window.BFS218_MC = {
     "The largest gap appeared at the overlap of darker skin and being a woman, not on either axis alone"
    ],
    "answer": 2,
-   "why": "The worst error appeared at the intersection of darker skin and being a woman, which a single-axis test would have missed, making it intersectional."
+   "why": "The worst error appeared at the intersection of darker skin and being a woman, which a single-axis test would have missed, making it intersectional.",
+   "skill": "concepts"
   },
   {
    "q": "How did Buolamwini and Gebru build the benchmark they used to test the systems?",
@@ -194,7 +212,8 @@ window.BFS218_MC = {
     "They reused an existing dataset that was mostly lighter-skinned men"
    ],
    "answer": 0,
-   "why": "The study built a facial-analysis benchmark balanced by gender and skin type, then tested three commercial systems against it."
+   "why": "The study built a facial-analysis benchmark balanced by gender and skin type, then tested three commercial systems against it.",
+   "skill": "concepts"
   },
   {
    "q": "Which course idea does the Gender Shades study ground?",
@@ -204,7 +223,8 @@ window.BFS218_MC = {
     "The OCAP principles of data governance"
    ],
    "answer": 1,
-   "why": "The abstract states the study grounds Benjamin's idea of the coded gaze with measured evidence."
+   "why": "The abstract states the study grounds Benjamin's idea of the coded gaze with measured evidence.",
+   "skill": "significance"
   }
  ],
  "opc2021": [
@@ -216,7 +236,8 @@ window.BFS218_MC = {
     "It could not be investigated under Canadian law"
    ],
    "answer": 0,
-   "why": "The special report found that the RCMP's use of Clearview AI facial recognition violated federal privacy law."
+   "why": "The special report found that the RCMP's use of Clearview AI facial recognition violated federal privacy law.",
+   "skill": "argument"
   },
   {
    "q": "Besides the Clearview finding, what else did the report provide?",
@@ -226,7 +247,8 @@ window.BFS218_MC = {
     "A purchase order for new facial-recognition cameras"
    ],
    "answer": 1,
-   "why": "The report paired the investigation with draft joint guidance for law enforcement agencies considering the use of facial recognition technology."
+   "why": "The report paired the investigation with draft joint guidance for law enforcement agencies considering the use of facial recognition technology.",
+   "skill": "concepts"
   },
   {
    "q": "What broader pattern does the Clearview case illustrate in the course?",
@@ -236,7 +258,8 @@ window.BFS218_MC = {
     "A surveillance tool named unlawful only after it had already been deployed"
    ],
    "answer": 2,
-   "why": "The case shows oversight arriving after the fact, a tool found unlawful only once it had already been used."
+   "why": "The case shows oversight arriving after the fact, a tool found unlawful only once it had already been used.",
+   "skill": "significance"
   },
   {
    "q": "To whom was this special report directed?",
@@ -246,7 +269,8 @@ window.BFS218_MC = {
     "A provincial small-claims court"
    ],
    "answer": 0,
-   "why": "The abstract identifies the document as a special report to Parliament on the Privacy Commissioner's investigation."
+   "why": "The abstract identifies the document as a special report to Parliament on the Privacy Commissioner's investigation.",
+   "skill": "context"
   },
   {
    "q": "How does the report function within the Canadian week of BFS218?",
@@ -256,7 +280,8 @@ window.BFS218_MC = {
     "As a vendor brochure promoting facial recognition"
    ],
    "answer": 1,
-   "why": "The abstract states the report anchors the Canadian week as one of two domestic examples of the New Jim Code meeting Canadian law."
+   "why": "The abstract states the report anchors the Canadian week as one of two domestic examples of the New Jim Code meeting Canadian law.",
+   "skill": "significance"
   }
  ],
  "singh2021": [
@@ -268,7 +293,8 @@ window.BFS218_MC = {
     "These tools have never been used by Canadian police"
    ],
    "answer": 0,
-   "why": "Singh argues that surveillance technologies have been authorized under Supreme Court jurisprudence and common-law authorities rather than legislation."
+   "why": "Singh argues that surveillance technologies have been authorized under Supreme Court jurisprudence and common-law authorities rather than legislation.",
+   "skill": "argument"
   },
   {
    "q": "Who does Singh say bears the disproportionate consequences of these tools?",
@@ -278,7 +304,8 @@ window.BFS218_MC = {
     "Senior police administrators"
    ],
    "answer": 1,
-   "why": "Singh notes the consequences disproportionately affect people of colour and warns of serious potential harm to Canada's most vulnerable populations."
+   "why": "Singh notes the consequences disproportionately affect people of colour and warns of serious potential harm to Canada's most vulnerable populations.",
+   "skill": "concepts"
   },
   {
    "q": "What does Singh call on legislators to do?",
@@ -288,7 +315,8 @@ window.BFS218_MC = {
     "Enact dedicated legislation to govern the use of surveillance technologies in law enforcement"
    ],
    "answer": 2,
-   "why": "Singh calls on legislators to implement dedicated legislation governing surveillance technologies, with a focus on algorithmic policing tools."
+   "why": "Singh calls on legislators to implement dedicated legislation governing surveillance technologies, with a focus on algorithmic policing tools.",
+   "skill": "significance"
   },
   {
    "q": "What do the algorithmic tools Singh examines do with facial images?",
@@ -298,7 +326,8 @@ window.BFS218_MC = {
     "Store them only on the individual officer's phone"
    ],
    "answer": 0,
-   "why": "Singh examines tools that connect facial images to scattered public and private databases to identify people and predict future trends."
+   "why": "Singh examines tools that connect facial images to scattered public and private databases to identify people and predict future trends.",
+   "skill": "concepts"
   },
   {
    "q": "Which right does Singh say the legislative gap leaves exposed?",
@@ -308,7 +337,8 @@ window.BFS218_MC = {
     "Copyright in police training material"
    ],
    "answer": 1,
-   "why": "Singh argues that authorizing these tools through court rulings rather than statute leaves Charter rights exposed."
+   "why": "Singh argues that authorizing these tools through court rulings rather than statute leaves Charter rights exposed.",
+   "skill": "concepts"
   }
  ],
  "robertson2020": [
@@ -320,7 +350,8 @@ window.BFS218_MC = {
     "A social-media company's policy team"
    ],
    "answer": 0,
-   "why": "The report is the result of work by the University of Toronto's International Human Rights Program and the Citizen Lab at the Munk School."
+   "why": "The report is the result of work by the University of Toronto's International Human Rights Program and the Citizen Lab at the Munk School.",
+   "skill": "context"
   },
   {
    "q": "What kind of analysis does the report apply to algorithmic policing?",
@@ -330,7 +361,8 @@ window.BFS218_MC = {
     "A marketing analysis of police technology vendors"
    ],
    "answer": 1,
-   "why": "The report gives a human-rights analysis, warning of serious risks to Charter rights such as privacy and equality."
+   "why": "The report gives a human-rights analysis, warning of serious risks to Charter rights such as privacy and equality.",
+   "skill": "concepts"
   },
   {
    "q": "Who does the report say bears the disproportionate burden of these tools?",
@@ -340,7 +372,8 @@ window.BFS218_MC = {
     "Racialized and marginalized communities"
    ],
    "answer": 2,
-   "why": "The report finds that the burden of algorithmic policing falls disproportionately on racialized and marginalized communities."
+   "why": "The report finds that the burden of algorithmic policing falls disproportionately on racialized and marginalized communities.",
+   "skill": "concepts"
   },
   {
    "q": "Which three forms of algorithmic policing does the report document?",
@@ -350,7 +383,8 @@ window.BFS218_MC = {
     "Traffic cameras, parking meters, and noise sensors"
    ],
    "answer": 0,
-   "why": "The report documents predictive policing, facial recognition, and algorithmic social-media surveillance."
+   "why": "The report documents predictive policing, facial recognition, and algorithmic social-media surveillance.",
+   "skill": "concepts"
   },
   {
    "q": "What does the report say about the timing of these tools relative to legal limits?",
@@ -360,7 +394,8 @@ window.BFS218_MC = {
     "They were adopted only after Parliament passed detailed rules"
    ],
    "answer": 1,
-   "why": "The abstract describes the report as a leading source on how policing technologies were adopted ahead of clear legal limits."
+   "why": "The abstract describes the report as a leading source on how policing technologies were adopted ahead of clear legal limits.",
+   "skill": "significance"
   }
  ],
  "molnar2023": [
@@ -372,7 +407,8 @@ window.BFS218_MC = {
     "Voluntary community-led design projects"
    ],
    "answer": 0,
-   "why": "Molnar describes these systems as digital border technologies that operate through logics of exclusion."
+   "why": "Molnar describes these systems as digital border technologies that operate through logics of exclusion.",
+   "skill": "concepts"
   },
   {
    "q": "Who does Molnar say is often the testing ground for these tools?",
@@ -382,7 +418,8 @@ window.BFS218_MC = {
     "Senior government officials"
    ],
    "answer": 1,
-   "why": "Molnar shows migrants and refugees, with the least power to refuse, used as the testing ground for tools that later spread more widely."
+   "why": "Molnar shows migrants and refugees, with the least power to refuse, used as the testing ground for tools that later spread more widely.",
+   "skill": "concepts"
   },
   {
    "q": "How does Molnar describe the relationship between racism, technology, and borders?",
@@ -392,7 +429,8 @@ window.BFS218_MC = {
     "A cruel intersection"
    ],
    "answer": 2,
-   "why": "Molnar frames racism, technology, and borders as a cruel intersection where people on the move are caught in harmful, unregulated technologies."
+   "why": "Molnar frames racism, technology, and borders as a cruel intersection where people on the move are caught in harmful, unregulated technologies.",
+   "skill": "argument"
   },
   {
    "q": "Which examples does Molnar use to illustrate digital border technologies?",
@@ -402,7 +440,8 @@ window.BFS218_MC = {
     "Home smart speakers and fitness trackers"
    ],
    "answer": 0,
-   "why": "Molnar points to drones, AI lie detectors, and robodogs at the United States and Mexico border as examples of these tools."
+   "why": "Molnar points to drones, AI lie detectors, and robodogs at the United States and Mexico border as examples of these tools.",
+   "skill": "concepts"
   },
   {
    "q": "Where is Petra Molnar based?",
@@ -412,7 +451,8 @@ window.BFS218_MC = {
     "The Office of the Privacy Commissioner of Canada"
    ],
    "answer": 1,
-   "why": "The abstract identifies Molnar as being with the Refugee Law Lab at York University."
+   "why": "The abstract identifies Molnar as being with the Refugee Law Lab at York University.",
+   "skill": "context"
   }
  ],
  "mohamed2020": [
@@ -424,7 +464,8 @@ window.BFS218_MC = {
     "A refusal to study power at all"
    ],
    "answer": 0,
-   "why": "The paper argues that critical science, and in particular postcolonial and decolonial theories, should help understand and shape advances in AI."
+   "why": "The paper argues that critical science, and in particular postcolonial and decolonial theories, should help understand and shape advances in AI.",
+   "skill": "argument"
   },
   {
    "q": "What danger do the authors warn about?",
@@ -434,7 +475,8 @@ window.BFS218_MC = {
     "That AI will become too transparent"
    ],
    "answer": 1,
-   "why": "They highlight problematic applications that are instances of coloniality and warn against imposing systems on already vulnerable peoples."
+   "why": "They highlight problematic applications that are instances of coloniality and warn against imposing systems on already vulnerable peoples.",
+   "skill": "concepts"
   },
   {
    "q": "What do the authors propose to build a decolonial field of AI?",
@@ -444,7 +486,8 @@ window.BFS218_MC = {
     "A critical technical practice, reverse tutelage and pedagogies, and renewed affective and political communities"
    ],
    "answer": 2,
-   "why": "They submit three tactics: creating a critical technical practice of AI, seeking reverse tutelage and pedagogies, and renewing affective and political communities."
+   "why": "They submit three tactics: creating a critical technical practice of AI, seeking reverse tutelage and pedagogies, and renewing affective and political communities.",
+   "skill": "concepts"
   },
   {
    "q": "What tool do Mohamed, Png, and Isaac use to see patterns of power in technology?",
@@ -454,7 +497,8 @@ window.BFS218_MC = {
     "Real-time profit forecasts from industry"
    ],
    "answer": 0,
-   "why": "The authors use historical hindsight, grounded in postcolonial and decolonial theory, to see patterns of power that shape technology."
+   "why": "The authors use historical hindsight, grounded in postcolonial and decolonial theory, to see patterns of power that shape technology.",
+   "skill": "concepts"
   },
   {
    "q": "What is the stated aim of the authors' approach?",
@@ -464,7 +508,8 @@ window.BFS218_MC = {
     "To speed up deployment regardless of who is affected"
    ],
    "answer": 1,
-   "why": "The abstract states the aim is to centre those who bear the brunt of technological harm."
+   "why": "The abstract states the aim is to centre those who bear the brunt of technological harm.",
+   "skill": "significance"
   }
  ],
  "smillie2005": [
@@ -476,7 +521,8 @@ window.BFS218_MC = {
     "Whether social media should be banned"
    ],
    "answer": 0,
-   "why": "The paper asks whether the internet is a viable resource for Indigenous women in remote communities to access health resources and other information."
+   "why": "The paper asks whether the internet is a viable resource for Indigenous women in remote communities to access health resources and other information.",
+   "skill": "argument"
   },
   {
    "q": "What concept frames the access problem she describes?",
@@ -486,7 +532,8 @@ window.BFS218_MC = {
     "The benevolence trap"
    ],
    "answer": 1,
-   "why": "She examines the digital divide, the gap between those with ready access to information technology and those without it."
+   "why": "She examines the digital divide, the gap between those with ready access to information technology and those without it.",
+   "skill": "concepts"
   },
   {
    "q": "Along which lines does she say the digital divide runs?",
@@ -496,7 +543,8 @@ window.BFS218_MC = {
     "Income, education, geography, and race, among others"
    ],
    "answer": 2,
-   "why": "She describes the divide as running along social class, generational and racial lines, location, disability, and other categories."
+   "why": "She describes the divide as running along social class, generational and racial lines, location, disability, and other categories.",
+   "skill": "concepts"
   },
   {
    "q": "For which organization was Smillie-Adjarkwa's paper written?",
@@ -506,7 +554,8 @@ window.BFS218_MC = {
     "The Office of the Privacy Commissioner of Canada"
    ],
    "answer": 0,
-   "why": "The abstract states the paper was written for the National Network for Aboriginal Mental Health Research."
+   "why": "The abstract states the paper was written for the National Network for Aboriginal Mental Health Research.",
+   "skill": "context"
   },
   {
    "q": "Which countries does the paper consider when looking at Indigenous women's internet access?",
@@ -516,7 +565,8 @@ window.BFS218_MC = {
     "Canada, the United States, and Mexico"
    ],
    "answer": 1,
-   "why": "The paper asks whether the internet is a useful resource for Indigenous women in remote communities in Canada, Australia, and New Zealand."
+   "why": "The paper asks whether the internet is a useful resource for Indigenous women in remote communities in Canada, Australia, and New Zealand.",
+   "skill": "context"
   }
  ],
  "king2003": [
@@ -528,7 +578,8 @@ window.BFS218_MC = {
     "Stories should be replaced by data"
    ],
    "answer": 0,
-   "why": "King argues that stories are the means by which people make and hold their world, which is why narrative carries real power."
+   "why": "King argues that stories are the means by which people make and hold their world, which is why narrative carries real power.",
+   "skill": "argument"
   },
   {
    "q": "Why does BFS218 read King in the Indigenous data sovereignty week?",
@@ -538,7 +589,8 @@ window.BFS218_MC = {
     "To teach students to write fiction"
    ],
    "answer": 1,
-   "why": "The course reads the first lecture for the power of stories, connecting control over narrative to control over data."
+   "why": "The course reads the first lecture for the power of stories, connecting control over narrative to control over data.",
+   "skill": "significance"
   },
   {
    "q": "What distinction in King's background does the source note?",
@@ -548,7 +600,8 @@ window.BFS218_MC = {
     "He was the first lecturer of Native descent in the CBC Massey Lectures"
    ],
    "answer": 2,
-   "why": "The Massey Lectures note that King is the first Massey lecturer of Native descent."
+   "why": "The Massey Lectures note that King is the first Massey lecturer of Native descent.",
+   "skill": "context"
   },
   {
    "q": "How does King describe what stories actually are?",
@@ -558,7 +611,8 @@ window.BFS218_MC = {
     "A pleasant distraction with no bearing on real life"
    ],
    "answer": 0,
-   "why": "King argues that stories are not entertainment set apart from real life but the means by which people make, hold, and pass on their world."
+   "why": "King argues that stories are not entertainment set apart from real life but the means by which people make, hold, and pass on their world.",
+   "skill": "argument"
   },
   {
    "q": "In which lecture series did King deliver The Truth About Stories?",
@@ -568,7 +622,8 @@ window.BFS218_MC = {
     "A university computer-science seminar"
    ],
    "answer": 1,
-   "why": "The abstract identifies King as the first lecturer of Native descent in the CBC Massey Lectures."
+   "why": "The abstract identifies King as the first lecturer of Native descent in the CBC Massey Lectures.",
+   "skill": "context"
   }
  ],
  "devlin2023": [
@@ -580,7 +635,8 @@ window.BFS218_MC = {
     "It does not exist once the code is open source"
    ],
    "answer": 0,
-   "why": "Devlin argues that inequality in AI sits both within the algorithm and without it, in who builds these systems and who is subject to them."
+   "why": "Devlin argues that inequality in AI sits both within the algorithm and without it, in who builds these systems and who is subject to them.",
+   "skill": "argument"
   },
   {
    "q": "Which other author's account of search does Devlin's chapter pair with in the course?",
@@ -590,7 +646,8 @@ window.BFS218_MC = {
     "Petra Molnar's border research"
    ],
    "answer": 1,
-   "why": "The course pairs Devlin with Noble's Algorithms of Oppression to ground the gatekeeping week."
+   "why": "The course pairs Devlin with Noble's Algorithms of Oppression to ground the gatekeeping week.",
+   "skill": "context"
   },
   {
    "q": "What is the through-line of Devlin's chapter?",
@@ -600,7 +657,8 @@ window.BFS218_MC = {
     "Power: a tool can be biased in its outputs and reflect an unequal industry that decides what gets built"
    ],
    "answer": 2,
-   "why": "Devlin treats power as the through-line, connecting biased outputs to an unequal industry that decides what gets built and for whom."
+   "why": "Devlin treats power as the through-line, connecting biased outputs to an unequal industry that decides what gets built and for whom.",
+   "skill": "argument"
   },
   {
    "q": "What does Devlin treat as the through-line of inequality in AI?",
@@ -610,7 +668,8 @@ window.BFS218_MC = {
     "Screen design"
    ],
    "answer": 0,
-   "why": "The abstract states Devlin treats power as the through-line connecting biased outputs to an unequal industry."
+   "why": "The abstract states Devlin treats power as the through-line connecting biased outputs to an unequal industry.",
+   "skill": "concepts"
   },
   {
    "q": "From which volume does Devlin's chapter come?",
@@ -620,7 +679,8 @@ window.BFS218_MC = {
     "The CBC Massey Lectures"
    ],
    "answer": 1,
-   "why": "The abstract names the chapter as coming from the Handbook of Gender, Communication, and Women's Human Rights."
+   "why": "The abstract names the chapter as coming from the Handbook of Gender, Communication, and Women's Human Rights.",
+   "skill": "context"
   }
  ],
  "bird2023": [
@@ -632,7 +692,8 @@ window.BFS218_MC = {
     "Search-engine results for job titles"
    ],
    "answer": 0,
-   "why": "They investigated algorithmic bias in two models predicting course completion and degree completion for community college students."
+   "why": "They investigated algorithmic bias in two models predicting course completion and degree completion for community college students.",
+   "skill": "concepts"
   },
   {
    "q": "What did they find if such a model were used to target support to at-risk students?",
@@ -642,7 +703,8 @@ window.BFS218_MC = {
     "All students would receive identical support"
    ],
    "answer": 1,
-   "why": "They show that the bias would lead to fewer marginal Black students receiving additional supports."
+   "why": "They show that the bias would lead to fewer marginal Black students receiving additional supports.",
+   "skill": "argument"
   },
   {
    "q": "What does the study suggest about a model meant to help?",
@@ -652,7 +714,8 @@ window.BFS218_MC = {
     "It can quietly reinforce racial inequity in who gets flagged and supported"
    ],
    "answer": 2,
-   "why": "The study shows a model designed to help can reinforce racial inequities, and that the size of the bias shifts with how at-risk is defined."
+   "why": "The study shows a model designed to help can reinforce racial inequities, and that the size of the bias shifts with how at-risk is defined.",
+   "skill": "significance"
   },
   {
    "q": "In what setting did Bird, Castleman, and Song study predictive analytics?",
@@ -662,7 +725,8 @@ window.BFS218_MC = {
     "Hospital emergency-room triage"
    ],
    "answer": 0,
-   "why": "The study examined predictive analytics used in higher education to flag community college students as likely to succeed or struggle."
+   "why": "The study examined predictive analytics used in higher education to flag community college students as likely to succeed or struggle.",
+   "skill": "context"
   },
   {
    "q": "What did the authors find changes the size of the bias?",
@@ -672,7 +736,8 @@ window.BFS218_MC = {
     "The brand of computer running the model"
    ],
    "answer": 1,
-   "why": "The abstract states the size of the bias shifts depending on how at-risk is defined."
+   "why": "The abstract states the size of the bias shifts depending on how at-risk is defined.",
+   "skill": "concepts"
   }
  ],
  "tanksley2023": [
@@ -684,7 +749,8 @@ window.BFS218_MC = {
     "Government regulators only"
    ],
    "answer": 0,
-   "why": "Tanksley centres the voices, experiences, and technological innovations of Black youth in computer science education."
+   "why": "Tanksley centres the voices, experiences, and technological innovations of Black youth in computer science education.",
+   "skill": "concepts"
   },
   {
    "q": "What distinction does Tanksley's work model?",
@@ -694,7 +760,8 @@ window.BFS218_MC = {
     "Between hardware and software"
    ],
    "answer": 1,
-   "why": "Her abolitionist, critical race pedagogy models the difference between a reform that smooths the edges and a repair that changes power."
+   "why": "Her abolitionist, critical race pedagogy models the difference between a reform that smooths the edges and a repair that changes power.",
+   "skill": "concepts"
   },
   {
    "q": "What does Tanksley's work show about responding to techno-racism?",
@@ -704,7 +771,8 @@ window.BFS218_MC = {
     "It is constructive, not only critical: it builds an alternative practice"
    ],
    "answer": 2,
-   "why": "The work grounds the course claim that responding to techno-racism is constructive, reorganizing who is taught to build technology."
+   "why": "The work grounds the course claim that responding to techno-racism is constructive, reorganizing who is taught to build technology.",
+   "skill": "argument"
   },
   {
    "q": "In which field does Tanksley apply an abolitionist, critical race pedagogy?",
@@ -714,7 +782,8 @@ window.BFS218_MC = {
     "Border-security policy"
    ],
    "answer": 0,
-   "why": "Tanksley sets out an abolitionist, critical race pedagogy for computer science that centres Black youth."
+   "why": "Tanksley sets out an abolitionist, critical race pedagogy for computer science that centres Black youth.",
+   "skill": "context"
   },
   {
    "q": "How does Tanksley's pedagogy treat Black youth?",
@@ -724,7 +793,8 @@ window.BFS218_MC = {
     "As subjects to be studied but not consulted"
    ],
    "answer": 1,
-   "why": "The pedagogy treats Black youth as creators of technology rather than only its subjects."
+   "why": "The pedagogy treats Black youth as creators of technology rather than only its subjects.",
+   "skill": "argument"
   }
  ],
  "costanza2020": [
@@ -736,7 +806,8 @@ window.BFS218_MC = {
     "Standardize one global design for everyone"
    ],
    "answer": 0,
-   "why": "Design justice centres those directly impacted and prioritizes impact over the designer's intentions, through community-led practice."
+   "why": "Design justice centres those directly impacted and prioritizes impact over the designer's intentions, through community-led practice.",
+   "skill": "argument"
   },
   {
    "q": "Where does the design justice framework come from?",
@@ -746,7 +817,8 @@ window.BFS218_MC = {
     "A single technology company's style guide"
    ],
    "answer": 1,
-   "why": "The framework draws together the Design Justice Network principles in Costanza-Chock's 2020 book."
+   "why": "The framework draws together the Design Justice Network principles in Costanza-Chock's 2020 book.",
+   "skill": "context"
   },
   {
    "q": "Why does BFS218 read Design Justice in the resistance week?",
@@ -756,7 +828,8 @@ window.BFS218_MC = {
     "For a concrete model of what an alternative to the New Jim Code looks like"
    ],
    "answer": 2,
-   "why": "The course reads the Introduction and Network Principles for a concrete alternative to the New Jim Code, and returns to it in the closing weeks."
+   "why": "The course reads the Introduction and Network Principles for a concrete alternative to the New Jim Code, and returns to it in the closing weeks.",
+   "skill": "significance"
   },
   {
    "q": "Which parts of the book does BFS218 assign from Design Justice?",
@@ -766,7 +839,8 @@ window.BFS218_MC = {
     "Only the index and the bibliography"
    ],
    "answer": 0,
-   "why": "The abstract states the course reads the Introduction and the Network Principles for a concrete model of an alternative."
+   "why": "The abstract states the course reads the Introduction and the Network Principles for a concrete model of an alternative.",
+   "skill": "concepts"
   },
   {
    "q": "How does design justice treat community-led practice?",
@@ -776,7 +850,8 @@ window.BFS218_MC = {
     "As a barrier to good design"
    ],
    "answer": 1,
-   "why": "Among its commitments, design justice treats community-led practice as the way to build technology."
+   "why": "Among its commitments, design justice treats community-led practice as the way to build technology.",
+   "skill": "concepts"
   }
  ],
  "attard2023": [
@@ -788,7 +863,8 @@ window.BFS218_MC = {
     "Search-engine ranking for Black women"
    ],
    "answer": 0,
-   "why": "The brief explains how generative AI affects artists and creators and identifies gaps in the proposed AIDA, with recommendations."
+   "why": "The brief explains how generative AI affects artists and creators and identifies gaps in the proposed AIDA, with recommendations.",
+   "skill": "argument"
   },
   {
    "q": "To whom was the brief submitted?",
@@ -798,7 +874,8 @@ window.BFS218_MC = {
     "A private technology vendor"
    ],
    "answer": 1,
-   "why": "The brief is a submission to the Standing Committee on Industry and Technology in the Parliament of Canada."
+   "why": "The brief is a submission to the Standing Committee on Industry and Technology in the Parliament of Canada.",
+   "skill": "context"
   },
   {
    "q": "What is one recommendation the brief makes about AIDA?",
@@ -808,7 +885,8 @@ window.BFS218_MC = {
     "Remove AIDA from the legislative agenda until adequate public engagement has been conducted"
    ],
    "answer": 2,
-   "why": "One recommendation is to remove AIDA from the legislative agenda until adequate public engagement on AI legislation has taken place."
+   "why": "One recommendation is to remove AIDA from the legislative agenda until adequate public engagement on AI legislation has taken place.",
+   "skill": "significance"
   },
   {
    "q": "How many significant gaps in the proposed AIDA does Attard-Frost's brief identify?",
@@ -818,7 +896,8 @@ window.BFS218_MC = {
     "Ten, with no recommendations"
    ],
    "answer": 0,
-   "why": "The brief identifies five significant gaps in the proposed Artificial Intelligence and Data Act, with five corresponding recommendations."
+   "why": "The brief identifies five significant gaps in the proposed Artificial Intelligence and Data Act, with five corresponding recommendations.",
+   "skill": "concepts"
   },
   {
    "q": "What is Blair Attard-Frost's stated background in the brief?",
@@ -828,7 +907,8 @@ window.BFS218_MC = {
     "A serving member of Parliament"
    ],
    "answer": 1,
-   "why": "The abstract identifies Attard-Frost as a doctoral candidate at the University of Toronto studying Canada's system of AI governance."
+   "why": "The abstract identifies Attard-Frost as a doctoral candidate at the University of Toronto studying Canada's system of AI governance.",
+   "skill": "context"
   }
  ]
 };
