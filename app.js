@@ -1150,9 +1150,20 @@
   function weekData(w) { var c = (D.course && D.course.code) || ''; return (WEEKPAGE[c] && WEEKPAGE[c][w]) || null; }
   function wkOptBtns(key) {
     var sel = state.wkCheck[key], opts = ['New to me', 'Getting it', 'I can'];
-    return opts.map(function (o, i) { var on = sel === i; return '<button onclick="SOC.wkCheck(\'' + key + '\',' + i + ')" aria-pressed="' + on + '" class="wk-opt' + (on ? ' on' : '') + '">' + o + '</button>'; }).join('');
+    return opts.map(function (o, i) { var on = sel === i; return '<button onclick="SOC.wkCheck(\'' + key + '\',' + i + ')" aria-pressed="' + on + '" title="' + (on ? 'Click again to clear this rating' : 'Set this rating') + '" class="wk-opt' + (on ? ' on' : '') + '">' + o + '</button>'; }).join('');
   }
   function wkOpts(key) { return '<div class="wk-opts" id="opts-' + key + '">' + wkOptBtns(key) + '</div>'; }
+  function refreshWeekChecks(w, d) {
+    if (!d) return;
+    ['pre', 'post'].forEach(function (ph) {
+      d.checks.forEach(function (c, i) {
+        var key = ph + '|' + w + '|' + i, el = document.getElementById('opts-' + key);
+        if (el) el.innerHTML = wkOptBtns(key);
+      });
+      var m = document.getElementById('wkmeter-' + ph + '-' + w);
+      if (m) m.innerHTML = checkMeter(w, ph, d);
+    });
+  }
   // a check is {t: a key idea from the week, look?: where to revisit it}. The student rates their OWN grasp:
   // New to me (0) / Getting it (1) / I can (2). This monitors understanding; there is no right or wrong.
   function checkText(c) { return (typeof c === 'string') ? c : c.t; }
@@ -1199,7 +1210,9 @@
   }
   function wkChecks(w, phase, d) {
     var qs = d.checks.map(function (c, i) { return '<div class="wk-q">' + (i + 1) + '. ' + esc(checkText(c)) + wkOpts(phase + '|' + w + '|' + i) + '</div>'; }).join('');
-    return qs + '<div id="wkmeter-' + phase + '-' + w + '">' + checkMeter(w, phase, d) + '</div>';
+    var label = phase === 'pre' ? 'Before' : 'Now';
+    var reset = '<div class="wk-resetrow"><button onclick="SOC.wkClear(' + w + ',\'' + phase + '\')" class="wk-reset">Reset ' + label + ' ratings</button><span>Click a selected rating again to clear only that idea.</span></div>';
+    return qs + reset + '<div id="wkmeter-' + phase + '-' + w + '">' + checkMeter(w, phase, d) + '</div>';
   }
   function weekPage(w, d) {
     var ws = journeyWeeks(), idx = ws.indexOf(w), prev = idx > 0 ? ws[idx - 1] : null, next = idx < ws.length - 1 ? ws[idx + 1] : null;
@@ -1448,10 +1461,16 @@
     rcClear: function () { state.rcReading = null; render(); topScroll(); },
     rcNote: function (k, v) { state.rcNotes[k] = v; persist(); },
     wkCheck: function (k, o) {
-      state.wkCheck[k] = o; persist();
+      if (state.wkCheck[k] === o) delete state.wkCheck[k]; else state.wkCheck[k] = o;
+      persist();
       var el = document.getElementById('opts-' + k); if (el) el.innerHTML = wkOptBtns(k);
       var parts = k.split('|'), w = +parts[1], d = weekData(w);
-      if (d) ['pre', 'post'].forEach(function (ph) { var m = document.getElementById('wkmeter-' + ph + '-' + w); if (m) m.innerHTML = checkMeter(w, ph, d); });
+      refreshWeekChecks(w, d);
+    },
+    wkClear: function (w, phase) {
+      var d = weekData(w); if (!d) return;
+      d.checks.forEach(function (c, i) { delete state.wkCheck[phase + '|' + w + '|' + i]; });
+      persist(); refreshWeekChecks(w, d);
     },
     wkReflect: function (w, v) { state.wkReflect[w] = v; persist(); },
     actPick: function (key, idx) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; state.act[key] = idx; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
