@@ -3,6 +3,7 @@ window.BFS218 = {
   "code": "BFS218",
   "name": "Racism and the Digital Age: Understanding Techno-Racism",
   "frame": "",
+  "mode": "Online Asynchronous",
   "blackboardNote": "A companion to Blackboard. Official records, discussion, and submission live in Blackboard."
  },
  "themes": {
@@ -397,7 +398,7 @@ window.BFS218 = {
    "week": 8,
    "abstract": "Written for the National Network for Aboriginal Mental Health Research, this paper examines the digital divide and asks whether the internet is a useful resource for Indigenous women in remote communities in Canada, Australia, and New Zealand to reach health information. It traces how the gap in access runs along lines of income, education, geography, and race, leaving many Indigenous communities with limited or unreliable connectivity. The work frames access itself, not only what runs on the network, as a question of equity.",
    "coreIdea": "Before any algorithm runs, the digital divide already limits whether Indigenous women in remote communities can get online at all.",
-   "url": "http://www.yorku.ca/anthna/DigitalDivide.pdf",
+   "url": "https://www.yorku.ca/anthna/DigitalDivide.pdf",
    "related": [
     "mohamed2020",
     "king2003"
@@ -630,7 +631,7 @@ window.BFS218 = {
   {
    "term": "The Coded Gaze",
    "def": "A term from Joy Buolamwini naming whose face a system is built to see. Buolamwini and Gebru's 2018 Gender Shades study measured it: facial-analysis systems were nearly perfect on lighter-skinned men but failed darker-skinned women far more often, with error rates up to about 35 percent.",
-   "cite": "Buolamwini, J., and Gebru, T. (2018). Gender Shades. Proceedings of Machine Learning Research, 81.",
+   "cite": "Buolamwini, J., and Gebru, T. (2018). Gender Shades. Proceedings of Machine Learning Research, 81, 77-91.",
    "week": 5
   },
   {
@@ -654,13 +655,13 @@ window.BFS218 = {
   {
    "term": "Indigenous Data Sovereignty",
    "def": "Indigenous data sovereignty is the principle that First Nations, Inuit, and Metis peoples have the right to govern the collection, ownership, and use of data about their own communities, lands, and knowledge. It reframes data from something extracted by outsiders to something a community holds and governs.",
-   "cite": "Course Key Concepts, Week 8.",
+   "cite": "First Nations Information Governance Centre. (2014). Ownership, control, access and possession (OCAP): The path to First Nations information governance.",
    "week": 8
   },
   {
    "term": "OCAP: Ownership, Control, Access, Possession",
    "def": "OCAP names four First Nations principles for data governance, stewarded by the First Nations Information Governance Centre. Ownership: a community collectively owns its information. Control: it controls how data about it is collected and used. Access: it can access data about itself. Possession: it physically holds or stewards that data.",
-   "cite": "First Nations Information Governance Centre (FNIGC), Week 8.",
+   "cite": "First Nations Information Governance Centre. (2014). Ownership, control, access and possession (OCAP): The path to First Nations information governance.",
    "week": 8
   },
   {
@@ -684,7 +685,7 @@ window.BFS218 = {
   {
    "term": "Algorithmic Gatekeeping",
    "def": "Algorithmic gatekeeping is the use of automated systems to decide who is granted access: who is hired, who is approved for credit, who is admitted or flagged in education. The gate operates at scale and at speed, and the person kept out often has no one to ask and no decision to appeal.",
-   "cite": "Course Key Concepts, Week 10.",
+   "cite": "Bird, K. A., Castleman, B. L., and Song, Y. (2023). Are algorithms biased in education? Exploring racial bias in predicting community college student success.",
    "week": 10
   },
   {
@@ -744,7 +745,7 @@ window.BFS218 = {
   {
    "term": "First Nations Information Governance Centre",
    "def": "The keeper of the OCAP principles, Ownership, Control, Access, and Possession, for First Nations data. The centre's work grounds Indigenous data sovereignty as a concrete governance practice rather than only a principle.",
-   "cite": "First Nations Information Governance Centre (FNIGC), Week 8.",
+   "cite": "First Nations Information Governance Centre. (2014). Ownership, control, access and possession (OCAP): The path to First Nations information governance.",
    "week": 8
   },
   {

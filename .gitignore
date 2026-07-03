@@ -1,7 +1,6 @@
 tools/
 data/*.json
 vendor/
-fonts/
 __pycache__/
 *.pyc
 _extracted/
