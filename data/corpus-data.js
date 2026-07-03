@@ -239,7 +239,12 @@ window.BFS218 = {
   {
    "id": "benjamin2019",
    "assigned": "Assigned by section each week (see the weekly schedule)",
-   "video": { "yt": "JahO1-saibU", "title": "Ruha Benjamin on \"The New Jim Code? Race, Carceral Technoscience, and Liberatory Imagination\"", "channel": "Othering & Belonging Institute", "scholar": "Ruha Benjamin" },
+   "video": {
+    "yt": "JahO1-saibU",
+    "title": "Ruha Benjamin on \"The New Jim Code? Race, Carceral Technoscience, and Liberatory Imagination\"",
+    "channel": "Othering & Belonging Institute",
+    "scholar": "Ruha Benjamin"
+   },
    "eye": "western",
    "type": "Book",
    "access": "course",
@@ -272,7 +277,12 @@ window.BFS218 = {
   {
    "id": "crenshaw1991",
    "assigned": "Assigned by section each week (see the weekly schedule)",
-   "video": { "yt": "akOe5-UsQ2o", "title": "The urgency of intersectionality | Kimberle Crenshaw | TED", "channel": "TED", "scholar": "Kimberle Crenshaw" },
+   "video": {
+    "yt": "akOe5-UsQ2o",
+    "title": "The urgency of intersectionality | Kimberle Crenshaw | TED",
+    "channel": "TED",
+    "scholar": "Kimberle Crenshaw"
+   },
    "eye": "western",
    "type": "Article",
    "access": "verified",
@@ -300,7 +310,12 @@ window.BFS218 = {
   {
    "id": "noble2018",
    "assigned": "Assigned by section each week (see the weekly schedule)",
-   "video": { "yt": "murg3Roch64", "title": "HTNM Lecture: Safiya Umoja Noble's \"Algorithms of Oppression: How Search Engines Reinforce Racism\"", "channel": "Berkeley Center for New Media", "scholar": "Safiya Umoja Noble" },
+   "video": {
+    "yt": "murg3Roch64",
+    "title": "HTNM Lecture: Safiya Umoja Noble's \"Algorithms of Oppression: How Search Engines Reinforce Racism\"",
+    "channel": "Berkeley Center for New Media",
+    "scholar": "Safiya Umoja Noble"
+   },
    "eye": "western",
    "type": "Chapter",
    "access": "open",
@@ -326,7 +341,12 @@ window.BFS218 = {
   },
   {
    "id": "buolamwini2018",
-   "video": { "yt": "UG_X_7g63rY", "title": "How I'm fighting bias in algorithms | Joy Buolamwini", "channel": "TED", "scholar": "Joy Buolamwini" },
+   "video": {
+    "yt": "UG_X_7g63rY",
+    "title": "How I'm fighting bias in algorithms | Joy Buolamwini",
+    "channel": "TED",
+    "scholar": "Joy Buolamwini"
+   },
    "eye": "western",
    "type": "Article",
    "access": "open",
@@ -409,7 +429,12 @@ window.BFS218 = {
   {
    "id": "robertson2020",
    "assigned": "Executive Summary and Part I",
-   "video": { "yt": "Dh7TKrVvnvM", "title": "To Surveil and Predict: A Human Rights Analysis of Algorithmic Policing in Canada", "channel": "Centre for Ethics", "scholar": "Kate Robertson and Cynthia Khoo (Citizen Lab)" },
+   "video": {
+    "yt": "Dh7TKrVvnvM",
+    "title": "To Surveil and Predict: A Human Rights Analysis of Algorithmic Policing in Canada",
+    "channel": "Centre for Ethics",
+    "scholar": "Kate Robertson and Cynthia Khoo (Citizen Lab)"
+   },
    "eye": "western",
    "type": "Report",
    "access": "open",
@@ -437,7 +462,12 @@ window.BFS218 = {
   },
   {
    "id": "molnar2023",
-   "video": { "yt": "_G5nwaJuWlM", "title": "New Border Tech: Interview with Petra Molnar", "channel": "Centre for Refugee Studies", "scholar": "Petra Molnar" },
+   "video": {
+    "yt": "_G5nwaJuWlM",
+    "title": "New Border Tech: Interview with Petra Molnar",
+    "channel": "Centre for Refugee Studies",
+    "scholar": "Petra Molnar"
+   },
    "eye": "western",
    "type": "Article",
    "access": "open",
@@ -465,7 +495,12 @@ window.BFS218 = {
   },
   {
    "id": "mohamed2020",
-   "video": { "yt": "Kc0tsGxgMPA", "title": "#TWIMLfest: Live Keynote Interview with Shakir Mohamed - #418", "channel": "The TWIML AI Podcast with Sam Charrington", "scholar": "Shakir Mohamed" },
+   "video": {
+    "yt": "Kc0tsGxgMPA",
+    "title": "#TWIMLfest: Live Keynote Interview with Shakir Mohamed - #418",
+    "channel": "The TWIML AI Podcast with Sam Charrington",
+    "scholar": "Shakir Mohamed"
+   },
    "eye": "western",
    "type": "Article",
    "access": "open",
@@ -543,7 +578,12 @@ window.BFS218 = {
   },
   {
    "id": "devlin2023",
-   "video": { "yt": "gpZZp6i-sTA", "title": "Reg Lecture: Dr Kate Devlin, Sex, AI, Robots and You", "channel": "The Register", "scholar": "Kate Devlin" },
+   "video": {
+    "yt": "gpZZp6i-sTA",
+    "title": "Reg Lecture: Dr Kate Devlin, Sex, AI, Robots and You",
+    "channel": "The Register",
+    "scholar": "Kate Devlin"
+   },
    "eye": "western",
    "type": "Chapter",
    "access": "open",
@@ -597,7 +637,12 @@ window.BFS218 = {
   },
   {
    "id": "tanksley2023",
-   "video": { "yt": "L1k5UwgTvdU", "title": "The Power and Potentiality of Abolitionist Tech | Dr. Tiera Tanksley | Black Study in Education Lab", "channel": "Black Study in Education Lab @ PSU", "scholar": "Tiera Tanksley" },
+   "video": {
+    "yt": "L1k5UwgTvdU",
+    "title": "The Power and Potentiality of Abolitionist Tech | Dr. Tiera Tanksley | Black Study in Education Lab",
+    "channel": "Black Study in Education Lab @ PSU",
+    "scholar": "Tiera Tanksley"
+   },
    "eye": "western",
    "type": "Article",
    "access": "open",
@@ -626,7 +671,12 @@ window.BFS218 = {
   {
    "id": "costanza2020",
    "assigned": "Design Justice, Introduction (pp.1-30)",
-   "video": { "yt": "SuVBJbyKrI4", "title": "Sasha Costanza-Chock - Community-Led Practices to Build the Worlds We Need | The Conference 2023", "channel": "The Conference / Media Evolution", "scholar": "Sasha Costanza-Chock" },
+   "video": {
+    "yt": "SuVBJbyKrI4",
+    "title": "Sasha Costanza-Chock - Community-Led Practices to Build the Worlds We Need | The Conference 2023",
+    "channel": "The Conference / Media Evolution",
+    "scholar": "Sasha Costanza-Chock"
+   },
    "eye": "western",
    "type": "Book",
    "access": "open",
