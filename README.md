@@ -1,4 +1,4 @@
-# BFS218 Companion (async Atlas)
+# BFS218 Companion (async)
 
 The reading room for **BFS218: Racism and the Digital Age (Understanding Techno-Racism)** at Seneca Polytechnic, Online Asynchronous section.
 
@@ -7,7 +7,7 @@ A student-facing source library on the shared corpus engine: search and filter t
 It is a **companion to Blackboard**, not a replacement. Official course records, discussion, grades, and submission live in Blackboard. No accounts, no grading, no student-to-student interaction, no analytics, no PDFs, and no reproduced reading text. Reading links point outward (open access, publisher, Seneca Library, or Blackboard).
 
 ## Single source with the sibling site
-This site and the Online Synchronous sibling (`bfs218-commons`, the Field Guide) share one engine and one content set. Pushing either repo propagates the shared parts (`app.js`, `data/corpus-data.js`, `data/bfs218-mc.js`, `walkthroughs/`) to the other via `BFS218/_shared/propagate.sh` (installed as a pre-push hook by `_shared/install_bidi_hooks.sh`). Each site keeps its own skin (`index.html`), its `course.mode` label, its favicon, and its README.
+This site and the Online Synchronous sibling (`bfs218-sync`, the Field Guide) share one engine and one content set. Pushing either repo propagates the shared parts (`app.js`, `data/corpus-data.js`, `data/bfs218-mc.js`, `walkthroughs/`) to the other via `BFS218/_shared/propagate.sh` (installed as a pre-push hook by `_shared/install_bidi_hooks.sh`). Each site keeps its own skin (`index.html`), its `course.mode` label, its favicon, and its README.
 
 ## Editing content
 Live data is `data/corpus-data.js` (one `window.BFS218` object) plus `data/bfs218-mc.js` (self-check banks). Weekly page copy lives in the `WEEKPAGE` block of `app.js`.
