@@ -89,6 +89,15 @@
   .wk-visual-pilot .wk-visual img{background:#fff}.wk-visual-explain{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}.wk-visual-card{border:1px solid var(--border);border-radius:10px;background:#FBFCFD;padding:12px 13px}.wk-visual-card .mono{font-size:.64rem;letter-spacing:.06em;color:var(--red);font-weight:700;margin-bottom:5px}.wk-visual-card h3{font-size:.94rem;margin:0 0 5px;color:var(--ink)}.wk-visual-card p{font-size:.82rem;line-height:1.5;color:var(--ink-dim);margin:0}
   @media(max-width:760px){.wk-visual-frames{grid-template-columns:repeat(2,minmax(0,1fr))}.wk-visual-frames span:last-child{grid-column:1/-1}}
   @media(max-width:760px){.wk-visual-explain{grid-template-columns:1fr}}
+  .wk-model-shell{position:relative;min-height:360px;border:1px solid rgba(27,42,74,.16);border-radius:15px;overflow:hidden;background:linear-gradient(180deg,#F9FBFC 0%,#E3ECF1 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.9)}
+  .wk-model-canvas{display:block;width:100%;height:100%;min-height:360px;touch-action:none}
+  .wk-model-note{position:absolute;left:14px;top:14px;max-width:min(390px,calc(100% - 28px));background:rgba(255,255,255,.9);border:1px solid rgba(27,42,74,.13);border-radius:11px;padding:10px 12px;box-shadow:0 8px 18px rgba(27,42,74,.1);backdrop-filter:blur(5px)}
+  .wk-model-note b{display:block;font-size:.78rem;color:var(--ink);margin-bottom:3px}.wk-model-note span{display:block;font-size:.74rem;line-height:1.4;color:var(--ink-dim)}
+  .wk-model-controls{position:absolute;left:14px;right:14px;bottom:14px;display:flex;gap:8px;flex-wrap:wrap}.wk-model-controls button{border:1px solid rgba(27,42,74,.2);background:rgba(255,255,255,.92);color:var(--ink);border-radius:9px;padding:7px 10px;font-size:.75rem;font-weight:700;box-shadow:0 6px 14px rgba(27,42,74,.1)}.wk-model-controls button.on{border-color:var(--red);background:#FBF4F3;color:var(--red)}
+  .wk-model-fallback{position:absolute;right:14px;top:14px;max-width:280px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:.78rem;line-height:1.4;color:var(--ink-dim)}
+  .wk-model-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}.wk-model-step{border:1px solid var(--border);border-radius:10px;background:#FBFCFD;padding:12px 13px}.wk-model-step .mono{font-size:.62rem;letter-spacing:.06em;color:var(--red);font-weight:700;margin-bottom:5px}.wk-model-step h3{font-size:.94rem;margin:0 0 5px;color:var(--ink)}.wk-model-step p{font-size:.82rem;line-height:1.5;color:var(--ink-dim);margin:0}
+  .activity-model{margin:0 0 18px}.activity-model .wk-model-shell{min-height:390px}.activity-how{border:1px solid var(--border);border-radius:12px;background:#F7F8FA;padding:13px 15px;margin:0 0 14px}.activity-how b{display:block;font-size:.82rem;color:var(--ink);margin-bottom:6px}.activity-how ol{margin:0;padding-left:20px}.activity-how li{font-size:.84rem;line-height:1.5;margin:4px 0;color:var(--ink-dim)}
+  @media(max-width:760px){.wk-model-steps{grid-template-columns:1fr}.wk-model-shell,.wk-model-canvas{min-height:420px}.wk-model-note{position:static;max-width:none;margin:0 0 8px}.wk-model-controls{position:static;padding:0 10px 10px;background:#E3ECF1}.wk-model-controls button{flex:1 1 120px}.activity-model .wk-model-shell{min-height:430px}}
   .wk-deck{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:#16213B}.wk-deck iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
   .wk-fs{display:inline-block;margin-top:10px;font-size:.82rem;font-weight:600;color:#1552D8;text-decoration:none}
   .wk-whatwhy{background:var(--soft);border-radius:11px;padding:14px 16px;margin:0 0 14px;font-size:.93rem;color:var(--ink-dim);line-height:1.6}.wk-whatwhy b{color:var(--ink)}
@@ -144,7 +153,8 @@
 <script src="./data/bfs218-career.js?v=3"></script>
 <script src="./data/seneca-programs.js?v=2"></script>
 <script src="./data/bfs218-lens.js?v=1"></script>
+<script src="./data/bfs218-visuals.js?v=1"></script>
 <script src="./data/videos.js?v=2"></script>
-<script src="./app.js?v=98"></script>
+<script src="./app.js?v=99"></script>
 </body>
 </html>

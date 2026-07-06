@@ -84,6 +84,7 @@
     glossWeek: 'all',
     glossSearch: '',
     auditView: resumeView0 ? (view0.auditView || 'errors') : 'errors',
+    visualView: {},
   };
   if (resumeView0) {
     state.activityReturn = cleanWeek(view0.activityReturn);
@@ -142,7 +143,23 @@
       try { sessionStorage.setItem(HKEY, '1'); sessionStorage.removeItem(VKEY); } catch (err) {}
     }
   }, true);
-  var refocusSearch = false, focusTarget = null, toastTimer = null, auditRenderStamp = 0, threePromise = null;
+  var refocusSearch = false, focusTarget = null, toastTimer = null, auditRenderStamp = 0, threePromise = null, modelCleanups = [];
+  function registerModelCleanup(fn) {
+    if (typeof fn === 'function') modelCleanups.push(fn);
+  }
+  function cleanupModels() {
+    var fns = modelCleanups.splice(0);
+    fns.forEach(function (fn) { try { fn(); } catch (e) {} });
+  }
+  function disposeThreeScene(scene) {
+    if (!scene || !scene.traverse) return;
+    scene.traverse(function (obj) {
+      if (obj.geometry && obj.geometry.dispose) obj.geometry.dispose();
+      var mat = obj.material;
+      if (Array.isArray(mat)) mat.forEach(function (m) { if (m && m.dispose) m.dispose(); });
+      else if (mat && mat.dispose) mat.dispose();
+    });
+  }
 
   /* ---------- helpers ---------- */
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -1060,14 +1077,15 @@
     });
   }
   function initAuditModel(THREE, canvas, stamp) {
-    if (!canvas || canvas.__auditInit) return;
+    if (!canvas || canvas.__auditInit || !canvas.isConnected || stamp !== auditRenderStamp) return;
     canvas.__auditInit = true;
     canvas.__auditStamp = stamp;
     var shell = canvas.parentNode, run = canvas.getAttribute('data-run') === '1';
     var slice = canvas.getAttribute('data-slice') || 'overall';
     var sys = GS.systems[Number(canvas.getAttribute('data-system-index')) || 0] || GS.systems[0];
     var view = canvas.getAttribute('data-view') || 'errors';
-    var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true, preserveDrawingBuffer: false });
+    canvas.__auditGL = renderer.getContext ? renderer.getContext() : null;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     if (THREE.SRGBColorSpace) renderer.outputColorSpace = THREE.SRGBColorSpace;
     var scene = new THREE.Scene();
@@ -1211,12 +1229,35 @@
     resize();
     var ro = window.ResizeObserver ? new ResizeObserver(resize) : null;
     if (ro) ro.observe(shell);
+    var disposed = false;
+    function cleanupAuditModel() {
+      if (disposed) return;
+      disposed = true;
+      if (ro) ro.disconnect();
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', upPointer);
+      canvas.removeEventListener('pointerdown', onPointer);
+      canvas.removeEventListener('pointermove', movePointer);
+      canvas.removeEventListener('pointerup', upPointer);
+      canvas.removeEventListener('pointercancel', upPointer);
+      canvas.removeEventListener('mousedown', onMouseDown);
+      shell.removeEventListener('pointerdown', onPointer);
+      shell.removeEventListener('mousedown', onMouseDown);
+      canvas.removeEventListener('touchstart', onTouchStart);
+      canvas.removeEventListener('touchmove', onTouchMove);
+      canvas.removeEventListener('touchend', upPointer);
+      shell.removeEventListener('touchstart', onTouchStart);
+      shell.removeEventListener('touchmove', onTouchMove);
+      shell.removeEventListener('touchend', upPointer);
+      disposeThreeScene(scene);
+      renderer.dispose();
+      if (renderer.forceContextLoss) renderer.forceContextLoss();
+      canvas.__auditGL = null;
+    }
+    registerModelCleanup(cleanupAuditModel);
     function animate() {
       if (!canvas.isConnected || canvas.__auditStamp !== auditRenderStamp) {
-        if (ro) ro.disconnect();
-        window.removeEventListener('mousemove', onMouseMove);
-        window.removeEventListener('mouseup', upPointer);
-        renderer.dispose();
+        cleanupAuditModel();
         return;
       }
       if (!dragging && view === 'orbit' && !reduced) target.y += 0.002;
@@ -1827,32 +1868,342 @@
       + setNote + progress + revealCta + summary + kRows + shortHtml + '</section>';
     return { html: kc, items: kcItems.concat(shortItems) };
   }
+  function visualSpec(w, d) {
+    var V = window.BFS218_VISUALS || {};
+    var spec = V.weeks && V.weeks[w];
+    if (spec) return spec;
+    var topic = d && d.concepts && d.concepts[0] ? d.concepts[0].h : weekTitle(w);
+    return {
+      kind: 'pipeline',
+      title: topic || 'This week as a process',
+      scene: 'A simple 3D process model for the week. Read it from left to right: tool, rule, impact, and response.',
+      steps: [
+        ['Find the tool', 'Start with the system, record, platform, or object being studied.'],
+        ['Follow the rule', 'Ask what decision or default the system applies.'],
+        ['Name the impact', 'End by asking who benefits, who carries risk, and what accountability would require.']
+      ],
+      activity: {
+        title: 'Use the model before the activity.',
+        steps: ['Look at the tool.', 'Follow the decision path.', 'Name the harm or repair in plain language.']
+      }
+    };
+  }
+  function visualViewFor(w, context) {
+    state.visualView = state.visualView || {};
+    var key = (context || 'week') + '|' + w;
+    return state.visualView[key] || (context === 'activity' ? 'predict' : 'observe');
+  }
+  function visualControls(w, context, active) {
+    var V = window.BFS218_VISUALS || {}, labels = V.viewLabels || {};
+    var defs = context === 'activity'
+      ? [['predict', labels.predict || 'Predict'], ['try', labels.try || 'Try it'], ['explain', labels.explain || 'Explain']]
+      : [['observe', labels.observe || 'Observe'], ['path', labels.path || 'Follow the path'], ['risk', labels.risk || 'Find the risk']];
+    return '<div class="wk-model-controls" aria-label="3D model view controls">' + defs.map(function (d) {
+      var on = active === d[0];
+      return '<button onclick="SOC.visualView(' + w + ',\'' + context + '\',\'' + d[0] + '\')" aria-pressed="' + on + '" class="' + (on ? 'on' : '') + '">' + esc(d[1]) + '</button>';
+    }).join('') + '</div>';
+  }
+  function visualModelHtml(w, spec, context) {
+    var view = visualViewFor(w, context);
+    var label = (context === 'activity' ? 'Activity model for Week ' : 'Visual overview for Week ') + w + ': ' + spec.title + '. ' + spec.scene + ' Drag the model to rotate it.';
+    return '<div class="wk-model-shell">'
+      + '<canvas class="wk-model-canvas" role="img" aria-label="' + esc(label) + '" data-topic-model="' + esc(context) + '" data-week="' + w + '" data-kind="' + esc(spec.kind || 'pipeline') + '" data-view="' + esc(view) + '"></canvas>'
+      + '<div class="wk-model-note"><b>' + esc(spec.title) + '</b><span>' + esc(spec.scene) + ' Drag to rotate. Use the buttons below to change what you are looking for.</span></div>'
+      + visualControls(w, context, view)
+      + '<div class="wk-model-fallback" hidden>The 3D model could not load. The explanation below still walks you through the idea.</div>'
+      + '</div>';
+  }
+  function visualStepCards(steps) {
+    return '<div class="wk-model-steps">' + (steps || []).slice(0, 3).map(function (c, i) {
+      return '<div class="wk-model-step"><div class="mono">STEP ' + (i + 1) + '</div><h3>' + esc(c[0]) + '</h3><p>' + esc(c[1]) + '</p></div>';
+    }).join('') + '</div>';
+  }
   function visualOverviewSection(w, d) {
-    if (courseCode() === 'BFS218' && w === 5) return visualPilotWeek5(w, d);
-    var weekNum = (w < 10 ? '0' : '') + w;
-    var src = './assets/topic-pictures/bfs218-week' + weekNum + '-storyboard.webp';
-    var frames = ['Situation', 'System', 'Pressure point', 'Impact path', 'Critical lens', 'Accountability', 'Redesign'];
-    var frameGuide = frames.map(function (f) { return '<span>' + esc(f) + '</span>'; }).join('');
-    var alt = 'Seven-panel visual overview for Week ' + w + ', ' + weekTitle(w) + ': ' + frames.join(', ') + '.';
+    var spec = visualSpec(w, d);
     return '<section id="wk-visual" class="node"><h2 class="wk-sec">A Visual Overview</h2>'
-      + '<p class="wk-hint">A stitched seven-frame story for this week: the issue, the system, the pressure point, the impact path, the course lens, the accountability move, and the redesign.</p>'
-      + '<figure class="wk-visual"><img src="' + src + '" alt="' + esc(alt) + '" loading="lazy" decoding="async"><figcaption>Read the visual as one process story, from the first panel through the final redesign.</figcaption></figure>'
-      + '<div class="wk-visual-frames" aria-label="Visual overview frame guide">' + frameGuide + '</div>'
+      + '<p class="wk-hint">Use this as a guided picture, not a test. First rotate the model, then read the three steps below. The point is to make the week\'s idea easier to see.</p>'
+      + visualModelHtml(w, spec, 'week')
+      + visualStepCards(spec.steps)
       + '</section>';
   }
-  function visualPilotWeek5(w, d) {
-    var src = './assets/topic-pictures/bfs218-week05-3d-audit-turntable.webp';
-    var alt = '3D-rendered coded gaze audit turntable: a circular scanner, four transparent benchmark trays, and concentrated red error pins showing an intersectional failure pattern.';
-    var cards = [
-      ['The scanner', 'The ring and scanner stand for a system being audited, not trusted just because it looks technical.'],
-      ['The slices', 'The four trays stand for the benchmark split into groups. The audit asks whether every group is being seen equally well.'],
-      ['The evidence', 'The red pins are errors. Their concentration in one tray is the point: the harm appears when the audit is sliced intersectionally.']
-    ].map(function (c, i) { return '<div class="wk-visual-card"><div class="mono">STEP ' + (i + 1) + '</div><h3>' + esc(c[0]) + '</h3><p>' + esc(c[1]) + '</p></div>'; }).join('');
-    return '<section id="wk-visual" class="node wk-visual-pilot"><h2 class="wk-sec">A Visual Overview</h2>'
-      + '<p class="wk-hint">Pilot format: one 3D-rendered scene that turns the audit into physical objects before you manipulate the model in the activity.</p>'
-      + '<figure class="wk-visual wk-visual-3d"><img src="' + src + '" alt="' + esc(alt) + '" loading="eager" decoding="sync" fetchpriority="high"><figcaption>Read the image as a process: run the scanner, compare the trays, then ask why one group carries so many more red error pins.</figcaption></figure>'
-      + '<div class="wk-visual-explain">' + cards + '</div>'
+  function activityModelSection(w, a) {
+    var spec = visualSpec(w, weekData(w));
+    var guide = (spec.activity && spec.activity.steps) ? spec.activity.steps : ['Look at the model.', 'Do the activity below.', 'Name what the activity helped you see.'];
+    var title = (spec.activity && spec.activity.title) || 'Use the model before the activity.';
+    return '<section class="activity-model" aria-label="Activity 3D model">'
+      + '<div class="activity-how"><b>' + esc(title) + '</b><ol>' + guide.map(function (g) { return '<li>' + esc(g) + '</li>'; }).join('') + '</ol></div>'
+      + visualModelHtml(w, spec, 'activity')
       + '</section>';
+  }
+  function activityStartGuide(w) {
+    var spec = visualSpec(w, weekData(w));
+    var guide = (spec.activity && spec.activity.steps) ? spec.activity.steps : ['Look at the model.', 'Do the activity.', 'Name what it helped you see.'];
+    return '<div class="activity-how" style="margin:14px 0 16px"><b>How to use this activity</b><ol>' + guide.map(function (g) { return '<li>' + esc(g) + '</li>'; }).join('') + '</ol></div>';
+  }
+  function initTopicModels() {
+    var canvases = Array.prototype.slice.call(document.querySelectorAll('canvas[data-topic-model]'));
+    if (!canvases.length) return;
+    loadThree().then(function (THREE) {
+      canvases.forEach(function (canvas) { initTopicModel(THREE, canvas, auditRenderStamp); });
+    }).catch(function () {
+      canvases.forEach(function (canvas) {
+        var fb = canvas.parentNode && canvas.parentNode.querySelector('.wk-model-fallback');
+        if (fb) fb.hidden = false;
+      });
+    });
+  }
+  function initTopicModel(THREE, canvas, stamp) {
+    if (!canvas || canvas.__topicInit || !canvas.isConnected || stamp !== auditRenderStamp) return;
+    canvas.__topicInit = true;
+    canvas.__topicStamp = stamp;
+    var shell = canvas.parentNode, week = Number(canvas.getAttribute('data-week')) || 1;
+    var kind = canvas.getAttribute('data-kind') || 'pipeline';
+    var view = canvas.getAttribute('data-view') || 'observe';
+    var riskOn = view === 'risk' || view === 'explain';
+    var pathOn = view === 'path' || view === 'try';
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true, preserveDrawingBuffer: false });
+    canvas.__topicGL = renderer.getContext ? renderer.getContext() : null;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    if (THREE.SRGBColorSpace) renderer.outputColorSpace = THREE.SRGBColorSpace;
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(42, 16 / 9, 0.1, 90);
+    camera.position.set(4.8, 3.4, 6.6);
+    camera.lookAt(0, 0.55, 0);
+    scene.add(new THREE.HemisphereLight(0xffffff, 0xb8c4d0, 2.5));
+    var sun = new THREE.DirectionalLight(0xffffff, 3.0); sun.position.set(3.5, 6.5, 4.8); scene.add(sun);
+    var fill = new THREE.DirectionalLight(0xe7f7ff, 1.0); fill.position.set(-4, 3, -3); scene.add(fill);
+    var root = new THREE.Group(); root.scale.set(0.9, 0.9, 0.9); root.position.set(0, -0.05, 0); scene.add(root);
+    var mats = {};
+    function m(color, opt) {
+      opt = opt || {};
+      var key = color + '|' + (opt.opacity == null ? 1 : opt.opacity) + '|' + !!opt.glass + '|' + !!opt.emissive;
+      if (!mats[key]) {
+        var args = { color: color, roughness: opt.rough == null ? 0.48 : opt.rough, metalness: opt.metal == null ? 0.06 : opt.metal };
+        if (opt.opacity != null && opt.opacity < 1) { args.transparent = true; args.opacity = opt.opacity; }
+        if (opt.emissive) { args.emissive = color; args.emissiveIntensity = 0.25; }
+        mats[key] = opt.glass ? new THREE.MeshPhysicalMaterial(Object.assign(args, { transmission: 0.12 })) : new THREE.MeshStandardMaterial(args);
+      }
+      return mats[key];
+    }
+    function mesh(geo, mat, pos, rot, scale) {
+      var x = new THREE.Mesh(geo, mat);
+      if (pos) x.position.set(pos[0], pos[1], pos[2]);
+      if (rot) x.rotation.set(rot[0], rot[1], rot[2]);
+      if (scale) x.scale.set(scale[0], scale[1], scale[2]);
+      root.add(x);
+      return x;
+    }
+    function box(wd, ht, dp, color, pos, opt) {
+      var x = mesh(new THREE.BoxGeometry(wd, ht, dp), m(color, opt), pos);
+      if (opt && opt.edge) edge(x, opt.edge);
+      return x;
+    }
+    function sph(r, color, pos, opt) { return mesh(new THREE.SphereGeometry(r, 22, 14), m(color, opt), pos); }
+    function cyl(r, h, color, pos, rot, opt) { return mesh(new THREE.CylinderGeometry(r, r, h, 22), m(color, opt), pos, rot); }
+    function tor(r, tube, color, pos, rot, opt) { return mesh(new THREE.TorusGeometry(r, tube, 14, 80), m(color, opt), pos, rot); }
+    function cone(r, h, color, pos, rot, opt) { return mesh(new THREE.ConeGeometry(r, h, 32, 1, true), m(color, opt), pos, rot); }
+    function edge(x, color) {
+      var e = new THREE.LineSegments(new THREE.EdgesGeometry(x.geometry), new THREE.LineBasicMaterial({ color: color || 0xffffff, transparent: true, opacity: 0.55 }));
+      e.position.copy(x.position); e.rotation.copy(x.rotation); e.scale.copy(x.scale); root.add(e);
+    }
+    function tube(points, color, radius) {
+      var curve = new THREE.CatmullRomCurve3(points.map(function (p) { return new THREE.Vector3(p[0], p[1], p[2]); }));
+      mesh(new THREE.TubeGeometry(curve, 28, radius || 0.025, 10, false), m(color, { rough: 0.35, metal: 0.12, emissive: riskOn && color === 0xda291c }));
+    }
+    root.add(new THREE.GridHelper(7.2, 10, 0xd6dde5, 0xd6dde5));
+    box(7.3, 0.08, 5.2, 0xe9eef2, [0, -0.08, 0], { rough: 0.72 });
+    function miniPerson(x, z, color) {
+      cyl(0.11, 0.38, color || 0x1b2a4a, [x, 0.22, z]);
+      sph(0.14, 0x9fdde0, [x, 0.5, z], { rough: 0.36 });
+    }
+    function arrow(a, b, color) {
+      tube([a, [(a[0] + b[0]) / 2, Math.max(a[1], b[1]) + 0.18, (a[2] + b[2]) / 2], b], color || 0x1b2a4a, 0.028);
+      cone(0.09, 0.28, color || 0x1b2a4a, b, [Math.PI / 2, 0, 0]);
+    }
+    function rowBlocks(n, color, hotIndex) {
+      for (var i = 0; i < n; i++) {
+        var x = -2.4 + i * (4.8 / Math.max(1, n - 1));
+        var hot = i === hotIndex;
+        box(0.72, 0.56, 0.72, hot ? 0xda291c : color, [x, 0.28, 0], { edge: hot ? 0xda291c : 0xffffff, opacity: hot ? 0.96 : 0.78, glass: !hot });
+        if (i > 0) arrow([x - (4.8 / Math.max(1, n - 1)) + 0.38, 0.38, 0], [x - 0.42, 0.38, 0], pathOn || hot ? 0xda291c : 0x1b2a4a);
+      }
+    }
+    switch (kind) {
+      case 'map':
+        miniPerson(0, 0, 0x1b2a4a);
+        [[-2, -1.3], [0, -1.8], [2, -1.3], [-2.1, 1.1], [0, 1.7], [2.1, 1.1]].forEach(function (p, i) {
+          box(0.58, 0.35, 0.5, i === 2 && riskOn ? 0xda291c : 0xffffff, [p[0], 0.22, p[1]], { edge: i === 2 ? 0xda291c : 0x8ba0b4 });
+          tube([[p[0], 0.35, p[1]], [0, 0.55, 0]], (i === 2 || pathOn) ? 0xda291c : 0x8ba0b4, 0.018);
+        });
+        break;
+      case 'lens':
+        box(1.1, 0.9, 1.1, 0xffffff, [0, 0.46, 0], { edge: 0x8ba0b4 });
+        box(0.06, 1.55, 2.9, 0x00aeb3, [-0.28, 0.78, 0], { opacity: 0.28, glass: true, edge: 0x00aeb3 });
+        box(2.9, 1.55, 0.06, riskOn ? 0xda291c : 0xffa12b, [0.28, 0.78, 0], { opacity: 0.32, glass: true, edge: riskOn ? 0xda291c : 0xffa12b });
+        tor(1.35, 0.025, riskOn ? 0xda291c : 0x1b2a4a, [0, 0.85, 0], [Math.PI / 2, 0, 0]);
+        break;
+      case 'pipeline':
+        rowBlocks(5, 0x00aeb3, riskOn ? 3 : -1);
+        break;
+      case 'switches':
+        box(3.8, 0.18, 1.8, 0xffffff, [0, 0.08, 0], { edge: 0x8ba0b4 });
+        for (var si = 0; si < 4; si++) {
+          var on = si < (pathOn ? 3 : 1);
+          cyl(0.12, 0.65, on && (riskOn || si === 2) ? 0xda291c : 0x1b2a4a, [-1.35 + si * 0.9, 0.42, 0], [0.78, 0, 0]);
+          sph(0.17, on ? 0xffa12b : 0xc7cdd6, [-1.35 + si * 0.9, 0.75, -0.28]);
+        }
+        arrow([1.55, 0.32, 0], [2.45, 0.32, 0], riskOn ? 0xda291c : 0x1b2a4a);
+        break;
+      case 'audit':
+        [[-0.9, -0.75], [0.9, -0.75], [-0.9, 0.75], [0.9, 0.75]].forEach(function (p, i) {
+          var hot = i === 3;
+          box(1.25, 0.12, 0.92, hot && riskOn ? 0xff8a65 : 0x9fdde0, [p[0], 0.1, p[1]], { opacity: hot ? 0.48 : 0.28, glass: true, edge: hot ? 0xda291c : 0x00aeb3 });
+          for (var ai = 0; ai < 16; ai++) {
+            var x = p[0] - 0.42 + (ai % 4) * 0.28, z = p[1] - 0.28 + Math.floor(ai / 4) * 0.18;
+            sph(0.045, 0xe9dfcc, [x, 0.25, z]);
+            if (hot && ai < (riskOn ? 8 : 3)) cyl(0.018, 0.38, 0xda291c, [x, 0.54, z]);
+          }
+        });
+        tor(1.9, 0.02, riskOn ? 0xda291c : 0x1b2a4a, [0, 0.82, 0], [Math.PI / 2, 0, 0], { opacity: 0.75 });
+        break;
+      case 'gate':
+        box(0.14, 1.4, 0.14, 0x1b2a4a, [-1.1, 0.62, 0]);
+        box(0.14, 1.4, 0.14, 0x1b2a4a, [1.1, 0.62, 0]);
+        box(2.34, 0.14, 0.14, 0x1b2a4a, [0, 1.3, 0]);
+        miniPerson(-2.2, 0, 0x00aeb3); miniPerson(2.2, 0, 0xffa12b);
+        cone(0.7, 2.4, riskOn ? 0xda291c : 0xffcc66, [0, 0.62, 0.12], [Math.PI / 2, 0, 0], { opacity: 0.2 });
+        arrow([-1.75, 0.35, 0], [1.75, 0.35, 0], riskOn ? 0xda291c : 0x1b2a4a);
+        break;
+      case 'review':
+        for (var ri = 0; ri < 6; ri++) {
+          var ang = -1.85 + ri * 0.74, x2 = Math.cos(ang) * 1.65, z2 = Math.sin(ang) * 1.05;
+          box(0.48, 0.36, 0.48, ri === 5 && riskOn ? 0xda291c : 0xffffff, [x2, 0.2 + ri * 0.04, z2], { edge: 0x8ba0b4 });
+          if (ri) tube([[Math.cos(ang - 0.74) * 1.65, 0.32, Math.sin(ang - 0.74) * 1.05], [x2, 0.32 + ri * 0.04, z2]], pathOn ? 0xda291c : 0x8ba0b4, 0.018);
+        }
+        tor(1.75, 0.02, 0x1b2a4a, [0, 0.48, 0], [Math.PI / 2, 0, 0], { opacity: 0.38 });
+        break;
+      case 'vault':
+        box(1.45, 1.15, 1.15, 0x00aeb3, [-0.65, 0.62, 0], { opacity: 0.28, glass: true, edge: 0x00aeb3 });
+        box(0.22, 0.5, 1.0, riskOn ? 0xda291c : 0x1b2a4a, [-0.65, 0.62, 0]);
+        for (var vi = 0; vi < 4; vi++) box(0.72, 0.05, 0.42, 0xffffff, [1.05, 0.22 + vi * 0.18, -0.45 + vi * 0.3], { edge: 0x8ba0b4 });
+        cyl(0.05, 1.1, 0xffa12b, [0.45, 0.75, 0.9], [0, 0, Math.PI / 2]);
+        tor(0.22, 0.035, 0xffa12b, [1.05, 0.75, 0.9], [0, Math.PI / 2, 0]);
+        break;
+      case 'benevolence':
+        box(1.55, 0.85, 1.15, 0xffffff, [0, 0.52, -0.38], { edge: 0x8ba0b4 });
+        sph(0.28, 0x00aeb3, [0, 1.08, -0.38], { opacity: 0.72, glass: true });
+        cone(0.85, 1.25, riskOn ? 0xda291c : 0xffa12b, [0, 0.48, 0.82], [Math.PI, 0, 0], { opacity: riskOn ? 0.5 : 0.24 });
+        miniPerson(-1.7, 0.82, 0x1b2a4a); miniPerson(1.7, 0.82, 0x1b2a4a);
+        break;
+      case 'sorting':
+        for (var li = 0; li < 3; li++) {
+          box(4.6, 0.04, 0.09, li === 2 && riskOn ? 0xda291c : 0x8ba0b4, [0, 0.07, -0.9 + li * 0.9]);
+          for (var ti = 0; ti < 4; ti++) sph(0.09, li === 2 && ti > 1 ? 0xda291c : 0x00aeb3, [-1.8 + ti * 0.55, 0.22, -0.9 + li * 0.9]);
+        }
+        box(0.18, 1.1, 2.35, 0x1b2a4a, [0.85, 0.55, 0]);
+        arrow([1.1, 0.35, 0], [2.2, 0.35, riskOn ? 0.9 : 0], riskOn ? 0xda291c : 0x1b2a4a);
+        break;
+      case 'repair':
+        box(1.25, 1.0, 1.05, riskOn ? 0xda291c : 0xffffff, [-0.5, 0.55, 0], { edge: riskOn ? 0xda291c : 0x8ba0b4, opacity: 0.88 });
+        tube([[-1.0, 0.95, -0.35], [-0.55, 0.58, 0.1], [-0.1, 0.95, 0.35]], 0x1b2a4a, 0.018);
+        [[1.1, -0.8], [1.65, 0], [1.1, 0.8]].forEach(function (p) { miniPerson(p[0], p[1], 0x00aeb3); });
+        box(0.72, 0.14, 0.26, 0xffa12b, [0.95, 0.23, -0.1]); cyl(0.05, 0.75, 0xffa12b, [1.25, 0.32, -0.1], [0, 0, Math.PI / 2]);
+        break;
+      case 'policy':
+        ['system', 'institution', 'law', 'rights'].forEach(function (name, pi) {
+          box(2.6 - pi * 0.26, 0.22, 1.55 - pi * 0.14, pi === 2 && riskOn ? 0xda291c : [0x9fdde0, 0x00aeb3, 0xffa12b, 0x1b2a4a][pi], [0, 0.13 + pi * 0.28, 0], { opacity: pi === 3 ? 0.88 : 0.72, glass: pi < 2, edge: 0xffffff });
+        });
+        arrow([-2, 0.18, 0], [-1.42, 1.05, 0], pathOn ? 0xda291c : 0x1b2a4a);
+        break;
+      case 'return':
+        for (var rr = 0; rr < 18; rr++) {
+          var a = rr * 0.48, rad = 0.25 + rr * 0.07;
+          sph(0.055, rr > 13 && riskOn ? 0xda291c : 0x00aeb3, [Math.cos(a) * rad, 0.2 + rr * 0.035, Math.sin(a) * rad]);
+        }
+        box(0.85, 0.08, 0.62, 0xffffff, [-1.8, 0.12, -1.05], { edge: 0x8ba0b4 });
+        box(0.85, 0.08, 0.62, 0xffffff, [1.8, 0.9, 1.05], { edge: 0xda291c });
+        break;
+      case 'compass':
+        tor(1.35, 0.035, 0x1b2a4a, [0, 0.35, 0], [Math.PI / 2, 0, 0]);
+        cyl(0.035, 1.95, riskOn ? 0xda291c : 0xffa12b, [0, 0.5, 0], [0, 0, 0.85]);
+        cone(0.18, 0.42, riskOn ? 0xda291c : 0xffa12b, [0.67, 0.5, 0.75], [0, 0, -0.75]);
+        [[-1.8, -1.05], [0, 1.65], [1.8, -1.05]].forEach(function (p, ci) { box(0.7, 0.46, 0.7, ci === 2 && riskOn ? 0xda291c : 0xffffff, [p[0], 0.28, p[1]], { edge: ci === 2 ? 0xda291c : 0x8ba0b4 }); });
+        break;
+      default:
+        rowBlocks(4, 0x00aeb3, riskOn ? 2 : -1);
+    }
+    var target = { x: pathOn ? -0.18 : -0.28, y: riskOn ? -0.72 : -0.5 };
+    var cur = { x: target.x, y: target.y }, dragging = false, last = null, animating = false, frames = 0;
+    function schedule() { if (!animating) { animating = true; requestAnimationFrame(animate); } }
+    function begin(x, y) { dragging = true; last = { x: x, y: y }; frames = 0; schedule(); }
+    function move(x, y) {
+      if (!dragging || !last) return;
+      target.y += (x - last.x) * 0.014;
+      target.x += (y - last.y) * 0.008;
+      target.x = Math.max(-0.65, Math.min(0.35, target.x));
+      last = { x: x, y: y };
+      canvas.setAttribute('data-dragged', '1');
+      schedule();
+    }
+    function up() { dragging = false; last = null; frames = 0; schedule(); }
+    function onPointer(e) { begin(e.clientX, e.clientY); if (e.currentTarget && e.currentTarget.setPointerCapture) e.currentTarget.setPointerCapture(e.pointerId); }
+    function movePointer(e) { move(e.clientX, e.clientY); }
+    function onTouchStart(e) { if (e.touches && e.touches[0]) { e.preventDefault(); begin(e.touches[0].clientX, e.touches[0].clientY); } }
+    function onTouchMove(e) { if (e.touches && e.touches[0]) { e.preventDefault(); move(e.touches[0].clientX, e.touches[0].clientY); } }
+    canvas.addEventListener('pointerdown', onPointer);
+    canvas.addEventListener('pointermove', movePointer);
+    canvas.addEventListener('pointerup', up);
+    canvas.addEventListener('pointercancel', up);
+    canvas.addEventListener('touchstart', onTouchStart, { passive: false });
+    canvas.addEventListener('touchmove', onTouchMove, { passive: false });
+    canvas.addEventListener('touchend', up);
+    var reduced = false;
+    try { reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+    function resize() {
+      var wd = Math.max(320, shell.clientWidth || canvas.clientWidth || 720);
+      var ht = Math.max(300, Math.round(wd * 0.56));
+      renderer.setSize(wd, ht, false);
+      camera.aspect = wd / ht;
+      camera.updateProjectionMatrix();
+    }
+    resize();
+    var ro = window.ResizeObserver ? new ResizeObserver(resize) : null;
+    if (ro) ro.observe(shell);
+    var disposed = false;
+    function cleanupTopicModel() {
+      if (disposed) return;
+      disposed = true;
+      if (ro) ro.disconnect();
+      canvas.removeEventListener('pointerdown', onPointer);
+      canvas.removeEventListener('pointermove', movePointer);
+      canvas.removeEventListener('pointerup', up);
+      canvas.removeEventListener('pointercancel', up);
+      canvas.removeEventListener('touchstart', onTouchStart);
+      canvas.removeEventListener('touchmove', onTouchMove);
+      canvas.removeEventListener('touchend', up);
+      disposeThreeScene(scene);
+      renderer.dispose();
+      if (renderer.forceContextLoss) renderer.forceContextLoss();
+      canvas.__topicGL = null;
+    }
+    registerModelCleanup(cleanupTopicModel);
+    function animate() {
+      if (!canvas.isConnected || canvas.__topicStamp !== auditRenderStamp) {
+        cleanupTopicModel();
+        animating = false;
+        return;
+      }
+      frames++;
+      if (!dragging && !reduced && frames < 150) target.y += 0.0015 + (week % 3) * 0.0004;
+      cur.x += (target.x - cur.x) * 0.08;
+      cur.y += (target.y - cur.y) * 0.08;
+      root.rotation.x = cur.x;
+      root.rotation.y = cur.y;
+      renderer.render(scene, camera);
+      if (dragging || frames < 180) requestAnimationFrame(animate);
+      else animating = false;
+    }
+    schedule();
   }
   function weekPage(w, d) {
     var ws = journeyWeeks(), idx = ws.indexOf(w), prev = idx > 0 ? ws[idx - 1] : null, next = idx < ws.length - 1 ? ws[idx + 1] : null;
@@ -1884,7 +2235,7 @@
     var readings = sec('read', 'Readings', d.readings.map(function (r) { var resolves = (typeof rec === 'function') && r.id && rec(r.id); var tail = resolves ? '<button onclick="SOC.read(\'' + r.id + '\')" class="wk-scope">' + esc(r.scope || 'Open the reading') + ' &#8599;</button>' : (r.url ? '<a href="' + r.url + '" target="_blank" rel="noopener" class="wk-scope">' + esc(r.scope || 'Open the reading') + ' &#8599;</a>' : (r.scope ? '<div class="wk-scope" style="background:none;border:none;color:var(--ink-faint);padding:6px 0;cursor:default">' + esc(r.scope) + '</div>' : '')); return '<div class="wk-read"><div class="ref">' + r.apa + '</div>' + tail + '</div>'; }).join(''));
     var visual = visualOverviewSection(w, d);
     var watch = d.deck ? '<section id="wk-watch" class="node"><h2 class="wk-sec">Walkthrough</h2><p style="margin:0 0 12px;font-size:.92rem">Step through this week\'s walkthrough deck.</p><div class="wk-deck"><iframe src="./walkthroughs/' + d.deck + '/index.html?v=4" title="Week ' + w + ' walkthrough" loading="lazy" allowfullscreen></iframe></div><a href="./walkthroughs/' + d.deck + '/index.html?v=4" target="_blank" rel="noopener" class="wk-fs">Open the walkthrough fullscreen &#8599;</a></section>' : '';
-    var act = '<section id="wk-do" class="node interactive"><h2 class="wk-sec">The activity: ' + esc(d.activity.title) + '</h2><div class="wk-whatwhy"><b>What this is:</b> ' + esc(d.activity.what) + '<br><br><b>Why you are doing it:</b> ' + esc(d.activity.why) + '</div>' + lensActivityBlock(w, d.activity, false) + '<button onclick="SOC.startActivity(\'' + d.activity.screen + '\',' + w + ')" class="wk-cta">Start the activity' + ic('chevron', 17, 2.4) + '</button><p style="margin:10px 0 0;font-size:.74rem;color:var(--ink-faint)">Every activity works the same way: predict, then do it, then see the result, then name it with the reading.</p></section>';
+    var act = '<section id="wk-do" class="node interactive"><h2 class="wk-sec">The activity: ' + esc(d.activity.title) + '</h2><div class="wk-whatwhy"><b>What this is:</b> ' + esc(d.activity.what) + '<br><br><b>Why you are doing it:</b> ' + esc(d.activity.why) + '</div>' + activityStartGuide(w) + lensActivityBlock(w, d.activity, false) + '<button onclick="SOC.startActivity(\'' + d.activity.screen + '\',' + w + ')" class="wk-cta">Start the activity' + ic('chevron', 17, 2.4) + '</button><p style="margin:10px 0 0;font-size:.74rem;color:var(--ink-faint)">Every activity works the same way: predict, then do it, then see the result, then name it with the reading.</p></section>';
     var reflect = '<section id="wk-reflect" class="node"><h2 class="wk-sec">Reflection</h2>'
       + '<div class="wk-ocheck"><div class="mono" style="font-size:.78rem;font-weight:700;color:var(--ink-faint);margin-bottom:7px">YOU CAN NOW</div>' + d.youcan.map(function (y) { return '<div class="wk-row"><span class="t">' + ic('check', 14, 2.6) + '</span>' + esc(y) + '</div>'; }).join('') + '</div>'
       + '<h3 style="margin:16px 0 4px">Now, what do you think?</h3><p class="wk-hint" style="margin-bottom:8px">The same ideas from the start. Rate them again to see where your understanding sits now, and how far it moved.</p>' + wkChecks(w, 'post', d)
@@ -1978,7 +2329,7 @@
     var w = state.activityReturn, d = weekData(w);
     if (!d || !d.activity) return '<div style="padding:30px 0;color:var(--ink-dim)">No activity here. <button onclick="SOC.go(\'journey\')" style="background:none;border:none;color:var(--red);font-weight:600;cursor:pointer">Back to your journey</button></div>';
     var a = d.activity;
-    var head = '<section class="jhero" style="margin:0 0 18px;padding:26px 28px"><div class="mono" style="font-size:.7rem;letter-spacing:.06em;color:var(--red);font-weight:700;margin-bottom:7px">WEEK ' + w + ' ACTIVITY</div><h1 style="font-size:1.7rem;line-height:1.15;font-weight:700;margin:0 0 12px;color:var(--ink)">' + esc(a.title) + '</h1><div class="wk-whatwhy" style="margin:0"><b>What this is:</b> ' + esc(a.what) + '<br><br><b>Why you are doing it:</b> ' + esc(a.why) + '</div></section>' + lensActivityBlock(w, a, true);
+    var head = '<section class="jhero" style="margin:0 0 18px;padding:26px 28px"><div class="mono" style="font-size:.7rem;letter-spacing:.06em;color:var(--red);font-weight:700;margin-bottom:7px">WEEK ' + w + ' ACTIVITY</div><h1 style="font-size:1.7rem;line-height:1.15;font-weight:700;margin:0 0 12px;color:var(--ink)">' + esc(a.title) + '</h1><div class="wk-whatwhy" style="margin:0"><b>What this is:</b> ' + esc(a.what) + '<br><br><b>Why you are doing it:</b> ' + esc(a.why) + '</div></section>' + lensActivityBlock(w, a, true) + activityModelSection(w, a);
     var inner = '';
     switch (a.archetype) { case 'match': inner = actMatch(w, a); break; case 'scenario': inner = actScenario(w, a); break; case 'toggle': inner = actToggle(w, a); break; case 'assemble': inner = actAssemble(w, a); break; case 'lab': inner = actLab(w, a); break; case 'capstone': inner = actCapstone(w, a); break; default: inner = '<p style="color:var(--ink-dim)">This activity is not set up yet.</p>'; }
     var foot = '<div style="margin-top:22px;padding-top:18px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap"><div style="font-size:.86rem;color:var(--ink-dim)">When you are done, go back to the week to answer the reflection and save your work.</div><button onclick="SOC.station(' + w + ')" class="wk-cta" style="margin:0">Back to Week ' + w + ' ' + ic('chevron', 16, 2.4) + '</button></div>';
@@ -2014,7 +2365,7 @@
       + '<div style="font-size:1.02rem;font-weight:600;color:var(--ink);border-left:3px solid var(--red);padding-left:14px;margin:16px 0">No new readings or teaching material this week. This time is yours: focus on your work' + (isFinal ? ' and close out the course. Nothing is due.' : '. Your capstone is due this week.') + '</div>'
       + '</div></section>';
     var visual = visualOverviewSection(w, d);
-    var act = d.activity ? '<section id="wk-do" class="node interactive"><h2 class="wk-sec">' + esc(d.activity.title) + '</h2><div class="wk-whatwhy"><b>What this is:</b> ' + esc(d.activity.what) + '<br><br><b>Why you are doing it:</b> ' + esc(d.activity.why) + '</div><button onclick="SOC.startActivity(\'' + d.activity.screen + '\',' + w + ')" class="wk-cta">Open your capstone' + ic('chevron', 17, 2.4) + '</button></section>' : '';
+    var act = d.activity ? '<section id="wk-do" class="node interactive"><h2 class="wk-sec">' + esc(d.activity.title) + '</h2><div class="wk-whatwhy"><b>What this is:</b> ' + esc(d.activity.what) + '<br><br><b>Why you are doing it:</b> ' + esc(d.activity.why) + '</div>' + activityStartGuide(w) + '<button onclick="SOC.startActivity(\'' + d.activity.screen + '\',' + w + ')" class="wk-cta">Open your capstone' + ic('chevron', 17, 2.4) + '</button></section>' : '';
     var reflect = '<section id="wk-reflect" class="node"><h2 class="wk-sec">Your reflection</h2>'
       + (d.reflectPrompt ? '<p style="margin:0 0 8px;font-size:.95rem">' + esc(d.reflectPrompt) + '</p>' : '')
       + '<textarea oninput="SOC.wkReflect(' + w + ',this.value)" class="wk-ta" placeholder="Your reflection...">' + esc(state.wkReflect[w] || '') + '</textarea>'
@@ -2187,7 +2538,7 @@
     return template.replace(/\{program\}/g, label);
   }
   function lensChangeLine() {
-    return 'What changes: your program filter changes the expanded week hook, field diagram, case study, activity map, home field panel, key-week badges, and Career Choices write-up. What stays the same: readings, assessments, and outcomes.';
+    return 'What changes: your program filter adds a field hook, diagram, case study, field prompt, home field panel, key-week badges, and Career Choices write-up. What stays the same: readings, activities, assessments, and outcomes.';
   }
   function lensFieldContext(L) {
     var label = (L && (L.program || L.area)) || 'your field';
@@ -2260,7 +2611,7 @@
         + '<div style="font-size:.78rem;line-height:1.35;color:var(--ink-dim)">' + esc(x[1]) + '</div></div>';
     }).join('');
     return '<div style="background:#F7F8FA;border:1px solid var(--border);border-left:3px solid var(--red);border-radius:0 10px 10px 0;padding:14px 16px;margin:' + (inScreen ? '0 0 18px' : '14px 0 16px') + '">'
-      + '<div class="mono" style="font-size:.64rem;letter-spacing:.06em;color:var(--red);font-weight:700;margin-bottom:7px">ACTIVITY MAP FOR ' + esc((L.program || L.area).toUpperCase()) + '</div>'
+      + '<div class="mono" style="font-size:.64rem;letter-spacing:.06em;color:var(--red);font-weight:700;margin-bottom:7px">FIELD PROMPT FOR ' + esc((L.program || L.area).toUpperCase()) + '</div>'
       + '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:10px">' + cells + '</div>'
       + '<p style="margin:0 0 6px;font-size:.9rem;line-height:1.5;color:var(--ink)">' + esc(profile.use) + '</p>'
       + '<p style="margin:0;font-size:.78rem;line-height:1.45;color:var(--ink-dim)">' + esc(profile.check) + ' The activity itself stays the same for everyone.</p></div>';
@@ -2579,7 +2930,7 @@
     var picker = '<p style="font-size:.95rem;color:var(--ink-dim);margin:0 0 16px">' + esc(C.intro || '') + '</p>'
       + '<label for="career-sel" style="display:block;font-size:.85rem;font-weight:600;color:var(--ink);margin-bottom:6px">Your program or field of study</label>'
       + '<select id="career-sel" onchange="SOC.careerField(this.value)" aria-label="Select your program or field of study" style="font:inherit;font-size:1rem;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;background:#fff;color:var(--ink);width:100%;max-width:460px;margin-bottom:22px">' + opts + '</select>';
-    if (!raw) return wrap(picker + '<div style="background:#F7F8FA;border:1px solid var(--border);border-radius:12px;padding:18px 20px"><p style="margin:0 0 8px;font-size:1rem;line-height:1.7;color:var(--ink)">You are in the general stream. Keep going this way if you want the standard course path with no program-specific lens.</p><p style="margin:0;font-size:.92rem;line-height:1.6;color:var(--ink-dim)">Pick a program later if you want the field hook, diagram, case study, activity map, and Career Choices write-up to change around that program.</p></div>');
+    if (!raw) return wrap(picker + '<div style="background:#F7F8FA;border:1px solid var(--border);border-radius:12px;padding:18px 20px"><p style="margin:0 0 8px;font-size:1rem;line-height:1.7;color:var(--ink)">You are in the general stream. Keep going this way if you want the standard course path with no program-specific lens.</p><p style="margin:0;font-size:.92rem;line-height:1.6;color:var(--ink-dim)">Pick a program later if you want the field hook, diagram, case study, field prompt, and Career Choices write-up to connect to that program. The weekly activity itself stays shared.</p></div>');
     if (raw === '__explore') return wrap(picker + '<div style="background:#F7F8FA;border:1px solid var(--border);border-radius:12px;padding:18px 20px"><p style="margin:0;font-size:1rem;line-height:1.7;color:var(--ink)">That is completely fine. Read the whole course with one question in mind. Wherever you end up, some system will make decisions about people in your field. Someone has to notice when it gets those decisions wrong. This course is practice at being that person. Come back and pick your program once you have one in mind.</p></div>');
     var f = (C.byField || {})[area];
     if (!f) return wrap(picker + '<p style="color:var(--ink-dim)">The write-up for ' + esc(area) + ' is being prepared.</p>');
@@ -2607,6 +2958,7 @@
   function render() {
     if (state.screen !== 'compare' && render._prev !== undefined && render._prev !== state.screen && (state.compareIds.length || state.showSynthesis)) { state.compareIds = []; state.showSynthesis = false; }
     render._prev = state.screen;
+    cleanupModels();
     auditRenderStamp++;
     var toast = state.toast ? '<div role="status" style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:80;background:#15171C;color:#fff;font-size:.9375rem;font-weight:500;padding:12px 20px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.24);display:flex;align-items:center;gap:10px"><span style="display:flex;color:#F2A900">' + ic('check', 16, 2.2) + '</span>' + esc(state.toast) + '</div>' : '';
     document.getElementById('app').innerHTML =
@@ -2627,6 +2979,7 @@
     }
     saveView();
     initAuditModels();
+    initTopicModels();
   }
   function topScroll() { var m = document.getElementById('soc-main'); if (m) m.scrollTop = 0; }
 
@@ -2698,6 +3051,7 @@
       persist(); refreshWeekChecks(w, d);
     },
     wkReflect: function (w, v) { state.wkReflect[w] = v; persist(); },
+    visualView: function (w, context, v) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; state.visualView = state.visualView || {}; state.visualView[(context || 'week') + '|' + w] = v; render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
     actPick: function (key, idx) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; state.act[key] = idx; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
     actToggle: function (key) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; state.act[key] = !state.act[key]; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
     actAdd: function (key, idx) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; var arr = state.act[key] || []; if (arr.indexOf(idx) < 0) arr.push(idx); state.act[key] = arr; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
