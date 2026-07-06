@@ -554,6 +554,15 @@ window.BFS218 = {
   {
    "id": "king2003",
    "assigned": "The Truth About Stories, Chapter 1",
+   "audio": {
+    "kind": "Podcast",
+    "platform": "cbc",
+    "title": "The 2003 CBC Massey Lectures: The Truth about Stories",
+    "source": "CBC Radio / Ideas",
+    "scholar": "Thomas King",
+    "url": "https://www.cbc.ca/radio/ideas/the-2003-cbc-massey-lectures-the-truth-about-stories-a-native-narrative-1.2946870",
+    "embed": false
+   },
    "eye": "indigenous",
    "type": "Book",
    "access": "open",
@@ -580,10 +589,10 @@ window.BFS218 = {
   {
    "id": "devlin2023",
    "video": {
-    "yt": "gpZZp6i-sTA",
-    "title": "Reg Lecture: Dr Kate Devlin, Sex, AI, Robots and You",
-    "channel": "The Register",
-    "scholar": "Kate Devlin"
+    "yt": "0PqrZ2lqT70",
+    "title": "Kate Crawford: Mapping Planetary AI",
+    "channel": "State Library Victoria",
+    "scholar": "Kate Crawford"
    },
    "eye": "western",
    "type": "Chapter",

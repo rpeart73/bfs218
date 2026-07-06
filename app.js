@@ -14,21 +14,14 @@
   var VKEY = SKEY + '.view.v1';
   var HKEY = SKEY + '.hardResetNext';
   function load() { try { var o = JSON.parse(localStorage.getItem(SKEY) || '{}'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; } }
-  function persist() { try { localStorage.setItem(SKEY, JSON.stringify({ saved: state.saved, cmpNotes: state.cmpNotes, rcNotes: state.rcNotes, sgNotes: state.sgNotes, sgTick: state.sgTick, wkCheck: state.wkCheck, wkReflect: state.wkReflect, act: state.act, kcShort: state.kcShort, kcShortRate: state.kcShortRate, kcHist: state.kcHist, careerReflect: state.careerReflect })); } catch (e) {} }
-  function navWasReload() {
-    try {
-      var n = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
-      if (n && n.type) return n.type === 'reload';
-    } catch (e) {}
-    try { return !!(performance.navigation && performance.navigation.type === 1); } catch (e2) { return false; }
-  }
+  function persist() { try { localStorage.setItem(SKEY, JSON.stringify({ saved: state.saved, cmpNotes: state.cmpNotes, rcNotes: state.rcNotes, sgNotes: state.sgNotes, sgTick: state.sgTick, wkCheck: state.wkCheck, wkReflect: state.wkReflect, act: state.act, kcShort: state.kcShort, kcShortRate: state.kcShortRate, kcHist: state.kcHist, careerReflect: state.careerReflect, mediaNotes: state.mediaNotes })); } catch (e) {} }
   function loadView() { try { var o = JSON.parse(sessionStorage.getItem(VKEY) || '{}'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; } }
   function clearView() { try { sessionStorage.removeItem(VKEY); sessionStorage.removeItem(HKEY); } catch (e) {} }
   function shouldResumeView(v) {
     var hard = false;
     try { hard = sessionStorage.getItem(HKEY) === '1'; sessionStorage.removeItem(HKEY); } catch (e) {}
     if (hard) { clearView(); return false; }
-    return !!(v && v.screen && navWasReload());
+    return !!(v && v.screen);
   }
   function cleanScreen(s) {
     return ['journey', 'library', 'station', 'detail', 'assignments', 'videos', 'readings', 'compare', 'reading', 'glossary', 'career', 'cards', 'sandbox', 'activity'].indexOf(s) >= 0 ? s : 'journey';
@@ -78,6 +71,7 @@
     kcHist: (saved0.kcHist && typeof saved0.kcHist === 'object') ? saved0.kcHist : {},
     careerField: resumeView0 ? (view0.careerField || '') : '',
     careerReflect: (saved0.careerReflect && typeof saved0.careerReflect === 'object') ? saved0.careerReflect : {},
+    mediaNotes: (saved0.mediaNotes && typeof saved0.mediaNotes === 'object') ? saved0.mediaNotes : {},
     libScroll: 0,
     toast: null,
     cardWeek: resumeView0 ? cleanWeek(view0.cardWeek) : null,
@@ -89,6 +83,7 @@
     assignmentFaq: resumeView0 ? (view0.assignmentFaq == null ? null : Number(view0.assignmentFaq)) : null,
     assignmentChecks: {},
     videoWeek: resumeView0 ? (view0.videoWeek || 'all') : 'all',
+    mediaKind: resumeView0 ? (view0.mediaKind || 'all') : 'all',
   };
   if (resumeView0) {
     state.activityReturn = cleanWeek(view0.activityReturn);
@@ -140,10 +135,13 @@
         auditedSystems: state.auditedSystems || {},
         assignmentIndex: state.assignmentIndex || 0,
         assignmentFaq: state.assignmentFaq,
-        videoWeek: state.videoWeek || 'all'
+        videoWeek: state.videoWeek || 'all',
+        mediaKind: state.mediaKind || 'all'
       }));
     } catch (e) {}
   }
+  window.addEventListener('pagehide', saveView);
+  window.addEventListener('beforeunload', saveView);
   window.addEventListener('keydown', function (e) {
     var k = String(e.key || '').toLowerCase();
     if (((e.ctrlKey || e.metaKey) && e.shiftKey && k === 'r') || (e.ctrlKey && k === 'f5')) {
@@ -367,7 +365,7 @@
   }
   function sidebar() {
     var s = state;
-    var navDefs = [['journey', 'Home', 'gauge'], ['assignments', 'Understanding the Assignments', 'clipboard'], ['videos', 'Scholar Video Gallery', 'play'], ['readings', 'Library of Readings', 'gallery'], ['compare', 'Compare Reading Concepts', 'columns'], ['reading', 'Build Your Reading Comprehension', 'book'], ['glossary', 'Glossary & Thinkers', 'book'], ['cards', 'Self-check', 'clipboard'], ['career', 'Career Choices', 'globe']];
+    var navDefs = [['journey', 'Home', 'gauge'], ['assignments', 'Understanding the Assignments', 'clipboard'], ['videos', 'Scholar Media Gallery', 'play'], ['readings', 'Library of Readings', 'gallery'], ['compare', 'Compare Reading Concepts', 'columns'], ['reading', 'Build Your Reading Comprehension', 'book'], ['glossary', 'Glossary & Thinkers', 'book'], ['cards', 'Self-check', 'clipboard'], ['career', 'Career Choices', 'globe']];
     var btns = navDefs.map(function (d) {
       var key = d[0], active = (key === 'journey' && (s.screen === 'journey' || s.screen === 'library' || s.screen === 'station' || s.screen === 'detail')) || s.screen === key;
       var badge = '';
@@ -527,10 +525,10 @@
   function readingsGallery() {
     var s = state, list = rgList();
     var nFull = D.records.filter(function (r) { return r.fulltext !== false; }).length;
-    var nVid = D.records.filter(function (r) { return !!r.video; }).length;
+    var nMedia = D.records.filter(function (r) { return !!(r.video || r.audio); }).length;
     var weeks = weeksWithReadings(), topics = rgTopics();
     var stats = [['Readings', D.records.length], ['Read online', nFull]];
-    if (nVid) stats.push(['Scholar talks', nVid]);
+    if (nMedia) stats.push(['Scholar media', nMedia]);
     var hero = '<section style="background:#fff;border:1px solid #DEE3EA;border-top:4px solid var(--red);border-radius:14px;padding:26px 30px;margin-bottom:18px;box-shadow:0 1px 2px rgba(21,23,28,.04)">'
       + '<div style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap;justify-content:space-between">'
       + '<div style="flex:1;min-width:280px">'
@@ -1454,7 +1452,7 @@
     ws.forEach(function (w) {
       if (!studyIn && w >= 8) { out += studyMarker(); studyIn = true; }
       var recs = recordsForWeek(w), n = recs.length, isCur = (w === cur);
-      var note = (w === OVERVIEW_WEEK) ? 'Course overview' : (WORK_WEEKS.indexOf(w) >= 0 ? 'Focus on your work, no new material' : (n + (n === 1 ? ' reading' : ' readings')));
+      var note = (w === OVERVIEW_WEEK && !weekData(w)) ? 'Course overview' : (WORK_WEEKS.indexOf(w) >= 0 ? 'Focus on your work, no new material' : (n + (n === 1 ? ' reading' : ' readings')));
       out += '<button class="jstation' + (isCur ? ' cur' : '') + '" onclick="SOC.station(' + w + ')">'
         + '<div style="display:flex;align-items:flex-start;gap:16px">'
         + '<span class="jdot" style="display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;flex:none;border-radius:12px;background:' + (isCur ? 'var(--red)' : '#1B2A4A') + ';color:#fff;font-family:var(--mono);font-size:1.0625rem;font-weight:600">' + w + '</span>'
@@ -1915,9 +1913,42 @@
       repair: [[24, 64], [52, 64], [78, 64]],
       policy: [[24, 64], [52, 64], [78, 64]],
       return: [[24, 64], [52, 64], [78, 64]],
-      compass: [[24, 64], [52, 64], [78, 64]]
+      compass: [[24, 64], [52, 64], [78, 64]],
+      startermap: [[22, 64], [52, 64], [78, 64]]
     };
     return map[kind] || [[22, 64], [52, 64], [78, 64]];
+  }
+  function visualKindLabelAnchors(kind) {
+    var map = {
+      matchwork: [[-2.15, 0.82, -0.55], [-0.18, 1.22, 0.15], [2.25, 0.9, 0.08]],
+      decisionpath: [[-2.0, 1.08, 0], [-0.55, 1.05, 0], [1.28, 0.88, 0.82]],
+      defaultboard: [[-1.8, 0.9, -0.2], [0.45, 0.9, 0.1], [2.1, 1.05, 0.45]],
+      toolkit: [[-1.85, 0.84, -0.35], [0.45, 1.22, 0], [1.35, 1.02, 0.56]],
+      policydeck: [[-1.9, 0.55, 0], [0, 1.18, 0], [1.85, 1.05, 0.2]],
+      capstonemap: [[-1.95, 0.55, -0.85], [-0.45, 0.9, -0.25], [2.15, 1.0, 0.82]],
+      surveillanceflow: [[-2.2, 0.95, 0], [0.1, 1.1, 0.4], [2.2, 0.65, 0.8]],
+      datastory: [[-1.3, 0.75, -0.5], [0.35, 1.15, 0], [1.75, 0.78, 0.6]],
+      promisefunnel: [[-1.6, 1.1, -0.55], [0, 0.95, 0], [1.75, 0.5, 0.6]],
+      thresholdaudit: [[-1.8, 0.65, -0.55], [0, 0.9, 0], [1.8, 0.5, 0.65]],
+      repairtable: [[-1.6, 0.75, -0.6], [0, 1.0, 0], [1.65, 0.75, 0.65]],
+      futurecompass: [[-1.4, 0.75, -0.9], [0, 1.15, 0], [1.6, 0.75, 0.9]],
+      startermap: [[-2.0, 0.65, -1.0], [0, 0.8, 0], [2.0, 0.65, 1.0]],
+      map: [[-2.1, 0.8, 1.1], [0, 0.95, 0], [2, 0.8, -1.3]],
+      lens: [[-0.28, 1.35, 0], [0, 1.25, 0], [0.28, 1.35, 0]],
+      pipeline: [[-2.4, 0.9, 0], [0, 0.9, 0], [2.4, 0.9, 0]],
+      switches: [[-1.35, 1.05, 0], [0.45, 1.05, 0], [2.45, 0.7, 0]],
+      audit: [[-0.9, 0.75, -0.75], [0, 1.15, 0], [0.9, 0.75, 0.75]],
+      gate: [[-2.2, 0.95, 0], [0, 1.55, 0], [2.2, 0.95, 0]],
+      review: [[-1.65, 0.65, -0.4], [0, 0.85, 0], [1.65, 0.85, 0.4]],
+      vault: [[-0.65, 1.35, 0], [1.05, 0.9, 0.1], [0.75, 1.1, 0.9]],
+      benevolence: [[0, 1.45, -0.38], [0, 0.95, 0.82], [1.7, 0.8, 0.82]],
+      sorting: [[-1.8, 0.55, -0.9], [0.85, 1.2, 0], [2.2, 0.7, 0.9]],
+      repair: [[-0.5, 1.15, 0], [1.1, 0.85, -0.8], [1.65, 0.85, 0]],
+      policy: [[0, 0.45, 0], [0, 1.05, 0], [0, 1.35, 0]],
+      return: [[-1.8, 0.55, -1.05], [0, 1.0, 0], [1.8, 1.25, 1.05]],
+      compass: [[-1.8, 0.75, -1.05], [0, 1.0, 0], [1.8, 0.75, -1.05]]
+    };
+    return map[kind] || [[-2.2, 0.9, 0], [0, 1.1, 0], [2.2, 0.9, 0]];
   }
   function visualReadingSentence(spec) {
     var steps = spec.steps || [];
@@ -1929,8 +1960,9 @@
   function enrichVisualSpec(spec) {
     spec = Object.assign({}, spec || {});
     var steps = (spec.steps || []).slice(0, 3);
+    var anchors = visualKindLabelAnchors(spec.kind || 'pipeline');
+    var coords = visualKindLabelPositions(spec.kind || 'pipeline');
     if (!spec.labels || !spec.labels.length) {
-      var coords = visualKindLabelPositions(spec.kind || 'pipeline');
       spec.labels = coords.map(function (xy, i) {
         var step = steps[i] || [];
         return {
@@ -1941,6 +1973,15 @@
         };
       });
     }
+    spec.labels = (spec.labels || []).map(function (l, i) {
+      l = Object.assign({}, l);
+      if ((l.x == null || l.y == null) && coords[i]) {
+        l.x = coords[i][0];
+        l.y = coords[i][1];
+      }
+      if (!l.anchor && anchors[i]) l.anchor = anchors[i];
+      return l;
+    });
     if (!spec.reading) spec.reading = visualReadingSentence(spec);
     return spec;
   }
@@ -2021,7 +2062,15 @@
     var kinds = choices[type] || ['pipeline', 'review', 'map'];
     var kind = kinds.filter(function (k) { return k !== baseKind; })[0] || kinds[0] || baseKind;
     var p = profile[type] || profile.scenario;
-    return { kind: kind, title: p.title, scene: p.scene, steps: p.steps, labels: p.labels || [], activity: base.activity };
+    var custom = base.activity || {};
+    return enrichVisualSpec({
+      kind: custom.modelKind || kind,
+      title: custom.modelTitle || p.title,
+      scene: custom.modelScene || p.scene,
+      steps: custom.modelSteps || p.steps,
+      labels: custom.modelLabels || p.labels || [],
+      activity: custom
+    });
   }
   function visualViewFor(w, context) {
     state.visualView = state.visualView || {};
@@ -2041,15 +2090,16 @@
   function visualLabels(spec) {
     var labels = spec.labels || [];
     if (!labels.length) return '';
-    return '<div class="wk-model-labels" aria-hidden="true">' + labels.map(function (l) {
+    return '<div class="wk-model-labels" aria-hidden="true"><svg class="wk-label-leaders" focusable="false"></svg>' + labels.map(function (l, i) {
       var left = Math.max(8, Math.min(92, Number(l.x) || 50));
       var top = Math.max(12, Math.min(82, Number(l.y) || 50));
-      return '<span class="wk-model-label" style="left:' + left + '%;top:' + top + '%"><b>' + esc(l.t || '') + '</b><small>' + esc(l.sub || '') + '</small></span>';
+      var anchor = Array.isArray(l.anchor) ? l.anchor : [0, 1, 0];
+      return '<span class="wk-model-label" data-label-index="' + i + '" data-anchor="' + esc(anchor.join(',')) + '" style="left:' + left + '%;top:' + top + '%"><b>' + esc(l.t || '') + '</b><small>' + esc(l.sub || '') + '</small></span>';
     }).join('') + '</div>';
   }
   function visualModelHtml(w, spec, context) {
     var view = visualViewFor(w, context);
-    var rotateHelp = 'Click or touch and drag anywhere inside this 3D picture to rotate the scene.';
+    var rotateHelp = 'Click or touch and drag anywhere inside this 3D picture to rotate the scene. The callout lines stay attached to the model while the text boxes stay in open space.';
     var labelList = (spec.labels || []).map(function (l) { return (l.t || '') + ': ' + (l.sub || ''); }).join('. ');
     var label = (context === 'activity' ? 'Activity model for Week ' : 'Visual overview for Week ') + w + ': ' + spec.title + '. ' + spec.scene + ' Labels: ' + labelList + '. ' + rotateHelp;
     return '<div class="wk-model-shell">'
@@ -2073,7 +2123,7 @@
   function visualOverviewSection(w, d) {
     var spec = visualSpec(w, d);
     return '<section id="wk-visual" class="node"><h2 class="wk-sec">A Visual Overview</h2>'
-      + '<p class="wk-hint">Use this as a labelled guide. The three labels show the story of the week in order. The buttons change what the model highlights.</p>'
+      + '<p class="wk-hint">Use this as a labelled guide. The three callouts point to the model and show the story of the week in order. The buttons change what the model highlights.</p>'
       + visualGuideHtml(spec)
       + visualModelHtml(w, spec, 'week')
       + visualStepCards(spec.steps)
@@ -2235,6 +2285,107 @@
     var sun = new THREE.DirectionalLight(0xffffff, 3.0); sun.position.set(3.5, 6.5, 4.8); scene.add(sun);
     var fill = new THREE.DirectionalLight(0xe7f7ff, 1.0); fill.position.set(-4, 3, -3); scene.add(fill);
     var root = new THREE.Group(); root.scale.set(0.9, 0.9, 0.9); root.position.set(0, -0.05, 0); scene.add(root);
+    var labelEls = shell ? Array.prototype.slice.call(shell.querySelectorAll('.wk-model-label[data-anchor]')) : [];
+    labelEls.forEach(function (el) {
+      var nums = String(el.getAttribute('data-anchor') || '0,1,0').split(',').map(function (n) { return Number(n); });
+      el.__topicAnchor = nums.length >= 3 && nums.every(function (n) { return !isNaN(n); }) ? nums.slice(0, 3) : [0, 1, 0];
+    });
+    var leaderSvg = shell ? shell.querySelector('.wk-label-leaders') : null;
+    var leaderParts = [];
+    if (leaderSvg && labelEls.length) {
+      var NS = 'http://www.w3.org/2000/svg';
+      leaderSvg.innerHTML = '';
+      leaderParts = labelEls.map(function () {
+        var line = document.createElementNS(NS, 'line');
+        var dot = document.createElementNS(NS, 'circle');
+        line.setAttribute('class', 'wk-label-line');
+        dot.setAttribute('class', 'wk-label-anchor');
+        dot.setAttribute('r', '4.2');
+        leaderSvg.appendChild(line);
+        leaderSvg.appendChild(dot);
+        return { line: line, dot: dot };
+      });
+    }
+    var labelVec = new THREE.Vector3();
+    function updateTopicLabels() {
+      if (!labelEls.length || !shell || !canvas.isConnected) return;
+      var mobile = false;
+      try { mobile = window.matchMedia && window.matchMedia('(max-width: 760px)').matches; } catch (e) {}
+      if (mobile) {
+        labelEls.forEach(function (el) {
+          el.style.left = '';
+          el.style.top = '';
+          el.style.opacity = '';
+          el.style.transform = '';
+          el.style.zIndex = '';
+        });
+        if (leaderSvg) leaderSvg.setAttribute('hidden', 'hidden');
+        return;
+      }
+      var box = canvas.getBoundingClientRect();
+      var shellBox = shell.getBoundingClientRect();
+      var shellW = shellBox.width || shell.clientWidth || box.width;
+      var shellH = shellBox.height || shell.clientHeight || box.height;
+      var canvasTop = box.top - shellBox.top;
+      var canvasH = box.height;
+      if (leaderSvg) {
+        leaderSvg.removeAttribute('hidden');
+        leaderSvg.setAttribute('viewBox', '0 0 ' + Math.round(shellW) + ' ' + Math.round(shellH));
+      }
+      var note = shell.querySelector('.wk-model-note');
+      var noteBottom = 0;
+      if (note) {
+        var nb = note.getBoundingClientRect();
+        noteBottom = Math.max(0, nb.bottom - shellBox.top);
+      }
+      var slots = [
+        { x: shellW * 0.12, y: canvasTop + canvasH * 0.18 },
+        { x: shellW * 0.62, y: canvasTop + Math.max(12, canvasH * 0.025) },
+        { x: shellW * 0.88, y: canvasTop + canvasH * 0.18 }
+      ];
+      root.updateMatrixWorld(true);
+      labelEls.forEach(function (el, i) {
+        var a = el.__topicAnchor || [0, 1, 0];
+        labelVec.set(a[0], a[1], a[2]).applyMatrix4(root.matrixWorld).project(camera);
+        var anchorX = (box.left - shellBox.left) + (labelVec.x * 0.5 + 0.5) * box.width;
+        var anchorY = canvasTop + (-labelVec.y * 0.5 + 0.5) * box.height;
+        var slot = slots[i % slots.length];
+        var wobbleX = Math.max(-24, Math.min(24, (anchorX - slot.x) * 0.1));
+        var wobbleY = Math.max(i === 1 ? -5 : -10, Math.min(i === 1 ? 5 : 10, (anchorY - slot.y) * 0.05));
+        var ew = el.offsetWidth || 180, eh = el.offsetHeight || 62;
+        var x = slot.x + wobbleX;
+        var y = slot.y + wobbleY;
+        if (note) {
+          var noteBox = note.getBoundingClientRect();
+          var noteLeft = noteBox.left - shellBox.left, noteRight = noteBox.right - shellBox.left;
+          var wouldOverlapNote = x + ew * 0.5 > noteLeft - 8 && x - ew * 0.5 < noteRight + 8 && y - eh * 0.5 < noteBottom + 8;
+          if (wouldOverlapNote) y = noteBottom + eh * 0.5 + 10;
+        }
+        x = Math.max(ew * 0.5 + 12, Math.min(shellW - ew * 0.5 - 12, x));
+        y = Math.max(eh * 0.5 + 10, Math.min(canvasTop + canvasH - eh * 0.5 - 18, y));
+        var visible = labelVec.z > -1 && labelVec.z < 1;
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+        el.style.opacity = visible ? '1' : '.22';
+        el.style.transform = 'translate(-50%, -50%)';
+        el.style.zIndex = String(20 + Math.round((1 - labelVec.z) * 10));
+        var leader = leaderParts[i];
+        if (leader) {
+          var dx = anchorX - x, dy = anchorY - y;
+          var useX = Math.abs(dx) > Math.abs(dy);
+          var lineX = x + (useX ? (dx > 0 ? ew * 0.5 : -ew * 0.5) : Math.max(-ew * 0.38, Math.min(ew * 0.38, dx)));
+          var lineY = y + (useX ? Math.max(-eh * 0.38, Math.min(eh * 0.38, dy)) : (dy > 0 ? eh * 0.5 : -eh * 0.5));
+          leader.line.setAttribute('x1', lineX.toFixed(1));
+          leader.line.setAttribute('y1', lineY.toFixed(1));
+          leader.line.setAttribute('x2', anchorX.toFixed(1));
+          leader.line.setAttribute('y2', anchorY.toFixed(1));
+          leader.line.style.opacity = visible ? '1' : '.18';
+          leader.dot.setAttribute('cx', anchorX.toFixed(1));
+          leader.dot.setAttribute('cy', anchorY.toFixed(1));
+          leader.dot.style.opacity = visible ? '1' : '.18';
+        }
+      });
+    }
     var mats = {};
     function m(color, opt) {
       opt = opt || {};
@@ -2291,6 +2442,17 @@
       }
     }
       switch (kind) {
+      case 'startermap':
+        miniPerson(0, -0.1, 0x1b2a4a);
+        [[-2.05, -1.05, 0xffffff], [-2.1, 0.95, 0xe7f3ec], [1.95, -1.05, 0xfbe9ea], [2.05, 0.95, 0xffffff]].forEach(function (p, si) {
+          box(0.78, 0.12, 0.58, p[2], [p[0], 0.18, p[1]], { edge: si === 2 && riskOn ? 0xda291c : 0x8ba0b4 });
+          sph(0.06, si === 2 && riskOn ? 0xda291c : 0x00aeb3, [p[0] + 0.22, 0.32, p[1] - 0.12]);
+          tube([[p[0], 0.32, p[1]], [p[0] * 0.42, 0.62, p[1] * 0.42], [0, 0.62, -0.1]], (si === 2 || pathOn) ? 0xda291c : 0x8ba0b4, 0.016);
+        });
+        box(1.35, 0.08, 0.88, 0xffffff, [0, 0.14, 1.72], { edge: 0x8ba0b4 });
+        tube([[-0.2, 0.54, 0.18], [0.35, 0.72, 0.9], [0.18, 0.3, 1.42]], riskOn ? 0xda291c : 0x1b2a4a, 0.024);
+        cone(0.12, 0.32, riskOn ? 0xda291c : 0x1b2a4a, [0.18, 0.3, 1.42], [Math.PI / 2, 0, 0]);
+        break;
       case 'matchwork':
         box(2.15, 0.12, 1.2, 0xffffff, [-2.15, 0.18, -0.55], { edge: 0x8ba0b4 });
         box(2.15, 0.12, 1.2, 0xffffff, [-2.15, 0.18, 0.95], { edge: 0x8ba0b4 });
@@ -2347,6 +2509,63 @@
         tube([[-1.5, 0.24, -0.78], [-0.45, 0.58, -0.25], [0.75, 0.78, 0.3], [1.55, 0.62, 0.82]], pathOn || riskOn ? 0xda291c : 0x1b2a4a, 0.026);
         tor(0.58, 0.025, 0x1b2a4a, [2.15, 0.46, 0.82], [Math.PI / 2, 0, 0]);
         cyl(0.035, 0.86, riskOn ? 0xda291c : 0xffa12b, [2.15, 0.48, 0.82], [0, 0, 0.82]);
+        break;
+      case 'surveillanceflow':
+        miniPerson(-2.25, 0, 0x1b2a4a);
+        box(0.16, 1.15, 0.16, 0x1b2a4a, [-1.2, 0.58, -0.36]);
+        box(0.16, 1.15, 0.16, 0x1b2a4a, [-1.2, 0.58, 0.36]);
+        box(0.14, 0.14, 0.95, 0x1b2a4a, [-1.2, 1.12, 0]);
+        cone(0.5, 1.8, riskOn ? 0xda291c : 0xffcc66, [-1.0, 0.58, 0.05], [Math.PI / 2, 0, 0], { opacity: 0.22 });
+        box(1.0, 0.7, 0.9, 0x9fdde0, [0.05, 0.46, 0.4], { opacity: 0.42, glass: true, edge: 0x00aeb3 });
+        box(0.9, 0.56, 0.76, riskOn ? 0xfbe9ea : 0xffffff, [1.2, 0.36, -0.25], { edge: riskOn ? 0xda291c : 0x8ba0b4 });
+        box(1.0, 0.12, 0.75, 0xffffff, [2.2, 0.16, 0.8], { edge: 0x8ba0b4 });
+        tube([[-1.78, 0.55, 0], [-0.55, 0.86, 0.22], [0.05, 0.8, 0.4], [0.82, 0.64, -0.12], [1.75, 0.42, 0.65]], pathOn || riskOn ? 0xda291c : 0x1b2a4a, 0.028);
+        sph(0.12, riskOn ? 0xda291c : 0xffa12b, [0.05, 0.92, 0.4]);
+        break;
+      case 'datastory':
+        box(1.2, 0.78, 1.0, 0x00aeb3, [-1.3, 0.48, -0.5], { opacity: 0.3, glass: true, edge: 0x00aeb3 });
+        for (var ds = 0; ds < 4; ds++) box(0.66, 0.06, 0.42, 0xffffff, [-0.18 + ds * 0.28, 0.23 + ds * 0.13, -0.18 + ds * 0.12], { edge: 0x8ba0b4 });
+        tor(0.24, 0.03, 0xffa12b, [0.85, 0.7, 0.2], [0, Math.PI / 2, 0]);
+        cyl(0.04, 0.92, 0xffa12b, [1.22, 0.7, 0.2], [0, 0, Math.PI / 2]);
+        box(1.02, 0.08, 0.72, riskOn ? 0xfbe9ea : 0xe7f3ec, [1.75, 0.18, 0.6], { edge: riskOn ? 0xda291c : 0x1c7a43 });
+        tube([[-0.82, 0.72, -0.5], [0.15, 1.02, 0.0], [1.1, 0.82, 0.28]], pathOn ? 0xda291c : 0x1b2a4a, 0.026);
+        break;
+      case 'promisefunnel':
+        box(1.0, 0.82, 0.82, 0xffffff, [-1.6, 0.48, -0.55], { edge: 0x8ba0b4 });
+        sph(0.2, 0x00aeb3, [-1.6, 1.0, -0.55], { opacity: 0.68, glass: true });
+        cone(0.92, 1.45, riskOn ? 0xda291c : 0xffcc66, [0, 0.54, 0], [Math.PI, 0, 0], { opacity: riskOn ? 0.42 : 0.24 });
+        for (var pf = 0; pf < 7; pf++) sph(0.07, pf > 3 && riskOn ? 0xda291c : 0x00aeb3, [-0.55 + pf * 0.17, 1.05 - pf * 0.08, -0.15 + pf * 0.06]);
+        box(1.1, 0.12, 0.75, 0xfbe9ea, [1.75, 0.18, 0.6], { edge: 0xda291c });
+        arrow([0.46, 0.42, 0.28], [1.25, 0.28, 0.52], riskOn ? 0xda291c : 0x1b2a4a);
+        break;
+      case 'thresholdaudit':
+        box(4.1, 0.1, 1.05, 0xffffff, [-0.2, 0.12, -0.1], { edge: 0x8ba0b4 });
+        for (var th = 0; th < 9; th++) sph(0.08, th > (pathOn ? 4 : 6) ? (riskOn ? 0xda291c : 0xffa12b) : 0x00aeb3, [-1.8 + th * 0.35, 0.32, -0.55 + (th % 2) * 0.28]);
+        box(0.12, 1.0, 1.55, riskOn ? 0xda291c : 0x1b2a4a, [0.35, 0.56, 0], { opacity: 0.78 });
+        box(0.92, 0.42, 0.7, 0xe7f3ec, [1.25, 0.32, -0.55], { edge: 0x1c7a43 });
+        box(0.92, 0.42, 0.7, 0xfbe9ea, [1.8, 0.32, 0.65], { edge: 0xda291c });
+        tube([[0.42, 0.5, 0], [1.08, 0.7, -0.45], [1.25, 0.48, -0.55]], 0x1c7a43, 0.022);
+        tube([[0.42, 0.5, 0], [1.25, 0.7, 0.5], [1.8, 0.48, 0.65]], riskOn ? 0xda291c : 0x1b2a4a, 0.022);
+        break;
+      case 'repairtable':
+        box(3.2, 0.16, 1.55, 0xe9eef2, [0, 0.14, 0], { edge: 0x8ba0b4 });
+        box(0.92, 0.7, 0.76, riskOn ? 0xfbe9ea : 0xffffff, [-1.2, 0.48, -0.25], { edge: riskOn ? 0xda291c : 0x8ba0b4 });
+        tube([[-1.54, 0.8, -0.45], [-1.15, 0.45, -0.2], [-0.82, 0.78, 0.05]], 0xda291c, 0.016);
+        [[0.2, -0.68], [0.8, 0.62], [1.45, -0.18]].forEach(function (p, rt) { miniPerson(p[0], p[1], rt === 1 ? 0xffa12b : 0x00aeb3); });
+        cyl(0.055, 1.05, 0xffa12b, [0.35, 0.4, 0.05], [0, 0, Math.PI / 2]);
+        cyl(0.04, 0.95, 0x1b2a4a, [1.15, 0.45, 0.32], [0.35, 0, Math.PI / 2]);
+        break;
+      case 'futurecompass':
+        miniPerson(-2.1, -1.05, 0x1b2a4a);
+        box(0.94, 0.1, 0.62, 0xffffff, [-1.35, 0.16, -0.8], { edge: 0x8ba0b4 });
+        box(0.94, 0.1, 0.62, 0xe7f3ec, [0, 0.2, 0], { edge: 0x1c7a43 });
+        box(0.94, 0.1, 0.62, riskOn ? 0xfbe9ea : 0xffffff, [1.45, 0.24, 0.78], { edge: riskOn ? 0xda291c : 0x8ba0b4 });
+        tube([[-1.75, 0.28, -0.95], [-0.72, 0.62, -0.45], [0.2, 0.7, 0.05], [1.25, 0.44, 0.62]], pathOn || riskOn ? 0xda291c : 0x1b2a4a, 0.034);
+        cone(0.16, 0.42, pathOn || riskOn ? 0xda291c : 0x1b2a4a, [1.28, 0.44, 0.64], [Math.PI / 2, 0, 0]);
+        cyl(0.035, 1.45, 0x1b2a4a, [1.86, 0.82, 0.92]);
+        box(0.62, 0.36, 0.06, riskOn ? 0xda291c : 0xffa12b, [2.12, 1.22, 0.92], { edge: 0xffffff });
+        miniPerson(0.1, -0.62, 0x00aeb3);
+        miniPerson(1.96, 0.22, 0xffa12b);
         break;
       case 'map':
         miniPerson(0, 0, 0x1b2a4a);
@@ -2484,6 +2703,7 @@
       renderer.setSize(wd, ht, false);
       camera.aspect = wd / ht;
       camera.updateProjectionMatrix();
+      updateTopicLabels();
     }
     resize();
     var ro = window.ResizeObserver ? new ResizeObserver(resize) : null;
@@ -2519,6 +2739,7 @@
       root.rotation.x = cur.x;
       root.rotation.y = cur.y;
       renderer.render(scene, camera);
+      updateTopicLabels();
       if (dragging || frames < 180) requestAnimationFrame(animate);
       else animating = false;
     }
@@ -2749,7 +2970,7 @@
     return '<div class="rise">' + hero + '<div class="wk-grid"><section>' + catchup + kc + navRow + '</section>' + rail + '</div></div>';
   }
   function weekStation(w) {
-    if (w === OVERVIEW_WEEK) return overviewPage(w);
+    if (w === OVERVIEW_WEEK && !weekData(w)) return overviewPage(w);
     if (WORK_WEEKS.indexOf(w) >= 0) return workWeekPage(w);
     var d = weekData(w);
     if (d) return weekPage(w, d);
@@ -2863,7 +3084,7 @@
     return template.replace(/\{program\}/g, label);
   }
   function lensChangeLine() {
-    return 'What changes: your program filter adds a field hook, diagram, case study, field prompt, home field panel, key-week badges, and Career Choices write-up. What stays the same: readings, activities, assessments, and outcomes.';
+    return 'What changes: your program filter adds field hooks, diagrams, case studies, activity prompts, media prompts, assignment planning prompts, key-week badges, and Career Choices notes. What stays the same: readings, activities, assessments, grading criteria, and outcomes.';
   }
   function lensFieldContext(L) {
     var label = (L && (L.program || L.area)) || 'your field';
@@ -3464,10 +3685,19 @@
     var items = assignmentsData();
     var active = Math.max(0, Math.min(items.length - 1, Number(state.assignmentIndex) || 0));
     var a = items[active];
+    var L = lensParse();
+    var programPanel = '';
+    if (L) {
+      var ctx = lensFieldContext(L);
+      var label = L.program || L.area;
+      programPanel = '<section class="asg-field" aria-label="Program planning prompt"><div><div class="mono">FOR YOUR PROGRAM</div><h2>' + esc(label) + '</h2><p>Your assignment topic still has to answer the same BFS218 prompt as everyone else. Use your program only to choose a stronger example, artifact, or workplace-style decision to analyse.</p></div>'
+        + '<ol><li><b>Look for a real system.</b><span>Start with ' + esc(ctx.place) + '.</span></li><li><b>Name the decision point.</b><span>Ask where ' + esc(ctx.decision) + ' shapes what happens next.</span></li><li><b>Check who feels it.</b><span>Follow the effect on ' + esc(ctx.people) + '.</span></li><li><b>Keep the course lens.</b><span>Use the readings to explain the pattern, not just your opinion.</span></li></ol></section>';
+    }
     var summary = '<section class="asg-summary" aria-label="Assignment overview"><div><span>5 assignments</span><b>Each is worth 20%</b><small>Together they build one Personal Cartography.</small></div><div><span>First half</span><b>Due by Study Week</b><small>Map Exchange checkpoint, Coded Encounter, and Canadian Case File.</small></div><div><span>Second half</span><b>Due by Week 13</b><small>Design the Repair, final Map Exchange close, and capstone.</small></div></section>';
     return '<div class="rise asg-page">'
       + '<section class="asg-hero"><div class="mono">ASSIGNMENT GUIDE</div><h1>Understanding the Assignments</h1><p>One map, five pieces. This page explains what each assignment is asking you to do, what you submit, and how the grading criteria work in plain language.</p></section>'
       + assignmentPolicyPanel()
+      + programPanel
       + summary
       + '<section class="asg-story"><div><div class="mono">THE STORY</div><h2>You are building one map across the term</h2><p>The assignments are not random separate tasks. You begin by noticing real digital life, then you inspect one encounter, investigate one Canadian system, design a repair, and finally walk someone through the map of how your thinking changed.</p></div><ol><li>Notice</li><li>Break down</li><li>Investigate</li><li>Repair</li><li>Integrate</li></ol></section>'
       + assignmentArc(items, active)
@@ -3475,7 +3705,7 @@
       + assignmentFaqSection()
       + '</div>';
   }
-  function scholarVideos() {
+  function scholarMedia() {
     var meta = {
       benjamin2019: {
         synopsis: 'Benjamin introduces the New Jim Code as a way to understand how racism can travel through systems that are marketed as neutral, objective, or progressive. The recorded lecture connects race, carceral technology, and liberatory imagination, so it is useful for seeing why the course treats technology as a site of power, not just a set of tools.',
@@ -3513,9 +3743,9 @@
         readNext: 'Read Mohamed, Png, and Isaac on Decolonial AI. Look for the move from better tools to different authority.'
       },
       devlin2023: {
-        synopsis: 'Devlin\'s lecture is broader than the assigned chapter, but it is useful for hearing how she talks about AI, embodiment, gender, and social assumptions. For Week 10, use it to think about how power sits both inside technical systems and outside them, in the industries and cultures that build them.',
-        watchFor: ['Which assumptions are built into AI and robots', 'How design choices reflect social norms', 'Why power is not only inside the algorithm'],
-        readNext: 'Read Devlin on power in AI. Separate inequality within the algorithm from inequality in the world around the algorithm.'
+        synopsis: 'Crawford maps AI as a planetary system built from data, labour, infrastructure, and institutional power. For Week 10, use this beside Devlin\'s chapter: the harm is not only in model outputs, but also in who builds, funds, deploys, and bears the costs of AI systems.',
+        watchFor: ['AI infrastructure as material and political', 'Where labour and extraction sit outside the model', 'Why power is not only inside the algorithm'],
+        readNext: 'Read Devlin on inequality within and without the algorithm. Use Crawford to sharpen the "without" side: who builds, who supplies the data, labour, and infrastructure, and who absorbs risk.'
       },
       tanksley2023: {
         synopsis: 'Tanksley discusses abolitionist technology and the power of centring Black youth as creators, not just subjects, of technology. The video supports Week 11 by showing that repair means changing who has authority to build, teach, and imagine technology.',
@@ -3526,61 +3756,101 @@
         synopsis: 'Costanza-Chock explains community-led design practices and the worlds they make possible. The talk supports Design Justice by shifting attention from expert designers working for communities to affected communities leading the design process themselves.',
         watchFor: ['Who leads the design process', 'Why impact matters more than designer intention', 'How design justice turns critique into practice'],
         readNext: 'Read Costanza-Chock\'s introduction and the Design Justice Network principles. Choose one principle and connect it to your repair design.'
+      },
+      king2003: {
+        synopsis: 'CBC Ideas hosts Thomas King\'s Massey Lectures on how stories shape worlds. For Week 8, the audio helps students hear why narrative control matters for Indigenous data sovereignty: data is not just information, it is also a story told about people.',
+        watchFor: ['Why stories are not just entertainment', 'Who has authority to tell a story', 'How narrative control connects to data control'],
+        readNext: 'Listen to one part if you are short on time, then read the assigned King excerpt. Ask who controls the story, who is described by it, and who can correct it.'
       }
     };
     var out = [];
-    D.records.forEach(function (r) {
-      if (!r.video || !r.video.yt || !meta[r.id]) return;
+    function addMedia(r, source, kind) {
+      if (!source || !meta[r.id]) return;
       var m = meta[r.id];
+      var isYouTube = !!source.yt;
+      var mediaId = String(source.yt || source.platform || source.kind || kind || 'media').replace(/[^A-Za-z0-9_-]/g, '');
       out.push({
+        key: r.id + '|' + mediaId,
         week: r.week,
-        title: r.video.title || r.title,
-        scholar: r.video.scholar || r.authors,
-        source: r.video.channel || 'YouTube',
-        platform: 'youtube',
-        id: r.video.yt,
-        url: 'https://www.youtube.com/watch?v=' + r.video.yt,
+        kind: source.kind || kind || (isYouTube ? 'Video' : 'Podcast'),
+        title: source.title || r.title,
+        scholar: source.scholar || r.authors,
+        source: source.channel || source.source || (isYouTube ? 'YouTube' : 'Source site'),
+        platform: source.platform || (isYouTube ? 'youtube' : 'source'),
+        id: source.yt || '',
+        embed: source.embed === false ? false : isYouTube,
+        url: source.url || (isYouTube ? 'https://www.youtube.com/watch?v=' + source.yt : readUrl(r)),
         synopsis: m.synopsis,
-        watchFor: m.watchFor,
-        readNext: m.readNext
+        watchFor: m.watchFor || [],
+        readNext: m.readNext || '',
+        fieldPrompt: mediaFieldPrompt(r.week, m)
       });
+    }
+    D.records.forEach(function (r) {
+      addMedia(r, r.video, 'Video');
+      addMedia(r, r.audio, 'Podcast');
     });
     return out.sort(function (a, b) { return (a.week - b.week) || a.scholar.localeCompare(b.scholar); });
   }
-  function videoWeekOptions(items) {
+  function mediaFieldPrompt(w, meta) {
+    var L = lensParse();
+    if (!L) return '';
+    var ctx = lensFieldContext(L);
+    var label = L.program || L.area;
+    var topic = weekData(w);
+    var concept = topic && topic.concepts && topic.concepts[0] ? topic.concepts[0].h : 'this week\'s concept';
+    return 'For ' + label + ', use this media item to notice one decision point in ' + ctx.place + '. After watching or listening, write one sentence that connects ' + concept + ' to ' + ctx.decision + ' and one sentence naming who is affected.';
+  }
+  function mediaWeekOptions(items) {
     var weeks = [];
     items.forEach(function (v) { if (weeks.indexOf(v.week) < 0) weeks.push(v.week); });
     weeks.sort(function (a, b) { return a - b; });
-    return '<div class="vid-tabs" role="group" aria-label="Filter scholar videos by week">'
+    return '<div class="vid-tabs" role="group" aria-label="Filter scholar media by week">'
       + '<button type="button" onclick="SOC.videoWeek(\'all\')" class="' + (state.videoWeek === 'all' ? 'on' : '') + '">All weeks</button>'
       + weeks.map(function (w) { return '<button type="button" onclick="SOC.videoWeek(' + w + ')" class="' + (String(state.videoWeek) === String(w) ? 'on' : '') + '">Week ' + w + '</button>'; }).join('')
       + '</div>';
   }
+  function mediaKindOptions(items) {
+    var kinds = [];
+    items.forEach(function (v) { var k = String(v.kind || 'Media'); if (kinds.indexOf(k) < 0) kinds.push(k); });
+    return '<div class="vid-tabs vid-kind-tabs" role="group" aria-label="Filter scholar media by type">'
+      + '<button type="button" onclick="SOC.mediaKind(\'all\')" class="' + (state.mediaKind === 'all' ? 'on' : '') + '">All media</button>'
+      + kinds.map(function (k) { return '<button type="button" onclick="SOC.mediaKind(\'' + esc(k) + '\')" class="' + (String(state.mediaKind) === k ? 'on' : '') + '">' + esc(k) + '</button>'; }).join('')
+      + '</div>';
+  }
   function videoEmbed(v) {
-    if (v.platform === 'youtube') {
-      return '<iframe src="https://www.youtube-nocookie.com/embed/' + esc(v.id) + '" title="' + esc(v.title + ' - ' + v.scholar) + '" loading="lazy" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
+    if (v.platform === 'youtube' && v.embed) {
+      return '<iframe src="https://www.youtube-nocookie.com/embed/' + esc(v.id) + '?rel=0&amp;modestbranding=1" title="' + esc(v.title + ' - ' + v.scholar) + '" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
     }
-    return '<a class="vid-linkout" href="' + esc(v.url) + '" target="_blank" rel="noopener">Open video source</a>';
+    return '<a class="vid-linkout" href="' + esc(v.url) + '" target="_blank" rel="noopener"><span>' + esc(v.kind || 'Media') + '</span><b>Open on source site</b><small>Playback stays with the official source. Nothing is downloaded or rehosted here.</small></a>';
   }
   function videoCard(v) {
+    var note = state.mediaNotes && state.mediaNotes[v.key] ? state.mediaNotes[v.key] : '';
     return '<article class="vid-card">'
       + '<div class="vid-frame">' + videoEmbed(v) + '</div>'
-      + '<div class="vid-copy"><div class="mono">WEEK ' + v.week + ' &middot; ' + esc(v.source) + '</div><h2>' + esc(v.title) + '</h2><h3>' + esc(v.scholar) + '</h3><p>' + esc(v.synopsis) + '</p>'
+      + '<div class="vid-copy"><div class="mono">WEEK ' + v.week + ' &middot; ' + esc(v.kind || 'Media') + ' &middot; ' + esc(v.source) + '</div><h2>' + esc(v.title) + '</h2><h3>' + esc(v.scholar) + '</h3><p>' + esc(v.synopsis) + '</p>'
       + '<div class="vid-watch"><b>Watch for</b><ul>' + v.watchFor.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>'
       + '<div class="vid-read"><b>Then read</b><span>' + esc(v.readNext) + '</span></div>'
+      + (v.fieldPrompt ? '<div class="vid-field"><b>Use it in your program</b><span>' + esc(v.fieldPrompt) + '</span></div>' : '')
+      + '<label class="vid-note"><b>Reading Rescue note</b><span>After the media, write one sentence you can prove from the reading.</span><textarea oninput="SOC.mediaNote(\'' + esc(v.key) + '\',this.value)" placeholder="One evidence-backed sentence...">' + esc(note) + '</textarea></label>'
       + '<a href="' + esc(v.url) + '" target="_blank" rel="noopener">Open source page <span aria-hidden="true">&#8599;</span></a></div>'
       + '</article>';
   }
   function videosPage() {
-    var items = scholarVideos();
+    var items = scholarMedia();
     var filter = state.videoWeek || 'all';
-    var shown = items.filter(function (v) { return filter === 'all' || String(v.week) === String(filter); });
+    var kindFilter = state.mediaKind || 'all';
+    var shown = items.filter(function (v) { return (filter === 'all' || String(v.week) === String(filter)) && (kindFilter === 'all' || String(v.kind) === String(kindFilter)); });
+    var L = lensParse();
+    var field = L ? '<section class="vid-field-hero"><div><div class="mono">PROGRAM LENS IS ON</div><h2>' + esc(L.program || L.area) + '</h2><p>Each card now includes a field prompt. Use it to turn the media item into a concrete question about your future work, then return to the reading for the evidence.</p></div><button type="button" onclick="SOC.go(\'career\')">Review my field notes</button></section>' : '';
     return '<div class="rise vid-page">'
-      + '<section class="vid-hero"><div class="mono">CURATED SCHOLAR VIDEOS</div><h1>Scholar Video Gallery</h1><p>Use these videos as on-ramps into the readings, not replacements for them. Each card tells you what the video explains and which reading move to make next.</p></section>'
-      + '<section class="vid-rule"><div><b>Watch, then read</b><span>The video gives you a way in. Your assignments still need concepts and evidence from the readings.</span></div><div><b>Official embeds only</b><span>Videos are embedded or linked from official or reputable sources. Nothing is downloaded or rehosted here.</span></div><div><b>Build the habit</b><span>For each video, write down one sentence you could support with a course reading.</span></div></section>'
-      + videoWeekOptions(items)
-      + '<section class="vid-grid" aria-label="Scholar video cards">' + shown.map(videoCard).join('') + '</section>'
-      + (shown.length ? '' : '<p class="vid-empty">No videos are currently curated for this week.</p>')
+      + '<section class="vid-hero"><div class="mono">CURATED SCHOLAR MEDIA</div><h1>Scholar Media Gallery</h1><p>Use these videos and podcasts as on-ramps into the readings, not replacements for them. Each card tells you what the item explains, what to watch or listen for, and which reading move to make next.</p></section>'
+      + '<section class="vid-rule"><div><b>Watch or listen, then read</b><span>The media gives you a way in. Your assignments still need concepts and evidence from the readings.</span></div><div><b>Official sources only</b><span>Embeddable videos use official platform players. Podcasts and restricted media link out to the source site.</span></div><div><b>Use the program lens</b><span>If you choose a program, each card adds a field prompt without changing the required work.</span></div></section>'
+      + field
+      + mediaWeekOptions(items)
+      + mediaKindOptions(items)
+      + '<section class="vid-grid" aria-label="Scholar media cards">' + shown.map(videoCard).join('') + '</section>'
+      + (shown.length ? '' : '<p class="vid-empty">No media items are currently curated for that filter.</p>')
       + '</div>';
   }
   function homeBar() {
@@ -3668,7 +3938,7 @@
       '<div style="min-height:100vh;display:flex;flex-direction:column;background:#F7F8FA">' + header()
       + (state.navOpen ? '<button class="soc-mobile-scrim" onclick="SOC.closeNav()" aria-label="Close course navigation"></button>' : '')
       + '<div style="display:flex;flex:1;min-height:0">' + sidebar()
-      + '<main id="soc-main" class="scrollarea" style="flex:1;min-width:0;overflow:auto;height:calc(100vh - 62px)"><div style="margin:0 auto;padding:30px 30px 110px">' + (['journey','library','station'].indexOf(state.screen) >= 0 ? lensChip() : '') + body() + '</div></main>'
+      + '<main id="soc-main" class="scrollarea" style="flex:1;min-width:0;overflow:auto;height:calc(100vh - 62px)"><div style="margin:0 auto;padding:30px 30px 110px">' + (['journey','library','station','assignments','videos'].indexOf(state.screen) >= 0 ? lensChip() : '') + body() + '</div></main>'
       + '</div>' + toast + '</div>';
     if (refocusSearch) {
       var el = document.getElementById('soc-search');
@@ -3708,6 +3978,18 @@
     document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
     flash('Saved to your device (Seneca template).');
   }
+  function keepActivityRoute(w, screen) {
+    var cw = cleanWeek(w);
+    if (cw) state.activityReturn = cw;
+    state.screen = cleanScreen(screen || 'activity');
+  }
+  function routeActivityFromKey(key) {
+    var m = /^a\|(\d+)\|/.exec(String(key || ''));
+    if (m) keepActivityRoute(Number(m[1]), 'activity');
+  }
+  function keepAuditActivity() {
+    keepActivityRoute(5, 'sandbox');
+  }
   window.SOC = {
     toggleNav: function () { state.navOpen = !state.navOpen; render(); },
     closeNav: function () { state.navOpen = false; render(); },
@@ -3716,11 +3998,12 @@
     assignFaq: function (i) { state.assignmentFaq = (state.assignmentFaq === i) ? null : i; render(); },
     assignCheck: function (id, i) { state.assignmentChecks = state.assignmentChecks || {}; state.assignmentChecks[id] = state.assignmentChecks[id] || {}; state.assignmentChecks[id][i] = !state.assignmentChecks[id][i]; render(); },
     videoWeek: function (w) { state.videoWeek = w || 'all'; render(); topScroll(); },
+    mediaKind: function (k) { state.mediaKind = k || 'all'; render(); topScroll(); },
     careerField: function (v) { state.careerField = v; persist(); render(); topScroll(); },
     lensOff: function () { state.careerField = ''; persist(); render(); },
     careerReflect: function (k, v) { state.careerReflect = state.careerReflect || {}; state.careerReflect[k] = v; persist(); },
     station: function (w) { state.navOpen = false; state.stationWeek = w; state.journeyWeek = w; state.activityReturn = null; state.screen = 'station'; persist(); focusTarget = 'soc-main'; render(); topScroll(); },
-    startActivity: function (s, w) { state.activityReturn = w; state.screen = s; focusTarget = 'soc-main'; render(); topScroll(); },
+    startActivity: function (s, w) { keepActivityRoute(w, s); focusTarget = 'soc-main'; render(); topScroll(); },
     goWeek: function (s, w) { state.cardWeek = w; state.screen = s; focusTarget = 'soc-main'; render(); topScroll(); },
     galWeek: function (w) { var m = document.getElementById('soc-main'); var y = m ? m.scrollTop : 0; state.galWeek = (state.galWeek === w) ? null : w; render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = y; },
     galTopic: function (t) { var m = document.getElementById('soc-main'); var y = m ? m.scrollTop : 0; state.galTopic = (state.galTopic === t) ? null : t; render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = y; },
@@ -3758,11 +4041,11 @@
       persist(); refreshWeekChecks(w, d);
     },
     wkReflect: function (w, v) { state.wkReflect[w] = v; persist(); },
-    visualView: function (w, context, v) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; state.visualView = state.visualView || {}; state.visualView[(context || 'week') + '|' + w] = v; render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
-    actPick: function (key, idx) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; state.act[key] = idx; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
-    actToggle: function (key) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; state.act[key] = !state.act[key]; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
-    actAdd: function (key, idx) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; var arr = state.act[key] || []; if (arr.indexOf(idx) < 0) arr.push(idx); state.act[key] = arr; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
-    actLabPick: function (key, idx, max) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; var arr = state.act[key] || [], p = arr.indexOf(idx); if (p >= 0) arr.splice(p, 1); else { if (arr.length >= max) arr.shift(); arr.push(idx); } state.act[key] = arr; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
+    visualView: function (w, context, v) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; state.visualView = state.visualView || {}; state.visualView[(context || 'week') + '|' + w] = v; if (context === 'activity') keepActivityRoute(w, 'activity'); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
+    actPick: function (key, idx) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; routeActivityFromKey(key); state.act[key] = idx; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
+    actToggle: function (key) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; routeActivityFromKey(key); state.act[key] = !state.act[key]; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
+    actAdd: function (key, idx) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; routeActivityFromKey(key); var arr = state.act[key] || []; if (arr.indexOf(idx) < 0) arr.push(idx); state.act[key] = arr; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
+    actLabPick: function (key, idx, max) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; routeActivityFromKey(key); var arr = state.act[key] || [], p = arr.indexOf(idx); if (p >= 0) arr.splice(p, 1); else { if (arr.length >= max) arr.shift(); arr.push(idx); } state.act[key] = arr; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
     saveWeek: function (w) {
       var d = weekData(w); if (!d) { flash('Open a week first.'); return; }
       var lab = ['New to me', 'Getting it', 'I can'];
@@ -3775,14 +4058,21 @@
       }).join('\n\n');
       var scoreLine = 'Where your understanding sits: after the week you can speak to ' + postStat.g.can + ' of ' + postStat.total + ' of these ideas (getting there on ' + postStat.g.getting + ', new to ' + postStat.g.newto + '), and your read moved forward on ' + moved + ' of ' + postStat.total + ' since the start.';
       var auditText = activitySummary(w, d);
+      var mediaText = scholarMedia().filter(function (v) {
+        return v.week === w && state.mediaNotes && String(state.mediaNotes[v.key] || '').trim();
+      }).map(function (v) {
+        return v.title + ' (' + v.scholar + '):\n' + String(state.mediaNotes[v.key] || '').trim();
+      }).join('\n\n');
       var sections = [
         { h: 'Week ' + w + ': ' + weekTitle(w), t: d.purpose },
         { h: 'Before and after, your check answers', t: scoreLine + '\n\n' + checkLines },
-        { h: 'The activity: ' + d.activity.title, t: auditText },
-        { h: 'Your reflection', t: (state.wkReflect[w] || '').trim() || '(not written yet)' }
+        { h: 'The activity: ' + d.activity.title, t: auditText }
       ];
+      if (mediaText) sections.push({ h: 'Scholar media notes', t: mediaText });
+      sections.push({ h: 'Your reflection', t: (state.wkReflect[w] || '').trim() || '(not written yet)' });
       senecaDoc('BFS218', weekTitle(w) + ' (Week ' + w + ')', ['BFS218 Racism and the Digital Age', 'Your week record'], sections, 'BFS218_Week' + w + '_my_work');
     },
+    mediaNote: function (k, v) { state.mediaNotes = state.mediaNotes || {}; state.mediaNotes[k] = v; persist(); },
     rcReveal: function (k) { var m = document.getElementById('soc-main'); var top = m ? m.scrollTop : 0; state.revealed[k] = !state.revealed[k]; render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
     sgNote: function (k, v) { state.sgNotes = state.sgNotes || {}; state.sgNotes[k] = v; persist(); },
     sgCompare: function (k, w) { state.sgShow = state.sgShow || {}; state.sgShow[k] = !state.sgShow[k]; var sec = document.getElementById('wk-sg'); if (sec) sec.outerHTML = sgSection(w).html; },
@@ -3868,11 +4158,11 @@
       if (sel !== undefined && sel !== null) sections.push({ h: 'Quick check', t: 'Q: ' + checkQ + '\nYour answer was ' + (sel === 0 ? 'the grounded one. Correct.' : 'not the grounded one. Look again at what the reading actually claims.') });
       senecaDoc(cc || 'Course', 'Self-Check Studio', sub, sections, (cc || 'Course') + '_self_check_studio');
     },
-    runAudit: function () { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; state.auditRun = true; state.auditSystem = 0; state.auditedSystems = state.auditedSystems || {}; state.auditedSystems[GS.systems[0].id] = true; if (!state.auditSlice) state.auditSlice = 'overall'; render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
-    auditSystem: function (idx) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; state.auditRun = true; state.auditSystem = idx; state.auditedSystems = state.auditedSystems || {}; state.auditedSystems[auditSys().id] = true; if (!state.auditSlice) state.auditSlice = 'overall'; render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
-    nextSystem: function () { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; state.auditSystem = ((state.auditSystem || 0) + 1) % GS.systems.length; state.auditedSystems = state.auditedSystems || {}; state.auditedSystems[auditSys().id] = true; render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
-    auditSlice: function (s) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; state.auditSlice = s; render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
-    auditView: function (v) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; state.auditView = v || 'errors'; render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
+    runAudit: function () { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; keepAuditActivity(); state.auditRun = true; state.auditSystem = 0; state.auditedSystems = state.auditedSystems || {}; state.auditedSystems[GS.systems[0].id] = true; if (!state.auditSlice) state.auditSlice = 'overall'; render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
+    auditSystem: function (idx) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; keepAuditActivity(); state.auditRun = true; state.auditSystem = idx; state.auditedSystems = state.auditedSystems || {}; state.auditedSystems[auditSys().id] = true; if (!state.auditSlice) state.auditSlice = 'overall'; render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
+    nextSystem: function () { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; keepAuditActivity(); state.auditSystem = ((state.auditSystem || 0) + 1) % GS.systems.length; state.auditedSystems = state.auditedSystems || {}; state.auditedSystems[auditSys().id] = true; render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
+    auditSlice: function (s) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; keepAuditActivity(); state.auditSlice = s; render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
+    auditView: function (v) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; keepAuditActivity(); state.auditView = v || 'errors'; render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
     saveSandbox: function () {
       var gs = rec('buolamwini2018'), sel = state.mcSel['BFS218|sandbox'];
       var sections = [

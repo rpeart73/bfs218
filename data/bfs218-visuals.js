@@ -11,7 +11,15 @@ window.BFS218_VISUALS = {
       ],
       activity: {
         title: 'Use the model before you match examples.',
-        steps: ['Pick one everyday object in the model.', 'Ask what hidden rule might sit inside it.', 'Then match the examples in the activity to the course idea they show.']
+        steps: ['Pick one everyday object in the model.', 'Ask what hidden rule might sit inside it.', 'Then match the examples in the activity to the course idea they show.'],
+        modelKind: 'startermap',
+        modelTitle: 'Activity model: start your noticing map.',
+        modelScene: 'Everyday tools point back to one learner and then into a first map entry. Use this model to notice a real tool before you match it to a course idea.',
+        modelSteps: [
+          ['Choose one tool', 'Start with a search bar, camera, app, payment screen, or ID check.'],
+          ['Ask what it assumes', 'Look for what the tool treats as normal, trusted, risky, or invisible.'],
+          ['Make the first map entry', 'Turn the example into a sentence you can revisit later.']
+        ]
       }
     },
     2: {
@@ -25,7 +33,15 @@ window.BFS218_VISUALS = {
       ],
       activity: {
         title: 'Use the model to switch from intent to outcome.',
-        steps: ['Read the example.', 'Ask what happened, not only who meant what.', 'Choose the CRT mechanism that best explains the outcome.']
+        steps: ['Read the example.', 'Ask what happened, not only who meant what.', 'Choose the CRT mechanism that best explains the outcome.'],
+        modelKind: 'matchwork',
+        modelTitle: 'Activity model: match a case to a course idea.',
+        modelScene: 'Example cards move toward concept bins. Use this model to see that the activity is asking you to name the mechanism, not guess a moral label.',
+        modelSteps: [
+          ['Read the case', 'Stay with one example at a time.'],
+          ['Name the mechanism', 'Choose the idea that explains the outcome.'],
+          ['Use feedback', 'The feedback tells you why the match fits or why another idea is stronger.']
+        ]
       }
     },
     3: {
@@ -39,7 +55,15 @@ window.BFS218_VISUALS = {
       ],
       activity: {
         title: 'Use the model to trace the chain.',
-        steps: ['Start at the input.', 'Follow the rule or score.', 'Name where inequity enters the chain.']
+        steps: ['Start at the input.', 'Follow the rule or score.', 'Name where inequity enters the chain.'],
+        modelKind: 'decisionpath',
+        modelTitle: 'Activity model: follow one built-in decision.',
+        modelScene: 'A decision point branches into different outcomes. Use this model to slow down and ask where a neutral-looking process starts to reproduce an old pattern.',
+        modelSteps: [
+          ['Locate the input', 'What information enters the system first?'],
+          ['Follow the rule', 'What score, label, or threshold changes the path?'],
+          ['Check the outcome', 'Who receives help, suspicion, exposure, or exclusion?']
+        ]
       }
     },
     4: {
@@ -53,7 +77,15 @@ window.BFS218_VISUALS = {
       ],
       activity: {
         title: 'Use the model by flipping defaults.',
-        steps: ['Turn each default on or off.', 'Read who bears the cost.', 'Explain why a default is never neutral.']
+        steps: ['Turn each default on or off.', 'Read who bears the cost.', 'Explain why a default is never neutral.'],
+        modelKind: 'defaultboard',
+        modelTitle: 'Activity model: test the default board.',
+        modelScene: 'A control board shows choices already set before the user arrives. Use this model to remember that defaults make decisions quietly.',
+        modelSteps: [
+          ['Find the setting', 'A rule is already chosen.'],
+          ['Switch it', 'Turn one default on or off.'],
+          ['Name the cost', 'Ask who has to adapt to the default.']
+        ]
       }
     },
     5: {
@@ -81,7 +113,15 @@ window.BFS218_VISUALS = {
       ],
       activity: {
         title: 'Use the model to read a surveillance decision.',
-        steps: ['Choose the decision point.', 'Ask what data is being joined.', 'Name who can appeal or correct the flag.']
+        steps: ['Choose the decision point.', 'Ask what data is being joined.', 'Name who can appeal or correct the flag.'],
+        modelKind: 'surveillanceflow',
+        modelTitle: 'Activity model: follow the surveillance flag.',
+        modelScene: 'A person moves through a checkpoint, a scan becomes a data label, and the label travels to another decision point. Use this model to ask where accountability should enter.',
+        modelSteps: [
+          ['Find the checkpoint', 'Where does watching begin?'],
+          ['Follow the data trail', 'What label or database does the scan feed?'],
+          ['Look for appeal', 'Who can challenge the flag before it harms someone?']
+        ]
       }
     },
     7: {
@@ -95,7 +135,15 @@ window.BFS218_VISUALS = {
       ],
       activity: {
         title: 'Use the model as a review map.',
-        steps: ['Choose one earlier week.', 'Reread your note from that week.', 'Add one sentence about what you see more clearly now.']
+        steps: ['Choose one earlier week.', 'Reread your note from that week.', 'Add one sentence about what you see more clearly now.'],
+        modelKind: 'toolkit',
+        modelTitle: 'Activity model: assemble your review kit.',
+        modelScene: 'A small workbench holds the pieces of the first half of the course. Use this model to choose the part you need to strengthen before the course turns toward response.',
+        modelSteps: [
+          ['Choose a week', 'Pick one earlier idea that still feels unfinished.'],
+          ['Find the return point', 'Read your note or the anchor source again.'],
+          ['Name one clearer idea', 'Write what you understand better now.']
+        ]
       }
     },
     8: {
@@ -109,7 +157,15 @@ window.BFS218_VISUALS = {
       ],
       activity: {
         title: 'Use the model to inspect a data story.',
-        steps: ['Identify the data being used.', 'Ask whose story it tells.', 'Ask who should control or correct it.']
+        steps: ['Identify the data being used.', 'Ask whose story it tells.', 'Ask who should control or correct it.'],
+        modelKind: 'datastory',
+        modelTitle: 'Activity model: open the data story.',
+        modelScene: 'A data vault, story cards, and a key separate information from authority. Use this model to ask who controls the record and who gets to correct it.',
+        modelSteps: [
+          ['Name the record', 'What data is being stored or shared?'],
+          ['Read the story', 'What claim does the data make about people?'],
+          ['Return the key', 'Who should govern collection, use, and correction?']
+        ]
       }
     },
     9: {
@@ -123,7 +179,15 @@ window.BFS218_VISUALS = {
       ],
       activity: {
         title: 'Use the model to test a helpful promise.',
-        steps: ['Name the promise.', 'Follow what the tool collects or decides.', 'Decide who gains power and who loses it.']
+        steps: ['Name the promise.', 'Follow what the tool collects or decides.', 'Decide who gains power and who loses it.'],
+        modelKind: 'promisefunnel',
+        modelTitle: 'Activity model: test the promise funnel.',
+        modelScene: 'A polished help tool feeds data into a hidden funnel. Use this model to compare what the tool promises with what it collects, predicts, or controls.',
+        modelSteps: [
+          ['Read the promise', 'What help does the tool say it gives?'],
+          ['Trace the funnel', 'What data or prediction happens behind the promise?'],
+          ['Judge the effect', 'Who gains power, and who becomes more exposed?']
+        ]
       }
     },
     10: {
@@ -137,7 +201,15 @@ window.BFS218_VISUALS = {
       ],
       activity: {
         title: 'Use the model to inspect a gatekeeping tool.',
-        steps: ['Identify the score or threshold.', 'Ask who is filtered out.', 'Name what human review would need to see.']
+        steps: ['Identify the score or threshold.', 'Ask who is filtered out.', 'Name what human review would need to see.'],
+        modelKind: 'thresholdaudit',
+        modelTitle: 'Activity model: test the threshold.',
+        modelScene: 'Student records approach a cutoff line that sends people toward support or away from it. Use this model to see how one threshold can redistribute help.',
+        modelSteps: [
+          ['Find the score', 'What number, category, or label sorts students?'],
+          ['Test the cutoff', 'Who falls just outside support?'],
+          ['Add human review', 'What context would a fairer process need to see?']
+        ]
       }
     },
     11: {
@@ -151,7 +223,15 @@ window.BFS218_VISUALS = {
       ],
       activity: {
         title: 'Use the model as a repair bench.',
-        steps: ['Pick the harm to repair.', 'Choose who must be at the table.', 'Explain whether your fix changes power or only patches damage.']
+        steps: ['Pick the harm to repair.', 'Choose who must be at the table.', 'Explain whether your fix changes power or only patches damage.'],
+        modelKind: 'repairtable',
+        modelTitle: 'Activity model: build at the repair table.',
+        modelScene: 'A damaged system sits on a work table with tools and seats around it. Use this model to ask whether your response changes power or only patches damage.',
+        modelSteps: [
+          ['Name the harm', 'What damage has the system already caused?'],
+          ['Bring people to the table', 'Who must lead the repair?'],
+          ['Choose the tool', 'Does the response shift authority or only adjust the interface?']
+        ]
       }
     },
     12: {
@@ -165,7 +245,15 @@ window.BFS218_VISUALS = {
       ],
       activity: {
         title: 'Use the model as a policy stack.',
-        steps: ['Choose a policy lever.', 'Ask which level it works on.', 'Name the trade-off and the gap it still leaves.']
+        steps: ['Choose a policy lever.', 'Ask which level it works on.', 'Name the trade-off and the gap it still leaves.'],
+        modelKind: 'policydeck',
+        modelTitle: 'Activity model: compare policy levers.',
+        modelScene: 'A layered policy deck separates product fixes, institutional rules, law, and rights. Use this model to see what each lever can do and what it cannot do alone.',
+        modelSteps: [
+          ['Pick a lever', 'Choose one response from the list.'],
+          ['Find its level', 'Is it system, institution, law, or rights?'],
+          ['Name the gap', 'What risk remains even after this lever is used?']
+        ]
       }
     },
     13: {
@@ -179,7 +267,15 @@ window.BFS218_VISUALS = {
       ],
       activity: {
         title: 'Use the model to reread your cartography.',
-        steps: ['Open an early entry.', 'Open a later entry.', 'Mark what changed in your own seeing.']
+        steps: ['Open an early entry.', 'Open a later entry.', 'Mark what changed in your own seeing.'],
+        modelKind: 'capstonemap',
+        modelTitle: 'Activity model: prepare your final map.',
+        modelScene: 'Early entries, later entries, and a final path sit together. Use this model to turn your own course evidence into the final response.',
+        modelSteps: [
+          ['Return to evidence', 'Open one early and one later entry.'],
+          ['Name the change', 'What can you now see that you could not name before?'],
+          ['Shape the final answer', 'Use the change to plan the final video or map.']
+        ]
       }
     },
     14: {
@@ -193,7 +289,15 @@ window.BFS218_VISUALS = {
       ],
       activity: {
         title: 'Use the model to close the course.',
-        steps: ['Name the harm.', 'Name the response.', 'Name the commitment you will carry into your field.']
+        steps: ['Name the harm.', 'Name the response.', 'Name the commitment you will carry into your field.'],
+        modelKind: 'futurecompass',
+        modelTitle: 'Activity model: point the answer forward.',
+        modelScene: 'A compass connects evidence, response, and commitment. Use this model to make sure the final answer does not stop at harm.',
+        modelSteps: [
+          ['Use your evidence', 'Ground the answer in your own map.'],
+          ['Name a response', 'Choose a repair, policy, or design-justice move.'],
+          ['Carry it forward', 'Say what you will notice or do differently in future work.']
+        ]
       }
     }
   },

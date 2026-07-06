@@ -25,4 +25,4 @@ Static site, no build step, no framework. Serve the folder and open it:
 python3 -m http.server 8200
 ```
 
-IBM Plex Sans and Mono are self-hosted from `./fonts/` (OFL 1.1, license in `fonts/OFL.txt`); the site loads no CDN scripts and no Google Fonts. The only external requests are user-facing scholar-talk video embeds (YouTube thumbnail + click-gated player).
+IBM Plex Sans and Mono are self-hosted from `./fonts/` (OFL 1.1, license in `fonts/OFL.txt`); the site loads no CDN scripts and no Google Fonts. The only external requests are user-facing scholar media embeds or source links. Embeddable videos use official YouTube no-cookie players; podcasts or restricted media link to the official source site and are not downloaded or rehosted.
