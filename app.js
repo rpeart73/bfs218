@@ -1,7 +1,6 @@
-/* BFS218 Companion: the course source library. Vanilla JS, no build step, no framework.
+/* BFS218: the course source library. Vanilla JS, no build step, no framework.
    Organized by WEEK (the course arc): Racism and the Digital Age readings, glossary,
-   and self-checks. Shared engine for the two BFS218 section sites (async Atlas and
-   sync Field Guide); content is single-sourced via BFS218/_shared/propagate.sh.
+   and self-checks. This is the canonical public BFS218 site for all sections.
    A companion to Blackboard: no accounts, no grading, no student-to-student
    interaction. Saved + compare live on the student's own device (localStorage). */
 (function () {
@@ -354,7 +353,7 @@
         + '<span style="display:flex;align-items:center;justify-content:center;width:22px;height:22px;flex:none;color:' + (active ? 'var(--red)' : '#6B7280') + '">' + ic(d[2], 19) + '</span><span style="flex:1;text-align:left">' + d[1] + '</span>' + badge + '</button>';
     });
     var walk = '<a href="./walkthroughs/" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:11px;width:100%;border-radius:10px;padding:10px 12px;font-size:.9375rem;font-weight:500;color:#474C57;text-decoration:none"><span style="display:flex;align-items:center;justify-content:center;width:22px;height:22px;flex:none;color:#6B7280">' + ic('layers', 19) + '</span><span style="flex:1">Weekly Walkthrough</span><span style="color:#6B7280">↗</span></a>';
-    var guidePdf = './guide/' + (D.course && D.course.mode === 'Online Synchronous' ? 'BFS218_Field_Guide_Site_Guide.pdf' : 'BFS218_Companion_Site_Guide.pdf');
+    var guidePdf = './guide/BFS218_Site_Guide.pdf';
     var guide = '<div style="border-radius:10px;padding:10px 12px;color:#474C57"><div style="display:flex;align-items:flex-start;gap:11px;font-size:.9375rem;font-weight:500;line-height:1.25"><span style="display:flex;align-items:center;justify-content:center;width:22px;height:22px;flex:none;color:#6B7280">' + ic('file', 19) + '</span><span style="flex:1;min-width:0">Course Website Instructions</span></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 0 33px"><a href="./guide/" target="_blank" rel="noopener" style="font-size:.75rem;font-weight:600;color:#1B2A4A;background:#EEF1F5;border:1px solid #DEE3EA;border-radius:999px;padding:4px 9px;text-decoration:none">Online version <span aria-hidden="true">&#8599;</span></a><a href="' + guidePdf + '" target="_blank" rel="noopener" style="font-size:.75rem;font-weight:600;color:#1B2A4A;background:#EEF1F5;border:1px solid #DEE3EA;border-radius:999px;padding:4px 9px;text-decoration:none">PDF <span aria-hidden="true">&#8599;</span></a></div></div>';
     var nav = btns[0] + walk + guide + btns.slice(1).join('');
     var counts = {}; D.records.forEach(function (r) { counts[r.week] = (counts[r.week] || 0) + 1; });
