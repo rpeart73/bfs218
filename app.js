@@ -14,7 +14,7 @@
   var VKEY = SKEY + '.view.v1';
   var HKEY = SKEY + '.hardResetNext';
   function load() { try { var o = JSON.parse(localStorage.getItem(SKEY) || '{}'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; } }
-  function persist() { try { localStorage.setItem(SKEY, JSON.stringify({ saved: state.saved, cmpNotes: state.cmpNotes, rcNotes: state.rcNotes, sgNotes: state.sgNotes, sgTick: state.sgTick, wkCheck: state.wkCheck, wkReflect: state.wkReflect, act: state.act, kcShort: state.kcShort, kcShortRate: state.kcShortRate, kcHist: state.kcHist, careerReflect: state.careerReflect, mediaNotes: state.mediaNotes })); } catch (e) {} }
+  function persist() { try { localStorage.setItem(SKEY, JSON.stringify({ saved: state.saved, cmpNotes: state.cmpNotes, rcNotes: state.rcNotes, sgNotes: state.sgNotes, sgTick: state.sgTick, wkCheck: state.wkCheck, wkReflect: state.wkReflect, wkNotes: state.wkNotes, act: state.act, mcSel: state.mcSel, mcConf: state.mcConf, kcVersion: state.kcVersion, kcShort: state.kcShort, kcShortRate: state.kcShortRate, kcHist: state.kcHist, careerReflect: state.careerReflect, mediaNotes: state.mediaNotes })); } catch (e) {} }
   function loadView() { try { var o = JSON.parse(sessionStorage.getItem(VKEY) || '{}'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; } }
   function clearView() { try { sessionStorage.removeItem(VKEY); sessionStorage.removeItem(HKEY); } catch (e) {} }
   function shouldResumeView(v) {
@@ -30,19 +30,34 @@
     w = Number(w);
     return (isFinite(w) && w >= 1 && w <= 20) ? w : null;
   }
+  function cleanWeekPart(part) {
+    part = String(part || '');
+    return ['ov', 'path', 'vid', 'pre', 'learn', 'out', 'gq', 'lens', 'con', 'term', 'read', 'rescue', 'visual', 'watch', 'case', 'do', 'reflect', 'sg', 'kc', 'how', 'catch'].indexOf(part) >= 0 ? part : null;
+  }
+  function initialRoute() {
+    try {
+      var p = new URLSearchParams(location.search || '');
+      var w = cleanWeek(p.get('week') || p.get('w'));
+      if (w) return { screen: 'station', week: w, part: cleanWeekPart(p.get('part')) };
+    } catch (e) {}
+    return null;
+  }
   var saved0 = load();
   var view0 = loadView();
+  var route0 = initialRoute();
   var resumeView0 = shouldResumeView(view0);
+  var routePart0 = route0 && route0.part;
 
   var state = {
-    screen: resumeView0 ? cleanScreen(view0.screen) : 'journey',
+    screen: route0 ? route0.screen : (resumeView0 ? cleanScreen(view0.screen) : 'journey'),
     navOpen: false,
-    journeyWeek: resumeView0 ? cleanWeek(view0.journeyWeek) : null,
-    stationWeek: resumeView0 ? cleanWeek(view0.stationWeek) : null,
+    journeyWeek: route0 ? route0.week : (resumeView0 ? cleanWeek(view0.journeyWeek) : null),
+    stationWeek: route0 ? route0.week : (resumeView0 ? cleanWeek(view0.stationWeek) : null),
     sgNotes: (saved0.sgNotes || {}),
     sgTick: (saved0.sgTick || {}),
     wkCheck: (saved0.wkCheck && typeof saved0.wkCheck === 'object') ? saved0.wkCheck : {},
     wkReflect: (saved0.wkReflect && typeof saved0.wkReflect === 'object') ? saved0.wkReflect : {},
+    wkNotes: (saved0.wkNotes && typeof saved0.wkNotes === 'object') ? saved0.wkNotes : {},
     act: (saved0.act && typeof saved0.act === 'object') ? saved0.act : {},
     layout: 'byweek',
     search: '',
@@ -62,8 +77,9 @@
     rcReading: null,
     rcNotes: (saved0.rcNotes && typeof saved0.rcNotes === 'object') ? saved0.rcNotes : {},
     revealed: {},
-    mcSel: {},
-    mcConf: {},
+    mcSel: (saved0.mcSel && typeof saved0.mcSel === 'object') ? saved0.mcSel : {},
+    mcConf: (saved0.mcConf && typeof saved0.mcConf === 'object') ? saved0.mcConf : {},
+    kcVersion: (saved0.kcVersion && typeof saved0.kcVersion === 'object') ? saved0.kcVersion : {},
     kcReveal: {},
     kcShort: (saved0.kcShort && typeof saved0.kcShort === 'object') ? saved0.kcShort : {},
     kcShortShown: {},
@@ -1359,7 +1375,7 @@
     });
     var chain = '<div style="background:#F7F8FA;border:1px solid #DEE3EA;border-radius:12px;padding:15px 17px;margin:16px 0 0"><div class="mono" style="font-size:.6875rem;letter-spacing:.05em;color:#6B7280;margin-bottom:7px">CARRY THIS INTO YOUR ACCOUNTABILITY CHAIN</div><p style="font-size:.875rem;line-height:1.55;color:#15171C;margin:0">The system that fails darker-skinned women &#8594; the makers who built and shipped it, hiding the gap behind a high overall accuracy score &#8594; the institutions that buy and deploy it, in policing and at borders (the OPC and Robertson readings) &#8594; the people it is then used against &#8594; accountability across that whole chain, not one programmer &#8594; a response grounded in the resistance and design-justice readings (Tanksley, Costanza-Chock).</p></div>';
     var save = '<div style="margin-top:16px"><button onclick="SOC.saveSandbox()" style="background:var(--red);border:none;color:#fff;border-radius:9px;padding:10px 18px;font-size:.875rem;font-weight:600;cursor:pointer">Save my audit to the Accountability file (.docx)</button></div>';
-    return '<section style="background:#fff;border:1px solid #DEE3EA;border-radius:14px;padding:18px 18px 22px;margin:0 0 22px;box-shadow:0 1px 2px rgba(21,23,28,.04)">'
+    return mobileActivityActions(5, weekData(5) || {}) + '<section style="background:#fff;border:1px solid #DEE3EA;border-radius:14px;padding:18px 18px 22px;margin:0 0 22px;box-shadow:0 1px 2px rgba(21,23,28,.04)">'
       + '<div class="mono" style="font-size:.6875rem;letter-spacing:.06em;color:var(--red);font-weight:600;margin-bottom:6px">BIAS AUDIT</div>'
       + '<h1 style="font-size:1.75rem;font-weight:600;margin:0 0 8px">Audit the coded gaze</h1>'
       + '<p style="font-size:.9375rem;line-height:1.55;color:#474C57;margin:0 0 4px;">You are the auditor. Run a balanced benchmark on a facial-analysis system, then find the bias its makers missed, the way Buolamwini and Gebru did.</p>'
@@ -2127,7 +2143,15 @@
       + visualGuideHtml(spec)
       + visualModelHtml(w, spec, 'week')
       + visualStepCards(spec.steps)
+      + weekNoteBox(w, 'visual', 'A Visual Overview Notes', 'Write what the model is showing in your own words. Focus on the process, not the graphics.')
       + '</section>';
+  }
+  function wkNoteKey(w, part) { return w + '|' + part; }
+  function wkNoteValue(w, part) { return String((state.wkNotes && state.wkNotes[wkNoteKey(w, part)]) || '').trim(); }
+  function weekNoteBox(w, part, title, prompt) {
+    var key = wkNoteKey(w, part), id = 'wk-note-' + w + '-' + part;
+    var val = (state.wkNotes && state.wkNotes[key]) || '';
+    return '<label class="wk-notebox" for="' + id + '"><b>' + esc(title) + '</b><span>' + esc(prompt) + '</span><textarea id="' + id + '" oninput="SOC.wkNote(\'' + key + '\',this.value)" placeholder="Write a short note for your weekly document...">' + esc(val) + '</textarea></label>';
   }
   function weekActionLine(w, d) {
     var concept = d && d.concepts && d.concepts[0] ? d.concepts[0].h : weekTitle(w);
@@ -2773,17 +2797,20 @@
     var programCase = lensCaseStudySection(w, d);
     var concepts = sec('con', 'Key concepts', d.concepts.map(function (c) { return '<div class="wk-concept"><h3>' + esc(c.h) + '</h3><p>' + esc(c.body) + ' <span class="wk-cite">(' + esc(c.cite) + ')</span></p></div>'; }).join(''));
     var terms = sec('term', 'Key terms', d.terms.map(function (t) { return '<div class="wk-term"><b>' + esc(t.term) + '</b>: ' + esc(t.def) + ' <span class="wk-cite">(' + esc(t.cite) + ')</span></div>'; }).join(''));
-    var readings = sec('read', 'Readings', d.readings.map(function (r) { var resolves = (typeof rec === 'function') && r.id && rec(r.id); var tail = resolves ? '<button onclick="SOC.read(\'' + r.id + '\')" class="wk-scope">' + esc(r.scope || 'Open the reading') + ' &#8599;</button>' : (r.url ? '<a href="' + r.url + '" target="_blank" rel="noopener" class="wk-scope">' + esc(r.scope || 'Open the reading') + ' &#8599;</a>' : (r.scope ? '<div class="wk-scope" style="background:none;border:none;color:var(--ink-faint);padding:6px 0;cursor:default">' + esc(r.scope) + '</div>' : '')); return '<div class="wk-read"><div class="ref">' + r.apa + '</div>' + tail + '</div>'; }).join(''));
+    var readingsInner = d.readings.map(function (r) { var resolves = (typeof rec === 'function') && r.id && rec(r.id); var tail = resolves ? '<button onclick="SOC.read(\'' + r.id + '\')" class="wk-scope">' + esc(r.scope || 'Open the reading') + ' &#8599;</button>' : (r.url ? '<a href="' + r.url + '" target="_blank" rel="noopener" class="wk-scope">' + esc(r.scope || 'Open the reading') + ' &#8599;</a>' : (r.scope ? '<div class="wk-scope" style="background:none;border:none;color:var(--ink-faint);padding:6px 0;cursor:default">' + esc(r.scope) + '</div>' : '')); return '<div class="wk-read"><div class="ref">' + r.apa + '</div>' + tail + '</div>'; }).join('')
+      + weekNoteBox(w, 'readings', 'Readings Notes', 'After the reading or Reading Rescue, write the one idea you want to remember and where you saw it.');
+    var readings = sec('read', 'Readings', readingsInner);
     var rescue = readingRescueSection(w, d);
     var visual = visualOverviewSection(w, d);
-    var watch = d.deck ? '<section id="wk-watch" class="node"><h2 class="wk-sec">Walkthrough</h2><p style="margin:0 0 12px;font-size:.92rem">Step through this week\'s walkthrough deck.</p><div class="wk-deck"><iframe src="./walkthroughs/' + d.deck + '/index.html?v=4" title="Week ' + w + ' walkthrough" loading="lazy" allowfullscreen></iframe></div><a href="./walkthroughs/' + d.deck + '/index.html?v=4" target="_blank" rel="noopener" class="wk-fs">Open the walkthrough fullscreen &#8599;</a></section>' : '';
-    var act = '<section id="wk-do" class="node interactive"><h2 class="wk-sec">The activity: ' + esc(d.activity.title) + '</h2><div class="wk-whatwhy"><b>What this is:</b> ' + esc(d.activity.what) + '<br><br><b>Why you are doing it:</b> ' + esc(d.activity.why) + '</div>' + activityStartGuide(w) + lensActivityBlock(w, d.activity, false) + '<button onclick="SOC.startActivity(\'' + d.activity.screen + '\',' + w + ')" class="wk-cta">Start the activity' + ic('chevron', 17, 2.4) + '</button><p style="margin:10px 0 0;font-size:.74rem;color:var(--ink-faint)">Each activity gives you a guided model first, then a specific set of choices or checks. Read the short guide before you click.</p></section>';
+    var watch = d.deck ? '<section id="wk-watch" class="node"><h2 class="wk-sec">Walkthrough</h2><p style="margin:0 0 12px;font-size:.92rem">Step through this week\'s walkthrough deck.</p><div class="wk-deck"><iframe src="./walkthroughs/' + d.deck + '/index.html?v=4" title="Week ' + w + ' walkthrough" loading="lazy" allowfullscreen></iframe></div><a href="./walkthroughs/' + d.deck + '/index.html?v=4" target="_blank" rel="noopener" class="wk-fs">Open the walkthrough fullscreen &#8599;</a>' + weekNoteBox(w, 'walkthrough', 'Walkthrough Notes', 'Write one thing the walkthrough made clearer, or one question you still have.') + '</section>' : '';
+    var act = '<section id="wk-do" class="node interactive"><h2 class="wk-sec">The activity: ' + esc(d.activity.title) + '</h2><div class="wk-whatwhy"><b>What this is:</b> ' + esc(d.activity.what) + '<br><br><b>Why you are doing it:</b> ' + esc(d.activity.why) + '</div>' + activityStartGuide(w) + lensActivityBlock(w, d.activity, false) + '<button onclick="SOC.startActivity(\'' + d.activity.screen + '\',' + w + ')" class="wk-cta">Start the activity' + ic('chevron', 17, 2.4) + '</button><p style="margin:10px 0 0;font-size:.74rem;color:var(--ink-faint)">Each activity gives you a guided model first, then a specific set of choices or checks. Read the short guide before you click.</p>' + weekNoteBox(w, 'activity', 'Activity Notes', 'After trying the activity, write what the model or feedback helped you notice.') + '</section>';
     var reflect = '<section id="wk-reflect" class="node"><h2 class="wk-sec">Reflection</h2>'
       + '<div class="wk-ocheck"><div class="mono" style="font-size:.78rem;font-weight:700;color:var(--ink-faint);margin-bottom:7px">YOU CAN NOW</div>' + d.youcan.map(function (y) { return '<div class="wk-row"><span class="t">' + ic('check', 14, 2.6) + '</span>' + esc(y) + '</div>'; }).join('') + '</div>'
       + '<h3 style="margin:16px 0 4px">Now, what do you think?</h3><p class="wk-hint" style="margin-bottom:8px">The same ideas from the start. Rate them again to see where your understanding sits now, and how far it moved.</p>' + wkChecks(w, 'post', d)
       + '<h3 style="margin:16px 0 4px">Your reflection</h3><p style="margin:0 0 8px;font-size:.95rem">' + esc(d.reflectPrompt) + '</p>'
       + '<textarea oninput="SOC.wkReflect(' + w + ',this.value)" class="wk-ta" placeholder="Your reflection...">' + esc(state.wkReflect[w] || '') + '</textarea>'
-      + '<div class="wk-savebox"><h3>Save your work for this week</h3><p style="margin:0 0 4px;font-size:.9rem">This makes one Word file (.docx) on Seneca letterhead, your record of the week and what you hand in on Blackboard. It contains:</p><ul><li>your before-and-after answers to the five check questions</li><li>a summary of what you did in this week\'s activity</li><li>your answer to the reflection question</li></ul><button onclick="SOC.saveWeek(' + w + ')" class="wk-save">Save my work for this week (.docx)</button></div>'
+      + weekNoteBox(w, 'revisit', 'What I Still Need to Revisit', 'Name anything you want to return to before the assessment or discussion.')
+      + '<div class="wk-savebox"><h3>Generate your weekly notes</h3><p style="margin:0 0 4px;font-size:.9rem">This makes one Word file (.docx) on Seneca letterhead. It organizes your notes and practice results so you can review them before Blackboard work.</p><ul><li>your notes from readings, visuals, walkthrough, activity, media, and reflection</li><li>your before-and-after understanding check</li><li>your activity, knowledge-check, and reading-comprehension practice results</li></ul><button onclick="SOC.saveWeek(' + w + ')" class="wk-save">Generate Your Weekly Notes</button></div>'
       + '</section>';
     var navRow = '<div style="display:flex;gap:12px;margin-top:18px;flex-wrap:wrap">'
       + (prev != null ? '<button onclick="SOC.station(' + prev + ')" style="flex:1;min-width:180px;text-align:left;border:1px solid var(--border);background:#fff;border-radius:12px;padding:13px 16px;cursor:pointer"><div class="mono" style="font-size:.66rem;color:var(--ink-faint)">&larr; PREVIOUS</div><div style="font-size:.92rem;font-weight:700;color:var(--ink);margin-top:2px">Week ' + prev + ': ' + esc(weekTitle(prev)) + '</div></button>' : '')
@@ -2795,7 +2822,7 @@
     var rail = '<aside class="wk-rail"><div class="wk-railbox"><div class="wk-railh">IN THIS WEEK</div>'
       + [['ov', 'Overview'], ['path', 'Your learning path']].concat(VID ? [['vid', 'This week in 80 seconds']] : []).concat([['pre', 'Before you begin'], ['learn', 'Purpose'], ['out', 'Learning outcomes'], ['gq', 'Guiding questions']]).concat(programLens ? [['lens', 'For your program']] : []).concat([['con', 'Key concepts'], ['term', 'Key terms'], ['read', 'Readings']]).concat(rescue ? [['rescue', 'Reading Rescue']] : []).concat([['visual', 'A Visual Overview']]).concat(d.deck ? [['watch', 'Walkthrough']] : []).concat(programCase ? [['case', 'Case study']] : []).concat([['do', 'The activity'], ['reflect', 'Reflection &amp; save']]).concat(sg ? [['sg', 'Study Guide']] : []).concat(kcItems.length ? [['kc', 'Knowledge Check']] : []).map(function (it) { return '<a href="#wk-' + it[0] + '"><span class="s"></span>' + it[1] + '</a>'; }).join('')
       + '<div class="wk-railt">' + ic('clock', 12) + ' ' + esc(d.time.split('(')[0].trim()) + '</div></div></aside>';
-    return '<div class="rise">' + hero + path + '<div class="wk-grid"><section>' + vid + pre + purpose + outcomes + guiding + programLens + concepts + terms + readings + rescue + visual + watch + programCase + act + reflect + sg + kc + navRow + '</section>' + rail + '</div></div>';
+    return '<div class="rise">' + mobileWeekActions(w, d) + hero + path + '<div class="wk-grid"><section>' + vid + pre + purpose + outcomes + guiding + programLens + concepts + terms + readings + rescue + visual + watch + programCase + act + reflect + sg + kc + navRow + '</section>' + rail + '</div></div>';
   }
   /* ---------- generic week activities: match / scenario / toggle / assemble / lab ---------- */
   function actCard(inner) { return '<div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin:0 0 12px">' + inner + '</div>'; }
@@ -2877,7 +2904,7 @@
     var inner = '';
     switch (a.archetype) { case 'match': inner = actMatch(w, a); break; case 'scenario': inner = actScenario(w, a); break; case 'toggle': inner = actToggle(w, a); break; case 'assemble': inner = actAssemble(w, a); break; case 'lab': inner = actLab(w, a); break; case 'capstone': inner = actCapstone(w, a); break; default: inner = '<p style="color:var(--ink-dim)">This activity is not set up yet.</p>'; }
     var foot = '<div style="margin-top:22px;padding-top:18px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap"><div style="font-size:.86rem;color:var(--ink-dim)">When you are done, go back to the week to answer the reflection and save your work.</div><button onclick="SOC.station(' + w + ')" class="wk-cta" style="margin:0">Back to Week ' + w + ' ' + ic('chevron', 16, 2.4) + '</button></div>';
-    return '<div class="rise" style="margin:0 auto">' + head + activityInteractionGuide(w, a) + inner + foot + '</div>';
+    return '<div class="rise" style="margin:0 auto">' + mobileActivityActions(w, d) + head + activityInteractionGuide(w, a) + inner + weekNoteBox(w, 'activity', 'Activity Notes', 'What did this activity make you notice about the week\'s idea?') + foot + '</div>';
   }
   function activitySummary(w, d) {
     var a = d.activity || {};
@@ -2910,11 +2937,12 @@
       + '</div></section>';
     var path = capstoneLearningPath(w, d);
     var visual = visualOverviewSection(w, d);
-    var act = d.activity ? '<section id="wk-do" class="node interactive"><h2 class="wk-sec">' + esc(d.activity.title) + '</h2><div class="wk-whatwhy"><b>What this is:</b> ' + esc(d.activity.what) + '<br><br><b>Why you are doing it:</b> ' + esc(d.activity.why) + '</div>' + activityStartGuide(w) + '<button onclick="SOC.startActivity(\'' + d.activity.screen + '\',' + w + ')" class="wk-cta">Open your capstone' + ic('chevron', 17, 2.4) + '</button></section>' : '';
+    var act = d.activity ? '<section id="wk-do" class="node interactive"><h2 class="wk-sec">' + esc(d.activity.title) + '</h2><div class="wk-whatwhy"><b>What this is:</b> ' + esc(d.activity.what) + '<br><br><b>Why you are doing it:</b> ' + esc(d.activity.why) + '</div>' + activityStartGuide(w) + '<button onclick="SOC.startActivity(\'' + d.activity.screen + '\',' + w + ')" class="wk-cta">Open your capstone' + ic('chevron', 17, 2.4) + '</button>' + weekNoteBox(w, 'activity', 'Activity Notes', 'Write what this capstone activity helped you organize or decide.') + '</section>' : '';
     var reflect = '<section id="wk-reflect" class="node"><h2 class="wk-sec">Your reflection</h2>'
       + (d.reflectPrompt ? '<p style="margin:0 0 8px;font-size:.95rem">' + esc(d.reflectPrompt) + '</p>' : '')
       + '<textarea oninput="SOC.wkReflect(' + w + ',this.value)" class="wk-ta" placeholder="Your reflection...">' + esc(state.wkReflect[w] || '') + '</textarea>'
-      + '<div class="wk-savebox"><h3>Save your work for this week</h3><p style="margin:0 0 6px;font-size:.9rem">This makes one Word file (.docx) on Seneca letterhead, your record of this week.</p><button onclick="SOC.saveWeek(' + w + ')" class="wk-save">Save my work for this week (.docx)</button></div></section>';
+      + weekNoteBox(w, 'revisit', 'What I Still Need to Revisit', 'Name anything you want to return to before you finish the course.')
+      + '<div class="wk-savebox"><h3>Generate your weekly notes</h3><p style="margin:0 0 6px;font-size:.9rem">This makes one Word file (.docx) on Seneca letterhead, your organized weekly record.</p><button onclick="SOC.saveWeek(' + w + ')" class="wk-save">Generate Your Weekly Notes</button></div></section>';
     var navRow = '<div style="display:flex;gap:12px;margin-top:18px;flex-wrap:wrap">'
       + (prev != null ? '<button onclick="SOC.station(' + prev + ')" style="flex:1;min-width:180px;text-align:left;border:1px solid var(--border);background:#fff;border-radius:12px;padding:13px 16px;cursor:pointer"><div class="mono" style="font-size:.66rem;color:var(--ink-faint)">&larr; PREVIOUS</div><div style="font-size:.92rem;font-weight:700;color:var(--ink);margin-top:2px">Week ' + prev + ': ' + esc(weekTitle(prev)) + '</div></button>' : '')
       + (next != null ? '<button onclick="SOC.station(' + next + ')" style="flex:1;min-width:180px;text-align:right;border:1px solid var(--border);background:#fff;border-radius:12px;padding:13px 16px;cursor:pointer"><div class="mono" style="font-size:.66rem;color:var(--red)">NEXT &rarr;</div><div style="font-size:.92rem;font-weight:700;color:var(--ink);margin-top:2px">Week ' + next + ': ' + esc(weekTitle(next)) + '</div></button>' : '')
@@ -2922,7 +2950,7 @@
     var rail = '<aside class="wk-rail"><div class="wk-railbox"><div class="wk-railh">IN THIS WEEK</div>'
       + [['ov', 'This week'], ['path', 'Your learning path'], ['visual', 'A Visual Overview']].concat(d.activity ? [['do', 'Your capstone']] : []).concat([['reflect', 'Reflection & save']]).map(function (it) { return '<a href="#wk-' + it[0] + '"><span class="s"></span>' + it[1] + '</a>'; }).join('')
       + '<div class="wk-railt">' + ic('clock', 12) + ' No new material</div></div></aside>';
-    return '<div class="rise">' + hero + path + '<div class="wk-grid"><section>' + visual + act + reflect + navRow + '</section>' + rail + '</div></div>';
+    return '<div class="rise">' + mobileWeekActions(w, d, { activityLabel: 'Capstone' }) + hero + path + '<div class="wk-grid"><section>' + visual + act + reflect + navRow + '</section>' + rail + '</div></div>';
   }
   var OVERVIEW_WEEK = 1;
   function overviewPage(w) {
@@ -2943,7 +2971,7 @@
     var rail = '<aside class="wk-rail"><div class="wk-railbox"><div class="wk-railh">IN THIS WEEK</div>'
       + [['ov', 'Overview'], ['path', 'Your learning path'], ['how', 'How this course works'], ['visual', 'A Visual Overview']].map(function (it) { return '<a href="#wk-' + it[0] + '"><span class="s"></span>' + it[1] + '</a>'; }).join('')
       + '<div class="wk-railt">' + ic('clock', 12) + ' Overview, no readings</div></div></aside>';
-    return '<div class="rise">' + hero + path + '<div class="wk-grid"><section>' + how + visual + beginRow + '</section>' + rail + '</div></div>';
+    return '<div class="rise">' + mobileWeekActions(w, d, { reflect: false }) + hero + path + '<div class="wk-grid"><section>' + how + visual + beginRow + '</section>' + rail + '</div></div>';
   }
   var STUDY_WEEK = 7;
   function studyWeekPage(w) {
@@ -2967,7 +2995,7 @@
     var rail = '<aside class="wk-rail"><div class="wk-railbox"><div class="wk-railh">IN THIS WEEK</div>'
       + [['ov', 'Study Week']].concat(priors.length ? [['catch', 'Catch up and review']] : []).concat(kcItems.length ? [['kc', 'Knowledge Check']] : []).map(function (it) { return '<a href="#wk-' + it[0] + '"><span class="s"></span>' + it[1] + '</a>'; }).join('')
       + '<div class="wk-railt">' + ic('clock', 12) + ' No classes this week</div></div></aside>';
-    return '<div class="rise">' + hero + '<div class="wk-grid"><section>' + catchup + kc + navRow + '</section>' + rail + '</div></div>';
+    return '<div class="rise">' + mobileWeekActions(w, {}, { reflect: false }) + hero + '<div class="wk-grid"><section>' + catchup + kc + navRow + '</section>' + rail + '</div></div>';
   }
   function weekStation(w) {
     if (w === OVERVIEW_WEEK && !weekData(w)) return overviewPage(w);
@@ -2991,7 +3019,7 @@
       + (prev != null ? '<button onclick="SOC.station(' + prev + ')" style="flex:1;min-width:190px;text-align:left;border:1px solid var(--border);background:#fff;border-radius:12px;padding:13px 16px;cursor:pointer"><div class="mono" style="font-size:.6875rem;color:var(--ink-faint)">&larr; PREVIOUS</div><div style="font-size:.9375rem;font-weight:600;color:var(--ink);margin-top:2px">Week ' + prev + ': ' + esc(weekTitle(prev)) + '</div></button>' : '')
       + (next != null ? '<button onclick="SOC.station(' + next + ')" style="flex:1;min-width:190px;text-align:right;border:1px solid var(--border);background:#fff;border-radius:12px;padding:13px 16px;cursor:pointer"><div class="mono" style="font-size:.6875rem;color:var(--red)">NEXT &rarr;</div><div style="font-size:.9375rem;font-weight:600;color:var(--ink);margin-top:2px">Week ' + next + ': ' + esc(weekTitle(next)) + '</div></button>' : '')
       + '</div>';
-    return '<div class="rise">' + hero + framing + '<div class="mono" style="font-size:.6875rem;letter-spacing:.05em;color:var(--ink-faint);margin:0 0 12px">WHAT YOU ARE READING</div>' + readBlocks + stationDo(w) + navRow + '</div>';
+    return '<div class="rise">' + mobileWeekActions(w, {}, { reflect: false }) + hero + framing + '<div class="mono" style="font-size:.6875rem;letter-spacing:.05em;color:var(--ink-faint);margin:0 0 12px">WHAT YOU ARE READING</div>' + readBlocks + stationDo(w) + navRow + '</div>';
   }
 
   /* ---------- render ---------- */
@@ -3860,6 +3888,128 @@
     if (state.activityReturn != null) return '<button onclick="SOC.station(' + state.activityReturn + ')" style="display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid #DEE3EA;border-radius:8px;padding:8px 14px;font-size:.875rem;font-weight:600;color:#15171C;margin-bottom:18px;cursor:pointer">&#8592; Back to Week ' + state.activityReturn + '</button>';
     return homeBar();
   }
+  function docBlank(s) { return String(s || '').trim() || '(not written yet)'; }
+  function yesNoDoc(x) { return x ? 'Yes' : 'Not yet'; }
+  function readingsDoc(w, d) {
+    var refs = ((d && d.readings) || []).map(function (r, i) {
+      return (i + 1) + '. ' + String(r.apa || '').replace(/<[^>]+>/g, '');
+    }).join('\n\n') || '(no assigned readings this week)';
+    return 'Assigned readings:\n' + refs + '\n\nYour notes:\n' + docBlank(wkNoteValue(w, 'readings'));
+  }
+  function visualDoc(w, d) {
+    var spec = visualSpec(w, d);
+    var labels = (spec.labels || []).slice(0, 3).map(function (l, i) { return (i + 1) + '. ' + (l.t || '') + ': ' + (l.sub || ''); }).join('\n');
+    return 'What the visual is conveying:\n' + (spec.reading || spec.scene || '(visual guide)') + (labels ? '\n\nLabels:\n' + labels : '') + '\n\nYour notes:\n' + docBlank(wkNoteValue(w, 'visual'));
+  }
+  function walkthroughDoc(w, d) {
+    if (!d || !d.deck) return 'No walkthrough deck for this week.\n\nYour notes:\n' + docBlank(wkNoteValue(w, 'walkthrough'));
+    return 'Walkthrough used: ' + d.deck + '\n\nYour notes:\n' + docBlank(wkNoteValue(w, 'walkthrough'));
+  }
+  function kcDoc(w) {
+    var kcVer = (state.kcVersion && state.kcVersion[w]) || 0;
+    var label = ['A', 'B', 'C'][kcVer] || 'A';
+    var items = kcSection(w).items || [];
+    var scored = items.filter(function (m) { return !(m && m.type === 'short'); });
+    var answered = 0, correct = 0, confidentMiss = 0, confidenceSet = 0;
+    scored.forEach(function (m, mi) {
+      var key = 'wk' + w + '|kc' + kcVer + '|' + mi, sel = state.mcSel && state.mcSel[key];
+      if (sel !== undefined && sel !== null) {
+        answered++;
+        if (sel === m.answer) correct++;
+        var conf = state.mcConf && state.mcConf[key];
+        if (conf) {
+          confidenceSet++;
+          if (conf === 'sure' && sel !== m.answer) confidentMiss++;
+        }
+      }
+    });
+    var shortRows = items.filter(function (m) { return m && m.type === 'short'; }).map(function (m, si) {
+      var skey = 'wk' + w + '|kc' + kcVer + '|short' + si;
+      var rate = state.kcShortRate && state.kcShortRate[skey];
+      return (si + 1) + '. ' + (m.q || 'Short reflection') + '\n   Your answer: ' + docBlank(state.kcShort && state.kcShort[skey]) + '\n   Your self-rating: ' + (rate === 'got' ? 'I had this' : rate === 'part' ? 'Partly there' : rate === 'not' ? 'Not yet' : '(not rated)');
+    }).join('\n\n');
+    return 'Set used: ' + label + '\nPractice result: ' + correct + ' of ' + scored.length + ' correct (' + answered + ' of ' + scored.length + ' answered).\nConfidence marks added: ' + confidenceSet + '. Confident misses: ' + confidentMiss + '.\n\n' + (shortRows ? 'Short written practice:\n' + shortRows : 'No short written practice completed in this set.');
+  }
+  function readingCompDoc(w, d) {
+    var records = weekReadingRecords(d), any = false;
+    var lines = records.map(function (r) {
+      var mcItems = MC[r.id] || [], ans = 0, cor = 0;
+      mcItems.forEach(function (m, mi) { var s = state.mcSel && state.mcSel[r.id + '|mc|' + mi]; if (s !== undefined && s !== null) { ans++; if (s === m.answer) cor++; } });
+      var noteLines = Object.keys(state.rcNotes || {}).filter(function (k) { return k.indexOf(r.id + '|') === 0 && String(state.rcNotes[k] || '').trim(); }).map(function (k) { any = true; return '- ' + String(state.rcNotes[k]).trim(); }).join('\n');
+      if (ans || noteLines) any = true;
+      return r.title + '\nPractice result: ' + cor + ' of ' + mcItems.length + ' correct (' + ans + ' answered).' + (noteLines ? '\nWritten responses:\n' + noteLines : '\nWritten responses: (not written yet)');
+    });
+    return any ? lines.join('\n\n') : 'No reading-comprehension practice saved for this week yet.';
+  }
+  function checksDoc(w, d) {
+    if (!d || !d.checks || !d.checks.length) return 'No before-and-after understanding check for this week.';
+    var lab = ['New to me', 'Getting it', 'I can'];
+    var rate = function (k) { var s = state.wkCheck[k]; return s == null ? '(not rated)' : lab[s]; };
+    var postStat = checkStat(w, 'post', d), moved = 0;
+    var checkLines = d.checks.map(function (q, i) {
+      var pr = state.wkCheck['pre|' + w + '|' + i], po = state.wkCheck['post|' + w + '|' + i];
+      if (pr != null && po != null && po > pr) moved++;
+      return (i + 1) + '. ' + checkText(q) + '\n   Before: ' + rate('pre|' + w + '|' + i) + '   After: ' + rate('post|' + w + '|' + i);
+    }).join('\n\n');
+    return 'After the week you can speak to ' + postStat.g.can + ' of ' + postStat.total + ' ideas (getting there on ' + postStat.g.getting + ', new to ' + postStat.g.newto + '), and your read moved forward on ' + moved + ' of ' + postStat.total + ' since the start.\n\n' + checkLines;
+  }
+  function mediaDoc(w) {
+    var mediaText = scholarMedia().filter(function (v) {
+      return v.week === w && state.mediaNotes && String(state.mediaNotes[v.key] || '').trim();
+    }).map(function (v) {
+      return v.title + ' (' + v.scholar + '):\n' + String(state.mediaNotes[v.key] || '').trim();
+    }).join('\n\n');
+    return mediaText || '(not written yet)';
+  }
+  function revisitDoc(w, d) {
+    var note = docBlank(wkNoteValue(w, 'revisit'));
+    if (!d || !d.checks || !d.checks.length) return note;
+    var post = checkStat(w, 'post', d);
+    var auto = (post.items || []).filter(function (it) { return it.r !== 2; }).map(function (it, i) { return (i + 1) + '. ' + checkText(it.q); }).join('\n');
+    return note + (auto ? '\n\nAuto-suggested revisit list from your final understanding check:\n' + auto : '');
+  }
+  function checklistDoc(w, d) {
+    var actSum = activitySummary(w, d);
+    var activityDone = actSum.indexOf('not started') < 0 && actSum.indexOf('not run') < 0 && actSum.indexOf('revisit not started') < 0;
+    var kcItems = kcSection(w).items || [], kcVer = (state.kcVersion && state.kcVersion[w]) || 0;
+    var kcAnswered = kcItems.some(function (m, mi) { return m && m.type !== 'short' && state.mcSel && state.mcSel['wk' + w + '|kc' + kcVer + '|' + mi] != null; });
+    return [
+      'Readings notes added: ' + yesNoDoc(!!wkNoteValue(w, 'readings')),
+      'Visual overview notes added: ' + yesNoDoc(!!wkNoteValue(w, 'visual')),
+      'Walkthrough notes added: ' + yesNoDoc(!!wkNoteValue(w, 'walkthrough') || !(d && d.deck)),
+      'Activity attempted: ' + yesNoDoc(activityDone),
+      'Knowledge check attempted: ' + yesNoDoc(kcAnswered),
+      'Reading-comprehension practice attempted: ' + yesNoDoc(readingCompDoc(w, d).indexOf('No reading-comprehension practice') !== 0),
+      'Reflection written: ' + yesNoDoc(!!String(state.wkReflect[w] || '').trim()),
+      'Revisit note written: ' + yesNoDoc(!!wkNoteValue(w, 'revisit'))
+    ].join('\n');
+  }
+  function mobileJumpItem(label, action, primary) {
+    return '<button type="button" class="' + (primary ? 'primary' : '') + '" onclick="' + action + '">' + esc(label) + '</button>';
+  }
+  function mobileWeekActions(w, d, opt) {
+    opt = opt || {};
+    d = d || {};
+    var items = [
+      mobileJumpItem('Menu', 'SOC.openNav()', true),
+      mobileJumpItem('Home', "SOC.go('journey')", false)
+    ];
+    if (d.deck) items.push(mobileJumpItem('Walkthrough', "SOC.jumpWeek(" + w + ",'watch')", false));
+    if (d.activity) items.push(mobileJumpItem(opt.activityLabel || 'Activity', "SOC.jumpWeek(" + w + ",'do')", false));
+    if (opt.reflect !== false) items.push(mobileJumpItem('Reflect/save', "SOC.jumpWeek(" + w + ",'reflect')", false));
+    return '<nav class="soc-mobile-jump" aria-label="Mobile week shortcuts">' + items.join('') + '</nav>';
+  }
+  function mobileActivityActions(w, d) {
+    d = d || {};
+    var items = [
+      mobileJumpItem('Menu', 'SOC.openNav()', true),
+      mobileJumpItem('Week ' + w, 'SOC.station(' + w + ')', false),
+      mobileJumpItem('Home', "SOC.go('journey')", false)
+    ];
+    if (d.deck) items.push(mobileJumpItem('Walkthrough', "SOC.jumpWeek(" + w + ",'watch')", false));
+    items.push(mobileJumpItem('Reflect/save', "SOC.jumpWeek(" + w + ",'reflect')", false));
+    return '<nav class="soc-mobile-jump" aria-label="Mobile activity shortcuts">' + items.join('') + '</nav>';
+  }
   function body() {
     if (state.screen === 'journey' || state.screen === 'library') return journeyHome();
     if (state.screen === 'station') { var _sw = state.stationWeek || currentJourneyWeek(); return homeBar() + lensHook(_sw) + weekStation(_sw); }
@@ -3955,6 +4105,21 @@
     initTopicModels();
   }
   function topScroll() { var m = document.getElementById('soc-main'); if (m) m.scrollTop = 0; }
+  function renderKeepScroll() {
+    var m = document.getElementById('soc-main'), y = m ? m.scrollTop : 0;
+    render();
+    var m2 = document.getElementById('soc-main');
+    if (m2) m2.scrollTop = y;
+  }
+  function scrollWeekPart(part) {
+    if (!part) { topScroll(); return; }
+    setTimeout(function () {
+      var el = document.getElementById('wk-' + part);
+      var m = document.getElementById('soc-main');
+      if (el && m) m.scrollTop = Math.max(0, el.offsetTop - 10);
+      else if (el && el.scrollIntoView) el.scrollIntoView({ block: 'start' });
+    }, 20);
+  }
 
   /* ---------- actions ---------- */
   function flash(msg) { clearTimeout(toastTimer); var lr = document.getElementById('soc-live'); if (lr) { lr.textContent = ''; setTimeout(function () { lr.textContent = msg; }, 30); } state.toast = msg; render(); toastTimer = setTimeout(function () { state.toast = null; render(); }, 2200); }
@@ -3991,8 +4156,9 @@
     keepActivityRoute(5, 'sandbox');
   }
   window.SOC = {
-    toggleNav: function () { state.navOpen = !state.navOpen; render(); },
-    closeNav: function () { state.navOpen = false; render(); },
+    toggleNav: function () { state.navOpen = !state.navOpen; renderKeepScroll(); },
+    openNav: function () { state.navOpen = true; renderKeepScroll(); },
+    closeNav: function () { state.navOpen = false; renderKeepScroll(); },
     go: function (s) { state.navOpen = false; if (s === 'library') { state.savedView = false; } if (s === 'reading') { state.rcReading = null; state.lens = 'thematic'; } if (s === 'readings') { state.galWeek = null; state.galTopic = null; } state.screen = s; focusTarget = 'soc-main'; render(); topScroll(); },
     assignPick: function (i) { state.assignmentIndex = Number(i) || 0; focusTarget = 'asg-detail'; render(); },
     assignFaq: function (i) { state.assignmentFaq = (state.assignmentFaq === i) ? null : i; render(); },
@@ -4003,6 +4169,7 @@
     lensOff: function () { state.careerField = ''; persist(); render(); },
     careerReflect: function (k, v) { state.careerReflect = state.careerReflect || {}; state.careerReflect[k] = v; persist(); },
     station: function (w) { state.navOpen = false; state.stationWeek = w; state.journeyWeek = w; state.activityReturn = null; state.screen = 'station'; persist(); focusTarget = 'soc-main'; render(); topScroll(); },
+    jumpWeek: function (w, part) { state.navOpen = false; state.stationWeek = w; state.journeyWeek = w; state.activityReturn = null; state.screen = 'station'; persist(); focusTarget = 'soc-main'; render(); scrollWeekPart(part); },
     startActivity: function (s, w) { keepActivityRoute(w, s); focusTarget = 'soc-main'; render(); topScroll(); },
     goWeek: function (s, w) { state.cardWeek = w; state.screen = s; focusTarget = 'soc-main'; render(); topScroll(); },
     galWeek: function (w) { var m = document.getElementById('soc-main'); var y = m ? m.scrollTop : 0; state.galWeek = (state.galWeek === w) ? null : w; render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = y; },
@@ -4041,6 +4208,7 @@
       persist(); refreshWeekChecks(w, d);
     },
     wkReflect: function (w, v) { state.wkReflect[w] = v; persist(); },
+    wkNote: function (k, v) { state.wkNotes = state.wkNotes || {}; state.wkNotes[k] = v; persist(); },
     visualView: function (w, context, v) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; state.visualView = state.visualView || {}; state.visualView[(context || 'week') + '|' + w] = v; if (context === 'activity') keepActivityRoute(w, 'activity'); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
     actPick: function (key, idx) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; routeActivityFromKey(key); state.act[key] = idx; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
     actToggle: function (key) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; routeActivityFromKey(key); state.act[key] = !state.act[key]; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
@@ -4048,29 +4216,21 @@
     actLabPick: function (key, idx, max) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; routeActivityFromKey(key); var arr = state.act[key] || [], p = arr.indexOf(idx); if (p >= 0) arr.splice(p, 1); else { if (arr.length >= max) arr.shift(); arr.push(idx); } state.act[key] = arr; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
     saveWeek: function (w) {
       var d = weekData(w); if (!d) { flash('Open a week first.'); return; }
-      var lab = ['New to me', 'Getting it', 'I can'];
-      var rate = function (k) { var s = state.wkCheck[k]; return s == null ? '(not rated)' : lab[s]; };
-      var postStat = checkStat(w, 'post', d), moved = 0;
-      var checkLines = d.checks.map(function (q, i) {
-        var pr = state.wkCheck['pre|' + w + '|' + i], po = state.wkCheck['post|' + w + '|' + i];
-        if (pr != null && po != null && po > pr) moved++;
-        return (i + 1) + '. ' + checkText(q) + '\n   Before: ' + rate('pre|' + w + '|' + i) + '   After: ' + rate('post|' + w + '|' + i);
-      }).join('\n\n');
-      var scoreLine = 'Where your understanding sits: after the week you can speak to ' + postStat.g.can + ' of ' + postStat.total + ' of these ideas (getting there on ' + postStat.g.getting + ', new to ' + postStat.g.newto + '), and your read moved forward on ' + moved + ' of ' + postStat.total + ' since the start.';
-      var auditText = activitySummary(w, d);
-      var mediaText = scholarMedia().filter(function (v) {
-        return v.week === w && state.mediaNotes && String(state.mediaNotes[v.key] || '').trim();
-      }).map(function (v) {
-        return v.title + ' (' + v.scholar + '):\n' + String(state.mediaNotes[v.key] || '').trim();
-      }).join('\n\n');
       var sections = [
-        { h: 'Week ' + w + ': ' + weekTitle(w), t: d.purpose },
-        { h: 'Before and after, your check answers', t: scoreLine + '\n\n' + checkLines },
-        { h: 'The activity: ' + d.activity.title, t: auditText }
+        { h: 'Week Snapshot', t: d.purpose || d.overview || weekTitle(w) },
+        { h: 'Readings Notes', t: readingsDoc(w, d) },
+        { h: 'A Visual Overview Notes', t: visualDoc(w, d) },
+        { h: 'Walkthrough Notes', t: walkthroughDoc(w, d) },
+        { h: 'Activity Notes and Results', t: 'Activity: ' + ((d.activity && d.activity.title) || 'This week\'s activity') + '\nResult: ' + activitySummary(w, d) + '\n\nYour notes:\n' + docBlank(wkNoteValue(w, 'activity')) },
+        { h: 'Knowledge Check Results', t: kcDoc(w) },
+        { h: 'Reading Comprehension Practice Results', t: readingCompDoc(w, d) },
+        { h: 'Before and After Understanding Check', t: checksDoc(w, d) },
+        { h: 'Scholar Media Notes', t: mediaDoc(w) },
+        { h: 'Reflection', t: docBlank(state.wkReflect[w]) },
+        { h: 'What I Still Need to Revisit', t: revisitDoc(w, d) },
+        { h: 'Submission Checklist', t: checklistDoc(w, d) }
       ];
-      if (mediaText) sections.push({ h: 'Scholar media notes', t: mediaText });
-      sections.push({ h: 'Your reflection', t: (state.wkReflect[w] || '').trim() || '(not written yet)' });
-      senecaDoc('BFS218', weekTitle(w) + ' (Week ' + w + ')', ['BFS218 Racism and the Digital Age', 'Your week record'], sections, 'BFS218_Week' + w + '_my_work');
+      senecaDoc('BFS218', 'BFS218 Week ' + w + ': ' + weekTitle(w), ['Racism and the Digital Age', 'Your weekly notes and private practice results'], sections, 'BFS218_Week' + w + '_weekly_notes');
     },
     mediaNote: function (k, v) { state.mediaNotes = state.mediaNotes || {}; state.mediaNotes[k] = v; persist(); },
     rcReveal: function (k) { var m = document.getElementById('soc-main'); var top = m ? m.scrollTop : 0; state.revealed[k] = !state.revealed[k]; render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
@@ -4080,6 +4240,7 @@
     sgTickRung: function (k, w) { state.sgTick = state.sgTick || {}; state.sgTick[k] = true; persist(); var sec = document.getElementById('wk-sg'); if (sec) sec.outerHTML = sgSection(w).html; },
     mcPick: function (k, i) {
       if (state.mcSel[k] === i) { delete state.mcSel[k]; } else { state.mcSel[k] = i; }
+      persist();
       var kcm = /^wk(\d+)\|kc/.exec(k);
       if (kcm) {
         var sec = document.getElementById('wk-kc');
@@ -4090,15 +4251,15 @@
       var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top;
       window.scrollTo(0, wy);
     },
-    kcVer: function (w, v) { state.kcVersion = state.kcVersion || {}; state.kcVersion[w] = v; var sec = document.getElementById('wk-kc'); if (sec) { sec.outerHTML = kcSection(w).html; } },
-    kcClear: function (w, v) { var pre = 'wk' + w + '|kc' + v + '|'; [state.mcSel, state.mcConf].forEach(function (map) { if (!map) return; Object.keys(map).forEach(function (k) { if (k.indexOf(pre) === 0) delete map[k]; }); }); if (state.kcReveal) delete state.kcReveal[w + '|' + v]; var sec = document.getElementById('wk-kc'); if (sec) { sec.outerHTML = kcSection(w).html; } },
-    mcConf: function (k, c, w) { state.mcConf = state.mcConf || {}; if (state.mcConf[k] === c) delete state.mcConf[k]; else state.mcConf[k] = c; var sec = document.getElementById('wk-kc'); if (sec) sec.outerHTML = kcSection(w).html; },
-    mcPickSel: function (k, v) { v = Number(v); if (isNaN(v) || v < 0) delete state.mcSel[k]; else state.mcSel[k] = v; var kcm = /^wk(\d+)\|kc/.exec(k); if (kcm) { var sec = document.getElementById('wk-kc'); if (sec) { sec.outerHTML = kcSection(Number(kcm[1])).html; return; } } render(); },
-    kcShow: function (w) { var v = (state.kcVersion && state.kcVersion[w]) || 0; state.kcReveal = state.kcReveal || {}; state.kcReveal[w + '|' + v] = true; var sec = document.getElementById('wk-kc'); if (sec) sec.outerHTML = kcSection(w).html; },
+    kcVer: function (w, v) { state.kcVersion = state.kcVersion || {}; state.kcVersion[w] = v; persist(); var sec = document.getElementById('wk-kc'); if (sec) { sec.outerHTML = kcSection(w).html; } },
+    kcClear: function (w, v) { var pre = 'wk' + w + '|kc' + v + '|'; [state.mcSel, state.mcConf].forEach(function (map) { if (!map) return; Object.keys(map).forEach(function (k) { if (k.indexOf(pre) === 0) delete map[k]; }); }); if (state.kcReveal) delete state.kcReveal[w + '|' + v]; persist(); var sec = document.getElementById('wk-kc'); if (sec) { sec.outerHTML = kcSection(w).html; } },
+    mcConf: function (k, c, w) { state.mcConf = state.mcConf || {}; if (state.mcConf[k] === c) delete state.mcConf[k]; else state.mcConf[k] = c; persist(); var sec = document.getElementById('wk-kc'); if (sec) sec.outerHTML = kcSection(w).html; },
+    mcPickSel: function (k, v) { v = Number(v); if (isNaN(v) || v < 0) delete state.mcSel[k]; else state.mcSel[k] = v; persist(); var kcm = /^wk(\d+)\|kc/.exec(k); if (kcm) { var sec = document.getElementById('wk-kc'); if (sec) { sec.outerHTML = kcSection(Number(kcm[1])).html; return; } } render(); },
+    kcShow: function (w) { var v = (state.kcVersion && state.kcVersion[w]) || 0; state.kcReveal = state.kcReveal || {}; state.kcReveal[w + '|' + v] = true; persist(); var sec = document.getElementById('wk-kc'); if (sec) sec.outerHTML = kcSection(w).html; },
     kcShortText: function (k, v) { state.kcShort = state.kcShort || {}; state.kcShort[k] = v; persist(); },
     kcShortReveal: function (k, w) { state.kcShortShown = state.kcShortShown || {}; state.kcShortShown[k] = !state.kcShortShown[k]; var sec = document.getElementById('wk-kc'); if (sec) sec.outerHTML = kcSection(w).html; },
     kcShortRate: function (k, r, w) { state.kcShortRate = state.kcShortRate || {}; state.kcShortRate[k] = r; persist(); var sec = document.getElementById('wk-kc'); if (sec) sec.outerHTML = kcSection(w).html; },
-    mcReset: function (id) { var m = document.getElementById('soc-main'); var top = m ? m.scrollTop : 0; var keep = {}; Object.keys(state.mcSel).forEach(function (k) { if (k.indexOf(id + '|mc|') !== 0) keep[k] = state.mcSel[k]; }); state.mcSel = keep; render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
+    mcReset: function (id) { var m = document.getElementById('soc-main'); var top = m ? m.scrollTop : 0; var keep = {}; Object.keys(state.mcSel).forEach(function (k) { if (k.indexOf(id + '|mc|') !== 0) keep[k] = state.mcSel[k]; }); state.mcSel = keep; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
     saveReadingNotes: function () {
       var r = state.rcReading && rec(state.rcReading); if (!r) { flash('Pick a reading first.'); return; }
       var cc = (D.course && D.course.code) || 'Course';
@@ -4185,4 +4346,5 @@
   };
 
   render();
+  if (routePart0) scrollWeekPart(routePart0);
 })();

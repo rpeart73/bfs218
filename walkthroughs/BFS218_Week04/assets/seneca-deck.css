@@ -59,6 +59,38 @@
 .deck-logo {
   position: fixed; top: 22px; right: 26px; height: 30px; z-index: 41;
 }
+.deck-menu-toggle {
+  position: fixed; top: 18px; left: 18px; z-index: 70;
+  width: 42px; height: 42px; border-radius: 11px;
+  border: 1px solid #d8dde5; background: rgba(255,255,255,.96); color: var(--ink);
+  display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  box-shadow: 0 8px 22px rgba(0,0,0,.14); cursor: pointer;
+}
+.deck-menu-toggle span {
+  display: block; width: 18px; height: 2px; border-radius: 999px; background: currentColor;
+}
+.deck-menu-toggle:focus-visible { outline: 3px solid var(--seneca-red); outline-offset: 2px; }
+.deck-menu {
+  position: fixed; top: 68px; left: 18px; z-index: 72;
+  width: min(300px, calc(100vw - 36px)); border: 1px solid #d8dde5; border-radius: 14px;
+  background: #fff; padding: 10px; box-shadow: 0 18px 38px rgba(0,0,0,.22);
+}
+.deck-menu[hidden], .deck-menu-scrim[hidden] { display: none; }
+.deck-menu a {
+  display: flex; align-items: center; gap: 9px; min-height: 42px;
+  border-radius: 9px; padding: 9px 11px; color: var(--ink); text-decoration: none;
+  font-size: 15px; font-weight: 700;
+}
+.deck-menu a.primary { background: var(--seneca-red); color: #fff; }
+.deck-menu a:hover { background: #f3f5f7; }
+.deck-menu a.primary:hover { background: #c52318; }
+.deck-menu small {
+  display: block; padding: 8px 10px 4px; color: var(--muted); font-size: 12px; line-height: 1.35;
+}
+.deck-menu-scrim {
+  position: fixed; inset: 0; z-index: 69; border: 0; padding: 0;
+  background: rgba(26,26,26,.18);
+}
 .deck-footer {
   position: fixed; left: 0; right: 0; bottom: 0; height: var(--footer-h);
   background: var(--seneca-red); color: #fff; z-index: 40;
