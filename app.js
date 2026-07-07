@@ -14,7 +14,7 @@
   var VKEY = SKEY + '.view.v1';
   var HKEY = SKEY + '.hardResetNext';
   function load() { try { var o = JSON.parse(localStorage.getItem(SKEY) || '{}'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; } }
-  function persist() { try { localStorage.setItem(SKEY, JSON.stringify({ saved: state.saved, cmpNotes: state.cmpNotes, rcNotes: state.rcNotes, sgNotes: state.sgNotes, sgTick: state.sgTick, wkCheck: state.wkCheck, wkReflect: state.wkReflect, wkNotes: state.wkNotes, actResult: state.actResult, mcSel: state.mcSel, mcConf: state.mcConf, kcVersion: state.kcVersion, kcShort: state.kcShort, kcShortRate: state.kcShortRate, kcHist: state.kcHist, careerReflect: state.careerReflect, mediaNotes: state.mediaNotes })); } catch (e) {} }
+  function persist() { try { localStorage.setItem(SKEY, JSON.stringify({ saved: state.saved, cmpNotes: state.cmpNotes, rcNotes: state.rcNotes, sgNotes: state.sgNotes, sgTick: state.sgTick, wkCheck: state.wkCheck, wkReflect: state.wkReflect, wkNotes: state.wkNotes, actResult: state.actResult, mcSel: state.mcSel, mcConf: state.mcConf, kcVersion: state.kcVersion, kcShort: state.kcShort, kcShortRate: state.kcShortRate, kcHist: state.kcHist, careerReflect: state.careerReflect, mediaNotes: state.mediaNotes, assignmentStarter: state.assignmentStarter })); } catch (e) {} }
   function loadView() { try { var o = JSON.parse(sessionStorage.getItem(VKEY) || '{}'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; } }
   function clearView() { try { sessionStorage.removeItem(VKEY); sessionStorage.removeItem(HKEY); } catch (e) {} }
   function shouldResumeView(v) {
@@ -24,7 +24,7 @@
     return !!(v && v.screen);
   }
   function cleanScreen(s) {
-    return ['journey', 'library', 'station', 'detail', 'assignments', 'videos', 'readings', 'compare', 'reading', 'glossary', 'career', 'cards', 'sandbox', 'activity'].indexOf(s) >= 0 ? s : 'journey';
+    return ['journey', 'library', 'station', 'detail', 'pathways', 'assignments', 'starter', 'videos', 'readings', 'compare', 'reading', 'glossary', 'career', 'cards', 'sandbox', 'activity'].indexOf(s) >= 0 ? s : 'journey';
   }
   function cleanWeek(w) {
     w = Number(w);
@@ -34,11 +34,21 @@
     part = String(part || '');
     return ['ov', 'path', 'vid', 'pre', 'learn', 'out', 'gq', 'lens', 'con', 'term', 'read', 'rescue', 'visual', 'watch', 'case', 'do', 'reflect', 'sg', 'kc', 'notes', 'how', 'catch'].indexOf(part) >= 0 ? part : null;
   }
+  function cleanAssignmentTab(t) {
+    t = String(t || '').toLowerCase();
+    return ['story', 'program', 'assignments', 'quality', 'release', 'ai', 'faq'].indexOf(t) >= 0 ? t : 'story';
+  }
+  function cleanStarterFormat(t) {
+    t = String(t || '').toLowerCase();
+    return ['text', 'table', 'diagram', 'all'].indexOf(t) >= 0 ? t : 'all';
+  }
   function initialRoute() {
     try {
       var p = new URLSearchParams(location.search || '');
       var w = cleanWeek(p.get('week') || p.get('w'));
       if (w) return { screen: 'station', week: w, part: cleanWeekPart(p.get('part')) };
+      var s = cleanScreen(p.get('screen') || p.get('view'));
+      if (s && s !== 'journey') return { screen: s };
     } catch (e) {}
     return null;
   }
@@ -97,10 +107,13 @@
     auditView: resumeView0 ? (view0.auditView || 'errors') : 'errors',
     visualView: {},
     assignmentIndex: resumeView0 ? (Number(view0.assignmentIndex) || 0) : 0,
+    assignmentTab: resumeView0 ? cleanAssignmentTab(view0.assignmentTab) : 'story',
     assignmentFaq: resumeView0 ? (view0.assignmentFaq == null ? null : Number(view0.assignmentFaq)) : null,
+    assignmentStarter: (saved0.assignmentStarter && typeof saved0.assignmentStarter === 'object') ? saved0.assignmentStarter : {},
     assignmentChecks: {},
     videoWeek: resumeView0 ? (view0.videoWeek || 'all') : 'all',
     mediaKind: resumeView0 ? (view0.mediaKind || 'all') : 'all',
+    prevView: (resumeView0 && view0.prevView && typeof view0.prevView === 'object') ? view0.prevView : null,
   };
   if (resumeView0) {
     state.activityReturn = cleanWeek(view0.activityReturn);
@@ -152,9 +165,11 @@
         auditedSystems: state.auditedSystems || {},
         act: state.act || {},
         assignmentIndex: state.assignmentIndex || 0,
+        assignmentTab: state.assignmentTab || 'story',
         assignmentFaq: state.assignmentFaq,
         videoWeek: state.videoWeek || 'all',
-        mediaKind: state.mediaKind || 'all'
+        mediaKind: state.mediaKind || 'all',
+        prevView: state.prevView || null
       }));
     } catch (e) {}
   }
@@ -297,6 +312,7 @@
     eye: ['M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z', 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z'],
     unlock: ['M7 11V8a5 5 0 0 1 9.9-1', 'M5 11h14v10H5z'],
     play: ['M7 5l11 7-11 7z'],
+    map: ['M9 18l-6 3V6l6-3 6 3 6-3v15l-6 3-6-3z', 'M9 3v15', 'M15 6v15'],
     gallery: ['M3 5h18v14H3z', 'M3 16l5-5 4 4 3-3 6 6', 'M8.5 9.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2'],
   };
   function ic(name, size, w) {
@@ -383,7 +399,7 @@
   }
   function sidebar() {
     var s = state;
-    var navDefs = [['journey', 'Home', 'gauge'], ['assignments', 'Understanding the Assignments', 'clipboard'], ['videos', 'Scholar Media Gallery', 'play'], ['readings', 'Library of Readings', 'gallery'], ['compare', 'Compare Reading Concepts', 'columns'], ['reading', 'Build Your Reading Comprehension', 'book'], ['glossary', 'Glossary & Thinkers', 'book'], ['cards', 'Self-check', 'clipboard'], ['career', 'Career Choices', 'globe']];
+    var navDefs = [['journey', 'Home', 'gauge'], ['pathways', 'Course Pathways', 'map'], ['readings', 'Readings Library', 'gallery'], ['compare', 'Compare Readings', 'columns'], ['reading', 'Reading Practice', 'book'], ['videos', 'Videos and Podcasts', 'play'], ['glossary', 'Glossary', 'book'], ['cards', 'Concept Flashcards', 'clipboard'], ['assignments', 'Assignments Guide', 'clipboard'], ['career', 'Career Choices', 'globe']];
     var btns = navDefs.map(function (d) {
       var key = d[0], active = (key === 'journey' && (s.screen === 'journey' || s.screen === 'library' || s.screen === 'station' || s.screen === 'detail')) || s.screen === key;
       var badge = '';
@@ -392,17 +408,19 @@
       return '<button onclick="' + click + '" aria-current="' + (active ? 'page' : 'false') + '" style="display:flex;align-items:center;gap:11px;width:100%;border:none;border-radius:10px;padding:10px 12px;font-size:.9375rem;font-weight:' + (active ? '600' : '500') + ';background:' + (active ? '#EEF1F5' : 'transparent') + ';color:' + (active ? '#15171C' : '#474C57') + ';text-align:left">'
         + '<span style="display:flex;align-items:center;justify-content:center;width:22px;height:22px;flex:none;color:' + (active ? 'var(--red)' : '#6B7280') + '">' + ic(d[2], 19) + '</span><span style="flex:1;text-align:left">' + d[1] + '</span>' + badge + '</button>';
     });
-    var walk = '<a href="./walkthroughs/" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:11px;width:100%;border-radius:10px;padding:10px 12px;font-size:.9375rem;font-weight:500;color:#474C57;text-decoration:none"><span style="display:flex;align-items:center;justify-content:center;width:22px;height:22px;flex:none;color:#6B7280">' + ic('layers', 19) + '</span><span style="flex:1">Weekly Walkthrough</span><span style="color:#6B7280">↗</span></a>';
+    var walk = '<a href="./walkthroughs/?v=20260707014500" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:11px;width:100%;border-radius:10px;padding:10px 12px;font-size:.9375rem;font-weight:500;color:#474C57;text-decoration:none"><span style="display:flex;align-items:center;justify-content:center;width:22px;height:22px;flex:none;color:#6B7280">' + ic('layers', 19) + '</span><span style="flex:1">Weekly Walkthroughs</span><span style="color:#6B7280">↗</span></a>';
     var guidePdf = './guide/BFS218_Site_Guide.pdf';
     var guide = '<div style="border-radius:10px;padding:10px 12px;color:#474C57"><div style="display:flex;align-items:flex-start;gap:11px;font-size:.9375rem;font-weight:500;line-height:1.25"><span style="display:flex;align-items:center;justify-content:center;width:22px;height:22px;flex:none;color:#6B7280">' + ic('file', 19) + '</span><span style="flex:1;min-width:0">Course Website Instructions</span></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 0 33px"><a href="./guide/" target="_blank" rel="noopener" style="font-size:.75rem;font-weight:600;color:#1B2A4A;background:#EEF1F5;border:1px solid #DEE3EA;border-radius:999px;padding:4px 9px;text-decoration:none">Online version <span aria-hidden="true">&#8599;</span></a><a href="' + guidePdf + '" target="_blank" rel="noopener" style="font-size:.75rem;font-weight:600;color:#1B2A4A;background:#EEF1F5;border:1px solid #DEE3EA;border-radius:999px;padding:4px 9px;text-decoration:none">PDF <span aria-hidden="true">&#8599;</span></a></div></div>';
-    var nav = btns[0] + btns[1] + btns[2] + walk + guide + btns.slice(3).join('');
+    var nav = btns[0] + btns[1] + walk + btns.slice(2).join('') + guide;
     var counts = {}; D.records.forEach(function (r) { counts[r.week] = (counts[r.week] || 0) + 1; });
-    var weekNav = weeksWithReadings().map(function (w) {
+    var navWeeks = [];
+    for (var nw = 1; nw <= 14; nw++) navWeeks.push(nw);
+    var weekNav = navWeeks.map(function (w) {
       var active = s.screen === 'station' && s.stationWeek === w;
       return '<button onclick="SOC.station(' + w + ')" style="display:flex;align-items:center;gap:9px;width:100%;border:none;border-radius:9px;padding:7px 12px;font-size:.8125rem;font-weight:' + (active ? '600' : '500') + ';background:' + (active ? '#E6EAF1' : 'transparent') + ';color:' + (active ? '#1B2A4A' : '#474C57') + ';text-align:left">'
         + '<span class="mono" style="font-size:.6875rem;color:' + (active ? '#1B2A4A' : '#6B7280') + ';flex:none;width:18px">' + w + '</span>'
         + '<span style="flex:1;text-align:left;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(weekTitle(w)) + '</span>'
-        + '<span class="mono" style="font-size:.6875rem;color:#6B7280">' + counts[w] + '</span></button>';
+      + '<span class="mono" style="font-size:.6875rem;color:#6B7280">' + (counts[w] || 0) + '</span></button>';
     }).join('');
     return '<nav class="soc-sidebar' + (state.navOpen ? ' soc-sidebar-open' : '') + '" aria-label="Primary" style="width:240px;flex:none;border-right:1px solid #DEE3EA;background:#fff;padding:18px 14px;display:flex;flex-direction:column;gap:4px;position:sticky;top:62px;align-self:flex-start;height:calc(100vh - 62px);overflow:auto">'
       + nav
@@ -569,7 +587,7 @@
       + topics.map(function (t) { return pill(s.galTopic === t, esc(topicLabel(t)), 'SOC.galTopic(\'' + t + '\')', '#15171C'); }).join('')
       + '</div>';
     var anyFilter = (s.galWeek != null) || s.galTopic;
-    var filterBar = '<section style="background:#fff;border:1px solid #DEE3EA;border-radius:14px;padding:14px 16px;margin-bottom:16px;box-shadow:0 1px 2px rgba(21,23,28,.04);position:sticky;top:0;z-index:5">'
+    var filterBar = '<section style="background:#fff;border:1px solid #DEE3EA;border-radius:14px;padding:14px 16px;margin-bottom:16px;box-shadow:0 1px 2px rgba(21,23,28,.04);position:relative;z-index:1">'
       + '<div style="display:flex;align-items:center;gap:7px;margin-bottom:7px"><span style="display:flex;color:#6B7280">' + ic('calendar', 15) + '</span><span style="font-size:.7rem;font-weight:600;letter-spacing:.05em;color:#6B7280;text-transform:uppercase">Filter by week</span></div>'
       + weekRail
       + '<div style="display:flex;align-items:center;gap:7px;margin:13px 0 7px"><span style="display:flex;color:#6B7280">' + ic('sparkle', 15) + '</span><span style="font-size:.7rem;font-weight:600;letter-spacing:.05em;color:#6B7280;text-transform:uppercase">Filter by topic</span></div>'
@@ -626,9 +644,9 @@
     var list = D.records.slice().sort(function (a, b) { return a.week - b.week || (a.eye === b.eye ? 0 : a.eye === 'western' ? -1 : 1); });
     return list.map(function (r) {
       var tm = typeMeta(r.type), sel = state.compareIds.indexOf(r.id) >= 0;
-      return '<button onclick="SOC.compare(\'' + r.id + '\')" class="mapsrc" style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:' + (sel ? '#E7EEFB' : 'none') + ';border:none;border-bottom:1px solid #EEF1F5;padding:10px 12px">'
+      return '<button onclick="SOC.compare(\'' + r.id + '\')" class="mapsrc cmp-pick" style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:' + (sel ? '#E7EEFB' : 'none') + ';border:none;border-bottom:1px solid #EEF1F5;padding:10px 12px">'
         + '<span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:7px;background:' + tm.soft + ';color:' + tm.color + ';flex:none">' + ic(tm.icon, 14) + '</span>'
-        + '<span style="flex:1;min-width:0"><span style="display:block;font-size:.8125rem;font-weight:600;color:#15171C;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(r.title) + '</span><span style="display:block;font-size:.6875rem;color:#6B7280">Week ' + r.week + (HAS_EYE ? ' · ' + (r.eye === 'indigenous' ? 'Indigenous' : 'Western') : '') + '</span></span>'
+        + '<span style="flex:1;min-width:0"><span class="cmp-pick-title" style="display:block;font-size:.8125rem;font-weight:600;color:#15171C;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(r.title) + '</span><span style="display:block;font-size:.6875rem;color:#6B7280">Week ' + r.week + (HAS_EYE ? ' · ' + (r.eye === 'indigenous' ? 'Indigenous' : 'Western') : '') + '</span></span>'
         + (sel ? '<span style="display:flex;color:#1552D8;flex:none">' + ic('check', 16, 2.2) + '</span>' : '<span style="display:flex;color:#6b7280;flex:none">' + ic('plus', 16) + '</span>') + '</button>';
     }).join('');
   }
@@ -668,7 +686,7 @@
         + buildSynthesis(recs).paras.map(function (p) { return '<p style="font-size:.95rem;line-height:1.6;margin:0 0 10px;color:rgba(255,255,255,.94)">' + esc(p) + '</p>'; }).join('')
         + '<p style="font-size:.82rem;margin:6px 0 0;color:#9aa3b2">One way to read it. Compare it with yours, do not copy it.</p></div>'
       : '<button onclick="SOC.revealModel()" style="background:none;border:1px solid #15171C;color:#15171C;border-radius:9px;padding:10px 16px;font-size:.9rem;font-weight:600">Reveal a model comparison</button>';
-    return '<div style="margin-bottom:18px">'
+    return '<div class="cmp-studio" style="margin-bottom:18px">'
       + '<h2 style="font-size:1.25rem;margin:0 0 4px">Compare them</h2>'
       + '<p style="font-size:.9375rem;color:#474C57;margin:0 0 14px;">Comparative reading goes past what each text says on its own. Read the two together and look for what they share, how they differ, and why those differences matter.</p>'
       + ex
@@ -821,9 +839,9 @@
   }
   function compare() {
     var recs = state.compareIds.map(rec).filter(Boolean);
-    var html = '<div class="rise"><div style="display:flex;align-items:baseline;gap:12px;margin-bottom:6px;flex-wrap:wrap"><h1 style="font-size:1.75rem;font-weight:600;margin:0">Hold them side by side</h1><span style="font-size:.9375rem;color:#474C57">' + (recs.length ? recs.length + ' of 3 selected' : 'choose 2 or 3') + '</span>'
+    var html = '<div class="rise cmp-page"><div style="display:flex;align-items:baseline;gap:12px;margin-bottom:6px;flex-wrap:wrap"><h1 style="font-size:1.75rem;font-weight:600;margin:0">Hold them side by side</h1><span style="font-size:.9375rem;color:#474C57">' + (recs.length ? recs.length + ' of 3 selected' : 'choose 2 or 3') + '</span>'
       + (recs.length ? '<button onclick="SOC.clearCompare()" style="margin-left:auto;background:none;border:none;color:var(--red);font-size:.875rem;font-weight:600">Clear all</button>' : '') + '</div>'
-      + '<p style="font-size:.9375rem;color:#474C57;margin:0 0 22px;">Choose readings from the list on the right, up to three, and they appear side by side here. Holding two readings together shows how they connect on the same topic.</p>';
+      + '<p style="font-size:.9375rem;color:#474C57;margin:0 0 22px;">Choose up to three readings from the picker. They appear together so you can compare what they share, where they differ, and why the difference matters.</p>';
 
     var left;
     if (recs.length >= 1) {
@@ -831,7 +849,7 @@
         var tm = typeMeta(r.type);
         var rows = [['WEEK', 'Week ' + r.week + ': ' + weekTitle(r.week)], ['YEAR', String(r.year)], ['ORIGIN', r.origin], ['LENGTH', r.len], ['LEVEL', D.levels[r.diff] || ''], ['THE CORE IDEA', r.coreIdea]]
           .map(function (row) { return '<div style="padding:11px 17px;border-top:1px solid #EEF1F5"><div class="mono" style="font-size:.625rem;letter-spacing:.05em;color:#6B7280;margin-bottom:4px">' + row[0] + '</div><div style="font-size:.875rem;line-height:1.45;color:#15171C">' + esc(row[1]) + '</div></div>'; }).join('');
-        return '<div style="flex:none;width:280px;background:#fff;border:1px solid #DEE3EA;border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(21,23,28,.04);display:flex;flex-direction:column"><div style="height:5px;background:' + tm.color + '"></div><div style="padding:16px 17px 14px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:11px"><span style="display:inline-flex;align-items:center;gap:6px;background:' + tm.soft + ';color:' + tm.color + ';font-size:.6875rem;font-weight:600;padding:4px 9px;border-radius:999px">' + ic(tm.icon, 13) + esc(r.type) + '</span><button onclick="SOC.compare(\'' + r.id + '\')" class="removebtn" aria-label="Remove" style="margin-left:auto;background:none;border:none;color:#6b7280;display:flex;padding:6px">' + ic('x', 16) + '</button></div><button onclick="SOC.open(\'' + r.id + '\')" style="text-align:left;background:none;border:none;padding:0;display:block;margin-bottom:4px"><h3 style="font-size:1.0625rem;line-height:1.3;font-weight:600;margin:0;color:#15171C">' + esc(r.title) + '</h3></button><div style="font-size:.8125rem;color:#474C57">' + esc(r.authors) + '</div></div>' + rows + '</div>';
+        return '<div class="cmp-card" style="flex:none;width:280px;background:#fff;border:1px solid #DEE3EA;border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(21,23,28,.04);display:flex;flex-direction:column"><div style="height:5px;background:' + tm.color + '"></div><div style="padding:16px 17px 14px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:11px"><span style="display:inline-flex;align-items:center;gap:6px;background:' + tm.soft + ';color:' + tm.color + ';font-size:.6875rem;font-weight:600;padding:4px 9px;border-radius:999px">' + ic(tm.icon, 13) + esc(r.type) + '</span><button onclick="SOC.compare(\'' + r.id + '\')" class="removebtn" aria-label="Remove" style="margin-left:auto;background:none;border:none;color:#6b7280;display:flex;padding:6px">' + ic('x', 16) + '</button></div><button onclick="SOC.open(\'' + r.id + '\')" style="text-align:left;background:none;border:none;padding:0;display:block;margin-bottom:4px"><h3 style="font-size:1.0625rem;line-height:1.3;font-weight:600;margin:0;color:#15171C">' + esc(r.title) + '</h3></button><div style="font-size:.8125rem;color:#474C57">' + esc(r.authors) + '</div></div>' + rows + '</div>';
       }).join('');
       var hint = recs.length < 2 ? '<p style="font-size:.875rem;color:#6B7280;margin:0 0 12px">Pick one more reading on the right to compare it against this one.</p>' : '';
       var synthBlock = '';
@@ -843,21 +861,21 @@
             + syn.paras.map(function (p) { return '<p style="font-size:1rem;line-height:1.6;margin:0 0 12px;color:rgba(255,255,255,.92)">' + esc(p) + '</p>'; }).join('')
             + '</div>';
         } else {
-          synthBlock = '<button onclick="SOC.synthesize()" style="display:inline-flex;align-items:center;gap:8px;border:none;border-radius:9px;padding:12px 22px;font-size:1rem;font-weight:600;color:#fff;background:#15171C;margin-bottom:18px">' + ic('sparkle', 16) + 'Synthesize their relationship</button>';
+          synthBlock = '<button class="cmp-model" onclick="SOC.synthesize()" style="display:inline-flex;align-items:center;gap:8px;border:none;border-radius:9px;padding:12px 22px;font-size:1rem;font-weight:600;color:#fff;background:#15171C;margin-bottom:18px">' + ic('sparkle', 16) + 'Synthesize their relationship</button>';
         }
       }
-      left = hint + synthBlock + '<div class="hshelf" style="display:flex;gap:16px;align-items:stretch;overflow-x:auto;padding-bottom:10px">' + cols + '</div>';
+      left = hint + synthBlock + '<div class="hshelf cmp-shelf" style="display:flex;gap:16px;align-items:stretch;overflow-x:auto;padding-bottom:10px">' + cols + '</div>';
     } else {
-      left = '<div style="background:#fff;border:1px dashed #DEE3EA;border-radius:14px;padding:48px 26px;text-align:center;color:#474C57"><div style="display:inline-flex;color:#C9D1DC;margin-bottom:12px">' + ic('columns', 40, 1.4) + '</div><div style="font-size:1.0625rem;font-weight:600;color:#15171C;margin-bottom:6px">Nothing selected yet.</div><p style="font-size:.9375rem;margin:0">Choose two or three readings from the list on the right.</p></div>';
+      left = '<div class="cmp-empty" style="background:#fff;border:1px dashed #DEE3EA;border-radius:14px;padding:48px 26px;text-align:center;color:#474C57"><div style="display:inline-flex;color:#C9D1DC;margin-bottom:12px">' + ic('columns', 40, 1.4) + '</div><div style="font-size:1.0625rem;font-weight:600;color:#15171C;margin-bottom:6px">Nothing selected yet.</div><p style="font-size:.9375rem;margin:0">Choose two or three readings from the picker.</p></div>';
     }
 
-    var right = '<aside class="soc-rail" style="position:sticky;top:84px">'
+    var right = '<aside class="soc-rail cmp-picker" style="position:sticky;top:84px">'
       + '<div class="soc-pickbox" style="background:#fff;border:1px solid #DEE3EA;border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(21,23,28,.04);display:flex;flex-direction:column;max-height:calc(100vh - 110px)">'
       + '<div style="padding:13px 14px;border-bottom:1px solid #EEF1F5;flex:none"><div style="font-size:.9375rem;font-weight:600;color:#15171C">Readings</div><div style="font-size:.75rem;color:#6B7280;margin-top:2px">' + recs.length + ' of 3 selected. Tap to add or remove.</div></div>'
       + '<div class="scrollarea" style="overflow:auto">' + comparePickList() + '</div>'
       + '</div></aside>';
 
-    html += '<div class="soc-detailgrid" style="display:grid;grid-template-columns:1fr 300px;gap:26px;align-items:start"><div>' + left + '</div>' + right + '</div>';
+    html += '<div class="soc-detailgrid cmp-layout" style="display:grid;grid-template-columns:1fr 300px;gap:26px;align-items:start"><div class="cmp-selected">' + left + '</div>' + right + '</div>';
     return html + '</div>';
   }
 
@@ -1364,6 +1382,8 @@
     var openBtn = '<button onclick="SOC.read(\'buolamwini2018\')" style="margin-top:2px;background:none;border:none;color:#1552D8;font-size:.8125rem;font-weight:600;padding:0;cursor:pointer">Open Gender Shades (Buolamwini and Gebru, 2018) &#8599;</button>';
     var predict = '<div style="background:#F7F8FA;border:1px solid #DEE3EA;border-radius:12px;padding:14px 16px;margin:16px 0 0"><div class="mono" style="font-size:.6875rem;letter-spacing:.05em;color:#6B7280;margin-bottom:6px">PREDICT FIRST</div><p style="font-size:.9rem;line-height:1.55;color:#15171C;margin:0">You are about to audit three real facial-analysis systems against a benchmark balanced by gender and skin type. Before you run it: which group do you expect them to fail the most, and why?</p></div>';
     var method = '<p style="font-size:.78rem;line-height:1.5;color:#6b7280;margin:14px 0 0">This re-enacts Buolamwini and Gebru\'s published audit of three commercial systems (IBM, Microsoft, and Face++). The systems, the balanced benchmark, and the results are theirs; you are walking through what they found, not running a live classifier. Each marker is one benchmark face the system was tested on; red means the system got it wrong. The markers are neutral and do not depict anyone.</p>';
+    var how = '<section class="activity-run-guide" aria-label="How this activity works" style="margin-top:16px"><div><b>How this activity works</b><ol><li>Run the audit on the first system.</li><li>Use the slice buttons to compare overall, gender, skin-type, and intersectional results.</li><li>Audit the next systems and ask whether the pattern repeats across the industry.</li></ol></div></section>';
+    var leave = '<section class="activity-run-guide" aria-label="What to produce from this activity"><div><b>What you should leave with</b><p style="margin:0;font-size:.84rem;line-height:1.52;color:var(--ink-dim)">Write one sentence explaining why a high overall accuracy score can hide who the system fails most. Add that sentence to Activity Notes so it appears in Generate Your Weekly Notes.</p></div></section>';
     var grid = audit3dScene(run, slice, sys);
     var summary = run ? '<div style="background:' + (auditedCount >= 3 ? '#15171C' : '#F7F8FA') + ';color:' + (auditedCount >= 3 ? '#fff' : '#15171C') + ';border:1px solid ' + (auditedCount >= 3 ? '#15171C' : '#DEE3EA') + ';border-radius:12px;padding:14px 16px;margin:14px 0 0;font-size:.875rem;line-height:1.55">' + (auditedCount >= 3 ? 'You audited all three: IBM, Microsoft, and Face++. Every one failed darker-skinned women the most. The coded gaze is an industry pattern, not one bad product.' : esc(sys.name) + ' failed darker-skinned women the most. Audit the next system and watch whether the pattern repeats. (' + auditedCount + ' of 3 audited.)') + '</div>' : '';
     var results = run
@@ -1381,7 +1401,7 @@
       + '<div class="mono" style="font-size:.6875rem;letter-spacing:.06em;color:var(--red);font-weight:600;margin-bottom:6px">BIAS AUDIT</div>'
       + '<h1 style="font-size:1.75rem;font-weight:600;margin:0 0 8px">Audit the coded gaze</h1>'
       + '<p style="font-size:.9375rem;line-height:1.55;color:#474C57;margin:0 0 4px;">You are the auditor. Run a balanced benchmark on a facial-analysis system, then find the bias its makers missed, the way Buolamwini and Gebru did.</p>'
-      + openBtn + predict + method + grid + summary + results + auditFallbackTable() + check + chain + save
+      + openBtn + predict + method + how + grid + summary + results + auditFallbackTable() + check + leave + chain + weekNoteBox(5, 'activity', 'Activity Notes', 'Write the sentence you would use to explain why the coded gaze is an intersectional problem.') + save
       + '</section>';
   }
   function cardsScreen() {
@@ -2180,6 +2200,7 @@
       modelNote: custom.modelNote || p.modelNote,
       learningJob: custom.modelLearningJob || custom.learningJob || p.learningJob,
       display: custom.modelDisplay || p.display,
+      controls: custom.modelControls || custom.controls || p.controls,
       steps: custom.modelSteps || p.steps,
       labels: custom.modelLabels || p.labels || [],
       activity: custom
@@ -2190,14 +2211,16 @@
     var key = (context || 'week') + '|' + w;
     return state.visualView[key] || (context === 'activity' ? 'predict' : 'observe');
   }
-  function visualControls(w, context, active) {
+  function visualControls(w, spec, context, active) {
     var V = window.BFS218_VISUALS || {}, labels = V.viewLabels || {};
+    var custom = spec.controls || {};
     var defs = context === 'activity'
-      ? [['predict', labels.predict || 'Predict'], ['try', labels.try || 'Try it'], ['explain', labels.explain || 'Explain']]
-      : [['observe', labels.observe || 'Observe'], ['path', labels.path || 'Follow the path'], ['risk', labels.risk || 'Find the risk']];
-    return '<div class="wk-model-controls" aria-label="3D model view controls">' + defs.map(function (d) {
+      ? [['predict', custom.predict || labels.predict || 'Predict'], ['try', custom.try || labels.try || 'Try it'], ['explain', custom.explain || labels.explain || 'Explain']]
+      : [['observe', custom.observe || labels.observe || 'Observe'], ['path', custom.path || labels.path || 'Follow the path'], ['risk', custom.risk || labels.risk || 'Find the risk']];
+    var lead = context === 'activity' ? 'Choose a model step' : 'Change the display';
+    return '<div class="wk-model-controls" aria-label="' + esc(lead) + '"><span class="wk-model-control-title">' + esc(lead) + '</span>' + defs.map(function (d) {
       var on = active === d[0];
-      return '<button onclick="SOC.visualView(' + w + ',\'' + context + '\',\'' + d[0] + '\')" aria-pressed="' + on + '" class="' + (on ? 'on' : '') + '">' + esc(d[1]) + '</button>';
+      return '<button type="button" onmousedown="event.preventDefault()" ontouchstart="this.blur()" onclick="return SOC.visualView(event,' + w + ',\'' + context + '\',\'' + d[0] + '\')" aria-pressed="' + on + '" class="' + (on ? 'on' : '') + '">' + esc(d[1]) + '</button>';
     }).join('') + '</div>';
   }
   function visualLearningJob(spec, context) {
@@ -2226,7 +2249,7 @@
   function visualLabels(spec) {
     var labels = spec.labels || [];
     if (!labels.length) return '';
-    return '<div class="wk-model-labels" aria-hidden="true"><svg class="wk-label-leaders" focusable="false"></svg>' + labels.map(function (l, i) {
+    return '<div class="wk-model-labels" aria-label="Model labels"><svg class="wk-label-leaders" focusable="false"></svg>' + labels.map(function (l, i) {
       var left = Math.max(8, Math.min(92, Number(l.x) || 50));
       var top = Math.max(12, Math.min(82, Number(l.y) || 50));
       var anchor = Array.isArray(l.anchor) ? l.anchor : [0, 1, 0];
@@ -2235,24 +2258,42 @@
   }
   function visualModelHtml(w, spec, context) {
     var view = visualViewFor(w, context);
-    var rotateHelp = 'Click or touch and drag anywhere inside this 3D picture to rotate the scene. The callout lines stay attached to the model while the text boxes stay in open space.';
+    var rotateHelp = 'Click or touch and drag anywhere inside this 3D picture to rotate the scene. The numbered labels below the model explain what to inspect without covering the scene.';
     var labelList = (spec.labels || []).map(function (l) { return (l.t || '') + ': ' + (l.sub || ''); }).join('. ');
     var label = (context === 'activity' ? 'Activity model for Week ' : 'Visual overview for Week ') + w + ': ' + spec.title + '. ' + spec.scene + ' Labels: ' + labelList + '. ' + rotateHelp;
     var noteText = spec.modelNote || spec.scene;
     var shellKind = String(spec.kind || 'pipeline').replace(/[^a-z0-9_-]/gi, '').toLowerCase() || 'pipeline';
-    return '<div class="wk-model-shell wk-model-kind-' + esc(shellKind) + '">'
+    return '<div class="wk-model-frame">'
+      + visualControls(w, spec, context, view)
+      + '<div class="wk-model-shell wk-model-kind-' + esc(shellKind) + '">'
       + '<canvas class="wk-model-canvas" role="img" aria-label="' + esc(label) + '" data-topic-model="' + esc(context) + '" data-week="' + w + '" data-kind="' + esc(spec.kind || 'pipeline') + '" data-view="' + esc(view) + '"></canvas>'
-      + '<div class="wk-model-note"><b>' + esc(spec.title) + '</b><span>' + esc(noteText) + ' Drag to rotate. Callout lines stay attached to the model. Use the buttons below to change what the model highlights.</span></div>'
+      + '<div class="wk-model-note"><b>' + esc(spec.title) + '</b><span>' + esc(noteText) + ' Drag to rotate. Use the display buttons above the model, then read the numbered labels below it.</span></div>'
       + visualDisplayHtml(spec, context, view)
-      + visualLabels(spec)
-      + visualControls(w, context, view)
       + '<div class="wk-model-fallback" hidden>The 3D model could not load. The explanation below still walks you through the idea.</div>'
+      + '</div>'
+      + visualLabels(spec)
       + '</div>';
   }
   function visualGuideHtml(spec) {
     var labels = (spec.labels || []).slice(0, 3);
     return '<div class="wk-model-guide"><b>How to read this visual</b><p>' + esc(spec.reading || visualReadingSentence(spec)) + '</p>'
       + '<ol>' + labels.map(function (l) { return '<li><strong>' + esc(l.t || '') + '</strong><span>' + esc(l.sub || '') + '</span></li>'; }).join('') + '</ol></div>';
+  }
+  function visualTaskHtml(spec) {
+    var task = spec.task || {};
+    var steps = spec.steps || [];
+    var first = steps[0] && steps[0][0] ? steps[0][0] : 'the first label';
+    var mid = steps[1] && steps[1][0] ? steps[1][0] : 'the path';
+    var last = steps[2] && steps[2][0] ? steps[2][0] : 'the risk or result';
+    var taskSteps = task.steps || [
+      'Press each display button below the model. After each press, read the Do and Learn lines.',
+      'Drag the model once. You are not solving a puzzle; you are using a movable diagram to see the process.',
+      'In your notes, finish this sentence: ' + first + ' leads to ' + last + ' because...'
+    ];
+    var title = task.title || 'What to do with this visual';
+    var lead = task.lead || ('Use the model as a thinking aid. Read it in order: ' + first + ', then ' + mid + ', then ' + last + '.');
+    var answer = task.answer || 'Your goal is one clear sentence you could explain to another student.';
+    return '<div class="wk-model-task" aria-label="Student task for this visual"><div><b>' + esc(title) + '</b><p>' + esc(lead) + '</p><em>' + esc(answer) + '</em></div><ol>' + taskSteps.slice(0, 3).map(function (s, i) { return '<li><strong>' + (i + 1) + '. Do this</strong>' + esc(s) + '</li>'; }).join('') + '</ol></div>';
   }
   function visualStepCards(steps) {
     return '<div class="wk-model-steps">' + (steps || []).slice(0, 3).map(function (c, i) {
@@ -2262,11 +2303,12 @@
   function visualOverviewSection(w, d) {
     var spec = visualSpec(w, d);
     return '<section id="wk-visual" class="node"><h2 class="wk-sec">A Visual Overview</h2>'
-      + '<p class="wk-hint">Use this as a labelled guide. The three callouts point to the model and show the story of the week in order. The buttons change what the model highlights.</p>'
+      + '<p class="wk-hint">Use this as a labelled, movable teaching diagram. The point is not the picture by itself; the point is the process it helps you explain.</p>'
       + visualGuideHtml(spec)
+      + visualTaskHtml(spec)
       + visualModelHtml(w, spec, 'week')
       + visualStepCards(spec.steps)
-      + weekNoteBox(w, 'visual', 'A Visual Overview Notes', 'Write what the model is showing in your own words. Focus on the process, not the graphics.')
+      + weekNoteBox(w, 'visual', 'A Visual Overview Notes', spec.notePrompt || 'Write one sentence that explains what the model helped you see. Focus on the process, not the graphics.')
       + '</section>';
   }
   function wkNoteKey(w, part) { return w + '|' + part; }
@@ -2325,6 +2367,191 @@
     return '<section id="wk-path" class="node wk-path"><div class="wk-path-kicker">Your learning path</div><h2>Start the course without guessing</h2>'
       + '<p>This course asks serious questions, but the weekly path is simple. You will learn one main idea at a time, test it with an activity, then save your own thinking.</p>'
       + pathCards(steps) + '</section>';
+  }
+  function weekVideoBrief(w, d) {
+    var copy = {
+      1: {
+        title: 'Start by learning to notice.',
+        sentences: [
+          'Picture something you used this week: a search bar, phone camera, payment app, school portal, or feed.',
+          'This course begins by asking you to notice what that tool sorts, recommends, watches, approves, or refuses.',
+          'You do not need to prove a person behind it had bad intentions.',
+          'You are looking for data, design, defaults, and patterns that already exist in the world around the tool.',
+          'That is why your own digital life can become course evidence.',
+          'By the end of the week, you should have one real moment you can place in your Personal Cartography.'
+        ],
+        watch: ['Notice one ordinary tool that sorts, scores, watches, recommends, approves, or refuses.', 'Ask what the tool treats as normal and who might not fit that default.', 'Choose one digital moment from your own life that could begin your map.']
+      },
+      2: {
+        title: 'Shift from intention to outcome.',
+        sentences: [
+          'Once you can notice a tool, the next step is judging what it actually does.',
+          'Imagine a tenant screen that uses the same rule for everyone but blocks one group more often.',
+          'The key question is not only who meant harm.',
+          'Ask what the system produces, who benefits, and who carries the burden.',
+          'Critical race theory gives you that outcomes lens, and Benjamin uses it to explain the New Jim Code.',
+          'By the end, you should be able to write: the rule looks neutral, but the outcome shows...'
+        ],
+        watch: ['Compare what the rule claims to do with what the outcome actually does.', 'Ask who carries the burden when the system looks neutral.', 'Connect CRT to the New Jim Code by naming how old inequity travels through a new tool.']
+      },
+      3: {
+        title: 'Look for the design choice.',
+        sentences: [
+          'After you can read outcomes, start asking how the outcome was built.',
+          'Picture a hiring tool trained on years of old hiring records.',
+          'If those records already favoured some applicants, the tool can learn that pattern and repeat it faster.',
+          'Engineered inequity is not a random glitch.',
+          'It often lives in training data, thresholds, categories, access rules, and other design choices.',
+          'Your task this week is to name one design choice and the inequality it speeds up or locks in.'
+        ],
+        watch: ['Look for the existing inequality before the technology enters the scene.', 'Name the design choice that makes the gap wider or faster.', 'Ask what would have to be redesigned, not just apologized for.']
+      },
+      4: {
+        title: 'Notice what runs by default.',
+        sentences: [
+          'After looking at design choices, look at the choices that have become automatic.',
+          'Picture a form that already has one box checked, one category missing, or one old record carried forward.',
+          'Students, workers, clients, or residents may be pushed down that path before anyone notices.',
+          'That is how discrimination can repeat without a new act of prejudice each time.',
+          'This week, slow down when a system says, this is just how it works.',
+          'Ask who set the default, who gets pushed by it, and who is allowed to change it.'
+        ],
+        watch: ['Find the setting or old record that keeps working automatically.', 'Ask who benefits when no one changes the default.', 'Name who has the power to pause, revise, or remove that default.']
+      },
+      5: {
+        title: 'Ask who the system sees.',
+        sentences: [
+          'Once you have studied defaults, ask who the system can actually see.',
+          'Picture a facial analysis tool that works well for lighter-skinned men but fails darker-skinned women far more often.',
+          'That is not just a technical inconvenience.',
+          'It tells you whose faces were centred in building and testing the tool.',
+          'The Gender Shades audit gives you numbers you can read, compare, and explain.',
+          'By the end, you should be able to show why a high average score can hide the group most at risk.'
+        ],
+        watch: ['Notice the difference between being over watched and being poorly recognized.', 'Use the error rates as evidence, not decoration.', 'Ask which group is hidden by the average score.']
+      },
+      6: {
+        title: 'Bring the question to public power.',
+        sentences: [
+          'After asking who a system sees, ask who gets power from that seeing.',
+          'Picture facial recognition in policing, a border screening tool, or social media surveillance used by a public agency.',
+          'These systems do not only process information.',
+          'They can shape who is stopped, delayed, watched, or treated as risky.',
+          'This week brings the course language into Canadian cases and rights questions.',
+          'Follow the chain from tool, to agency, to person affected, then ask where accountability should begin.'
+        ],
+        watch: ['Track the chain from tool, to institution, to person affected.', 'Ask what changes when a system is used by police, border agencies, or public bodies.', 'Name the right or freedom that becomes harder to exercise.']
+      },
+      7: {
+        title: 'Hold the machine together.',
+        sentences: [
+          'By this point, you have several parts of the machine on the table.',
+          'Take one example, such as a risk score, hiring screen, or camera system, and run it through the pieces.',
+          'Ask what was engineered into it, what runs by default, and who is exposed or missed.',
+          'Week 7 is not about memorizing a list of terms.',
+          'It is about explaining how harm is produced across design, data, deployment, and power.',
+          'A strong answer traces the pattern before jumping to a fix.'
+        ],
+        watch: ['Connect engineered inequity, defaults, and exposure as parts of one system.', 'Describe the pattern before jumping to a fix.', 'Explain how the harm is produced step by step.']
+      },
+      8: {
+        title: 'Ask who holds the story.',
+        sentences: [
+          'After tracing how systems produce harm, change the starting question.',
+          'Picture a health dataset, school record, or community survey held by an outside agency.',
+          'Instead of asking only whether the data is accurate, ask who has the right to govern it.',
+          'Indigenous data sovereignty treats data as connected to people, land, story, and authority.',
+          'OCAP gives you concrete language for ownership, control, access, and possession.',
+          'By the end, you should be able to say what changes when the community holds the pen.'
+        ],
+        watch: ['Treat data as a story told about people, not only as information.', 'Use OCAP to ask who owns, controls, accesses, and possesses the data.', 'Ask what changes when the community holds authority over its own data.']
+      },
+      9: {
+        title: 'Be careful with help.',
+        sentences: [
+          'After asking who controls data, look at tools that arrive as help.',
+          'Picture an app that promises safety, a benefit system that promises efficiency, or a platform that promises inclusion.',
+          'The promise may sound generous, but the result can still deepen inequity.',
+          'That does not mean every helpful tool is false.',
+          'It means you must ask who defined the problem and who benefits from the solution.',
+          'By the end, judge the tool by what it does in real lives, not by the kindness of its language.'
+        ],
+        watch: ['Listen for the promise of help, care, safety, or inclusion.', 'Ask who defined the problem before the tool arrived.', 'Judge the tool by its effect on people, not by the kindness of its language.']
+      },
+      10: {
+        title: 'Stand at the gate.',
+        sentences: [
+          'After questioning tools that claim to help, look at tools that decide access.',
+          'A gate can be a hiring screen, loan score, admissions model, benefit form, or search ranking.',
+          'The person kept out may never learn why.',
+          'One model can sort thousands of people quickly, so a small design choice can have a large effect.',
+          'Devlin helps you ask what inequality lives inside the algorithm and what inequality surrounds it.',
+          'After this week, name one gate in your own world and ask who could appeal its decision.'
+        ],
+        watch: ['Identify the gate: job, loan, school, benefit, search result, or opportunity.', 'Ask what inequality sits inside the model and what inequality surrounds it.', 'Name who a person can ask when the gate keeps them out.']
+      },
+      11: {
+        title: 'Move from critique to repair.',
+        sentences: [
+          'After standing at the gate, the course asks what response could look like.',
+          'Picture a design meeting where the people most affected are not invited until the end.',
+          'Design justice asks what changes when they lead from the beginning.',
+          'Repair is not a nicer screen on top of the same old structure.',
+          'It means changing who has power, whose knowledge counts, and who can say no.',
+          'Bring this back to your field and name the first thing a community-led version of the tool would change.'
+        ],
+        watch: ['Separate real repair from a nicer interface over the same structure.', 'Ask who should lead the design if affected communities come first.', 'Name who has the power to refuse the tool or change its purpose.']
+      },
+      12: {
+        title: 'Test the rulebook.',
+        sentences: [
+          'After imagining repair, test the rulebook.',
+          'Picture a company deploying an AI system faster than the policy around it can respond.',
+          'A regulation can sound strong and still leave gaps where people get hurt.',
+          'This week asks you to compare what AI systems already do with what current rules actually cover.',
+          'Look for the distance between promise and protection, because that is where accountability often disappears.',
+          'By the end, name one policy lever and one thing it cannot fix by itself.'
+        ],
+        watch: ['Compare what the policy promises with what it actually protects.', 'Find the gap where harm can still happen.', 'Name one thing a single rule cannot fix by itself.']
+      },
+      13: {
+        title: 'Return to your own map.',
+        sentences: [
+          'After the policy week, return to your own evidence.',
+          'Open your Living Cartography and place an early entry beside a later one.',
+          'Your map is not just a folder of examples.',
+          'It is a record of your seeing getting sharper over time.',
+          'Look for places where your language changed, your examples got closer, or your questions became harder.',
+          'That change is the evidence you need for the final revisiting video.'
+        ],
+        watch: ['Reread an early map entry and notice what you can now name.', 'Look for a place where your question became sharper.', 'Use your own map as evidence of your learning.']
+      },
+      14: {
+        title: 'Answer the first question again.',
+        sentences: [
+          'The course closes by returning to the question it opened with.',
+          'Can a machine be racist?',
+          'Do not answer with a slogan.',
+          'Choose one entry from your map and use it as evidence.',
+          'Your answer should show the full path: seeing the tool, explaining the harm, naming accountability, and imagining response.',
+          'You leave with a habit you can use whenever a future system arrives looking neutral.'
+        ],
+        watch: ['Answer the opening question with evidence from your own map.', 'Connect seeing, anatomy, response, and return in one explanation.', 'Name the habit of questioning technology that you will carry forward.']
+      }
+    };
+    var item = copy[w] || {};
+    var sentences = item.sentences || [d.overview || weekTitle(w)];
+    return { title: item.title || 'Use this as your doorway into the week.', sentences: sentences.slice(0, 7), watch: (item.watch || (d.guiding || []).slice(0, 3)).slice(0, 3) };
+  }
+  function weekVideoSection(w, d, VID) {
+    var brief = weekVideoBrief(w, d);
+    var text = brief.sentences.map(function (s) { return esc(s); }).join(' ');
+    var watch = brief.watch.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('');
+    var watchTitle = VID ? 'While you watch, do this' : 'Use this to focus';
+    var media = VID
+      ? '<video controls preload="none" playsinline poster="./' + VID.poster + '"><source src="./' + VID.file + '" type="video/mp4">' + (VID.vtt ? '<track kind="captions" srclang="en" label="English" src="./' + VID.vtt + '">' : '') + '</video><p>Made with NotebookLM from this week\'s readings and reviewed by your instructor.</p>'
+      : '<div class="wk-video-map"><div class="mono">80 SECOND MAP</div><b>Read this before you start.</b><span>This week does not need a separate video player. Use the orientation beside it as the fast entry point into the readings, visual, and activity.</span></div>';
+    return '<section id="wk-vid" class="node wk-video"><h2 class="wk-sec">This week in 80 seconds</h2><div class="wk-video-grid"><div class="wk-video-media">' + media + '</div><div class="wk-video-copy"><div class="mono">QUICK ORIENTATION</div><h3>' + esc(brief.title) + '</h3><p>' + text + '</p><div class="wk-video-watch"><b>' + esc(watchTitle) + '</b><ul>' + watch + '</ul></div></div></div></section>';
   }
   function activityStudentPath(w, a) {
     var map = {
@@ -2398,6 +2625,17 @@
     };
     var steps = guides[a.archetype] || ['Use the controls on this page.', 'Read the feedback that appears.', 'Connect what happened back to the reading.'];
     return '<section class="activity-run-guide" aria-label="How this activity works"><div><b>How this activity works</b><ol>' + steps.map(function (g) { return '<li>' + esc(g) + '</li>'; }).join('') + '</ol></div></section>';
+  }
+  function activityOutputGuide(w, a) {
+    var map = {
+      match: 'Make at least one choice under each example. The useful output is not the score; it is being able to explain why the correct mechanism fits.',
+      scenario: 'Work through each decision point. The useful output is a short explanation of which choice reduces harm and which choice hides it.',
+      toggle: 'Turn the defaults on and off. The useful output is naming who carries the cost when a default is treated as normal.',
+      assemble: 'Add parts to the response. The useful output is explaining how the parts work together, not just collecting them.',
+      lab: 'Choose the policy levers and compare the trade-offs. The useful output is naming what each lever can and cannot fix.',
+      capstone: 'Check each part of your map. The useful output is a final answer grounded in your own evidence.'
+    };
+    return '<section class="activity-run-guide" aria-label="What to produce from this activity"><div><b>What you should leave with</b><p style="margin:0;font-size:.84rem;line-height:1.52;color:var(--ink-dim)">' + esc(map[a.archetype] || 'Use the controls, read the feedback, and write down what the activity helped you understand.') + ' Add that sentence to Activity Notes so it appears in Generate Your Weekly Notes.</p></div></section>';
   }
   function initTopicModels() {
     var canvases = Array.prototype.slice.call(document.querySelectorAll('canvas[data-topic-model]'));
@@ -2496,15 +2734,27 @@
       ];
       if (kind === 'outcomelens') {
         slots = [
-          { x: shellW * 0.18, y: canvasTop + canvasH * 0.36 },
-          { x: shellW * 0.6, y: canvasTop + canvasH * 0.38 },
-          { x: shellW * 0.84, y: canvasTop + canvasH * 0.54 }
+          { x: shellW * 0.17, y: canvasTop + canvasH * 0.34 },
+          { x: shellW * 0.52, y: canvasTop + canvasH * 0.34 },
+          { x: shellW * 0.84, y: canvasTop + canvasH * 0.48 }
         ];
       } else if (kind === 'mechanismatch') {
         slots = [
           { x: shellW * 0.14, y: canvasTop + canvasH * 0.32 },
           { x: shellW * 0.62, y: canvasTop + canvasH * 0.14 },
           { x: shellW * 0.86, y: canvasTop + canvasH * 0.27 }
+        ];
+      } else if (kind === 'audit') {
+        slots = [
+          { x: shellW * 0.15, y: canvasTop + canvasH * 0.33 },
+          { x: shellW * 0.18, y: canvasTop + canvasH * 0.58 },
+          { x: shellW * 0.85, y: canvasTop + canvasH * 0.5 }
+        ];
+      } else if (kind === 'auditturntable') {
+        slots = [
+          { x: shellW * 0.15, y: canvasTop + canvasH * 0.33 },
+          { x: shellW * 0.18, y: canvasTop + canvasH * 0.58 },
+          { x: shellW * 0.85, y: canvasTop + canvasH * 0.5 }
         ];
       }
       root.updateMatrixWorld(true);
@@ -2519,12 +2769,13 @@
         var ew = el.offsetWidth || 180, eh = el.offsetHeight || 62;
         var x = slot.x + wobbleX;
         var y = slot.y + wobbleY;
-        if (note) {
-          var noteBox = note.getBoundingClientRect();
-          var noteLeft = noteBox.left - shellBox.left, noteRight = noteBox.right - shellBox.left;
-          var wouldOverlapNote = x + ew * 0.5 > noteLeft - 8 && x - ew * 0.5 < noteRight + 8 && y - eh * 0.5 < noteBottom + 8;
-          if (wouldOverlapNote) y = noteBottom + eh * 0.5 + 10;
-        }
+        [note, shell.querySelector('.wk-holo-display')].forEach(function (panel) {
+          if (!panel) return;
+          var pb = panel.getBoundingClientRect();
+          var pLeft = pb.left - shellBox.left, pRight = pb.right - shellBox.left, pTop = pb.top - shellBox.top, pBottom = pb.bottom - shellBox.top;
+          var overlapsPanel = x + ew * 0.5 > pLeft - 8 && x - ew * 0.5 < pRight + 8 && y + eh * 0.5 > pTop - 8 && y - eh * 0.5 < pBottom + 8;
+          if (overlapsPanel) y = pBottom + eh * 0.5 + 10;
+        });
         x = Math.max(ew * 0.5 + 12, Math.min(shellW - ew * 0.5 - 12, x));
         y = Math.max(eh * 0.5 + 10, Math.min(canvasTop + canvasH - eh * 0.5 - 18, y));
         var visible = labelVec.z > -1 && labelVec.z < 1;
@@ -3007,6 +3258,11 @@
         root.position.set(0, 0.04, 0);
         camera.position.set(5.6, 3.8, 8.2);
         camera.lookAt(0, 0.6, 0);
+      } else if (focusModel) {
+        root.scale.set(0.76, 0.76, 0.76);
+        root.position.set(0, -0.34, 0);
+        camera.position.set(4.9, 3.5, 7.1);
+        camera.lookAt(0, 0.32, 0);
       } else {
         root.scale.set(0.9, 0.9, 0.9);
         root.position.set(0, -0.05, 0);
@@ -3058,30 +3314,71 @@
     }
     schedule();
   }
+  function assignmentWeekEvents(w) {
+    var items = assignmentsData();
+    var byId = {};
+    items.forEach(function (item) { byId[item.id] = item; });
+    var events = [
+      {
+        week: 2,
+        id: 'map-exchange',
+        focus: 'Begin collecting one small observation each week. Look for an ordinary digital system that sorts, scores, verifies, watches, delays, or protects people.'
+      },
+      {
+        week: 4,
+        id: 'coded-encounter',
+        focus: 'Choose one digital encounter you can slow down and inspect. Save the screen, rule, notice, record, or design choice that shows how the encounter works.'
+      },
+      {
+        week: 6,
+        id: 'case-file',
+        focus: 'Move from a personal example to a documented Canadian system. Start gathering public evidence before forming your claim.'
+      },
+      {
+        week: 11,
+        id: 'repair',
+        focus: 'Return to one harm you can explain clearly. Your task is to design a repair that changes a rule, process, review step, or accountability path.'
+      },
+      {
+        week: 13,
+        id: 'cartography',
+        focus: 'Pull together the map you have been building across the term. Show what you now notice, what changed, and what responsibility follows.'
+      }
+    ];
+    return events.filter(function (event) { return event.week === w; }).map(function (event) {
+      return Object.assign({}, event, byId[event.id] || {});
+    }).filter(function (event) { return event.title; });
+  }
+
+  function weekAssignmentNotice(w) {
+    var events = assignmentWeekEvents(w);
+    if (!events.length) return '';
+    return '<section class="week-assignment-note" id="wk-asg">'
+      + '<div class="mono">BLACKBOARD ASSIGNMENT TIMING</div>'
+      + '<h2>This week in the assignment arc</h2>'
+      + events.map(function (event) {
+        return '<article>'
+          + '<div><span>Opened on Blackboard</span><strong>' + esc(event.title) + ': ' + esc(assignmentDateLabel(event.release)) + '</strong></div>'
+          + '<p><b>Due:</b> ' + esc(event.due) + '</p>'
+          + '<p><b>Use this week to:</b> ' + esc(event.focus) + '</p>'
+          + '</article>';
+      }).join('')
+      + '<button type="button" onclick="SOC.go(\'assignments\')">Open Assignments Guide</button>'
+      + '</section>';
+  }
+
   function weekPage(w, d) {
     var ws = journeyWeeks(), idx = ws.indexOf(w), prev = idx > 0 ? ws[idx - 1] : null, next = idx < ws.length - 1 ? ws[idx + 1] : null;
     var sec = function (id, title, inner) { return '<section id="wk-' + id + '" class="node"><h2 class="wk-sec">' + esc(title) + '</h2>' + inner + '</section>'; };
-    var hero = '<section id="wk-ov" class="node jhero jfade" style="margin:0 0 16px"><div style="position:relative">'
-      + '<div class="mono" style="font-size:.7rem;letter-spacing:.08em;color:var(--red);font-weight:700;margin-bottom:8px">WEEK ' + w + ' · ' + esc(weekDate(w)) + '</div>'
-      + '<h1 style="font-size:2rem;line-height:1.12;font-weight:700;margin:0 0 12px;color:var(--ink)">' + esc(weekTitle(w)) + '</h1>'
-      + '<p style="font-size:1.04rem;line-height:1.6;color:var(--ink);margin:0 0 4px;">' + esc(d.overview) + '</p>'
-      + '<div style="font-size:1.08rem;font-weight:600;color:var(--ink);border-left:3px solid var(--red);padding-left:14px;margin:16px 0">' + esc(journeyQ(w)) + '</div>'
-      + '<div style="font-family:var(--mono);font-size:.74rem;color:var(--ink-faint)">' + ic('clock', 13) + ' ' + esc(d.time) + '</div>'
-      + '</div></section>';
+    var hero = weekHero(w, d, { label: 'TEACHING WEEK', route: ['Read', 'See', 'Try', 'Reflect'], startPart: 'read', startLabel: 'Start with readings' });
     var path = weekLearningPath(w, d);
     var VID = window.BFS218_VIDEOS && window.BFS218_VIDEOS[w];
-    var vid = VID ? '<section id="wk-vid" class="node"><h2 class="wk-sec">This week in 80 seconds</h2>'
-      + '<video controls preload="none" playsinline poster="./' + VID.poster + '" style="width:100%;max-width:300px;display:block;border-radius:12px;border:1px solid var(--border);background:#000">'
-      + '<source src="./' + VID.file + '" type="video/mp4">'
-      + (VID.vtt ? '<track kind="captions" srclang="en" label="English" src="./' + VID.vtt + '">' : '')
-      + '</video>'
-      + (VID.summary ? '<p style="margin:13px 0 0;font-size:.95rem;color:var(--ink-dim);line-height:1.6;">' + esc(VID.summary) + '</p>' : '')
-      + '<p style="margin:9px 0 0;font-size:.75rem;color:var(--ink-faint)">Made with NotebookLM from this week\'s readings; reviewed by your instructor.</p>'
-      + '</section>' : '';
+    var vid = weekVideoSection(w, d, VID);
     var pre = sec('pre', 'Before you begin', '<p class="wk-hint">A quick read on where your understanding sits right now, no grade. Rate each idea, then meet them again at the end to see how far your thinking moves.</p>' + wkChecks(w, 'pre', d));
     var purpose = '<section id="wk-learn" class="node"><h2 class="wk-sec">Purpose</h2><p style="margin:0">' + esc(d.purpose) + '</p></section>';
     var outcomes = sec('out', 'Learning outcomes', '<p style="margin:0 0 8px;font-size:.9rem">By the end of this week, you will be able to:</p>' + d.outcomes.map(function (o) { return '<div class="wk-oc"><span class="b"></span>' + esc(o) + '</div>'; }).join(''));
     var guiding = sec('gq', 'Guiding questions', '<p style="margin:0 0 8px;font-size:.9rem">Hold these in mind as you work:</p>' + d.guiding.map(function (q) { return '<div class="wk-gq"><span class="q">+</span>' + esc(q) + '</div>'; }).join(''));
+    var assignmentTiming = weekAssignmentNotice(w);
     var programLens = lensProgramSection(w, d);
     var programCase = lensCaseStudySection(w, d);
     var concepts = sec('con', 'Key concepts', d.concepts.map(function (c) { return '<div class="wk-concept"><h3>' + esc(c.h) + '</h3><p>' + esc(c.body) + ' <span class="wk-cite">(' + esc(c.cite) + ')</span></p></div>'; }).join(''));
@@ -3111,9 +3408,54 @@
     var kcR = kcSection(w);
     var kc = kcR.html, kcItems = kcR.items;
     var rail = '<aside class="wk-rail"><div class="wk-railbox"><div class="wk-railh">IN THIS WEEK</div>'
-      + [['ov', 'Overview'], ['path', 'Your learning path']].concat(VID ? [['vid', 'This week in 80 seconds']] : []).concat([['pre', 'Before you begin'], ['learn', 'Purpose'], ['out', 'Learning outcomes'], ['gq', 'Guiding questions']]).concat(programLens ? [['lens', 'For your program']] : []).concat([['con', 'Key concepts'], ['term', 'Key terms'], ['read', 'Readings']]).concat(rescue ? [['rescue', 'Reading Rescue']] : []).concat([['visual', 'A Visual Overview']]).concat(d.deck ? [['watch', 'Walkthrough']] : []).concat(programCase ? [['case', 'Case study']] : []).concat([['do', 'The activity'], ['reflect', 'Reflection']]).concat(sg ? [['sg', 'Study Guide']] : []).concat(kcItems.length ? [['kc', 'Knowledge Check']] : []).concat([['notes', 'Generate notes']]).map(function (it) { return '<a href="#wk-' + it[0] + '"><span class="s"></span>' + it[1] + '</a>'; }).join('')
+      + [['ov', 'Overview'], ['path', 'Your learning path'], ['vid', 'This week in 80 seconds']].concat([['pre', 'Before you begin'], ['learn', 'Purpose'], ['out', 'Learning outcomes'], ['gq', 'Guiding questions']]).concat(assignmentTiming ? [['asg', 'Assignment dates']] : []).concat(programLens ? [['lens', 'For your program']] : []).concat([['con', 'Key concepts'], ['term', 'Key terms'], ['read', 'Readings']]).concat(rescue ? [['rescue', 'Reading Rescue']] : []).concat([['visual', 'A Visual Overview']]).concat(d.deck ? [['watch', 'Walkthrough']] : []).concat(programCase ? [['case', 'Case study']] : []).concat([['do', 'The activity'], ['reflect', 'Reflection']]).concat(sg ? [['sg', 'Study Guide']] : []).concat(kcItems.length ? [['kc', 'Knowledge Check']] : []).concat([['notes', 'Generate notes']]).map(function (it) { return '<a href="#wk-' + it[0] + '"><span class="s"></span>' + it[1] + '</a>'; }).join('')
       + '<div class="wk-railt">' + ic('clock', 12) + ' ' + esc(d.time.split('(')[0].trim()) + '</div></div></aside>';
-    return '<div class="rise">' + mobileWeekActions(w, d) + hero + path + '<div class="wk-grid"><section>' + vid + pre + purpose + outcomes + guiding + programLens + concepts + terms + readings + rescue + visual + watch + programCase + act + reflect + sg + kc + notes + navRow + '</section>' + rail + '</div></div>';
+    return '<div class="rise wk-page">' + mobileWeekActions(w, d) + hero + path + '<div class="wk-grid"><section>' + vid + pre + purpose + outcomes + guiding + assignmentTiming + programLens + concepts + terms + readings + rescue + visual + watch + programCase + act + reflect + sg + kc + notes + navRow + '</section>' + rail + '</div></div>';
+  }
+  function weekHero(w, d, opt) {
+    d = d || {};
+    opt = opt || {};
+    var route = opt.route || ['Read', 'See', 'Try', 'Reflect'];
+    var routeHtml = route.map(function (x, i) { return '<span><b>' + (i + 1) + '</b>' + esc(x) + '</span>'; }).join('');
+    var startPart = opt.startPart || 'path';
+    var startLabel = opt.startLabel || 'Start this week';
+    var sub = opt.sub || d.overview || '';
+    var q = opt.question === false ? '' : (opt.question || journeyQ(w));
+    return '<section id="wk-ov" class="node jhero jfade wk-hero2">'
+      + '<div class="wk-hero-main"><div class="mono wk-hero-kicker">WEEK ' + w + ' | ' + esc(weekDate(w)) + ' | ' + esc(opt.label || 'WEEKLY MODULE') + '</div>'
+      + '<h1>' + esc(opt.title || weekTitle(w)) + '</h1>'
+      + (sub ? '<p>' + esc(sub) + '</p>' : '')
+      + (q ? '<div class="wk-hero-question">' + esc(q) + '</div>' : '')
+      + '<div class="wk-hero-actions"><button type="button" onclick="SOC.jumpWeek(' + w + ',\'' + startPart + '\')">' + esc(startLabel) + '</button><span>' + ic('clock', 13) + ' ' + esc((d.time || opt.time || 'Work at your own pace')) + '</span></div></div>'
+      + '<aside class="wk-hero-route" aria-label="Weekly route"><div class="mono">MODULE ROUTE</div>' + routeHtml + '</aside>'
+      + '</section>';
+  }
+  function pathwaysPage() {
+    var route = function (kind, title, subtitle, steps) {
+      return '<section class="path-route path-' + kind + '"><div class="path-route-head"><div class="mono">' + esc(kind === 'async' ? 'ASYNCHRONOUS COURSE USERS' : 'SYNCHRONOUS COURSE USERS') + '</div><h2>' + esc(title) + '</h2><p>' + esc(subtitle) + '</p></div>'
+        + '<ol>' + steps.map(function (s, i) { return '<li><span>' + (i + 1) + '</span><div><b>' + esc(s[0]) + '</b><em>' + esc(s[1]) + '</em><p>' + esc(s[2]) + '</p></div></li>'; }).join('') + '</ol></section>';
+    };
+    var asyncSteps = [
+      ['Start', 'Weekly page', 'Work through the module in order.'],
+      ['Learn', 'Walkthrough plus readings', 'Use the walkthrough as your class moment, then anchor it in the readings.'],
+      ['Practise', 'Activity and checks', 'Use the activity, Reading Practice, flashcards, and Knowledge Check as private rehearsal.'],
+      ['Capture', 'Notes as you go', 'Write in the note boxes while your thinking is fresh.'],
+      ['Finish', 'Generate notes', 'Download one organized weekly record for review and Blackboard preparation.']
+    ];
+    var syncSteps = [
+      ['Preview', 'Before class', 'Skim the weekly page and bring one question.'],
+      ['Discuss', 'Class time', 'Use the walkthrough, activity, and examples as shared discussion tools.'],
+      ['Return', 'After class', 'Finish the readings, activity notes, checks, and reflection.'],
+      ['Connect', 'Class plus site notes', 'Add your classroom takeaways into the site note boxes.'],
+      ['Prepare', 'Blackboard work', 'Use the Assignment Guide, practice tools, and notes before submitting.']
+    ];
+    return '<div class="rise path-page">'
+      + '<section class="path-hero"><div><div class="mono">COURSE PATHWAYS</div><h1>Choose your weekly rhythm</h1><p>The work is the same. The pacing is different. Pick the route that matches how you are taking BFS218, then use it every week.</p></div><div class="path-compass" aria-label="Two pathway options"><span>ASYNC</span><b>self-paced learning room</b><i></i><span>SYNC</span><b>before, during, after class</b></div></section>'
+      + '<section class="path-summary"><div><span class="path-mark">1</span><b>Same course</b><p>Same readings, activities, assignments, and expectations.</p></div><div><span class="path-mark">2</span><b>Different rhythm</b><p>Async is self-paced. Sync is class-connected.</p></div><div><span class="path-mark">3</span><b>One weekly record</b><p>Both routes end with Generate Your Weekly Notes.</p></div></section>'
+      + '<div class="path-routes">' + route('async', 'Asynchronous route', 'Use the weekly page as the full learning room.', asyncSteps)
+      + route('sync', 'Synchronous route', 'Use the site around class so class time goes deeper.', syncSteps) + '</div>'
+      + '<section class="path-close"><h2>Which route should you follow?</h2><p>No live weekly class? Use the asynchronous route. Scheduled class meetings? Use the synchronous route. Unsure? Start with the asynchronous route because it is the complete self-paced path. Enter the weekly room first. Use walkthroughs from inside the week when you need the ideas explained again.</p><div class="path-actions"><button type="button" class="primary" onclick="SOC.station(2)"><b>Enter Week 2 Learning Room</b><small>Start the full module.</small></button><button type="button" onclick="SOC.careerLens()"><b>Choose My Program Lens</b><small>Personalize the examples.</small></button><button type="button" onclick="SOC.careerChoices()"><b>Career Choices</b><small>See how BFS218 connects to your path.</small></button><button type="button" class="guide" onclick="SOC.go(\'assignments\')"><b>Open Assignments Guide</b><small>Understand the graded work.</small></button></div></section>'
+      + '</div>';
   }
   /* ---------- generic week activities: match / scenario / toggle / assemble / lab ---------- */
   function actCard(inner) { return '<div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin:0 0 12px">' + inner + '</div>'; }
@@ -3195,7 +3537,7 @@
     var inner = '';
     switch (a.archetype) { case 'match': inner = actMatch(w, a); break; case 'scenario': inner = actScenario(w, a); break; case 'toggle': inner = actToggle(w, a); break; case 'assemble': inner = actAssemble(w, a); break; case 'lab': inner = actLab(w, a); break; case 'capstone': inner = actCapstone(w, a); break; default: inner = '<p style="color:var(--ink-dim)">This activity is not set up yet.</p>'; }
     var foot = '<div style="margin-top:22px;padding-top:18px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap"><div style="font-size:.86rem;color:var(--ink-dim)">When you are done, go back to the week to answer the reflection and save your work.</div><button onclick="SOC.station(' + w + ')" class="wk-cta" style="margin:0">Back to Week ' + w + ' ' + ic('chevron', 16, 2.4) + '</button></div>';
-    return '<div class="rise" style="margin:0 auto">' + mobileActivityActions(w, d) + head + activityInteractionGuide(w, a) + inner + weekNoteBox(w, 'activity', 'Activity Notes', 'What did this activity make you notice about the week\'s idea?') + foot + '</div>';
+    return '<div class="rise" style="margin:0 auto">' + mobileActivityActions(w, d) + head + activityInteractionGuide(w, a) + activityOutputGuide(w, a) + inner + weekNoteBox(w, 'activity', 'Activity Notes', 'What did this activity make you notice about the week\'s idea?') + foot + '</div>';
   }
   function activitySummary(w, d) {
     var a = d.activity || {};
@@ -3228,6 +3570,8 @@
       + '<div style="font-size:1.02rem;font-weight:600;color:var(--ink);border-left:3px solid var(--red);padding-left:14px;margin:16px 0">No new readings or teaching material this week. This time is yours: focus on your work' + (isFinal ? ' and close out the course. Nothing is due.' : '. Your capstone is due this week.') + '</div>'
       + '</div></section>';
     var path = capstoneLearningPath(w, d);
+    var VID = window.BFS218_VIDEOS && window.BFS218_VIDEOS[w];
+    var vid = weekVideoSection(w, d, VID);
     var visual = visualOverviewSection(w, d);
     var act = d.activity ? '<section id="wk-do" class="node interactive"><h2 class="wk-sec">' + esc(d.activity.title) + '</h2><div class="wk-whatwhy"><b>What this is:</b> ' + esc(d.activity.what) + '<br><br><b>Why you are doing it:</b> ' + esc(d.activity.why) + '</div>' + activityStartGuide(w) + '<button onclick="SOC.startActivity(\'' + d.activity.screen + '\',' + w + ')" class="wk-cta">Open your capstone' + ic('chevron', 17, 2.4) + '</button>' + weekNoteBox(w, 'activity', 'Activity Notes', 'Write what this capstone activity helped you organize or decide.') + '</section>' : '';
     var reflect = '<section id="wk-reflect" class="node"><h2 class="wk-sec">Your reflection</h2>'
@@ -3242,9 +3586,9 @@
       + (next != null ? '<button onclick="SOC.station(' + next + ')" style="flex:1;min-width:180px;text-align:right;border:1px solid var(--border);background:#fff;border-radius:12px;padding:13px 16px;cursor:pointer"><div class="mono" style="font-size:.66rem;color:var(--red)">NEXT &rarr;</div><div style="font-size:.92rem;font-weight:700;color:var(--ink);margin-top:2px">Week ' + next + ': ' + esc(weekTitle(next)) + '</div></button>' : '')
       + '</div>';
     var rail = '<aside class="wk-rail"><div class="wk-railbox"><div class="wk-railh">IN THIS WEEK</div>'
-      + [['ov', 'This week'], ['path', 'Your learning path'], ['visual', 'A Visual Overview']].concat(d.activity ? [['do', 'Your capstone']] : []).concat([['reflect', 'Reflection'], ['notes', 'Generate notes']]).map(function (it) { return '<a href="#wk-' + it[0] + '"><span class="s"></span>' + it[1] + '</a>'; }).join('')
+      + [['ov', 'This week'], ['path', 'Your learning path'], ['vid', 'This week in 80 seconds'], ['visual', 'A Visual Overview']].concat(d.activity ? [['do', 'Your capstone']] : []).concat([['reflect', 'Reflection'], ['notes', 'Generate notes']]).map(function (it) { return '<a href="#wk-' + it[0] + '"><span class="s"></span>' + it[1] + '</a>'; }).join('')
       + '<div class="wk-railt">' + ic('clock', 12) + ' No new material</div></div></aside>';
-    return '<div class="rise">' + mobileWeekActions(w, d, { activityLabel: 'Capstone' }) + hero + path + '<div class="wk-grid"><section>' + visual + act + reflect + notes + navRow + '</section>' + rail + '</div></div>';
+    return '<div class="rise">' + mobileWeekActions(w, d, { activityLabel: 'Capstone' }) + hero + path + '<div class="wk-grid"><section>' + vid + visual + act + reflect + notes + navRow + '</section>' + rail + '</div></div>';
   }
   var OVERVIEW_WEEK = 1;
   function overviewPage(w) {
@@ -3341,6 +3685,14 @@
       (C.fields || []).forEach(function (fld) { opts += '<option value="' + esc(fld) + '"' + (raw === fld ? ' selected' : '') + '>' + esc(fld) + '</option>'; });
     }
     return opts;
+  }
+  function assignmentLensPicker() {
+    var raw = state.careerField || '';
+    return '<label class="asg-inline-lens"><span>Program lens</span><select onchange="SOC.assignmentLens(this.value)" aria-label="Choose a program lens for assignment examples">' + lensProgramOpts(raw, '') + '</select><small>Changing this updates the examples and starter questions on this page.</small></label>';
+  }
+  function assignmentLensPanel(L) {
+    var label = L ? (L.program || L.area) : 'General stream';
+    return '<section class="asg-lens-panel" aria-label="Assignment program lens selector"><div><div class="mono">PROGRAM LENS</div><h2>Choose once, then the guide updates</h2><p>Use this selector to make assignment examples more specific to your program. The assignment prompt, grading, due dates, and Blackboard submission rules stay the same.</p></div><div>' + assignmentLensPicker() + '<p>Current lens: <b>' + esc(label) + '</b>.</p></div></section>';
   }
   function lensChip() {
     var C = window[(D.course && D.course.code) + '_CAREER'] || null;
@@ -3485,7 +3837,7 @@
       + '<p style="margin:0;font-size:.78rem;line-height:1.45;color:var(--ink-dim)">' + esc(profile.check) + ' The activity itself stays the same for everyone.</p></div>';
   }
   function lensProgramFocus(L) {
-    var p = ((L && L.program) || '').toLowerCase();
+    var p = ((L && (L.program || L.area)) || '').toLowerCase();
     if (/civil|building|construction/.test(p)) return 'For this program, pay special attention to public infrastructure, site drawings, grading, drainage, accessibility, inspection records, and the people who rely on the built environment every day.';
     if (/fire/.test(p)) return 'For this program, pay special attention to life-safety systems, emergency access, alarms, codes, inspection records, and the people who depend on fast, clear decisions.';
     if (/mechanical|manufacturing|mechatronic|tool|cnc/.test(p)) return 'For this program, pay special attention to tolerances, machine settings, maintenance logs, safety guards, production defaults, and the workers affected by every technical choice.';
@@ -3756,9 +4108,12 @@
         id: 'map-exchange',
         title: 'Map Exchange',
         short: 'Share one located observation each week',
-        weight: '20%',
+        weight: '20 marks (20%)',
         timing: 'Ongoing Weeks 2-12. Graded at the Study Week checkpoint and again at the end of Week 13.',
         opens: 'Starts Week 2',
+        release: '2026-09-14',
+        due: 'Checkpoint due by October 30, 2026. Final close due by December 11, 2026.',
+        purpose: 'This assignment builds the habit that makes the rest of the course possible: noticing how ordinary digital systems shape people differently.',
         role: 'This is the weekly habit. You keep noticing where technology sorts, watches, helps, hides, or misreads people in everyday life.',
         really: [
           'Post one specific observation from your digital life, community, workplace, or field.',
@@ -3770,11 +4125,11 @@
           'One brief peer reply for that week.'
         ],
         criteria: [
-          ['Consistency', 25, 'You show up across the term instead of posting everything at the end.'],
-          ['Located specificity', 25, 'Your example is concrete: a tool, platform, form, camera, score, feed, or rule.'],
-          ['Connection to reading', 20, 'You use the week\'s concept or source accurately.'],
-          ['Exchange', 15, 'Your reply helps the conversation move, not just "I agree."'],
-          ['Growth', 15, 'Your later posts show sharper noticing than your early posts.']
+          ['Consistency', 5, 'You show up across the term instead of posting everything at the end.'],
+          ['Located specificity', 5, 'Your example is concrete: a tool, platform, form, camera, score, feed, or rule.'],
+          ['Connection to reading', 4, 'You use the week\'s concept or source accurately.'],
+          ['Exchange', 3, 'Your reply helps the conversation move, not just "I agree."'],
+          ['Growth', 3, 'Your later posts show sharper noticing than your early posts.']
         ],
         strong: [
           'Names the exact technology or digital setting.',
@@ -3792,9 +4147,12 @@
         id: 'coded-encounter',
         title: 'Coded Encounter',
         short: 'Break down one encounter with techno-racism',
-        weight: '20%',
-        timing: 'Opens Week 4. Due by the end of Study Week.',
+        weight: '20 marks (20%)',
+        timing: 'Opened on Blackboard in Week 4. Due by the end of Study Week.',
         opens: 'Week 4',
+        release: '2026-09-28',
+        due: 'Due by October 30, 2026.',
+        purpose: 'This assignment teaches you to slow down one real digital encounter and prove how the mechanism works with artifacts.',
         role: 'This is your first deeper analysis. You take one real encounter and show how the mechanism works.',
         really: [
           'Choose one encounter from your own digital life or a setting you can observe closely.',
@@ -3806,11 +4164,11 @@
           'A one to two page structured breakdown.'
         ],
         criteria: [
-          ['Evidence', 25, 'The artifacts are real, readable, and connected to your claim.'],
-          ['Naming the mechanism', 25, 'You accurately use New Jim Code, engineered inequity, or default discrimination.'],
-          ['Specificity', 20, 'You stay with the case instead of making a broad claim about society.'],
-          ['Who pays', 20, 'You identify who carries the cost, risk, delay, exposure, or exclusion.'],
-          ['Reflexivity', 10, 'You name your own position without making the assignment only about yourself.']
+          ['Evidence', 5, 'The artifacts are real, readable, and connected to your claim.'],
+          ['Naming the mechanism', 5, 'You accurately use New Jim Code, engineered inequity, or default discrimination.'],
+          ['Specificity', 4, 'You stay with the case instead of making a broad claim about society.'],
+          ['Who pays', 4, 'You identify who carries the cost, risk, delay, exposure, or exclusion.'],
+          ['Reflexivity', 2, 'You name your own position without making the assignment only about yourself.']
         ],
         strong: [
           'Treats the artifact like evidence.',
@@ -3828,9 +4186,12 @@
         id: 'case-file',
         title: 'Canadian Case File',
         short: 'Investigate one real Canadian system',
-        weight: '20%',
-        timing: 'Opens after Week 6. Due by the end of Study Week.',
+        weight: '20 marks (20%)',
+        timing: 'Opened on Blackboard after Week 6. Due by the end of Study Week.',
         opens: 'After Week 6',
+        release: '2026-10-19',
+        due: 'Due by October 30, 2026.',
+        purpose: 'This assignment moves from personal observation to a public Canadian system so your analysis is grounded in documented evidence.',
         role: 'This turns the course outward. You move from your own encounter to a real Canadian system with sources.',
         really: [
           'Pick one system from the Week 6 options: facial recognition, predictive or algorithmic policing, or a border or immigration algorithm.',
@@ -3842,11 +4203,11 @@
           'A 60 to 90 second recorded brief answering the Blackboard prompt.'
         ],
         criteria: [
-          ['Dossier', 25, 'The system is identified clearly and described accurately.'],
-          ['Lens application', 25, 'You use the course concept to explain the problem, not just summarize the case.'],
-          ['Local connection', 20, 'You connect the system to your city, community, field, or likely professional world.'],
-          ['Recorded brief', 20, 'Your short recording is clear, direct, and in your own voice.'],
-          ['Integrity', 10, 'Sources are real, cited, and used honestly.']
+          ['Dossier', 5, 'The system is identified clearly and described accurately.'],
+          ['Lens application', 5, 'You use the course concept to explain the problem, not just summarize the case.'],
+          ['Local connection', 4, 'You connect the system to your city, community, field, or likely professional world.'],
+          ['Recorded brief', 4, 'Your short recording is clear, direct, and in your own voice.'],
+          ['Integrity', 2, 'Sources are real, cited, and used honestly.']
         ],
         strong: [
           'Uses sources to build evidence, not decoration.',
@@ -3864,9 +4225,12 @@
         id: 'repair',
         title: 'Design the Repair',
         short: 'Propose a concrete response to one harm',
-        weight: '20%',
-        timing: 'Opens Week 11. Due by the end of Week 13.',
+        weight: '20 marks (20%)',
+        timing: 'Opened on Blackboard in Week 11. Due by the end of Week 13.',
         opens: 'Week 11',
+        release: '2026-11-23',
+        due: 'Due by December 11, 2026.',
+        purpose: 'This assignment asks you to stop at neither critique nor outrage. You design a concrete response to a harm you can explain.',
         role: 'This is where the course refuses to stop at critique. You design a response that fits one harm you already mapped.',
         really: [
           'Choose one harm from your Coded Encounter or Canadian Case File.',
@@ -3878,11 +4242,11 @@
           'Optional short pitch if Blackboard asks for or permits it.'
         ],
         criteria: [
-          ['Grounding', 25, 'The repair responds to a harm you already documented.'],
-          ['Use of reading', 20, 'The response is connected to Week 11 or Week 12 ideas.'],
-          ['Specificity and feasibility', 25, 'The repair is concrete enough that a reader can picture what changes.'],
-          ['Justice awareness', 15, 'You consider who gains power, protection, voice, or appeal.'],
-          ['Argument', 15, 'You make a clear case for why this repair fits.']
+          ['Grounding', 5, 'The repair responds to a harm you already documented.'],
+          ['Use of reading', 4, 'The response is connected to Week 11 or Week 12 ideas.'],
+          ['Specificity and feasibility', 5, 'The repair is concrete enough that a reader can picture what changes.'],
+          ['Justice awareness', 3, 'You consider who gains power, protection, voice, or appeal.'],
+          ['Argument', 3, 'You make a clear case for why this repair fits.']
         ],
         strong: [
           'Starts from a documented harm.',
@@ -3900,9 +4264,12 @@
         id: 'cartography',
         title: 'Personal Cartography Capstone',
         short: 'Tell the story of your map',
-        weight: '20%',
-        timing: 'Opens Week 13. Due by the end of Week 13. Nothing is due in the final week.',
+        weight: '20 marks (20%)',
+        timing: 'Opened on Blackboard in Week 13. Due by the end of Week 13. Nothing is due in the final week.',
         opens: 'Week 13',
+        release: '2026-12-07',
+        due: 'Due by December 11, 2026. Nothing is due in Week 14.',
+        purpose: 'This assignment gathers the whole course into one map and asks you to explain how your way of seeing changed.',
         role: 'This is the final integration. You gather the pieces and show how your way of seeing changed across the term.',
         really: [
           'Gather four earlier pieces from the term.',
@@ -3915,11 +4282,11 @@
           'A two to three minute recorded walkthrough.'
         ],
         criteria: [
-          ['Integration', 25, 'The earlier pieces connect into one map rather than sitting as separate assignments.'],
-          ['Coherence', 20, 'A viewer can follow the story of your thinking.'],
-          ['Reflection', 25, 'You show what changed in how you notice technology and racism.'],
-          ['Walkthrough', 20, 'The recording is clear, organized, and in your own voice.'],
-          ['Ownership', 10, 'The work sounds like you and shows your own relationship to the material.']
+          ['Integration', 5, 'The earlier pieces connect into one map rather than sitting as separate assignments.'],
+          ['Coherence', 4, 'A viewer can follow the story of your thinking.'],
+          ['Reflection', 5, 'You show what changed in how you notice technology and racism.'],
+          ['Walkthrough', 4, 'The recording is clear, organized, and in your own voice.'],
+          ['Ownership', 2, 'The work sounds like you and shows your own relationship to the material.']
         ],
         strong: [
           'Shows a before-and-after in your own thinking.',
@@ -3938,10 +4305,13 @@
   function assignmentFaqs() {
     return [
       ['Where do I submit?', 'Submit in Blackboard. This companion site helps you understand, practise, and prepare; it is not the submission system and it does not record grades.'],
+      ['Where can I access the complete assignments?', 'The complete assignments will be opened on Blackboard. This page explains the assignment arc and helps you prepare, but Blackboard is the official place for the full instructions, files, dropboxes, due dates, feedback, and grades.'],
       ['Can I email my assignment or send a link?', 'No. The assessment briefs say Blackboard submission only. Email submissions or email-only links are not accepted.'],
       ['Are all five assignments separate?', 'They are graded separately, but they build one thing: your Personal Cartography. Each assignment adds another layer to the same map.'],
       ['What if I miss a deadline?', 'The course assessment documents describe firm deadlines. Check Blackboard for the exact date and time, and ask the instructor early if you are unsure.'],
-      ['Can I use generative AI?', 'Only as a study aid, and you must disclose the tool and how you used it. Do not submit AI-generated or AI-rewritten work as your own.'],
+      ['Can I use generative AI?', 'Only as study support. You may use it to brainstorm, check clarity, or organize your own notes, but you must disclose the tool, date, and purpose. Do not submit AI-written or AI-rewritten work as your own. Use the AI Use tab for examples.'],
+      ['What happens if AI writes my paper?', 'Submitting AI-written or AI-rewritten work as your own can be treated as academic misconduct. That can lead to a zero on the assignment, a formal academic-integrity process, and further course or institutional penalties. If you are unsure, do not submit the AI text. Ask first and disclose.'],
+      ['Can AI fix my grammar?', 'A grammar or clarity check is different from having AI write the assignment. If a tool changes wording, structure, claims, sources, or analysis, disclose it. Your final ideas, course connections, examples, and evidence must be yours.'],
       ['What if screenshots do not work for my example?', 'Use another artifact you can explain clearly: a form field, prompt, output, setting, rule, notice, policy line, captioned photo, or short audio description.'],
       ['Do I need advanced technical knowledge?', 'No. The course asks you to notice patterns, explain evidence, connect to readings, and speak clearly. You do not need to code or reverse-engineer a system.'],
       ['Where do accommodations fit?', 'Formal ALS accommodations are honoured. Use the approved Seneca process and check Blackboard or the instructor message for any course-specific direction.']
@@ -3952,26 +4322,373 @@
       ['Blackboard is official', 'Use Blackboard for assignment instructions, submissions, due dates, feedback, and grades.'],
       ['The site is a guide', 'This page explains the assignment arc in plain language. It does not replace the official Blackboard dropboxes or assessment files.'],
       ['Your work stays yours', 'Use the activities and notes here to practise. Export or submit only through the course process described in Blackboard.'],
-      ['AI disclosure matters', 'If you use a generative AI tool as study support, disclose the tool and use. Your submitted analysis must be your own.']
+      ['AI disclosure matters', 'If you use generative AI as study support, disclose it. Do not use AI to write or rewrite submitted work as if it were yours.']
     ];
     return '<section class="asg-policy" aria-label="Important assignment rules">' + policies.map(function (p) {
       return '<div><b>' + esc(p[0]) + '</b><span>' + esc(p[1]) + '</span></div>';
     }).join('') + '</section>';
   }
-  function assignmentArc(items, active) {
-    return '<section class="asg-arc" aria-label="Assignment arc">' + items.map(function (a, i) {
-      var on = i === active;
-      return '<button type="button" onclick="SOC.assignPick(' + i + ')" aria-pressed="' + (on ? 'true' : 'false') + '" class="' + (on ? 'on' : '') + '">'
-        + '<span class="asg-num">' + (i + 1) + '</span><b>' + esc(a.title) + '</b><small>' + esc(a.short) + '</small><em>' + esc(a.weight) + '</em></button>';
-    }).join('') + '</section>';
+  function assignmentLocalDate() {
+    var d = new Date(), m = String(d.getMonth() + 1).padStart(2, '0'), day = String(d.getDate()).padStart(2, '0');
+    return d.getFullYear() + '-' + m + '-' + day;
+  }
+  function assignmentDateLabel(ymd) {
+    if (!ymd) return 'Date to be confirmed';
+    var p = String(ymd).split('-'), d = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+    return d.toLocaleDateString('en-CA', { month: 'long', day: 'numeric', year: 'numeric' });
+  }
+  function assignmentDateParts(ymd) {
+    if (!ymd) return { month: 'TBD', day: '', year: '' };
+    var p = String(ymd).split('-'), d = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+    return {
+      month: d.toLocaleDateString('en-CA', { month: 'short' }).toUpperCase().replace('.', ''),
+      day: String(d.getDate()),
+      year: String(d.getFullYear())
+    };
+  }
+  function assignmentPreviewBanner() {
+    return '<section class="asg-preview-mode" aria-label="Assignment guide status"><b>Preparation guide</b><p>This page helps you understand the assignment arc and prepare stronger examples. The complete official assignment files, dropboxes, due dates, feedback, and grades will be opened on Blackboard.</p></section>';
+  }
+  function assignmentDirectory(items) {
+    var cur = Math.max(0, Math.min(items.length - 1, Number(state.assignmentIndex) || 0));
+    return '<section id="asg-assignments" class="asg-directory" aria-label="Assignment rooms"><div class="mono">ASSIGNMENT ROOMS</div><h2>Choose one assignment</h2><p>Pick a card to see the guidance for that assignment. The page shows one assignment room at a time so you are not scrolling through the whole term.</p><div>'
+      + items.map(function (a, i) {
+        return '<button type="button" onclick="SOC.assignPick(' + i + ')" class="' + (i === cur ? 'current' : '') + '" aria-pressed="' + (i === cur ? 'true' : 'false') + '"><b>' + esc(a.title) + '</b><small>' + esc(a.short) + '</small></button>';
+      }).join('') + '</div></section>';
+  }
+  function assignmentJumpNav() {
+    var active = cleanAssignmentTab(state.assignmentTab);
+    var items = [['story', 'Story'], ['program', 'Program Lens'], ['assignments', 'Assignments'], ['quality', 'Rubric'], ['release', 'Release Dates'], ['ai', 'AI Use'], ['faq', 'FAQ']];
+    return '<nav class="asg-jump" aria-label="Assignments guide sections">' + items.map(function (it) {
+      var on = active === it[0];
+      return '<button type="button" onclick="SOC.assignTab(\'' + it[0] + '\')" aria-current="' + (on ? 'page' : 'false') + '" class="' + (on ? 'on' : '') + '">' + esc(it[1]) + '</button>';
+    }).join('') + '</nav>';
+  }
+  function assignmentQualityPath() {
+    var levels = [
+      ['Emerging', 'You are beginning the task. The example, concept, evidence, or relationship to the topic still needs support and clearer detail.'],
+      ['Acquiring', 'You are gathering what you need: a clearer example, stronger evidence, course language, and a better sense of who is affected.'],
+      ['Demonstrating', 'You meet the task clearly. Your example, evidence, course language, and explanation work together and are easy to follow.'],
+      ['Connecting', 'You show how the example, evidence, course idea, your position, and the people affected fit together. The work explains why the connection matters.']
+    ];
+    var moves = [
+      ['Reflection', 'Connect the topic to your own position, experience, and way of thinking.'],
+      ['Respect', 'Use sources carefully, look for relationships between ideas, and avoid treating one view as the whole story.'],
+      ['Realization', 'Show what changed in your understanding after working with the evidence.'],
+      ['Responsibility', 'Explain what your conclusion asks you, your field, or a system to do next.']
+    ];
+    return '<section id="asg-quality" class="asg-qualitypath" aria-label="Rubric"><div><div class="mono">RUBRIC</div><h2>Emerging to Connecting</h2><p>Use this as a quick guide to what stronger work does.</p></div><div class="asg-qualitypath-grid">' + levels.map(function (l) {
+      return '<article><b>' + esc(l[0]) + '</b><p>' + esc(l[1]) + '</p></article>';
+    }).join('') + '</div><details class="asg-moves"><summary>What I am looking for</summary><div>' + moves.map(function (m) {
+      return '<article><b>' + esc(m[0]) + '</b><p>' + esc(m[1]) + '</p></article>';
+    }).join('') + '</div></details></section>';
+  }
+  function assignmentProgramMove(a, L) {
+    var ctx = lensFieldContext(L);
+    if (!L) return [
+      ['Choose', 'Pick one real system from a field you know.'],
+      ['Ask', 'What does it do, and who feels the effect?'],
+      ['Show', 'Use a visible detail, artifact, or source as evidence.']
+    ];
+    var profile = assignmentLensProfile(L);
+    return [
+      ['Choose', 'Start with ' + profile.topics.slice(0, 3).join(', ') + '.'],
+      ['Use evidence', 'Bring in ' + profile.artifacts.slice(0, 3).join(', ') + '.'],
+      ['Answer the course', profile.question]
+    ];
+  }
+  function assignmentLensProfile(L) {
+    var ctx = lensFieldContext(L), label = (L && (L.program || L.area)) || 'your program';
+    var byArea = {
+      "Aviation": {
+        topics: ['passenger screening', 'biometric boarding', 'watchlist checks', 'dispatch records', 'crew handoff systems'],
+        artifacts: ['a screening notice', 'a kiosk message', 'a checklist item', 'a policy threshold', 'an incident or delay record'],
+        question: 'Ask who gets delayed, flagged, or sent for manual review, and whether the person can challenge the flag.'
+      },
+      "Business": {
+        topics: ['hiring screens', 'credit rules', 'pricing tools', 'customer dashboards', 'vendor AI recommendations'],
+        artifacts: ['a score output', 'a dashboard metric', 'a job filter', 'a customer segment', 'a vendor claim or policy line'],
+        question: 'Ask who the metric rewards, who it filters out before human review, and what proxy variable might be doing the work.'
+      },
+      "Creative Arts, Animation and Design": {
+        topics: ['image generators', 'style defaults', 'portfolio platforms', 'audience testing', 'asset libraries'],
+        artifacts: ['a prompt result', 'a reference board', 'a crop or lighting default', 'a style guide', 'a platform rule'],
+        question: 'Ask whose face, body, culture, or story is treated as normal, and who is made invisible or stereotyped.'
+      },
+      "Education, Community and Social Services": {
+        topics: ['intake forms', 'risk notes', 'early-warning dashboards', 'placement decisions', 'referral systems'],
+        artifacts: ['an intake field', 'a risk label', 'a referral rule', 'a case-note template', 'a placement criterion'],
+        question: 'Ask whose context is flattened by the record, who gets watched harder, and who has voice in the file.'
+      },
+      "Engineering Technology": {
+        topics: ['sensor calibration', 'site standards', 'testing plans', 'safety thresholds', 'accessibility defaults'],
+        artifacts: ['a spec', 'a test result', 'a drawing note', 'a tolerance range', 'an inspection record'],
+        question: 'Ask who the standard was tested on, who the built system protects, and who is left outside the default.'
+      },
+      "Fashion and Esthetics": {
+        topics: ['shade matching', 'skin-analysis apps', 'beauty filters', 'retail surveillance', 'client records'],
+        artifacts: ['a shade result', 'a filter output', 'a product match', 'a client form field', 'a store policy'],
+        question: 'Ask whose skin, body, hair, or beauty standard the tool recognizes, and who it tries to correct.'
+      },
+      "Health and Wellness": {
+        topics: ['triage scores', 'patient portals', 'device readings', 'risk tools', 'referral rules'],
+        artifacts: ['a chart field', 'a device output', 'a referral rule', 'a care-plan default', 'a risk score'],
+        question: 'Ask who the tool reads accurately, who it misses, and who carries the cost of a wrong screen.'
+      },
+      "Hospitality and Tourism": {
+        topics: ['booking systems', 'guest screening', 'dynamic pricing', 'ratings', 'staffing tools'],
+        artifacts: ['a booking rule', 'a price change', 'a guest profile', 'a rating prompt', 'a service script'],
+        question: 'Ask who is welcomed, who is treated as risk, and who can contest a booking, price, or service decision.'
+      },
+      "Information Technology": {
+        topics: ['data models', 'permissions', 'logs', 'testing sets', 'support queues'],
+        artifacts: ['a data field', 'a default setting', 'a ticket pattern', 'a test case', 'an access rule'],
+        question: 'Ask where bias enters the stack, what the system records, and what evidence would prove the fix works.'
+      },
+      "Law, Administration and Public Safety": {
+        topics: ['risk tools', 'case notes', 'policy thresholds', 'incident reports', 'appeal paths'],
+        artifacts: ['a report field', 'a risk flag', 'a policy rule', 'a file note', 'an appeal instruction'],
+        question: 'Ask who gets flagged, who gets believed, and how a person can challenge the decision.'
+      },
+      "Liberal Arts and University Transfers": {
+        topics: ['research methods', 'source choices', 'disciplinary claims', 'essay arguments', 'public policy debates'],
+        artifacts: ['a source', 'a definition', 'an evidence rule', 'a theory', 'a research question'],
+        question: 'Ask what the claim treats as evidence, whose experience it leaves out, and how the course concept changes the argument.'
+      },
+      "Media and Communications": {
+        topics: ['search ranking', 'feed algorithms', 'story framing', 'content moderation', 'audience analytics'],
+        artifacts: ['a headline', 'a search result', 'a platform rule', 'a moderation note', 'an audience metric'],
+        question: 'Ask who gets framed as credible, who gets flattened, and who controls which story rises.'
+      },
+      "Science": {
+        topics: ['sampling', 'instruments', 'lab thresholds', 'data cleaning', 'model assumptions'],
+        artifacts: ['a sample rule', 'an instrument setting', 'a cutoff', 'a dataset field', 'a protocol line'],
+        question: 'Ask whose data fits the method, whose result gets treated as noise, and who can question the model.'
+      }
+    };
+    var profile = byArea[L && L.area] || {
+      topics: [ctx.setting, ctx.place, ctx.decision],
+      artifacts: ['a form field', 'a policy line', 'a screenshot', 'a score output', 'a source'],
+      question: 'Ask who benefits, who carries risk, and who can challenge a bad outcome.'
+    };
+    profile.label = label;
+    profile.focus = lensProgramFocus(L);
+    return profile;
+  }
+  function assignmentProgramAssignmentRows(L, profile) {
+    var ctx = lensFieldContext(L);
+    profile = profile || assignmentLensProfile(L);
+    var t = profile.topics || [], a = profile.artifacts || [];
+    return [
+      ['Map Exchange', 'Notice one field moment', 'Use ' + (t[0] || ctx.decision) + ' as a weekly observation. Keep the example small enough that you can describe what happened, who was affected, and what question it raises.'],
+      ['Coded Encounter', 'Break down one artifact', 'Choose ' + (a[0] || 'one visible artifact') + ' and annotate the rule, default, data, screen, label, or threshold that makes the encounter work.'],
+      ['Canadian Case File', 'Move from example to system', 'Find a Canadian system connected to ' + (t[1] || ctx.setting) + '. Use sources to explain what the system does before you make the argument about harm.'],
+      ['Design the Repair', 'Change a process', 'Return to a harm you can prove. Propose a change to a rule, review step, design choice, appeal path, or accountability process.'],
+      ['Cartography Capstone', 'Connect the term', 'Choose earlier pieces that show how your thinking about ' + ctx.label + ' changed. The goal is not to list work. It is to tell the story of how your analysis grew.']
+    ];
+  }
+  function assignmentProgramCaseCards(L, profile) {
+    var ctx = lensFieldContext(L);
+    profile = profile || assignmentLensProfile(L);
+    var t = profile.topics || [], a = profile.artifacts || [];
+    return [
+      ['Start with the system', 'Pick ' + (t[0] || ctx.decision) + ', not the whole field. A narrow system gives you something you can actually inspect.'],
+      ['Anchor it in evidence', 'Use ' + (a[0] || 'one artifact') + ' or ' + (a[1] || 'one policy line') + '. A reader should be able to see what you are analysing.'],
+      ['Ask the course question', profile.question],
+      ['Name the consequence', 'Explain who is sorted, delayed, watched, excluded, protected, or given a way to challenge the outcome.']
+    ];
+  }
+  function assignmentProgramStrengthCheck(L, profile) {
+    var ctx = lensFieldContext(L);
+    profile = profile || assignmentLensProfile(L);
+    var topic = (profile.topics && profile.topics[0]) || ctx.decision;
+    var artifact = (profile.artifacts && profile.artifacts[0]) || 'a visible artifact';
+    return [
+      ['Too broad', 'Technology in ' + ctx.label + ' can be biased.'],
+      ['Stronger', 'A ' + topic + ' uses ' + artifact + ' to sort people, and the assignment asks who benefits, who is exposed, and who can challenge the result.'],
+      ['Best next move', 'Bring the example back to one course concept and one assigned source before you write the answer.']
+    ];
+  }
+  function assignmentProgramRoomDetail(a, L) {
+    if (!L) return '';
+    var rows = assignmentProgramAssignmentRows(L).filter(function (r) { return a && a.title && r[0] === a.title.replace('Personal ', '').replace(' Capstone', ''); });
+    if (!rows.length && a) {
+      var byId = {
+        'map-exchange': assignmentProgramAssignmentRows(L)[0],
+        'coded-encounter': assignmentProgramAssignmentRows(L)[1],
+        'case-file': assignmentProgramAssignmentRows(L)[2],
+        'repair': assignmentProgramAssignmentRows(L)[3],
+        'cartography': assignmentProgramAssignmentRows(L)[4]
+      };
+      rows = [byId[a.id] || assignmentProgramAssignmentRows(L)[0]];
+    }
+    var profile = assignmentLensProfile(L), ctx = lensFieldContext(L), row = rows[0] || [];
+    return '<div class="asg-room-lens"><span>Program-lens example</span><article><b>' + esc(row[1] || 'Use your field') + '</b><p>' + esc(row[2] || profile.question) + '</p></article><article><b>Keep the course lens</b><p>Use ' + esc(ctx.label) + ' for the example, then answer what the course asks: what the system does, who it sorts, who benefits, who is exposed, and who can challenge the outcome.</p></article></div>';
+  }
+  function assignmentProgramFit(a, L) {
+    var profile = assignmentLensProfile(L), ctx = lensFieldContext(L), field = ctx.label, topic = profile.topics[0] || ctx.decision, topic2 = profile.topics[1] || ctx.setting, artifact = profile.artifacts[0] || 'one visible artifact', artifact2 = profile.artifacts[1] || 'one policy line';
+    var base = {
+      title: 'How ' + field + ' connects to this assignment',
+      intro: 'Your program helps you choose the example, the artifact, and the people affected. The course gives you the question you must answer.',
+      cards: [
+        ['Program connection', 'Look at ' + topic + ' in ' + ctx.setting + '.'],
+        ['Evidence connection', 'Use ' + artifact + ' or ' + artifact2 + ' so the reader can see what you are analysing.'],
+        ['Course connection', profile.question]
+      ],
+      steps: [
+        'Name the concrete system, not the whole profession.',
+        'Point to the artifact or rule that shows how the system works.',
+        'Use a course concept to explain what the system does to people.'
+      ],
+      starter: 'In ' + field + ', this matters because ' + ctx.people + ' can be sorted, delayed, watched, excluded, protected, or given no clear way to challenge the outcome.'
+    };
+    var byId = {
+      'map-exchange': {
+        intro: 'For Map Exchange, your program gives you a place to notice one small moment each week. Do not solve it yet. Learn to see it clearly.',
+        cards: [
+          ['Where to look', 'Watch for ' + topic + ', ' + topic2 + ', or another routine system in ' + ctx.setting + '.'],
+          ['What to capture', 'Record the screen, rule, wording, score, form field, checklist, or decision point that shaped what happened.'],
+          ['What to ask', 'Who did the system make things easier for, harder for, more visible for, or less visible for?']
+        ],
+        steps: [
+          'Choose one small moment from the week, not a broad issue.',
+          'Describe what the system did in plain language.',
+          'Connect it to the week concept so the entry becomes analysis, not only an opinion.'
+        ],
+        starter: 'This week, I noticed ' + topic + ' in ' + field + '. The system mattered because it shaped what happened to ' + ctx.people + '.'
+      },
+      'coded-encounter': {
+        intro: 'For Coded Encounter, your program gives you the real artifact. The assignment asks you to slow it down and show how the mechanism works.',
+        cards: [
+          ['Choose the artifact', 'Start with ' + artifact + ', ' + artifact2 + ', or another visible piece from ' + ctx.place + '.'],
+          ['Trace the mechanism', 'Mark the default, data field, threshold, rule, label, screen, or handoff that produces the effect.'],
+          ['Name the effect', 'Explain who gets sorted, flagged, delayed, believed, missed, protected, or denied a clear path to challenge it.']
+        ],
+        steps: [
+          'Show the artifact before you judge it.',
+          'Explain the design choice or rule that makes the encounter work.',
+          'Use the course concept to show why the outcome matters.'
+        ],
+        starter: 'This encounter is not only a bad experience. In ' + field + ', the mechanism sits in ' + ctx.decision + ', and it changes what happens to ' + ctx.people + '.'
+      },
+      'case-file': {
+        intro: 'For Canadian Case File, your program helps you choose a public system that has documents, reports, policy, or news coverage you can verify.',
+        cards: [
+          ['Find the Canadian system', 'Look for a Canadian example connected to ' + topic + ', ' + topic2 + ', or a public system your field depends on.'],
+          ['Use source evidence', 'Bring in a report, policy page, public notice, article, legal document, dataset note, or institutional statement.'],
+          ['Keep the analysis grounded', 'Explain what the system does before you argue why it matters.']
+        ],
+        steps: [
+          'Choose a real Canadian case with sources you can cite.',
+          'Explain the system, actor, tool, and decision point.',
+          'Connect the evidence to a course concept and to the people affected.'
+        ],
+        starter: 'This Canadian case matters to ' + field + ' because a technical or administrative rule creates a real consequence for ' + ctx.people + '.'
+      },
+      'repair': {
+        intro: 'For Design the Repair, your program helps you imagine a response that could actually change a process, not just name a problem.',
+        cards: [
+          ['Return to a proved harm', 'Use an example from ' + topic + ', ' + topic2 + ', or an earlier artifact you already explained.'],
+          ['Change something concrete', 'Change a rule, review step, design default, appeal path, documentation habit, or accountability process.'],
+          ['Explain the protection', 'Show who gains voice, notice, consent, review, appeal, safety, or control.']
+        ],
+        steps: [
+          'Start from the harm you already documented.',
+          'Name the exact repair and who would have to do it.',
+          'Explain what the repair changes for the people affected.'
+        ],
+        starter: 'The repair fits ' + field + ' because it changes ' + ctx.decision + ' and gives ' + ctx.people + ' more voice, protection, appeal, or control.'
+      },
+      'cartography': {
+        intro: 'For the capstone, your program helps you tell a story of changed seeing. You are not proving that the field is good or bad. You are showing what you can now notice.',
+        cards: [
+          ['Choose your pattern', 'Return to earlier entries about ' + topic + ', ' + topic2 + ', or another repeated system in ' + field + '.'],
+          ['Show growth', 'Compare what you noticed early in the course with what you can name now.'],
+          ['Carry it forward', 'End with one responsibility, question, or habit you will bring into ' + ctx.setting + '.']
+        ],
+        steps: [
+          'Pick earlier pieces that connect instead of listing everything.',
+          'Explain how your language and evidence changed.',
+          'Name what responsibility you carry into your field.'
+        ],
+        starter: 'My map shows that I now notice how ' + field + ' systems can shape ' + ctx.people + ', and what I need to ask before I trust a tool, rule, or score.'
+      }
+    };
+    var fit = byId[a && a.id] || {};
+    return {
+      title: base.title,
+      intro: fit.intro || base.intro,
+      cards: fit.cards || base.cards,
+      steps: fit.steps || base.steps,
+      starter: fit.starter || base.starter
+    };
+  }
+  function assignmentProgramGuide(L) {
+    var label = L ? (L.program || L.area) : 'your program';
+    var profile = assignmentLensProfile(L);
+    if (!L) {
+      return '<section id="asg-program" class="asg-program" aria-label="Using your program in assignments"><div><div class="mono">PROGRAM LENS</div><h2>Use your program to choose better examples</h2><p>No program lens selected yet. Use the selector at the top of this page if you want examples to update for your field.</p></div><ol><li><b>Choose</b><span>Pick one real system from a field you know.</span></li><li><b>Ask</b><span>What does it do, and who feels the effect?</span></li><li><b>Show</b><span>Use a visible detail, artifact, or source as evidence.</span></li></ol></section>';
+    }
+    var focus = profile.focus.replace(/^For this program, pay special attention to /, 'Focus on ');
+    var cases = assignmentProgramCaseCards(L, profile).map(function (c) {
+      return '<article><b>' + esc(c[0]) + '</b><p>' + esc(c[1]) + '</p></article>';
+    }).join('');
+    var map = assignmentProgramAssignmentRows(L, profile).map(function (r) {
+      return '<article><b>' + esc(r[0]) + '</b><span>' + esc(r[1]) + '</span><p>' + esc(r[2]) + '</p></article>';
+    }).join('');
+    var check = assignmentProgramStrengthCheck(L, profile).map(function (r) {
+      return '<article><span>' + esc(r[0]) + '</span><p>' + esc(r[1]) + '</p></article>';
+    }).join('');
+    return '<section id="asg-program" class="asg-program compact expanded" aria-label="Using your program in assignments"><div><div class="mono">PROGRAM LENS</div><h2>Apply the ' + esc(label) + ' lens</h2><p>The prompt does not change. The lens helps you move from a broad topic to a concrete system you can inspect.</p><small>' + esc(focus) + '</small></div><div class="asg-program-grid"><article><span>Strong starting points</span><p>' + esc(profile.topics.join(', ')) + '</p></article><article><span>Evidence you could use</span><p>' + esc(profile.artifacts.join(', ')) + '</p></article><article><span>Question to keep in view</span><p>' + esc(profile.question) + '</p></article></div><div class="asg-program-alert"><b>Do not drift into career advice.</b><span>Your program gives you the example. The course gives you the analysis: what the system does, who it sorts, who benefits, who is exposed, and who can challenge the outcome.</span></div><div class="asg-program-wide"><div class="mono">HOW TO USE THE LENS</div><h3>Turn the program into an example, not a different assignment</h3><div class="asg-lens-steps">' + cases + '</div></div><div class="asg-program-wide"><div class="mono">ASSIGNMENT MAP</div><h3>Where the lens fits across the term</h3><div class="asg-lens-map">' + map + '</div></div><div class="asg-program-wide asg-lens-check"><div><div class="mono">STRENGTH CHECK</div><h3>Move from broad to usable</h3></div><div>' + check + '</div></div></section>';
+  }
+  function assignmentAiDisclosureGuide() {
+    var allowed = [
+      ['Brainstorming', 'You can ask for possible example areas, then choose your own example and check it against the readings.'],
+      ['Study support', 'You can ask for a plain-language explanation of a course term, then verify it with the assigned reading.'],
+      ['Clarity check', 'You can use spelling, grammar, or sentence-level clarity support if it does not add claims, evidence, or analysis.']
+    ];
+    var prohibited = [
+      ['Writing the paper', 'Do not ask AI to draft paragraphs, answers, reflections, scripts, or assignment sections for submission.'],
+      ['Rewriting your voice', 'Do not paste your draft into AI and submit a rewritten version as your own work.'],
+      ['Hiding AI use', 'Do not leave AI use undisclosed. A vague line like "I used AI" is not enough.']
+    ];
+    var good = [
+      ['No AI used', 'I did not use generative AI tools for this assignment.'],
+      ['Brainstorming only', 'I used ChatGPT on [date] to brainstorm possible examples after I read the Week [number] material. I chose my own example, checked it against the reading, and wrote the final analysis myself.'],
+      ['Clarity check', 'I used Grammarly or Microsoft Editor on [date] to check grammar and sentence clarity. I did not use it to add course concepts, sources, claims, or analysis.']
+    ];
+    var weak = [
+      ['Too vague', 'I used AI.'],
+      ['Not acceptable', 'AI helped write my assignment.'],
+      ['Not enough', 'I used AI to make it better.']
+    ];
+    return '<section id="asg-ai" class="asg-ai asg-ai-page" aria-label="AI disclosure examples"><div class="asg-ai-head"><span>AI use</span><b>Use AI only as support</b><small>Name the tool, date, purpose, and boundary.</small></div>'
+      + '<div class="asg-ai-warning"><b>Penalty risk: do not use AI to write your papers.</b><p>Submitting AI-written or AI-rewritten work as your own can be treated as academic misconduct. Penalties can include a zero on the assignment, a formal academic-integrity process, and further course or institutional consequences. When unsure, do not submit the AI text. Ask first and disclose.</p></div>'
+      + '<div class="asg-ai-columns"><div><h3>Acceptable study support</h3>' + allowed.map(function (a) {
+        return '<article><b>' + esc(a[0]) + '</b><p>' + esc(a[1]) + '</p></article>';
+      }).join('') + '</div><div><h3>Not acceptable</h3>' + prohibited.map(function (p) {
+        return '<article><b>' + esc(p[0]) + '</b><p>' + esc(p[1]) + '</p></article>';
+      }).join('') + '</div></div>'
+      + '<div class="asg-ai-grid">' + good.map(function (g) {
+      return '<article><b>' + esc(g[0]) + '</b><p>' + esc(g[1]) + '</p></article>';
+    }).join('') + '</div><div class="asg-ai-weak"><b>Weak disclosures to avoid</b><div>' + weak.map(function (w) {
+      return '<span><strong>' + esc(w[0]) + ':</strong> ' + esc(w[1]) + '</span>';
+    }).join('') + '</div></div><p class="asg-ai-bottom">The standard is simple: a reader should know what tool touched the work and what parts are still fully yours.</p></section>';
+  }
+  function assignmentReleaseSchedule(items) {
+    return '<section id="asg-release" class="asg-release" aria-label="Assignment opening schedule"><div><div class="mono">BLACKBOARD OPENING DATES</div><h2>When each assignment will be opened on Blackboard</h2><p>The companion guide stays open so you can prepare. The complete assignment instructions and submission dropboxes will be opened on Blackboard on the dates below.</p></div><div class="asg-release-grid">' + items.map(function (a) {
+      var dp = assignmentDateParts(a.release);
+      return '<article><div class="asg-release-head"><div class="asg-date"><span>' + esc(dp.month) + '</span><b>' + esc(dp.day) + '</b><small>' + esc(dp.year) + '</small></div><div><b>' + esc(a.title) + '</b><p>Assignment opened on Blackboard: ' + esc(assignmentDateLabel(a.release)) + '.</p></div></div><small class="asg-due">' + esc(a.due) + '</small></article>';
+    }).join('') + '</div></section>';
   }
   function assignmentList(title, arr) {
     return '<div class="asg-list"><b>' + esc(title) + '</b><ul>' + (arr || []).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>';
   }
   function assignmentCriteria(a) {
-    return '<div class="asg-criteria"><h3>How this is graded</h3>' + a.criteria.map(function (c) {
-      var pct = Math.max(0, Math.min(100, Number(c[1]) || 0));
-      return '<div class="asg-bar"><div><b>' + esc(c[0]) + '</b><span>' + pct + '%</span></div><p>' + esc(c[2]) + '</p><i style="width:' + pct + '%"></i></div>';
+    return '<div class="asg-criteria"><h3>How this is marked out of 20</h3>' + a.criteria.map(function (c) {
+      var marks = Math.max(0, Math.min(20, Number(c[1]) || 0));
+      var width = Math.round((marks / 20) * 100);
+      return '<div class="asg-bar"><div><b>' + esc(c[0]) + '</b><span>' + marks + ' marks</span></div><p>' + esc(c[2]) + '</p><i style="width:' + width + '%"></i></div>';
     }).join('') + '</div>';
   }
   function assignmentChecklist(a) {
@@ -3982,49 +4699,261 @@
         return '<button type="button" onclick="SOC.assignCheck(\'' + a.id + '\',' + i + ')" aria-pressed="' + (on ? 'true' : 'false') + '" class="' + (on ? 'on' : '') + '"><span>' + (on ? '&#10003;' : '') + '</span>' + esc(c) + '</button>';
       }).join('') + '</div></div>';
   }
-  function assignmentDetail(a) {
-    return '<section id="asg-detail" class="asg-detail" aria-label="' + esc(a.title) + ' details">'
-      + '<div class="asg-detail-head"><div><div class="mono">SELECTED ASSIGNMENT</div><h2>' + esc(a.title) + '</h2><p>' + esc(a.role) + '</p></div>'
-      + '<dl><div><dt>Weight</dt><dd>' + esc(a.weight) + '</dd></div><div><dt>Opens</dt><dd>' + esc(a.opens) + '</dd></div><div><dt>Timing</dt><dd>' + esc(a.timing) + '</dd></div></dl></div>'
-      + '<div class="asg-detail-grid"><div>'
+  function assignmentProgramBlock(a, L, hidePicker) {
+    var picker = hidePicker ? '' : assignmentLensPicker();
+    if (!L) {
+      return '<div class="asg-room-program"><div class="asg-room-program-head"><span>PROGRAM CONNECTION</span><b>Choose a program lens to make this assignment more concrete</b><p>The assignment prompt stays the same for everyone. A program lens helps you choose a stronger example, artifact, and affected group.</p>' + picker + '</div>' + assignmentAnswerBuilder(a, L) + '</div>';
+    }
+    var fit = assignmentProgramFit(a, L);
+    return '<div class="asg-room-program"><div class="asg-room-program-head"><span>PROGRAM CONNECTION</span><b>' + esc(fit.title) + '</b><p>' + esc(fit.intro) + '</p>' + picker + '</div><div class="asg-room-moves">' + fit.cards.map(function (m) {
+      return '<article><span>' + esc(m[0]) + '</span><p>' + esc(m[1]) + '</p></article>';
+    }).join('') + '</div><div class="asg-room-example"><b>How to build it into this assignment</b><ol>' + fit.steps.map(function (s) {
+      return '<li>' + esc(s) + '</li>';
+    }).join('') + '</ol><p><strong>Possible answer shape:</strong> ' + esc(fit.starter) + '</p></div>' + assignmentAnswerBuilder(a, L) + '</div>';
+  }
+  function assignmentAnswerBuilder(a, L) {
+    var ctx = lensFieldContext(L), field = ctx.label || 'your field', profile = assignmentLensProfile(L), topic1 = profile.topics[0] || ctx.setting, artifact1 = profile.artifacts[0] || 'one artifact';
+    var rows = {
+      'map-exchange': [
+        ['Field move', 'Notice one real moment involving ' + topic1 + ' in ' + field + '.'],
+        ['Course move', 'Name the system and connect it to the week\'s concept.'],
+        ['Answer shape', 'In my field, this matters because ' + ctx.people + ' may be sorted, delayed, watched, excluded, or protected differently.']
+      ],
+      'coded-encounter': [
+        ['Field move', 'Choose one artifact, such as ' + artifact1 + ', from ' + ctx.place + '.'],
+        ['Course move', 'Annotate where the design, default, data, or rule creates the effect.'],
+        ['Answer shape', 'This is not just a bad experience. The mechanism is in ' + ctx.decision + ', and it affects ' + ctx.people + '.']
+      ],
+      'case-file': [
+        ['Field move', 'Pick a Canadian system connected to ' + topic1 + ', or to a public system ' + field + ' depends on.'],
+        ['Course move', 'Use sources to explain what the system does before judging it.'],
+        ['Answer shape', 'The case matters because the system turns a technical rule into a real consequence for people.']
+      ],
+      'repair': [
+        ['Field move', 'Return to one harm you already documented in ' + field + ', preferably from an artifact or system you can explain clearly.'],
+        ['Course move', 'Change a rule, process, design, review step, or accountability path.'],
+        ['Answer shape', 'The repair fits because it changes who has voice, protection, appeal, or control.']
+      ],
+      'cartography': [
+        ['Field move', 'Choose earlier pieces that show how your thinking about ' + field + ' changed.'],
+        ['Course move', 'Connect evidence across the term instead of listing assignments.'],
+        ['Answer shape', 'My map shows what I now notice in my field, what I missed before, and what responsibility I carry forward.']
+      ]
+    }[a.id] || [];
+    return '<div class="asg-answer-builder asg-answer-path"><div class="asg-answer-head"><span>Build it into an answer</span><b>Turn the example into course analysis</b><p>Use this path when your idea feels like a career example but does not yet sound like an assignment answer.</p></div><div class="asg-answer-steps">' + rows.map(function (r, i) {
+      return '<article><i>' + (i + 1) + '</i><div><b>' + esc(r[0]) + '</b><p>' + esc(r[1]) + '</p></div></article>';
+    }).join('') + '</div></div>';
+  }
+  function assignmentStarterProfile(L) {
+    var ctx = lensFieldContext(L), profile = assignmentLensProfile(L), program = L && L.program;
+    if (program === 'Police Foundations') {
+      return {
+        label: 'Police Foundations',
+        system: 'a dispatch decision, record check, incident report, body camera rule, facial recognition search, social media check, patrol priority, risk flag, or complaint pathway',
+        artifact: 'an incident report field, policy threshold, call log, record check screen, body camera notice, facial recognition policy, case note, dispatch record, or appeal instruction',
+        people: 'residents, complainants, witnesses, accused people, officers, families, and racialized communities',
+        benefit: 'people who are treated as credible, low risk, protected, or easy to process',
+        burden: 'people who are watched harder, flagged faster, disbelieved, delayed, misidentified, or left with no clear appeal',
+        lens: 'Ask what the public safety system does, who it marks as risk, who gets believed, and who can challenge the outcome.'
+      };
+    }
+    if (L) {
+      return {
+        label: ctx.label,
+        system: (profile.topics || []).join(', ') || ctx.place,
+        artifact: (profile.artifacts || []).join(', ') || 'a form field, policy line, screenshot, score output, notice, or record',
+        people: ctx.people,
+        benefit: 'people who are protected, trusted, approved, ranked higher, served faster, or treated as the default user',
+        burden: 'people who are delayed, exposed, filtered out, misread, watched harder, or given no clear way to challenge the result',
+        lens: profile.question
+      };
+    }
+    return {
+      label: 'General BFS218',
+      system: 'a platform, app, score, screen, camera, form, record, rule, dashboard, search result, or policy',
+      artifact: 'a screenshot, form field, policy line, notice, output, score, rule, source, or short description of what you saw',
+      people: 'users, workers, clients, students, families, communities, and people affected by the decision',
+      benefit: 'people who are protected, believed, approved, served faster, or treated as the default user',
+      burden: 'people who are delayed, exposed, watched, excluded, misread, or left without a clear appeal path',
+      lens: 'Ask what the system does, who it sorts, who benefits, who is exposed, and who can challenge the outcome.'
+    };
+  }
+  function assignmentStarterQuestions(a, L) {
+    var p = assignmentStarterProfile(L);
+    var common = [
+      ['piece', 'What part of this assignment are you starting today?', 'Name the piece you want to work on first. Example: choosing an artifact, naming the harm, building the claim, finding a source.'],
+      ['program', 'How does your program lens shape the example?', L ? 'Use ' + p.label + ' to choose the example, not to change the assignment. ' + p.lens : 'If you are not using a program lens, name the everyday setting you are using. The general course question still applies.'],
+      ['concept', 'Which course concept best fits this example?', 'Choose one course concept first. Do not list every concept.'],
+      ['claim', 'What is your first working claim?', 'Write one sentence that connects the system, the people affected, and the course concept.']
+    ];
+    var byAssignment = {
+      'map-exchange': [
+        ['system', 'What ordinary digital moment did you notice this week?', 'For ' + p.label + ', look for ' + p.system + '. Keep it small enough to describe in a few sentences.'],
+        ['artifact', 'What can you show or describe from that moment?', 'Use ' + p.artifact + ', or write a clear description if you cannot use a screenshot.'],
+        ['action', 'What did the system do?', 'Name the action. Did it sort, rank, flag, approve, delay, watch, hide, recommend, or block something?'],
+        ['affected', 'Who was touched by this moment?', 'Think about ' + p.people + '.'],
+        ['benefit', 'Who did the system make things easier for?', 'Look for who moved through smoothly, got trusted, or was treated as the default user.'],
+        ['burden', 'Who might have carried the cost?', 'Look for ' + p.burden + '.']
+      ],
+      'coded-encounter': [
+        ['system', 'What single encounter will you slow down?', 'Choose one encounter with ' + p.system + '. Do not choose a whole issue. Choose one moment you can inspect.'],
+        ['artifact', 'Which artifacts prove the encounter happened?', 'Use ' + p.artifact + '. You need evidence the reader can understand.'],
+        ['action', 'What mechanism produced the effect?', 'Name the default, rule, data field, threshold, prompt, label, score, screen, or handoff.'],
+        ['affected', 'Who is inside the encounter?', 'Think about ' + p.people + '. Name the groups or roles, not just one person.'],
+        ['benefit', 'Who is trusted or moved forward by the design?', 'Look for who gets easier access, faster review, credibility, safety, or protection.'],
+        ['burden', 'Who is exposed, delayed, denied, misread, or forced to prove themselves?', 'Look for ' + p.burden + '.']
+      ],
+      'case-file': [
+        ['system', 'What Canadian system or case are you investigating?', 'Start with a Canadian example connected to ' + p.system + '.'],
+        ['artifact', 'What public evidence will anchor the case file?', 'Use reports, policy pages, court documents, oversight findings, public notices, news coverage, or ' + p.artifact + '.'],
+        ['action', 'What does the system do before you judge it?', 'Explain the tool, institution, decision point, and outcome in plain language.'],
+        ['affected', 'Who is affected in the Canadian case?', 'Think about ' + p.people + ' and any communities named in the evidence.'],
+        ['benefit', 'Who gains power, speed, authority, protection, or convenience from the system?', 'Name the institution or group that benefits from the current setup.'],
+        ['burden', 'Who carries the risk, delay, surveillance, exclusion, or appeal burden?', 'Look for ' + p.burden + '.']
+      ],
+      'repair': [
+        ['system', 'Which harm are you trying to repair?', 'Return to one harm involving ' + p.system + ' that you can explain clearly.'],
+        ['artifact', 'What evidence proves the harm is real?', 'Use an earlier artifact, source, case, policy, report, or ' + p.artifact + '.'],
+        ['action', 'What exactly needs to change?', 'Name the rule, process, default, review step, design choice, appeal path, or accountability path.'],
+        ['affected', 'Who should lead or shape the repair?', 'Think about ' + p.people + ', especially the people most affected by the harm.'],
+        ['benefit', 'Who might resist the repair because the current system works for them?', 'Name who benefits from the current setup.'],
+        ['burden', 'Who should be less exposed, less delayed, less watched, or better protected after the repair?', 'Look for ' + p.burden + '.']
+      ],
+      'cartography': [
+        ['system', 'What pattern across your map are you ready to explain?', 'Look across your earlier entries for repeated systems, tools, records, platforms, or decisions connected to ' + p.system + '.'],
+        ['artifact', 'Which earlier pieces of your work will you use as evidence?', 'Choose entries, notes, artifacts, readings, activity results, or ' + p.artifact + '.'],
+        ['action', 'What changed in how you see the system?', 'Compare what you noticed early with what you can name now.'],
+        ['affected', 'Whose experience can you now see more clearly?', 'Think about ' + p.people + '.'],
+        ['benefit', 'What do you now notice about who systems protect or centre?', 'Name the pattern you missed before.'],
+        ['burden', 'What do you now notice about who systems expose or leave with the cost?', 'Look for ' + p.burden + '.']
+      ]
+    };
+    var middle = byAssignment[a && a.id] || byAssignment['map-exchange'];
+    return common.slice(0, 2).concat(middle).concat(common.slice(2));
+  }
+  function assignmentStarterOptionalQuestions(a, L) {
+    return [
+      ['source', 'What reading, source, or case might support this?', 'Name the reading, Blackboard source, public document, or case you still need to use.'],
+      ['verify', 'What do you still need to verify?', 'List what you need to check before this becomes assignment-ready.'],
+      ['stronger', 'What would make this answer stronger?', 'Name one missing detail, clearer artifact, better source, or sharper course concept.']
+    ];
+  }
+  function starterData(a) {
+    var root = state.assignmentStarter || {};
+    var key = (a && a.id) || 'general';
+    return root[key] || { format: 'all', answers: {} };
+  }
+  function assignmentStarterLaunch(a, L) {
+    var label = L ? (L.program || L.area) : 'General stream';
+    return '<section class="asg-starter-launch" aria-label="Open the assignment starter studio">'
+      + '<div><div class="mono">PREPARATION STUDIO</div><h2>Build your starting document</h2><p>Use this when you are ready to move from understanding the assignment to planning your own answer. It uses the assignment and program lens you selected on the guide, then helps you read the tailored guidance, answer guided questions, and generate a Word preparation pack.</p></div>'
+      + '<div class="asg-starter-launch-panel"><p>Current path: <b>' + esc(a.title) + '</b> with <b>' + esc(label) + '</b>.</p><button type="button" onclick="SOC.openStarter()">Open Starter Studio</button></div>'
+      + '</section>';
+  }
+  function assignmentStarterAssignmentChooser(items) {
+    var idx = Math.max(0, Math.min(items.length - 1, Number(state.assignmentIndex) || 0));
+    return '<section id="asg-starter-chooser" class="asg-starter-chooser" aria-label="Selected assignment for the starter studio"><div><div class="mono">STEP 1</div><h2>Confirm the assignment you selected</h2><p>This preparation page uses the assignment you chose on the guide. To change assignments, return to the Assignments Guide first.</p></div><div>' + items.map(function (a, i) {
+      var on = i === idx;
+      return '<button type="button" ' + (on ? '' : 'aria-disabled="true" tabindex="-1" ') + 'class="' + (on ? 'current' : 'locked') + '" aria-pressed="' + (on ? 'true' : 'false') + '"><span>' + esc(assignmentDateLabel(a.release)) + '</span><b>' + esc(a.title) + '</b><small>' + esc(a.short) + '</small></button>';
+    }).join('') + '</div><button type="button" class="asg-starter-change" onclick="SOC.go(\'assignments\')">Return to Assignments Guide to change</button></section>';
+  }
+  function assignmentProgramBrief(a, L) {
+    var fit = assignmentProgramFit(a, L);
+    if (!L) {
+      return '<section class="asg-program-brief" aria-label="Program lens for this assignment"><div><div class="mono">PROGRAM CONNECTION</div><h3>Using the general course path</h3><p>The assignment prompt stays the same. Return to the Assignments Guide if you want to choose a program lens before building the preparation pack.</p></div></section>';
+    }
+    var cards = (fit.cards || []).slice(0, 3).map(function (m) {
+      return '<article><span>' + esc(m[0]) + '</span><p>' + esc(m[1]) + '</p></article>';
+    }).join('');
+    return '<section class="asg-program-brief" aria-label="Program lens for this assignment"><div><div class="mono">PROGRAM CONNECTION</div><h3>' + esc(fit.title) + '</h3><p>' + esc(fit.intro) + '</p></div><div class="asg-program-brief-cards">' + cards + '</div></section>';
+  }
+  function assignmentPrepPrompt(a, L) {
+    var label = L ? (L.program || L.area) : 'the general course path';
+    return '<section class="asg-prep-prompt" aria-label="Outline and preparation choice"><div><div class="mono">OUTLINE AND PREPARATION</div><h3>Would you like help building a starting document?</h3><p>If yes, the site will open a separate preparation page for <b>' + esc(a.title) + '</b> using <b>' + esc(label) + '</b>. You will answer guided questions and generate a Word file with a text outline, table, diagram, or all three.</p></div><div><button type="button" onclick="SOC.openStarter()">Yes, build my outline</button><button type="button" onclick="SOC.skipStarter()">No, stay with the brief</button></div></section>';
+  }
+  function assignmentStarterStudio(a, L) {
+    var data = starterData(a), answers = data.answers || {}, fmt = cleanStarterFormat(data.format);
+    var qs = assignmentStarterQuestions(a, L), opt = assignmentStarterOptionalQuestions(a, L);
+    var formatBtn = function (key, label) {
+      var on = fmt === key;
+      return '<button type="button" onclick="SOC.starterFormat(\'' + esc(a.id) + '\',\'' + key + '\')" aria-pressed="' + (on ? 'true' : 'false') + '" class="' + (on ? 'on' : '') + '">' + esc(label) + '</button>';
+    };
+    var field = function (q, optional) {
+      var id = 'starter-' + a.id + '-' + q[0];
+      return '<label for="' + esc(id) + '"><span>' + (optional ? 'Optional' : 'Required') + '</span><b>' + esc(q[1]) + '</b><small>' + esc(q[2]) + '</small><textarea id="' + esc(id) + '" oninput="SOC.starterAnswer(\'' + esc(a.id) + '\',\'' + esc(q[0]) + '\',this.value)" placeholder="Write your answer here...">' + esc(answers[q[0]] || '') + '</textarea></label>';
+    };
+    var lensLine = L ? 'Using ' + (L.program || L.area) + '. This lens was chosen on the Assignments Guide and now shapes the guidance below.' : 'Using the general course path selected on the Assignments Guide.';
+    return '<section id="asg-starter" class="asg-starter asg-starter-full" aria-label="Assignment preparation studio">'
+      + '<div class="asg-starter-top"><div class="asg-starter-context"><div><div class="mono">STEP 2</div><h1>Start strong before you write</h1><p>You are planning <b>' + esc(a.title) + '</b>. Answer in your own words. The preparation pack organizes your thinking, but it does not write the assignment for you.</p><small>' + esc(lensLine) + '</small></div><div class="asg-starter-flow"><span>Read the tailored guidance</span><span>Answer the questions</span><span>Generate a preparation pack</span></div></div></div>'
+      + assignmentProgramBlock(a, L, true)
+      + '<div class="asg-starter-format"><b>Choose what the Word file should include</b><div>' + formatBtn('text', 'Text') + formatBtn('table', 'Table') + formatBtn('diagram', 'Diagram') + formatBtn('all', 'All 3') + '</div></div>'
+      + '<div class="asg-starter-prompt-head"><div class="mono">STEP 3</div><h2>Answer the starter questions</h2><p>Short, honest answers are fine. The goal is to leave with a usable plan: example, evidence, system action, people affected, course concept, and first claim.</p></div>'
+      + '<div class="asg-starter-grid">' + qs.map(function (q) { return field(q, false); }).join('') + '</div>'
+      + '<details class="asg-starter-optional"><summary>Optional expansion questions</summary><div>' + opt.map(function (q) { return field(q, true); }).join('') + '</div></details>'
+      + '<div class="asg-starter-actions"><button type="button" onclick="SOC.saveStarter()">Generate Organized Notes Pack</button><button type="button" onclick="SOC.clearStarter(\'' + esc(a.id) + '\')">Clear answers</button></div>'
+      + '</section>';
+  }
+  function starterPage() {
+    var items = assignmentsData();
+    var L = lensParse();
+    var idx = Math.max(0, Math.min(items.length - 1, Number(state.assignmentIndex) || 0));
+    var selected = items[idx] || items[0];
+    return '<div class="rise asg-starter-page">'
+      + '<section class="asg-hero asg-starter-hero"><div class="mono">OUTLINE AND PREPARATION</div><h1>Build your first draft plan</h1><p>This page uses the assignment and program lens you already selected. Read the tailored guidance, answer the starter questions, and generate a Word document you can use before writing your final submission.</p></section>'
+      + assignmentStarterAssignmentChooser(items)
+      + assignmentStarterStudio(selected, L)
+      + '</div>';
+  }
+  function assignmentRoom(a, L) {
+    var body = '<div class="asg-detail-grid"><div>'
       + assignmentList('What you are really doing', a.really)
       + assignmentList('What to submit', a.submit)
       + '</div><div>' + assignmentCriteria(a) + '</div></div>'
-      + '<div class="asg-quality"><div>' + assignmentList('Strong work usually does this', a.strong) + '</div><div>' + assignmentList('Common misses to avoid', a.misses) + '</div></div>'
-      + assignmentChecklist(a)
+      + assignmentProgramBrief(a, L)
+      + '<details class="asg-room-more"><summary>Show final self-check and common misses</summary><div class="asg-quality"><div>' + assignmentList('Strong work usually does this', a.strong) + '</div><div>' + assignmentList('Common misses to avoid', a.misses) + '</div></div>' + assignmentChecklist(a) + '</details>'
+      + assignmentPrepPrompt(a, L);
+    return '<section id="asg-' + esc(a.id) + '" class="asg-detail asg-room" aria-label="' + esc(a.title) + ' details">'
+      + '<div class="asg-detail-head"><div><h2>' + esc(a.title) + '</h2><p>' + esc(a.purpose) + '</p></div>'
+      + '<dl><div><dt>Weight</dt><dd>' + esc(a.weight) + '</dd></div><div><dt>Opened on Blackboard</dt><dd>' + esc(assignmentDateLabel(a.release)) + '</dd></div><div><dt>Timing</dt><dd>' + esc(a.timing) + '</dd></div></dl></div>'
+      + body
       + '</section>';
   }
   function assignmentFaqSection() {
     var faqs = assignmentFaqs();
-    return '<section class="asg-faq" aria-label="Assignment FAQ"><div class="mono">FAQ</div><h2>Questions students usually ask</h2>'
+    return '<section id="asg-faq" class="asg-faq" aria-label="Assignment FAQ"><div class="mono">FAQ</div><h2>Questions students usually ask</h2>'
       + faqs.map(function (f, i) {
         var on = state.assignmentFaq === i;
         return '<div class="asg-faq-item"><button type="button" onclick="SOC.assignFaq(' + i + ')" aria-expanded="' + (on ? 'true' : 'false') + '"><span>' + esc(f[0]) + '</span><b>' + (on ? '-' : '+') + '</b></button>'
           + (on ? '<p>' + esc(f[1]) + '</p>' : '') + '</div>';
       }).join('') + '</section>';
   }
+  function assignmentStorySection(summary) {
+    return assignmentPolicyPanel()
+      + summary
+      + '<section id="asg-story" class="asg-story"><div><div class="mono">THE STORY</div><h2>You are building one map across the term</h2><p>The assignments are not random separate tasks. You begin by noticing real digital life, then you inspect one encounter, investigate one Canadian system, design a repair, and finally walk someone through the map of how your thinking changed.</p></div><ol><li>Notice</li><li>Break down</li><li>Investigate</li><li>Repair</li><li>Integrate</li></ol></section>';
+  }
+  function assignmentTabContent(tab, items, selected, L, summary) {
+    if (tab === 'release') return assignmentReleaseSchedule(items);
+    if (tab === 'quality') return assignmentQualityPath();
+    if (tab === 'program') return assignmentProgramGuide(L);
+    if (tab === 'ai') return assignmentAiDisclosureGuide();
+    if (tab === 'assignments') return assignmentDirectory(items) + assignmentRoom(selected, L);
+    if (tab === 'faq') return assignmentFaqSection();
+    return assignmentStorySection(summary);
+  }
   function assignmentsPage() {
     var items = assignmentsData();
-    var active = Math.max(0, Math.min(items.length - 1, Number(state.assignmentIndex) || 0));
-    var a = items[active];
     var L = lensParse();
-    var programPanel = '';
-    if (L) {
-      var ctx = lensFieldContext(L);
-      var label = L.program || L.area;
-      programPanel = '<section class="asg-field" aria-label="Program planning prompt"><div><div class="mono">FOR YOUR PROGRAM</div><h2>' + esc(label) + '</h2><p>Your assignment topic still has to answer the same BFS218 prompt as everyone else. Use your program only to choose a stronger example, artifact, or workplace-style decision to analyse.</p></div>'
-        + '<ol><li><b>Look for a real system.</b><span>Start with ' + esc(ctx.place) + '.</span></li><li><b>Name the decision point.</b><span>Ask where ' + esc(ctx.decision) + ' shapes what happens next.</span></li><li><b>Check who feels it.</b><span>Follow the effect on ' + esc(ctx.people) + '.</span></li><li><b>Keep the course lens.</b><span>Use the readings to explain the pattern, not just your opinion.</span></li></ol></section>';
-    }
+    var idx = Math.max(0, Math.min(items.length - 1, Number(state.assignmentIndex) || 0));
+    var selected = items[idx] || items[0];
+    var tab = cleanAssignmentTab(state.assignmentTab);
     var summary = '<section class="asg-summary" aria-label="Assignment overview"><div><span>5 assignments</span><b>Each is worth 20%</b><small>Together they build one Personal Cartography.</small></div><div><span>First half</span><b>Due by Study Week</b><small>Map Exchange checkpoint, Coded Encounter, and Canadian Case File.</small></div><div><span>Second half</span><b>Due by Week 13</b><small>Design the Repair, final Map Exchange close, and capstone.</small></div></section>';
     return '<div class="rise asg-page">'
       + '<section class="asg-hero"><div class="mono">ASSIGNMENT GUIDE</div><h1>Understanding the Assignments</h1><p>One map, five pieces. This page explains what each assignment is asking you to do, what you submit, and how the grading criteria work in plain language.</p></section>'
-      + assignmentPolicyPanel()
-      + programPanel
-      + summary
-      + '<section class="asg-story"><div><div class="mono">THE STORY</div><h2>You are building one map across the term</h2><p>The assignments are not random separate tasks. You begin by noticing real digital life, then you inspect one encounter, investigate one Canadian system, design a repair, and finally walk someone through the map of how your thinking changed.</p></div><ol><li>Notice</li><li>Break down</li><li>Investigate</li><li>Repair</li><li>Integrate</li></ol></section>'
-      + assignmentArc(items, active)
-      + assignmentDetail(a)
-      + assignmentFaqSection()
+      + assignmentPreviewBanner()
+      + assignmentLensPanel(L)
+      + assignmentJumpNav()
+      + '<div class="asg-tabpanel">' + assignmentTabContent(tab, items, selected, L, summary) + '</div>'
       + '</div>';
   }
   function scholarMedia() {
@@ -4142,7 +5071,7 @@
   }
   function videoEmbed(v) {
     if (v.platform === 'youtube' && v.embed) {
-      return '<iframe src="https://www.youtube-nocookie.com/embed/' + esc(v.id) + '?rel=0&amp;modestbranding=1" title="' + esc(v.title + ' - ' + v.scholar) + '" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
+      return '<button type="button" class="vid-load" onclick="SOC.playVideo(this,\'' + esc(v.id) + '\')" aria-label="Load video: ' + esc(v.title + ' - ' + v.scholar) + '"><span>' + esc(v.kind || 'Video') + '</span><b>Load official player</b><small>Loads YouTube only after you choose to play it.</small></button>';
     }
     return '<a class="vid-linkout" href="' + esc(v.url) + '" target="_blank" rel="noopener"><span>' + esc(v.kind || 'Media') + '</span><b>Open on source site</b><small>Playback stays with the official source. Nothing is downloaded or rehosted here.</small></a>';
   }
@@ -4176,10 +5105,9 @@
       + '</div>';
   }
   function homeBar() {
-    return '<button onclick="SOC.go(\'journey\')" style="display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid #DEE3EA;border-radius:8px;padding:8px 14px;font-size:.875rem;font-weight:600;color:#15171C;margin-bottom:18px;cursor:pointer">&#8592; Back to your journey</button>';
+    return '<div class="page-return-row" aria-label="Page navigation"><button type="button" onclick="SOC.prev()">&#8592; Return to Previous Screen</button><button type="button" onclick="SOC.go(\'journey\')">Home</button></div>';
   }
   function backBar() {
-    if (state.activityReturn != null) return '<button onclick="SOC.station(' + state.activityReturn + ')" style="display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid #DEE3EA;border-radius:8px;padding:8px 14px;font-size:.875rem;font-weight:600;color:#15171C;margin-bottom:18px;cursor:pointer">&#8592; Back to Week ' + state.activityReturn + '</button>';
     return homeBar();
   }
   function docBlank(s) { return String(s || '').trim() || '(not written yet)'; }
@@ -4312,7 +5240,9 @@
     if (state.screen === 'journey' || state.screen === 'library') return journeyHome();
     if (state.screen === 'station') { var _sw = state.stationWeek || currentJourneyWeek(); return homeBar() + lensHook(_sw) + weekStation(_sw); }
     if (state.screen === 'detail') return homeBar() + detail();
+    if (state.screen === 'pathways') return homeBar() + pathwaysPage();
     if (state.screen === 'assignments') return homeBar() + assignmentsPage();
+    if (state.screen === 'starter') return homeBar() + starterPage();
     if (state.screen === 'videos') return homeBar() + videosPage();
     if (state.screen === 'readings') return homeBar() + readingsGallery();
     if (state.screen === 'compare') return homeBar() + compare();
@@ -4326,9 +5256,7 @@
   }
   function careerScreen() {
     var C = window[(D.course && D.course.code) + '_CAREER'] || null;
-    var wrap = function (inner) { return '<div class="rise"><div class="mono" style="font-size:.75rem;letter-spacing:.06em;color:var(--red);font-weight:600;margin-bottom:8px">CAREER CHOICES</div>'
-      + '<h1 style="font-size:1.75rem;font-weight:700;margin:0 0 8px;color:var(--ink)">How this course connects to your field</h1>' + inner + '</div>'; };
-    if (!C) return wrap('<p style="color:var(--ink-dim)">This section is being prepared.</p>');
+    if (!C) return '<div class="rise career-page"><section class="career-empty"><h2>Career Choices is being prepared.</h2><p>This section is not ready yet.</p></section></div>';
     var raw = state.careerField || '', area = raw, program = null;
     if (raw.indexOf('::') >= 0) { var parts = raw.split('::'); area = parts[0]; program = parts[1]; }
     var PROG = window.SENECA_PROGRAMS || null;
@@ -4348,33 +5276,34 @@
         + (C.fields || []).map(function (fld) { return '<option value="' + esc(fld) + '"' + (raw === fld ? ' selected' : '') + '>' + esc(fld) + '</option>'; }).join('')
         + '<option value="__explore"' + (raw === '__explore' ? ' selected' : '') + '>Still exploring / undecided</option>';
     }
-    var picker = '<p style="font-size:.95rem;color:var(--ink-dim);margin:0 0 16px">' + esc(C.intro || '') + '</p>'
-      + '<label for="career-sel" style="display:block;font-size:.85rem;font-weight:600;color:var(--ink);margin-bottom:6px">Your program or field of study</label>'
-      + '<select id="career-sel" onchange="SOC.careerField(this.value)" aria-label="Select your program or field of study" style="font:inherit;font-size:1rem;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;background:#fff;color:var(--ink);width:100%;max-width:460px;margin-bottom:22px">' + opts + '</select>';
-    if (!raw) return wrap(picker + '<div style="background:#F7F8FA;border:1px solid var(--border);border-radius:12px;padding:18px 20px"><p style="margin:0 0 8px;font-size:1rem;line-height:1.7;color:var(--ink)">You are in the general stream. Keep going this way if you want the standard course path with no program-specific lens.</p><p style="margin:0;font-size:.92rem;line-height:1.6;color:var(--ink-dim)">Pick a program later if you want the field hook, diagram, case study, field prompt, and Career Choices write-up to connect to that program. The weekly activity itself stays shared.</p></div>');
-    if (raw === '__explore') return wrap(picker + '<div style="background:#F7F8FA;border:1px solid var(--border);border-radius:12px;padding:18px 20px"><p style="margin:0;font-size:1rem;line-height:1.7;color:var(--ink)">That is completely fine. Read the whole course with one question in mind. Wherever you end up, some system will make decisions about people in your field. Someone has to notice when it gets those decisions wrong. This course is practice at being that person. Come back and pick your program once you have one in mind.</p></div>');
+    var selected = raw ? (program || area || 'Selected lens') : 'No program lens selected yet';
+    var picker = '<aside class="career-picker"><label for="career-sel">Choose your program lens</label><select id="career-sel" onchange="SOC.careerField(this.value)" aria-label="Select your program or field of study">' + opts + '</select><p>Current lens: <b>' + esc(selected) + '</b>. You can change this any time. The assignments stay the same.</p></aside>';
+    var hero = '<section class="career-hero"><div><div class="mono">CAREER CHOICES</div><h1>Read BFS218 through your future work</h1><p>' + esc(C.intro || 'Choose a program lens to connect the course to your field.') + ' The lens does not change the required course. It changes the examples, prompts, and field questions that help the course feel closer to your world.</p></div>' + picker + '</section>';
+    var impact = '<section id="career-choices" class="career-impact" aria-label="What the program lens changes"><div><b>Weekly field hooks</b><span>The weekly page points to examples that feel closer to your program or field.</span></div><div><b>Stronger assignment choices</b><span>You get help finding artifacts, systems, and cases that fit the assignment prompt.</span></div><div><b>Same grading standard</b><span>Your work is still assessed on the same BFS218 expectations as everyone else.</span></div></section>';
+    var empty = function (title, body) { return '<section id="career-main" class="career-empty"><h2>' + esc(title) + '</h2><p>' + esc(body) + '</p><p>Start with the general course path if you are unsure. You can choose a field later without losing your notes or progress.</p></section>'; };
+    if (!raw) return '<div class="rise career-page">' + hero + impact + empty('Start general, or choose a lens now', 'The general path is the standard BFS218 experience. Choose a program lens when you want examples, activities, and prompts to connect more directly to a field.') + '</div>';
+    if (raw === '__explore') return '<div class="rise career-page">' + hero + impact + empty('Still exploring is a valid lens', 'Read the course with one question in mind: wherever I end up, what systems will make decisions about people, and how will I notice when those systems harm someone?') + '</div>';
     var f = (C.byField || {})[area];
-    if (!f) return wrap(picker + '<p style="color:var(--ink-dim)">The write-up for ' + esc(area) + ' is being prepared.</p>');
-    var box = function (label, inner) { return '<div style="background:#F7F8FA;border:1px solid var(--border);border-radius:12px;padding:15px 18px;margin:0 0 16px"><div class="mono" style="font-size:.66rem;letter-spacing:.06em;color:var(--red);font-weight:700;margin-bottom:7px">' + label + '</div>' + inner + '</div>'; };
-    var out = '<h2 style="font-size:1.25rem;font-weight:700;color:var(--ink);margin:6px 0 12px">' + esc(area) + '</h2>';
+    if (!f) return '<div class="rise career-page">' + hero + impact + empty('This lens is being prepared', 'The write-up for ' + area + ' is not ready yet. Keep using the general route for now.') + '</div>';
+    var box = function (label, inner) { return '<div class="career-box"><div class="mono">' + esc(label) + '</div>' + inner + '</div>'; };
+    var out = '<section id="career-main" class="career-field"><div class="mono">YOUR SELECTED FIELD</div><h2>' + esc(program || area) + '</h2>';
     if (program) {
       var pnote = (C.byProgram || {})[program];
-      if (pnote) out += '<div style="background:#FDF0EE;border-left:3px solid var(--red);padding:12px 16px;border-radius:0 8px 8px 0;margin:0 0 16px"><div class="mono" style="font-size:.64rem;letter-spacing:.05em;color:var(--red);font-weight:700;margin-bottom:6px">FOR ' + esc(program.toUpperCase()) + ' STUDENTS</div><p style="margin:0;font-size:1rem;line-height:1.65;color:var(--ink)">' + esc(pnote) + '</p></div>';
-      else out += '<p style="font-size:1rem;line-height:1.6;color:var(--ink);margin:0 0 16px;background:#FDF0EE;border-left:3px solid var(--red);padding:11px 15px;border-radius:0 8px 8px 0">You are in <b>' + esc(program) + '</b>, part of Seneca\'s ' + esc(area) + ' area. Here is how this course connects to where you are headed.</p>';
+      out += box('FOR THIS PROGRAM', '<p>' + esc(pnote || ('You are in ' + program + ', part of Seneca\'s ' + area + ' area. Use this lens to pick concrete examples while keeping the BFS218 course concepts visible.')) + '</p>');
     }
-    if (f.lens) out += '<div style="background:#15171C;color:#fff;border-radius:12px;padding:16px 20px;margin:0 0 18px"><div class="mono" style="font-size:.66rem;letter-spacing:.06em;color:#f3b1a8;font-weight:700;margin-bottom:7px">READ IT THIS WAY</div><p style="margin:0;font-size:1.02rem;line-height:1.6;font-weight:500">' + esc(f.lens) + '</p></div>';
-    (f.paras || []).forEach(function (pp) { out += '<p style="font-size:1rem;line-height:1.7;color:var(--ink);margin:0 0 14px">' + esc(pp) + '</p>'; });
-    if (f.scenario) out += box('IN YOUR FIELD', '<p style="margin:0;font-size:.97rem;line-height:1.65;color:var(--ink)">' + esc(f.scenario) + '</p>');
-    if (f.skills && f.skills.length) out += box('WHAT YOU WILL WALK AWAY ABLE TO DO', '<ul style="margin:0;padding-left:18px">' + f.skills.map(function (sk) { return '<li style="font-size:.95rem;line-height:1.55;color:var(--ink);margin:3px 0">' + esc(sk) + '</li>'; }).join('') + '</ul>');
+    if (f.lens) out += '<div class="career-lens"><div class="mono">READ THE COURSE THIS WAY</div><p>' + esc(f.lens) + '</p></div>';
+    (f.paras || []).forEach(function (pp) { out += '<p>' + esc(pp) + '</p>'; });
+    if (f.scenario) out += box('IN YOUR FIELD', '<p>' + esc(f.scenario) + '</p>');
+    if (f.skills && f.skills.length) out += box('WHAT YOU WILL WALK AWAY ABLE TO DO', '<ul>' + f.skills.map(function (sk) { return '<li>' + esc(sk) + '</li>'; }).join('') + '</ul>');
     if (f.weeks && f.weeks.length) {
-      var wl = f.weeks.map(function (w) { return '<button onclick="SOC.station(' + w + ')" style="border:1px solid var(--border);background:#fff;border-radius:8px;padding:7px 13px;font-size:.85rem;font-weight:600;color:var(--ink);margin:0 8px 0 0;cursor:pointer">Week ' + w + ' &#8594;</button>'; }).join('');
-      out += box('ZOOM IN ON THESE WEEKS', (f.weeksWhy ? '<p style="margin:0 0 9px;font-size:.95rem;line-height:1.6;color:var(--ink)">' + esc(f.weeksWhy) + '</p>' : '') + '<div>' + wl + '</div>');
+      var wl = f.weeks.map(function (w) { return '<button type="button" onclick="SOC.station(' + w + ')">Week ' + w + ' &#8594;</button>'; }).join('');
+      out += box('ZOOM IN ON THESE WEEKS', (f.weeksWhy ? '<p>' + esc(f.weeksWhy) + '</p>' : '') + '<div class="career-week-buttons">' + wl + '</div>');
     }
-    if (f.roles && f.roles.length) out += box('WHERE THIS SHOWS UP', '<p style="margin:0;font-size:.95rem;line-height:1.6;color:var(--ink)">' + f.roles.map(esc).join(' &middot; ') + '</p>');
+    if (f.roles && f.roles.length) out += box('WHERE THIS SHOWS UP', '<p>' + f.roles.map(esc).join(' &middot; ') + '</p>');
     var rk = 'career|' + area, rv = esc((state.careerReflect && state.careerReflect[rk]) || '');
-    out += '<div style="margin-top:6px"><h3 style="margin:10px 0 4px;font-size:1.02rem">Where might this land in your field?</h3><p class="wk-hint" style="margin-bottom:8px">A quick note to yourself, saved on your device. Nothing is submitted.</p>'
-      + '<textarea oninput="SOC.careerReflect(\'' + rk + '\',this.value)" aria-label="Your reflection" class="wk-ta" placeholder="One place I can already picture this showing up in my field..." style="min-height:74px">' + rv + '</textarea></div>';
-    return wrap(picker + out);
+    out += '<div class="career-note"><h3 style="margin:10px 0 4px;font-size:1.02rem">Where might this land in your field?</h3><p class="wk-hint" style="margin-bottom:8px">A quick note to yourself, saved on your device. Nothing is submitted.</p>'
+      + '<textarea oninput="SOC.careerReflect(\'' + rk + '\',this.value)" aria-label="Your reflection" class="wk-ta" placeholder="One place I can already picture this showing up in my field...">' + rv + '</textarea></div></section>';
+    return '<div class="rise career-page">' + hero + impact + out + '</div>';
   }
   function render() {
     if (state.screen !== 'compare' && render._prev !== undefined && render._prev !== state.screen && (state.compareIds.length || state.showSynthesis)) { state.compareIds = []; state.showSynthesis = false; }
@@ -4386,7 +5315,7 @@
       '<div style="min-height:100vh;display:flex;flex-direction:column;background:#F7F8FA">' + header()
       + (state.navOpen ? '<button class="soc-mobile-scrim" onclick="SOC.closeNav()" aria-label="Close course navigation"></button>' : '')
       + '<div style="display:flex;flex:1;min-height:0">' + sidebar()
-      + '<main id="soc-main" class="scrollarea" style="flex:1;min-width:0;overflow:auto;height:calc(100vh - 62px)"><div style="margin:0 auto;padding:30px 30px 110px">' + (['journey','library','station','assignments','videos'].indexOf(state.screen) >= 0 ? lensChip() : '') + body() + '</div></main>'
+      + '<main id="soc-main" class="scrollarea" style="flex:1;min-width:0;overflow:auto;height:calc(100vh - 62px)"><div style="margin:0 auto;padding:30px 30px 110px">' + (['journey','library','station','videos'].indexOf(state.screen) >= 0 ? lensChip() : '') + body() + '</div></main>'
       + '</div>' + toast + '</div>';
     if (refocusSearch) {
       var el = document.getElementById('soc-search');
@@ -4418,28 +5347,363 @@
       else if (el && el.scrollIntoView) el.scrollIntoView({ block: 'start' });
     }, 20);
   }
+  function scrollToId(id) {
+    setTimeout(function () {
+      var el = document.getElementById(id);
+      var m = document.getElementById('soc-main');
+      if (el && m) m.scrollTop = Math.max(0, el.offsetTop - 12);
+      else if (el && el.scrollIntoView) el.scrollIntoView({ block: 'start' });
+    }, 20);
+  }
+  function viewSnapshot() {
+    return {
+      screen: state.screen,
+      journeyWeek: state.journeyWeek,
+      stationWeek: state.stationWeek,
+      activityReturn: state.activityReturn,
+      detailId: state.detailId,
+      cardWeek: state.cardWeek,
+      activeTypes: (state.activeTypes || []).slice(),
+      activeWeek: state.activeWeek,
+      search: state.search || '',
+      savedView: !!state.savedView,
+      rcReading: state.rcReading,
+      lens: state.lens || 'thematic',
+      compareIds: (state.compareIds || []).slice(),
+      showSynthesis: !!state.showSynthesis,
+      galWeek: state.galWeek,
+      galTopic: state.galTopic,
+      glossWeek: state.glossWeek || 'all',
+      glossSearch: state.glossSearch || '',
+      auditRun: !!state.auditRun,
+      auditSystem: state.auditSystem || 0,
+      auditSlice: state.auditSlice || 'overall',
+      auditView: state.auditView || 'errors',
+      auditedSystems: state.auditedSystems || {},
+      act: state.act || {},
+      assignmentIndex: state.assignmentIndex || 0,
+      assignmentTab: state.assignmentTab || 'story',
+      assignmentFaq: state.assignmentFaq,
+      videoWeek: state.videoWeek || 'all',
+      mediaKind: state.mediaKind || 'all'
+    };
+  }
+  function sameView(a, b) {
+    try { return JSON.stringify(a || {}) === JSON.stringify(b || {}); } catch (e) { return false; }
+  }
+  function rememberPrevious() {
+    var v = viewSnapshot();
+    if (!state.prevView || !sameView(v, state.prevView)) state.prevView = v;
+  }
+  function restoreView(v) {
+    v = v || { screen: 'journey' };
+    state.screen = cleanScreen(v.screen);
+    state.journeyWeek = cleanWeek(v.journeyWeek);
+    state.stationWeek = cleanWeek(v.stationWeek);
+    state.activityReturn = cleanWeek(v.activityReturn);
+    state.detailId = v.detailId || null;
+    state.cardWeek = cleanWeek(v.cardWeek);
+    state.activeTypes = Array.isArray(v.activeTypes) ? v.activeTypes.slice() : [];
+    state.activeWeek = cleanWeek(v.activeWeek);
+    state.search = v.search || '';
+    state.savedView = !!v.savedView;
+    state.rcReading = v.rcReading || null;
+    state.lens = v.lens || 'thematic';
+    state.compareIds = Array.isArray(v.compareIds) ? v.compareIds.slice() : [];
+    state.showSynthesis = !!v.showSynthesis;
+    state.galWeek = cleanWeek(v.galWeek);
+    state.galTopic = v.galTopic || null;
+    state.glossWeek = v.glossWeek || 'all';
+    state.glossSearch = v.glossSearch || '';
+    state.auditRun = !!v.auditRun;
+    state.auditSystem = Number(v.auditSystem) || 0;
+    state.auditSlice = v.auditSlice || 'overall';
+    state.auditView = v.auditView || 'errors';
+    state.auditedSystems = (v.auditedSystems && typeof v.auditedSystems === 'object') ? v.auditedSystems : {};
+    state.act = (v.act && typeof v.act === 'object') ? v.act : (state.act || {});
+    state.assignmentIndex = Number(v.assignmentIndex) || 0;
+    state.assignmentTab = cleanAssignmentTab(v.assignmentTab);
+    state.assignmentFaq = v.assignmentFaq == null ? null : Number(v.assignmentFaq);
+    state.videoWeek = v.videoWeek || 'all';
+    state.mediaKind = v.mediaKind || 'all';
+    state.navOpen = false;
+  }
+  function goPrevious() {
+    var current = viewSnapshot();
+    var prev = state.prevView;
+    if (prev && prev.screen && !sameView(prev, current)) {
+      restoreView(prev);
+      state.prevView = current;
+    } else if (state.activityReturn != null) {
+      restoreView({ screen: 'station', stationWeek: state.activityReturn, journeyWeek: state.activityReturn });
+      state.prevView = current;
+    } else {
+      restoreView({ screen: 'journey' });
+      state.prevView = current;
+    }
+    persist();
+    focusTarget = 'soc-main';
+    render();
+    topScroll();
+  }
 
   /* ---------- actions ---------- */
   function flash(msg) { clearTimeout(toastTimer); var lr = document.getElementById('soc-live'); if (lr) { lr.textContent = ''; setTimeout(function () { lr.textContent = msg; }, 30); } state.toast = msg; render(); toastTimer = setTimeout(function () { state.toast = null; render(); }, 2200); }
+  function flashKeep(msg) { clearTimeout(toastTimer); var lr = document.getElementById('soc-live'); if (lr) { lr.textContent = ''; setTimeout(function () { lr.textContent = msg; }, 30); } state.toast = msg; renderKeepScroll(); toastTimer = setTimeout(function () { state.toast = null; renderKeepScroll(); }, 2200); }
   /* ---- real .docx (OOXML, dependency-free) ---- */
+  var DX_FONT = 'IBM Plex Sans';
+  var DX_BODY_SIZE = 22;
   function dxEsc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' }[c]; }); }
-  function dxRun(text, opt) { opt = opt || {}; var rpr = '<w:rPr>'; if (opt.bold) rpr += '<w:b/>'; if (opt.color) rpr += '<w:color w:val="' + opt.color + '"/>'; if (opt.size) rpr += '<w:sz w:val="' + opt.size + '"/><w:szCs w:val="' + opt.size + '"/>'; rpr += '<w:rFonts w:ascii="IBM Plex Sans" w:hAnsi="IBM Plex Sans" w:cs="IBM Plex Sans"/></w:rPr>'; var parts = String(text == null ? '' : text).split('\n'), t = ''; for (var i = 0; i < parts.length; i++) { if (i > 0) t += '<w:br/>'; t += '<w:t xml:space="preserve">' + dxEsc(parts[i]) + '</w:t>'; } return '<w:r>' + rpr + t + '</w:r>'; }
-  function dxPara(runsXml, opt) { opt = opt || {}; var ppr = '<w:pPr><w:spacing w:before="' + (opt.before || 0) + '" w:after="' + (opt.after || 120) + '"/>'; if (opt.border) ppr += '<w:pBdr><w:bottom w:val="single" w:sz="6" w:space="6" w:color="DEE3EA"/></w:pBdr>'; ppr += '</w:pPr>'; return '<w:p>' + ppr + runsXml + '</w:p>'; }
-  function dxDoc(course, title, subLines, sections) { var body = ''; body += dxPara(dxRun('SENECA POLYTECHNIC · ' + course, { bold: true, color: 'DA291C', size: 18 }), { after: 40 }); body += dxPara(dxRun(title, { bold: true, color: 'DA291C', size: 36 }), { after: 60 }); (subLines || []).forEach(function (line, i) { body += dxPara(dxRun(line, { color: '474C57', size: 20 }), { after: (i === subLines.length - 1 ? 160 : 40), border: (i === subLines.length - 1) }); }); (sections || []).forEach(function (sec) { body += dxPara(dxRun(sec.h, { bold: true, color: 'DA291C', size: 22 }), { before: 160, after: 30 }); if (sec.t !== undefined && sec.t !== null) { var t = (String(sec.t).trim()) ? sec.t : '(not written yet)'; body += dxPara(dxRun(t, { color: '15171C', size: 22 }), { after: 80 }); } }); return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>' + body + '<w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="720" w:footer="720" w:gutter="0"/></w:sectPr></w:body></w:document>'; }
-  var DX_CT = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>';
-  var DX_RELS = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>';
+  function dxRun(text, opt) {
+    opt = opt || {};
+    var size = opt.size || DX_BODY_SIZE;
+    var rpr = '<w:rPr>';
+    if (opt.bold) rpr += '<w:b/>';
+    if (opt.italic) rpr += '<w:i/>';
+    if (opt.color) rpr += '<w:color w:val="' + opt.color + '"/>';
+    rpr += '<w:sz w:val="' + size + '"/><w:szCs w:val="' + size + '"/>';
+    rpr += '<w:rFonts w:ascii="' + DX_FONT + '" w:hAnsi="' + DX_FONT + '" w:cs="' + DX_FONT + '"/></w:rPr>';
+    var parts = String(text == null ? '' : text).split('\n'), t = '';
+    for (var i = 0; i < parts.length; i++) {
+      if (i > 0) t += '<w:br/>';
+      t += '<w:t xml:space="preserve">' + dxEsc(parts[i]) + '</w:t>';
+    }
+    return '<w:r>' + rpr + t + '</w:r>';
+  }
+  function dxPara(runsXml, opt) {
+    opt = opt || {};
+    var ppr = '<w:pPr>';
+    if (opt.style) ppr += '<w:pStyle w:val="' + opt.style + '"/>';
+    if (opt.keep) ppr += '<w:keepNext/><w:keepLines/>';
+    if (opt.align) ppr += '<w:jc w:val="' + opt.align + '"/>';
+    ppr += '<w:spacing w:before="' + (opt.before || 0) + '" w:after="' + (opt.after || 120) + '" w:line="300" w:lineRule="auto"/>';
+    if (opt.border) ppr += '<w:pBdr><w:bottom w:val="single" w:sz="6" w:space="6" w:color="DEE3EA"/></w:pBdr>';
+    ppr += '</w:pPr>';
+    return '<w:p>' + ppr + runsXml + '</w:p>';
+  }
+  function dxLogoRun(rid, id, cx, cy) {
+    return '<w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="' + cx + '" cy="' + cy + '"/><wp:docPr id="' + id + '" name="Seneca logo"/><wp:cNvGraphicFramePr><a:graphicFrameLocks noChangeAspect="1"/></wp:cNvGraphicFramePr><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="' + (id + 1) + '" name="seneca-logo.png"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="' + rid + '"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="' + cx + '" cy="' + cy + '"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r>';
+  }
+  function dxLogoPara(rid) {
+    return dxPara(dxLogoRun(rid, 1, 1760000, 360000), { align: 'left', after: 180 });
+  }
+  function dxTc(inner, opt) { opt = opt || {}; var props = '<w:tcPr>'; if (opt.w) props += '<w:tcW w:w="' + opt.w + '" w:type="dxa"/>'; if (opt.shade) props += '<w:shd w:fill="' + opt.shade + '"/>'; props += '<w:tcMar><w:top w:w="110" w:type="dxa"/><w:left w:w="120" w:type="dxa"/><w:bottom w:w="110" w:type="dxa"/><w:right w:w="120" w:type="dxa"/></w:tcMar></w:tcPr>'; return '<w:tc>' + props + inner + '</w:tc>'; }
+  function dxCellText(text, opt) { opt = opt || {}; return dxPara(dxRun(text, { bold: opt.bold, color: opt.color || '15171C', size: opt.size || DX_BODY_SIZE }), { after: opt.after == null ? 60 : opt.after }); }
+  function dxTable(rows, opt) {
+    opt = opt || {};
+    var out = '<w:tbl><w:tblPr><w:tblW w:w="0" w:type="auto"/><w:tblBorders><w:top w:val="single" w:sz="6" w:color="DEE3EA"/><w:left w:val="single" w:sz="6" w:color="DEE3EA"/><w:bottom w:val="single" w:sz="6" w:color="DEE3EA"/><w:right w:val="single" w:sz="6" w:color="DEE3EA"/><w:insideH w:val="single" w:sz="4" w:color="DEE3EA"/><w:insideV w:val="single" w:sz="4" w:color="DEE3EA"/></w:tblBorders><w:tblCellMar><w:top w:w="90" w:type="dxa"/><w:left w:w="90" w:type="dxa"/><w:bottom w:w="90" w:type="dxa"/><w:right w:w="90" w:type="dxa"/></w:tblCellMar></w:tblPr>';
+    rows.forEach(function (row, ri) {
+      out += '<w:tr><w:trPr><w:cantSplit/>' + (ri === 0 && opt.header ? '<w:tblHeader/>' : '') + '</w:trPr>';
+      row.forEach(function (cell) {
+        var obj = (cell && typeof cell === 'object') ? cell : { text: cell };
+        var shade = obj.shade || (ri === 0 && opt.header ? '1B2A4A' : null);
+        var color = obj.color || (ri === 0 && opt.header ? 'FFFFFF' : '15171C');
+        out += dxTc(dxCellText(obj.text || '', { bold: obj.bold || (ri === 0 && opt.header), color: color, size: obj.size || DX_BODY_SIZE }), { shade: shade, w: obj.w || opt.w });
+      });
+      out += '</w:tr>';
+    });
+    return out + '</w:tbl>';
+  }
+  function dxList(items) {
+    return (items || []).map(function (item) { return dxPara(dxRun(String(item || ''), { color: '15171C' }), { after: 50 }); }).join('');
+  }
+  function dxDiagram(nodes) {
+    var cells = nodes.map(function (n, i) {
+      var txt = (i + 1) + '. ' + n.label + '\n' + (n.value || '(not written yet)');
+      return { text: txt, shade: i % 2 ? 'F8FBFC' : 'FFF8F7', bold: true, size: DX_BODY_SIZE };
+    });
+    while (cells.length < 6) cells.push({ text: (cells.length + 1) + '. Planning note\n(not written yet)', shade: 'F8FBFC', bold: true, size: DX_BODY_SIZE });
+    return dxTable([cells.slice(0, 3), cells.slice(3, 6)], { w: 3000 }) + dxPara(dxRun('Flow: System or case -> Evidence -> System action -> People affected -> Course concept -> Working claim.', { italic: true, color: '474C57' }), { before: 90, after: 80 });
+  }
+  function dxHeaderXml() {
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<w:hdr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">' + dxPara(dxLogoRun('rIdLogoHeader', 10, 1320000, 270000), { align: 'right', after: 40 }) + '</w:hdr>';
+  }
+  function dxFooterXml(assignmentName) {
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<w:ftr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:p><w:pPr><w:jc w:val="center"/><w:pBdr><w:top w:val="single" w:sz="4" w:space="6" w:color="DEE3EA"/></w:pBdr></w:pPr>' + dxRun(assignmentName + ' | Page ', { color: '474C57', size: 20 }) + '<w:fldSimple w:instr="PAGE"><w:r><w:rPr><w:rFonts w:ascii="' + DX_FONT + '" w:hAnsi="' + DX_FONT + '"/><w:sz w:val="20"/></w:rPr><w:t>1</w:t></w:r></w:fldSimple>' + dxRun(' of ', { color: '474C57', size: 20 }) + '<w:fldSimple w:instr="NUMPAGES"><w:r><w:rPr><w:rFonts w:ascii="' + DX_FONT + '" w:hAnsi="' + DX_FONT + '"/><w:sz w:val="20"/></w:rPr><w:t>1</w:t></w:r></w:fldSimple></w:p></w:ftr>';
+  }
+  function dxDoc(course, title, subLines, sections, opt) {
+    opt = opt || {};
+    var body = '';
+    body += dxLogoPara('rIdLogo');
+    body += dxPara(dxRun('SENECA POLYTECHNIC | ' + course, { bold: true, color: 'DA291C', size: 20 }), { after: 40, keep: true });
+    body += dxPara(dxRun(title, { bold: true, color: '15171C', size: 32 }), { style: 'Title', after: 60, keep: true });
+    (subLines || []).forEach(function (line, i) { body += dxPara(dxRun(line, { color: '474C57' }), { after: (i === subLines.length - 1 ? 160 : 40), border: (i === subLines.length - 1) }); });
+    (sections || []).forEach(function (sec) {
+      body += dxPara(dxRun(sec.h, { bold: true, color: 'DA291C', size: 26 }), { style: 'Heading1', before: 170, after: 60, keep: true });
+      if (sec.type === 'table') body += dxTable(sec.rows || [], { header: true });
+      else if (sec.type === 'diagram') body += dxDiagram(sec.nodes || []);
+      else if (sec.type === 'list') body += dxList(sec.items || []);
+      else if (sec.t !== undefined && sec.t !== null) { var t = (String(sec.t).trim()) ? sec.t : '(not written yet)'; body += dxPara(dxRun(t, { color: '15171C' }), { after: 80 }); }
+    });
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><w:body>' + body + '<w:sectPr><w:headerReference w:type="default" r:id="rIdHeader"/><w:footerReference w:type="default" r:id="rIdFooter"/><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="720" w:footer="720" w:gutter="0"/></w:sectPr></w:body></w:document>';
+  }
+  function dxStylesXml() {
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:rPr><w:rFonts w:ascii="' + DX_FONT + '" w:hAnsi="' + DX_FONT + '" w:cs="' + DX_FONT + '"/><w:sz w:val="' + DX_BODY_SIZE + '"/><w:szCs w:val="' + DX_BODY_SIZE + '"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:basedOn w:val="Normal"/><w:rPr><w:b/><w:rFonts w:ascii="' + DX_FONT + '" w:hAnsi="' + DX_FONT + '"/><w:sz w:val="32"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:qFormat/><w:pPr><w:keepNext/><w:keepLines/></w:pPr><w:rPr><w:b/><w:color w:val="DA291C"/><w:rFonts w:ascii="' + DX_FONT + '" w:hAnsi="' + DX_FONT + '"/><w:sz w:val="26"/></w:rPr></w:style></w:styles>';
+  }
+  function dxCoreXml() {
+    var now = new Date().toISOString();
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>BFS218 Assignment Preparation Pack</dc:title><dc:creator>Raymond Peart</dc:creator><cp:lastModifiedBy>Raymond Peart</cp:lastModifiedBy><dcterms:created xsi:type="dcterms:W3CDTF">' + now + '</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">' + now + '</dcterms:modified></cp:coreProperties>';
+  }
+  var DX_CT = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/header1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/><Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/></Types>';
+  var DX_RELS = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/></Relationships>';
+  var DX_DOC_RELS = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdLogo" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/seneca-logo.png"/><Relationship Id="rIdStyles" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rIdHeader" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" Target="header1.xml"/><Relationship Id="rIdFooter" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/></Relationships>';
+  var DX_HEADER_RELS = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdLogoHeader" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/seneca-logo.png"/></Relationships>';
   var dxCrcT = null;
   function dxCrc(bytes) { if (!dxCrcT) { dxCrcT = []; for (var n = 0; n < 256; n++) { var c = n; for (var k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1); dxCrcT[n] = c >>> 0; } } var crc = 0xFFFFFFFF; for (var i = 0; i < bytes.length; i++) crc = (crc >>> 8) ^ dxCrcT[(crc ^ bytes[i]) & 0xFF]; return (crc ^ 0xFFFFFFFF) >>> 0; }
   function dxCat(arrs) { var len = 0, i; for (i = 0; i < arrs.length; i++) len += arrs[i].length; var out = new Uint8Array(len), off = 0; for (i = 0; i < arrs.length; i++) { out.set(arrs[i], off); off += arrs[i].length; } return out; }
   function dxU16(n) { return new Uint8Array([n & 255, (n >> 8) & 255]); }
   function dxU32(n) { return new Uint8Array([n & 255, (n >>> 8) & 255, (n >>> 16) & 255, (n >>> 24) & 255]); }
   function dxZip(files) { var enc = new TextEncoder(); var chunks = [], central = [], offset = 0; files.forEach(function (f) { var nameB = enc.encode(f.name); var data = (f.data instanceof Uint8Array) ? f.data : enc.encode(f.data); var crc = dxCrc(data), size = data.length; var lfh = dxCat([dxU32(0x04034b50), dxU16(20), dxU16(0), dxU16(0), dxU16(0), dxU16(0), dxU32(crc), dxU32(size), dxU32(size), dxU16(nameB.length), dxU16(0), nameB, data]); chunks.push(lfh); central.push(dxCat([dxU32(0x02014b50), dxU16(20), dxU16(20), dxU16(0), dxU16(0), dxU16(0), dxU16(0), dxU32(crc), dxU32(size), dxU32(size), dxU16(nameB.length), dxU16(0), dxU16(0), dxU16(0), dxU16(0), dxU32(0), dxU32(offset), nameB])); offset += lfh.length; }); var centralB = dxCat(central); var eocd = dxCat([dxU32(0x06054b50), dxU16(0), dxU16(0), dxU16(files.length), dxU16(files.length), dxU32(centralB.length), dxU32(offset), dxU16(0)]); return dxCat([dxCat(chunks), centralB, eocd]); }
-  function senecaDoc(course, title, subLines, sections, fn) {
-    var bytes = dxZip([{ name: '[Content_Types].xml', data: DX_CT }, { name: '_rels/.rels', data: DX_RELS }, { name: 'word/document.xml', data: dxDoc(course, title, subLines, sections) }]);
-    var blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
-    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = fn + '.docx';
-    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
-    flash('Saved to your device (Seneca template).');
+  function dxLogoBytes() {
+    return fetch('./seneca-logo.png').then(function (r) {
+      if (!r.ok) throw new Error('Seneca logo could not be loaded.');
+      return r.arrayBuffer();
+    }).then(function (buf) { return new Uint8Array(buf); });
+  }
+  function senecaDoc(course, title, subLines, sections, fn, opt) {
+    opt = opt || {};
+    return dxLogoBytes().then(function (logoBytes) {
+      var assignmentName = opt.assignmentName || title;
+      var bytes = dxZip([
+        { name: '[Content_Types].xml', data: DX_CT },
+        { name: '_rels/.rels', data: DX_RELS },
+        { name: 'docProps/core.xml', data: dxCoreXml() },
+        { name: 'word/_rels/document.xml.rels', data: DX_DOC_RELS },
+        { name: 'word/_rels/header1.xml.rels', data: DX_HEADER_RELS },
+        { name: 'word/media/seneca-logo.png', data: logoBytes },
+        { name: 'word/styles.xml', data: dxStylesXml() },
+        { name: 'word/header1.xml', data: dxHeaderXml() },
+        { name: 'word/footer1.xml', data: dxFooterXml(assignmentName) },
+        { name: 'word/document.xml', data: dxDoc(course, title, subLines, sections, opt) }
+      ]);
+      var blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+      var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = fn + '.docx';
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
+      flash('Saved to your device as a Seneca branded organized notes document.');
+    }).catch(function () {
+      flashKeep('Export stopped: the Seneca logo could not be embedded.');
+    });
+  }
+  function starterRows(a, L) {
+    var data = starterData(a), answers = data.answers || {};
+    return assignmentStarterQuestions(a, L).concat(assignmentStarterOptionalQuestions(a, L)).map(function (q) {
+      return { key: q[0], question: q[1], answer: String(answers[q[0]] || '').trim() };
+    });
+  }
+  function starterTextOutput(rows) {
+    return rows.map(function (r) { return r.question + '\n' + (r.answer || '(not written yet)'); }).join('\n\n');
+  }
+  function starterAnswer(rows, key) {
+    var hit = rows.filter(function (r) { return r.key === key; })[0];
+    return hit && hit.answer ? hit.answer : '(not written yet)';
+  }
+  function starterTableRows(rows) {
+    return [[
+      { text: 'Planning question', w: 3200 },
+      { text: 'Your notes', w: 4100 },
+      { text: 'How to use it', w: 2300 }
+    ]].concat(rows.map(function (r) {
+      return [
+        { text: r.question, w: 3200 },
+        { text: r.answer || '(not written yet)', w: 4100 },
+        { text: starterUseHint(r.key), w: 2300 }
+      ];
+    }));
+  }
+  function starterUseHint(key) {
+    var hints = {
+      piece: 'Use this to decide what work comes first.',
+      program: 'Use this to keep the example concrete.',
+      system: 'Use this as the centre of the assignment.',
+      artifact: 'Use this as proof, not decoration.',
+      action: 'Use this to explain the mechanism.',
+      affected: 'Use this to name who is involved.',
+      benefit: 'Use this to show who the system helps.',
+      burden: 'Use this to show who carries the cost.',
+      concept: 'Use this to connect the example to the course.',
+      claim: 'Use this as the first draft of your thesis.',
+      source: 'Use this to plan evidence.',
+      verify: 'Use this as a research to-do item.',
+      stronger: 'Use this for revision before submission.'
+    };
+    return hints[key] || 'Use this to strengthen the final answer.';
+  }
+  function starterDiagramNodes(rows) {
+    return [
+      { label: 'System or case', value: starterAnswer(rows, 'system') },
+      { label: 'Evidence', value: starterAnswer(rows, 'artifact') },
+      { label: 'System action', value: starterAnswer(rows, 'action') },
+      { label: 'People affected', value: starterAnswer(rows, 'affected') },
+      { label: 'Course concept', value: starterAnswer(rows, 'concept') },
+      { label: 'Working claim', value: starterAnswer(rows, 'claim') }
+    ];
+  }
+  function starterBriefRows(a, L, fmt) {
+    var label = L ? (L.program || L.area) : 'General stream / no program';
+    return [
+      [{ text: 'Item' }, { text: 'Details' }],
+      [{ text: 'Course' }, { text: 'BFS218: Racism and the Digital Age' }],
+      [{ text: 'Assignment' }, { text: a.title }],
+      [{ text: 'Program lens' }, { text: label }],
+      [{ text: 'Blackboard posting date' }, { text: assignmentDateLabel(a.release) }],
+      [{ text: 'Timing' }, { text: a.timing }],
+      [{ text: 'Weight' }, { text: a.weight }],
+      [{ text: 'Selected output' }, { text: fmt === 'all' ? 'Text notes, table, and visual map' : fmt.charAt(0).toUpperCase() + fmt.slice(1) }],
+      [{ text: 'Official location' }, { text: 'Blackboard has the complete instructions, dropbox, due date, feedback, and grade.' }]
+    ];
+  }
+  function starterSnapshotRows(rows) {
+    return [
+      [{ text: 'Part of the answer' }, { text: 'Student starting point' }],
+      [{ text: 'Working claim' }, { text: starterAnswer(rows, 'claim') }],
+      [{ text: 'System or case' }, { text: starterAnswer(rows, 'system') }],
+      [{ text: 'Evidence or artifact' }, { text: starterAnswer(rows, 'artifact') }],
+      [{ text: 'System action' }, { text: starterAnswer(rows, 'action') }],
+      [{ text: 'People affected' }, { text: starterAnswer(rows, 'affected') }],
+      [{ text: 'Course concept' }, { text: starterAnswer(rows, 'concept') }]
+    ];
+  }
+  function starterEvidenceRows(rows) {
+    return [
+      [{ text: 'Evidence task' }, { text: 'Student notes' }, { text: 'Status' }],
+      [{ text: 'Artifact or example' }, { text: starterAnswer(rows, 'artifact') }, { text: 'Check details before writing' }],
+      [{ text: 'Source to find or use' }, { text: starterAnswer(rows, 'source') }, { text: 'Verify before citing' }],
+      [{ text: 'What still needs checking' }, { text: starterAnswer(rows, 'verify') }, { text: 'Resolve before Blackboard submission' }]
+    ];
+  }
+  function starterConceptRows(rows) {
+    return [
+      [{ text: 'Course move' }, { text: 'Student notes' }, { text: 'Use in the final answer' }],
+      [{ text: 'Main concept' }, { text: starterAnswer(rows, 'concept') }, { text: 'Define it in your own words and cite the reading.' }],
+      [{ text: 'What the system does' }, { text: starterAnswer(rows, 'action') }, { text: 'Show the mechanism before judging the outcome.' }],
+      [{ text: 'Who benefits' }, { text: starterAnswer(rows, 'benefit') }, { text: 'Name who moves through the system more easily.' }],
+      [{ text: 'Who carries the burden' }, { text: starterAnswer(rows, 'burden') }, { text: 'Name who is delayed, watched, exposed, misread, or excluded.' }]
+    ];
+  }
+  function saveAssignmentStarterDoc() {
+    var items = assignmentsData(), a = items[Math.max(0, Math.min(items.length - 1, Number(state.assignmentIndex) || 0))] || items[0], L = lensParse();
+    var data = starterData(a), fmt = cleanStarterFormat(data.format), rows = starterRows(a, L), label = L ? (L.program || L.area) : 'General stream / no program';
+    var sections = [
+      { h: 'How to Use This Preparation Pack', t: 'This document organizes your own starting notes. It is not a finished assignment and it does not replace Blackboard. Use it to plan your example, evidence, course concept, and claim. Then write the final submission yourself in your own words.' },
+      { h: 'Assignment Brief', type: 'table', rows: starterBriefRows(a, L, fmt) },
+      { h: 'Strong Start Snapshot', type: 'table', rows: starterSnapshotRows(rows) }
+    ];
+    if (fmt === 'text' || fmt === 'all') sections.push({ h: 'Organized Notes', t: starterTextOutput(rows) });
+    if (fmt === 'table' || fmt === 'all') sections.push({ h: 'Planning Table', type: 'table', rows: starterTableRows(rows) });
+    if (fmt === 'diagram' || fmt === 'all') sections.push({ h: 'Visual Planning Map', type: 'diagram', nodes: starterDiagramNodes(rows) });
+    sections.push(
+      { h: 'Evidence and Source Tracker', type: 'table', rows: starterEvidenceRows(rows) },
+      { h: 'Course Concept Tracker', type: 'table', rows: starterConceptRows(rows) },
+      { h: 'Before You Write the Final Submission', type: 'list', items: [
+        'Check Blackboard for the complete assignment instructions and due date.',
+        'Replace any general answer with a specific artifact, source, example, or case.',
+        'Use the course concept accurately and connect it to what the system does.',
+        'Make sure your evidence supports the claim instead of sitting beside it.',
+        'Write the final submission yourself in your own words.',
+        'If you used generative AI for brainstorming, disclose the tool, date, and exact use.'
+      ] }
+    );
+    return senecaDoc('BFS218', a.title + ' Preparation Pack', ['Racism and the Digital Age', 'Program lens: ' + label, 'IBM Plex Sans 11 pt body text'], sections, 'BFS218_' + a.id + '_organized_notes_pack', { assignmentName: a.title });
   }
   function keepActivityRoute(w, screen) {
     var cw = cleanWeek(w);
@@ -4457,35 +5721,54 @@
     toggleNav: function () { state.navOpen = !state.navOpen; renderKeepScroll(); },
     openNav: function () { state.navOpen = true; renderKeepScroll(); },
     closeNav: function () { state.navOpen = false; renderKeepScroll(); },
-    go: function (s) { state.navOpen = false; if (s === 'library') { state.savedView = false; } if (s === 'reading') { state.rcReading = null; state.lens = 'thematic'; } if (s === 'readings') { state.galWeek = null; state.galTopic = null; } state.screen = s; focusTarget = 'soc-main'; render(); topScroll(); },
-    assignPick: function (i) { state.assignmentIndex = Number(i) || 0; focusTarget = 'asg-detail'; render(); },
-    assignFaq: function (i) { state.assignmentFaq = (state.assignmentFaq === i) ? null : i; render(); },
-    assignCheck: function (id, i) { state.assignmentChecks = state.assignmentChecks || {}; state.assignmentChecks[id] = state.assignmentChecks[id] || {}; state.assignmentChecks[id][i] = !state.assignmentChecks[id][i]; render(); },
+    prev: goPrevious,
+    go: function (s) { var target = cleanScreen(s); if (target !== state.screen) rememberPrevious(); state.navOpen = false; if (target === 'library') { state.savedView = false; } if (target === 'reading') { state.rcReading = null; state.lens = 'thematic'; } if (target === 'readings') { state.galWeek = null; state.galTopic = null; } state.screen = target; focusTarget = 'soc-main'; render(); topScroll(); },
+    assignPick: function (i) {
+      var items = assignmentsData(), idx = Math.max(0, Math.min(items.length - 1, Number(i) || 0));
+      state.assignmentIndex = idx;
+      state.assignmentTab = 'assignments';
+      render();
+      scrollToId('asg-assignments');
+    },
+    openStarter: function () { if (state.screen !== 'starter') rememberPrevious(); state.screen = 'starter'; state.assignmentTab = 'assignments'; focusTarget = 'soc-main'; render(); topScroll(); },
+    starterPick: function (i) { var items = assignmentsData(); state.assignmentIndex = Math.max(0, Math.min(items.length - 1, Number(i) || 0)); persist(); render(); scrollToId('asg-starter-chooser'); },
+    asgJump: function (id) { scrollToId(id); },
+    assignTab: function (t) { state.assignmentTab = cleanAssignmentTab(t); if (state.assignmentTab !== 'faq') state.assignmentFaq = null; render(); topScroll(); },
+    assignFaq: function (i) { state.assignmentFaq = (state.assignmentFaq === i) ? null : i; renderKeepScroll(); },
+    assignCheck: function (id, i) { state.assignmentChecks = state.assignmentChecks || {}; state.assignmentChecks[id] = state.assignmentChecks[id] || {}; state.assignmentChecks[id][i] = !state.assignmentChecks[id][i]; renderKeepScroll(); },
+    starterAnswer: function (id, key, value) { state.assignmentStarter = state.assignmentStarter || {}; state.assignmentStarter[id] = state.assignmentStarter[id] || { format: 'all', answers: {} }; state.assignmentStarter[id].answers = state.assignmentStarter[id].answers || {}; state.assignmentStarter[id].answers[key] = value; persist(); },
+    starterFormat: function (id, fmt) { state.assignmentStarter = state.assignmentStarter || {}; state.assignmentStarter[id] = state.assignmentStarter[id] || { format: 'all', answers: {} }; state.assignmentStarter[id].format = cleanStarterFormat(fmt); persist(); renderKeepScroll(); },
+    clearStarter: function (id) { state.assignmentStarter = state.assignmentStarter || {}; state.assignmentStarter[id] = { format: 'all', answers: {} }; persist(); renderKeepScroll(); flash('Starter answers cleared.'); },
+    saveStarter: function () { saveAssignmentStarterDoc(); },
+    skipStarter: function () { flashKeep('No problem. Stay with the brief and return when you want a preparation document.'); },
     videoWeek: function (w) { state.videoWeek = w || 'all'; render(); topScroll(); },
     mediaKind: function (k) { state.mediaKind = k || 'all'; render(); topScroll(); },
+    careerLens: function () { if (state.screen !== 'career') rememberPrevious(); state.screen = 'career'; focusTarget = 'soc-main'; render(); scrollToId('career-sel'); },
+    careerChoices: function () { if (state.screen !== 'career') rememberPrevious(); state.screen = 'career'; focusTarget = 'soc-main'; render(); scrollToId('career-choices'); },
+    assignmentLens: function (v) { state.careerField = v; persist(); renderKeepScroll(); },
     careerField: function (v) { state.careerField = v; persist(); render(); topScroll(); },
     lensOff: function () { state.careerField = ''; persist(); render(); },
     careerReflect: function (k, v) { state.careerReflect = state.careerReflect || {}; state.careerReflect[k] = v; persist(); },
-    station: function (w) { state.navOpen = false; state.stationWeek = w; state.journeyWeek = w; state.activityReturn = null; state.screen = 'station'; persist(); focusTarget = 'soc-main'; render(); topScroll(); },
-    jumpWeek: function (w, part) { state.navOpen = false; state.stationWeek = w; state.journeyWeek = w; state.activityReturn = null; state.screen = 'station'; persist(); focusTarget = 'soc-main'; render(); scrollWeekPart(part); },
-    startActivity: function (s, w) { keepActivityRoute(w, s); focusTarget = 'soc-main'; render(); topScroll(); },
-    goWeek: function (s, w) { state.cardWeek = w; state.screen = s; focusTarget = 'soc-main'; render(); topScroll(); },
+    station: function (w) { w = cleanWeek(w) || w; if (state.screen !== 'station' || state.stationWeek !== w) rememberPrevious(); state.navOpen = false; state.stationWeek = w; state.journeyWeek = w; state.activityReturn = null; state.screen = 'station'; persist(); focusTarget = 'soc-main'; render(); topScroll(); },
+    jumpWeek: function (w, part) { w = cleanWeek(w) || w; if (state.screen !== 'station' || state.stationWeek !== w) rememberPrevious(); state.navOpen = false; state.stationWeek = w; state.journeyWeek = w; state.activityReturn = null; state.screen = 'station'; persist(); focusTarget = 'soc-main'; render(); scrollWeekPart(part); },
+    startActivity: function (s, w) { rememberPrevious(); keepActivityRoute(w, s); focusTarget = 'soc-main'; render(); topScroll(); },
+    goWeek: function (s, w) { if (state.screen !== cleanScreen(s) || state.cardWeek !== w) rememberPrevious(); state.cardWeek = w; state.screen = cleanScreen(s); focusTarget = 'soc-main'; render(); topScroll(); },
     galWeek: function (w) { var m = document.getElementById('soc-main'); var y = m ? m.scrollTop : 0; state.galWeek = (state.galWeek === w) ? null : w; render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = y; },
     galTopic: function (t) { var m = document.getElementById('soc-main'); var y = m ? m.scrollTop : 0; state.galTopic = (state.galTopic === t) ? null : t; render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = y; },
     galClear: function () { state.galWeek = null; state.galTopic = null; render(); },
     playVideo: function (el, id) { var box = el.closest ? el.closest('.rgvideo') : el.parentNode; if (box) { box.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0&modestbranding=1" title="Scholar talk" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe>'; } },
-    back: function () { state.screen = 'library'; focusTarget = 'soc-main'; render(); var m = document.getElementById('soc-main'); if (m) m.scrollTop = state.libScroll || 0; },
-    open: function (id) { var m = document.getElementById('soc-main'); if (m) state.libScroll = m.scrollTop; state.screen = 'detail'; state.detailId = id; focusTarget = 'soc-main'; render(); topScroll(); },
+    back: function () { if (state.screen !== 'library') rememberPrevious(); state.screen = 'library'; focusTarget = 'soc-main'; render(); var m = document.getElementById('soc-main'); if (m) m.scrollTop = state.libScroll || 0; },
+    open: function (id) { rememberPrevious(); var m = document.getElementById('soc-main'); if (m) state.libScroll = m.scrollTop; state.screen = 'detail'; state.detailId = id; focusTarget = 'soc-main'; render(); topScroll(); },
     layout: function (l) { state.layout = l; persist(); render(); },
     sort: function (s) { state.sort = s; render(); },
     search: function (v) { state.search = v; refocusSearch = true; render(); },
     clearSearch: function () { state.search = ''; render(); },
     type: function (t) { state.activeTypes = (state.activeTypes.length === 1 && state.activeTypes[0] === t) ? [] : [t]; render(); },
-    week: function (w) { state.activeWeek = (state.activeWeek === w) ? null : w; state.savedView = false; state.screen = 'library'; focusTarget = 'soc-main'; render(); topScroll(); },
+    week: function (w) { if (state.screen !== 'library' || state.activeWeek !== w) rememberPrevious(); state.activeWeek = (state.activeWeek === w) ? null : w; state.savedView = false; state.screen = 'library'; focusTarget = 'soc-main'; render(); topScroll(); },
     clearFilters: function () { state.activeTypes = []; state.activeWeek = null; state.search = ''; state.savedView = false; render(); },
     dismissIntro: function () { state.introOpen = false; persist(); render(); },
     save: function (id) { var a = state.saved, i = a.indexOf(id); var msg; if (i >= 0) { a.splice(i, 1); msg = 'Removed from saved.'; } else { a.push(id); msg = 'Saved to your shelf.'; } persist(); flash(msg); },
-    compare: function (id) { var a = state.compareIds, i = a.indexOf(id); if (i >= 0) { a.splice(i, 1); persist(); flash('Removed from compare.'); } else { if (a.length >= 3) { flash('Compare holds three at a time.'); return; } a.push(id); persist(); flash('Added to compare.'); } },
+    compare: function (id) { var a = state.compareIds, i = a.indexOf(id); if (i >= 0) { a.splice(i, 1); persist(); flash('Removed from compare.'); } else { if (a.length >= 3) { flash('Compare holds three at a time.'); return; } a.push(id); persist(); flash('Added to compare.'); } render(); },
     clearCompare: function () { state.compareIds = []; state.showSynthesis = false; render(); },
     synthesize: function () { state.showSynthesis = true; render(); },
     hideSynthesis: function () { state.showSynthesis = false; render(); },
@@ -4507,7 +5790,23 @@
     },
     wkReflect: function (w, v) { state.wkReflect[w] = v; persist(); },
     wkNote: function (k, v) { state.wkNotes = state.wkNotes || {}; state.wkNotes[k] = v; persist(); },
-    visualView: function (w, context, v) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; state.visualView = state.visualView || {}; state.visualView[(context || 'week') + '|' + w] = v; if (context === 'activity') keepActivityRoute(w, 'activity'); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
+    visualView: function (ev, w, context, v) {
+      if (typeof ev === 'number') { v = context; context = w; w = ev; ev = null; }
+      if (ev && ev.preventDefault) ev.preventDefault();
+      if (ev && ev.stopPropagation) ev.stopPropagation();
+      if (ev && ev.currentTarget && ev.currentTarget.blur) ev.currentTarget.blur();
+      var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0;
+      state.visualView = state.visualView || {};
+      state.visualView[(context || 'week') + '|' + w] = v;
+      if (context === 'activity') keepActivityRoute(w, 'activity');
+      render();
+      var restore = function () { var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; };
+      restore();
+      if (window.requestAnimationFrame) window.requestAnimationFrame(restore);
+      setTimeout(restore, 0);
+      setTimeout(restore, 80);
+      return false;
+    },
     actPick: function (key, idx) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; routeActivityFromKey(key); state.act[key] = idx; state.actResult = state.actResult || {}; state.actResult[key] = idx; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
     actToggle: function (key) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; routeActivityFromKey(key); var val = !state.act[key]; state.act[key] = val; state.actResult = state.actResult || {}; state.actResult[key] = val; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
     actAdd: function (key, idx) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; routeActivityFromKey(key); var arr = state.act[key] || []; if (arr.indexOf(idx) < 0) arr.push(idx); state.act[key] = arr; state.actResult = state.actResult || {}; state.actResult[key] = arr.slice(); persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },

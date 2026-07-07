@@ -28,6 +28,17 @@ window.BFS218_VISUALS = {
       scene: 'Two groups enter the same neutral-looking rule gate. One lane stays wide and open. The other lane narrows, hits a red barrier, and stacks extra burden at the intersection. That is why CRT asks what the system does, who pays, and who is hit hardest.',
       modelNote: 'Start with the identical rule, then compare the two outcome lanes. The red lane shows why unequal results matter even when the rule looks neutral.',
       learningJob: 'This visual teaches the Week 2 move: judge a system by its results, not only by whether anyone meant to discriminate.',
+      task: {
+        title: 'What to do with this visual',
+        lead: 'Use this as a three-step reading tool, not as decoration. Your job is to practise the CRT move from rule, to outcome, to burden.',
+        answer: 'You should leave able to say: the same rule can still be unfair when the outcomes show unequal burden.',
+        steps: [
+          'Press Observe and ask: what rule looks the same for both groups?',
+          'Press Follow the path and compare the open lane with the blocked lane.',
+          'Press Find the risk and write one sentence about who carries the extra burden.'
+        ]
+      },
+      notePrompt: 'Finish this sentence: The rule looks neutral, but the outcome shows... Then name who carries the extra burden.',
       display: {
         observe: {
           focus: 'Same rule, different outcomes.',
@@ -58,20 +69,25 @@ window.BFS218_VISUALS = {
         modelScene: 'A case file travels through an outcomes lens before it reaches the concept bins. Use this model to see that the activity is asking for the mechanism that explains the result, not a guess about intent.',
         modelNote: 'Read what happened first, pass it through the outcomes lens, then choose the course idea that explains why the harm repeats.',
         modelLearningJob: 'This activity model helps you explain why a harm repeats, using a course concept instead of a personal guess.',
+        modelControls: {
+          predict: 'Read outcome',
+          try: 'Test mechanism',
+          explain: 'Choose match'
+        },
         modelDisplay: {
           predict: {
             focus: 'Start with what happened.',
-            action: 'Read the case file before you choose a term.',
+            action: 'Read the case file before you answer below.',
             learning: 'A strong answer begins with the outcome, not with a guess about someone\'s intention.'
           },
           try: {
             focus: 'Run the mechanism test.',
-            action: 'Pass the case through the lens and ask what rule, record, default, or overlap is doing the work.',
+            action: 'Choose this model step to test what rule, record, default, or overlap is doing the work.',
             learning: 'The right concept should explain how the harm is produced, not just sound related.'
           },
           explain: {
             focus: 'Match the mechanism.',
-            action: 'Use the feedback to decide whether your chosen concept explains the repeated result.',
+            action: 'Choose this model step, then use the answer buttons below to pick the course idea.',
             learning: 'By the end, you should be able to say: this happened because the system worked this way.'
           }
         },
