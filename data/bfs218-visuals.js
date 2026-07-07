@@ -23,24 +23,31 @@ window.BFS218_VISUALS = {
       }
     },
     2: {
-      kind: 'lens',
-      title: 'A lens changes the question you ask.',
-      scene: 'A neutral-looking system is viewed through crossing lenses. One lens asks about intent. The stronger course lens asks about outcomes and who pays.',
+      kind: 'outcomelens',
+      title: 'The same rule can produce unequal outcomes.',
+      scene: 'Two groups pass through one rule that claims to be neutral. One path stays open while another path narrows, blocks, and stacks burden at the overlap. That is why CRT asks what the system does, who pays, and who is hit hardest.',
+      modelNote: 'Same surface rule. Different outcome paths. Follow the blocked red path to see why outcomes matter more than intent.',
       steps: [
-        ['Do not stop at intent', 'A system can harm people even if nobody set out to harm them.'],
-        ['Look at outcomes', 'Ask what the system actually does and who carries the cost.'],
-        ['Use intersectionality', 'Look for the overlap where race, gender, class, and status meet.']
+        ['Start with the same rule', 'Both groups meet the same surface rule, so intent alone cannot explain the result.'],
+        ['Compare the outcomes', 'The open lane and blocked lane show what the system actually does.'],
+        ['Find the overlap', 'Intersectionality asks which subgroup carries the heaviest burden.']
       ],
       activity: {
-        title: 'Use the model to switch from intent to outcome.',
-        steps: ['Read the example.', 'Ask what happened, not only who meant what.', 'Choose the CRT mechanism that best explains the outcome.'],
-        modelKind: 'matchwork',
-        modelTitle: 'Activity model: match a case to a course idea.',
-        modelScene: 'Example cards move toward concept bins. Use this model to see that the activity is asking you to name the mechanism, not guess a moral label.',
+        title: 'Use the model to name the mechanism.',
+        steps: ['Read the case outcome.', 'Ask which course idea explains how the harm happens.', 'Choose the mechanism, then use the feedback as evidence.'],
+        modelKind: 'mechanismatch',
+        modelTitle: 'Activity model: case outcome to mechanism.',
+        modelScene: 'A case card goes through an outcomes lens before it reaches the concept bins. Use this model to see that the activity is asking for the mechanism that explains the result.',
+        modelNote: 'Start with the case outcome, pass it through the outcomes lens, then choose the mechanism that explains the result.',
         modelSteps: [
-          ['Read the case', 'Stay with one example at a time.'],
-          ['Name the mechanism', 'Choose the idea that explains the outcome.'],
-          ['Use feedback', 'The feedback tells you why the match fits or why another idea is stronger.']
+          ['Read the outcome', 'Stay with what happened in the example before judging intent.'],
+          ['Ask why it repeats', 'Look for the system rule, old record, default, or overlap doing the work.'],
+          ['Name the mechanism', 'Use the feedback to test whether your choice explains the harm.']
+        ],
+        modelLabels: [
+          { t: '1. Case outcome', sub: 'Start with what happened.' },
+          { t: '2. Outcomes lens', sub: 'Ask why the result repeats.' },
+          { t: '3. Mechanism match', sub: 'Choose the idea that explains it.' }
         ]
       }
     },

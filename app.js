@@ -1581,6 +1581,80 @@
       return t;
     });
   })();
+  (function strengthenWeek5Terms() {
+    var c = (D.course && D.course.code) || '', w5 = WEEKPAGE[c] && WEEKPAGE[c][5];
+    if (!w5 || !Array.isArray(w5.terms)) return;
+    var defs = {
+      'Coded exposure': 'Benjamin\'s term for the uneven way technology makes people visible or invisible. Some people are over-watched, scanned, tracked, and flagged; others are not recognized, not served, or not counted correctly. Both can cause harm. The point is that visibility is designed through cameras, datasets, tests, thresholds, and institutions, not handed out naturally or equally.',
+      'The coded gaze': 'Buolamwini\'s term for the way a system is built to see some faces better than others. In Gender Shades, commercial facial-analysis systems worked best on lighter-skinned men and failed most often on darker-skinned women. The coded gaze is not just a bad camera. It is a design and testing problem: whose faces filled the data, whose errors were noticed, and whose misrecognition was treated as acceptable.',
+      'Intersectionality': 'Crenshaw\'s framework for seeing harm at the overlap of systems of power. Week 5 uses it because the facial-analysis problem is not visible if students look only at race or only at gender. The sharpest harm appears for darker-skinned women, at the intersection. Intersectionality asks: who is harmed most clearly when categories meet, and what does a single-axis view miss?',
+      'The New Jim Code': 'Benjamin\'s name for technologies that carry old racial inequities forward while appearing new, neutral, efficient, fair, or even helpful. In Week 5, the New Jim Code appears when a modern facial-analysis system is trusted as objective even though its errors fall unevenly across race and gender. The danger is not only the mistake; it is the authority the technical system receives.'
+    };
+    w5.terms = w5.terms.map(function (t) {
+      if (t && defs[t.term]) return { term: t.term, def: defs[t.term], cite: t.cite };
+      return t;
+    });
+  })();
+  (function strengthenBfs218ThinTerms() {
+    var c = (D.course && D.course.code) || '';
+    if (c !== 'BFS218') return;
+    var defsByWeek = {
+      1: {
+        'Personal Cartography': 'your first major course task and your working map of digital life. You track tools you use, moments when you feel seen, sorted, watched, helped, or misread, and the questions those moments raise. The goal is not to prove harm immediately. It is to build a record you can return to as your course lens gets sharper.'
+      },
+      3: {
+        'Engineered inequity': 'Benjamin\'s first dimension of the New Jim Code: technology that amplifies a hierarchy that already exists. The system does not have to create racism from nothing. It can take unequal records, assumptions, or access and make them faster, wider, and harder to challenge while calling the result neutral or efficient.',
+        'Amplify, not create': 'the key distinction in engineered inequity. A tool may not invent the inequality it produces; it may inherit it from housing, policing, hiring, schooling, health care, or other social systems. The design then widens that existing gap, which means the fix is not better intentions but a different design and different accountability.',
+        'The New Jim Code': 'Benjamin\'s name for technologies that carry old racial inequities forward while appearing neutral, fair, modern, or progressive. In Week 3, engineered inequity is one part of that pattern: a system can make an old hierarchy look like a clean technical result.'
+      },
+      4: {
+        'Default discrimination': 'Benjamin\'s second dimension of the New Jim Code: harm that happens through a system\'s built-in defaults, settings, categories, data, and assumptions. A default treats one group\'s world as normal and makes everyone else adapt. The harm can continue without a racist designer because the system quietly keeps choosing for people.',
+        'Is the glitch systemic?': 'Benjamin\'s question for failures that are dismissed as accidents. A one-time glitch is random; a systemic glitch repeats because of how the system was built, trained, tested, or deployed. The question asks students to look for a pattern, not only for a broken moment.',
+        'Design as worldbuilding': 'Benjamin\'s phrase for the way design does more than make a tool look or work a certain way. Design builds a version of the world into categories, forms, databases, and defaults. When that built world treats whiteness, wealth, English, or one body type as normal, the technology reproduces those assumptions.'
+      },
+      6: {
+        'Digital border technologies': 'the surveillance, biometrics, databases, risk tools, drones, and automated systems used to manage borders and migration. Molnar shows that these tools often test powerful technologies on people with limited ability to refuse: migrants, refugees, and asylum seekers. The issue is not only accuracy; it is power.',
+        'Logics of exclusion': 'Molnar\'s way of naming the purpose built into many border technologies: deciding who is allowed through and who is kept out. The logic turns movement into suspicion and treats people with the least power as test subjects. Students should ask what the tool excludes, not only what it detects.',
+        'Oversight gap': 'the space where powerful technologies operate without strong public rules, democratic debate, or clear accountability. Singh\'s concern is that court rulings and institutional decisions can permit surveillance tools before lawmakers define limits. A gap like this matters because harm can become normal before anyone has to justify it.'
+      },
+      7: {
+        'Engineered inequity (dimension one)': 'the first dimension of the New Jim Code: technology that actively amplifies an existing hierarchy of race, class, gender, or status. The key word is amplify. The system makes an old gap larger or faster while making the result look like technical efficiency.',
+        'Default discrimination (dimension two)': 'the second dimension of the New Jim Code: harm that runs through defaults, categories, settings, and assumptions. A default can quietly make one group fit the system easily and force others to prove, correct, translate, or defend themselves.',
+        'Coded exposure (dimension three)': 'the third dimension of the New Jim Code: the unequal distribution of visibility. Some people are watched, tracked, scanned, and flagged too much; others are not recognized or served correctly. The same group can experience both harms depending on the setting.',
+        'Algorithmic policing': 'data-driven policing tools such as predictive policing, facial recognition, social-media monitoring, and automated risk assessment. The issue is not only whether the tool is accurate. Students should ask what communities are watched, what past records feed the system, and who can challenge the result.'
+      },
+      8: {
+        'Indigenous data sovereignty': 'the right of First Nations, Inuit, and Metis peoples to govern data about their own communities, lands, bodies, histories, and knowledge. It asks who collects the data, who owns it, who interprets it, and who benefits. The key point is authority: data about a community should not be controlled only from outside it.',
+        'Algorithmic colonialism': 'the pattern where powerful companies, states, or institutions impose AI systems on communities while extracting data, labour, knowledge, or value from them. The technology may look new, but the power relation is colonial: benefit flows outward while the risk and loss stay with the people most affected.'
+      },
+      9: {
+        'The benevolence trap': 'the danger that a tool sold as help becomes harder to question. When a system is framed as care, safety, efficiency, or inclusion, criticism can look like refusing progress. Benjamin asks students to look underneath the helpful promise and ask who gains power, who becomes exposed, and whether the harm actually changes.',
+        'Will the fix fix it?': 'Benjamin\'s practical test for proposed solutions. Do not ask only whether the fix sounds kind or modern. Ask what it changes, for whom, who still carries the cost, and whether the people most affected have power over the repair. A fix that leaves the same people exposed is not a real repair.'
+      },
+      10: {
+        'Inequality within and without the algorithm': 'Devlin\'s distinction between inequity inside a system and inequity around it. Inside means the data, labels, model, or thresholds produce unfair results. Without means the social world around the algorithm, who builds it, who is governed by it, and who has power to refuse, is already unequal.',
+        'Algorithms of oppression': 'Noble\'s argument that search and ranking systems can reproduce racism and sexism while presenting results as neutral information. The system does not merely find what exists online; it orders, promotes, and legitimizes some images and ideas over others, especially in ways that harm Black women.'
+      },
+      11: {
+        'Design justice': 'Costanza-Chock\'s approach to design that centres people usually harmed, ignored, or spoken for by design systems. It treats affected communities as experts and asks them to lead decisions, not only give feedback after the fact. The goal is a shift in power, not a nicer interface.',
+        'Abolitionist tools': 'Benjamin\'s term for tools that refuse to make unjust systems run more smoothly. An abolitionist tool asks whether the gate, score, cage, or surveillance system should exist at all, then helps build a more just alternative. It is repair that changes the conditions, not just the interface.',
+        'Impact over intentions': 'a design justice rule: judge a design by what it does to the community, not by whether the designer meant well. Good intentions do not erase harm. Students should ask who is affected, what changed in their life, and whether they had power in the design process.',
+        'Critical race pedagogy in computer science': 'Tanksley\'s approach to teaching computing through race, power, history, and student expertise rather than treating code as separate from society. It centres Black youth as thinkers, designers, and innovators, not only as people harmed by technology.'
+      },
+      12: {
+        'AI governance': 'the laws, rules, institutions, audits, rights, and public processes that shape how AI is built and used. In Canada, AIDA is one proposed governance route. The key question is not whether a rule exists, but whose harm it counts, who can enforce it, and what happens when the rule has gaps.',
+        'Building justice in from the start': 'designing accountability before harm lands, not after. It means affected communities, rights concerns, data quality, consultation, redress, and limits on use are part of the system from the beginning. A late fix often leaves the original power structure in place.'
+      }
+    };
+    Object.keys(defsByWeek).forEach(function (wk) {
+      var d = WEEKPAGE[c] && WEEKPAGE[c][wk], defs = defsByWeek[wk];
+      if (!d || !Array.isArray(d.terms)) return;
+      d.terms = d.terms.map(function (t) {
+        if (t && defs[t.term]) return { term: t.term, def: defs[t.term], cite: t.cite };
+        return t;
+      });
+    });
+  })();
   function wkOptBtns(key) {
     var sel = state.wkCheck[key], opts = ['New to me', 'Getting it', 'I can'];
     return opts.map(function (o, i) { var on = sel === i; return '<button onclick="SOC.wkCheck(\'' + key + '\',' + i + ')" aria-pressed="' + on + '" title="' + (on ? 'Click again to clear this rating' : 'Set this rating') + '" class="wk-opt' + (on ? ' on' : '') + '">' + o + '</button>'; }).join('');
@@ -1935,6 +2009,7 @@
       map: [[22, 64], [50, 64], [77, 64]],
       lens: [[27, 64], [52, 64], [77, 64]],
       pipeline: [[20, 64], [50, 64], [80, 64]],
+      outcomelens: [[22, 63], [52, 63], [80, 63]],
       switches: [[24, 64], [52, 64], [78, 64]],
       audit: [[24, 64], [52, 64], [78, 64]],
       gate: [[23, 64], [52, 64], [78, 64]],
@@ -1946,7 +2021,8 @@
       policy: [[24, 64], [52, 64], [78, 64]],
       return: [[24, 64], [52, 64], [78, 64]],
       compass: [[24, 64], [52, 64], [78, 64]],
-      startermap: [[22, 64], [52, 64], [78, 64]]
+      startermap: [[22, 64], [52, 64], [78, 64]],
+      mechanismmatch: [[22, 63], [52, 63], [80, 63]]
     };
     return map[kind] || [[22, 64], [52, 64], [78, 64]];
   }
@@ -1962,11 +2038,13 @@
       datastory: [[-1.3, 0.75, -0.5], [0.35, 1.15, 0], [1.75, 0.78, 0.6]],
       promisefunnel: [[-1.6, 1.1, -0.55], [0, 0.95, 0], [1.75, 0.5, 0.6]],
       thresholdaudit: [[-1.8, 0.65, -0.55], [0, 0.9, 0], [1.8, 0.5, 0.65]],
+      mechanismmatch: [[-2.2, 0.72, -0.4], [-0.2, 1.18, 0], [2.08, 0.8, 0.42]],
       repairtable: [[-1.6, 0.75, -0.6], [0, 1.0, 0], [1.65, 0.75, 0.65]],
       futurecompass: [[-1.4, 0.75, -0.9], [0, 1.15, 0], [1.6, 0.75, 0.9]],
       startermap: [[-2.0, 0.65, -1.0], [0, 0.8, 0], [2.0, 0.65, 1.0]],
       map: [[-2.1, 0.8, 1.1], [0, 0.95, 0], [2, 0.8, -1.3]],
       lens: [[-0.28, 1.35, 0], [0, 1.25, 0], [0.28, 1.35, 0]],
+      outcomelens: [[-2.25, 0.9, 0], [0.12, 1.28, 0], [2.18, 0.86, 0.78]],
       pipeline: [[-2.4, 0.9, 0], [0, 0.9, 0], [2.4, 0.9, 0]],
       switches: [[-1.35, 1.05, 0], [0.45, 1.05, 0], [2.45, 0.7, 0]],
       audit: [[-0.9, 0.75, -0.75], [0, 1.15, 0], [0.9, 0.75, 0.75]],
@@ -2099,6 +2177,7 @@
       kind: custom.modelKind || kind,
       title: custom.modelTitle || p.title,
       scene: custom.modelScene || p.scene,
+      modelNote: custom.modelNote || p.modelNote,
       steps: custom.modelSteps || p.steps,
       labels: custom.modelLabels || p.labels || [],
       activity: custom
@@ -2134,9 +2213,10 @@
     var rotateHelp = 'Click or touch and drag anywhere inside this 3D picture to rotate the scene. The callout lines stay attached to the model while the text boxes stay in open space.';
     var labelList = (spec.labels || []).map(function (l) { return (l.t || '') + ': ' + (l.sub || ''); }).join('. ');
     var label = (context === 'activity' ? 'Activity model for Week ' : 'Visual overview for Week ') + w + ': ' + spec.title + '. ' + spec.scene + ' Labels: ' + labelList + '. ' + rotateHelp;
+    var noteText = spec.modelNote || spec.scene;
     return '<div class="wk-model-shell">'
       + '<canvas class="wk-model-canvas" role="img" aria-label="' + esc(label) + '" data-topic-model="' + esc(context) + '" data-week="' + w + '" data-kind="' + esc(spec.kind || 'pipeline') + '" data-view="' + esc(view) + '"></canvas>'
-      + '<div class="wk-model-note"><b>' + esc(spec.title) + '</b><span>' + esc(spec.scene) + ' ' + rotateHelp + ' Use the buttons below to change what you are looking for.</span></div>'
+      + '<div class="wk-model-note"><b>' + esc(spec.title) + '</b><span>' + esc(noteText) + ' Drag to rotate. Callout lines stay attached to the model. Use the buttons below to change what the model highlights.</span></div>'
       + visualLabels(spec)
       + visualControls(w, context, view)
       + '<div class="wk-model-fallback" hidden>The 3D model could not load. The explanation below still walks you through the idea.</div>'
@@ -2383,6 +2463,19 @@
         { x: shellW * 0.62, y: canvasTop + Math.max(12, canvasH * 0.025) },
         { x: shellW * 0.88, y: canvasTop + canvasH * 0.18 }
       ];
+      if (kind === 'outcomelens') {
+        slots = [
+          { x: shellW * 0.18, y: canvasTop + canvasH * 0.36 },
+          { x: shellW * 0.75, y: canvasTop + canvasH * 0.18 },
+          { x: shellW * 0.9, y: canvasTop + canvasH * 0.34 }
+        ];
+      } else if (kind === 'mechanismatch') {
+        slots = [
+          { x: shellW * 0.14, y: canvasTop + canvasH * 0.32 },
+          { x: shellW * 0.62, y: canvasTop + canvasH * 0.14 },
+          { x: shellW * 0.86, y: canvasTop + canvasH * 0.27 }
+        ];
+      }
       root.updateMatrixWorld(true);
       labelEls.forEach(function (el, i) {
         var a = el.__topicAnchor || [0, 1, 0];
@@ -2503,6 +2596,25 @@
         });
         sph(0.14, riskOn ? 0xda291c : 0x1c7a43, [2.75, 0.62, 0.08]);
         break;
+      case 'mechanismatch':
+        box(1.35, 0.12, 1.02, 0xffffff, [-2.2, 0.16, -0.4], { edge: 0x8ba0b4 });
+        box(0.92, 0.08, 0.12, 0x1b2a4a, [-2.34, 0.32, -0.74], { edge: 0x1b2a4a });
+        box(0.72, 0.08, 0.12, 0x1b2a4a, [-2.34, 0.44, -0.5], { edge: 0x1b2a4a });
+        sph(0.12, riskOn ? 0xda291c : 0xffa12b, [-1.74, 0.36, -0.1], { emissive: riskOn });
+        tor(0.56, 0.025, pathOn || riskOn ? 0xda291c : 0x00aeb3, [-0.25, 0.72, 0], [Math.PI / 2, 0, 0], { opacity: 0.9 });
+        box(0.1, 1.15, 1.28, 0x00aeb3, [-0.25, 0.72, 0], { opacity: 0.26, glass: true, edge: 0x00aeb3 });
+        [['CRT', -0.05, -0.62, 0x9fdde0], ['SYS', 0.82, -0.62, 0xffcc66], ['NJC', -0.05, 0.42, 0xffa12b], ['INT', 0.82, 0.42, 0x9fdde0]].forEach(function (p, mm) {
+          var hot = riskOn ? mm === 1 : (pathOn ? mm === 2 : false);
+          box(0.72, 0.42, 0.62, hot ? 0xda291c : p[3], [1.45 + p[1], 0.36, p[2]], { opacity: hot ? 0.88 : 0.58, glass: !hot, edge: hot ? 0xda291c : 0x00aeb3 });
+          box(0.42, 0.045, 0.08, hot ? 0xffffff : 0x1b2a4a, [1.45 + p[1], 0.62, p[2] - 0.12], { edge: hot ? 0xffffff : 0x1b2a4a });
+        });
+        tube([[-1.58, 0.42, -0.22], [-0.82, 0.82, -0.06], [-0.25, 0.82, 0]], pathOn || riskOn ? 0xda291c : 0x1b2a4a, 0.026);
+        tube([[-0.04, 0.82, 0.02], [0.82, 0.98, 0.28], [1.72, 0.58, 0.42]], pathOn || riskOn ? 0xda291c : 0x8ba0b4, 0.026);
+        if (riskOn) {
+          box(1.18, 0.06, 0.78, 0xfbe9ea, [2.15, 0.9, 0.42], { edge: 0xda291c });
+          sph(0.08, 0xda291c, [2.66, 1.05, 0.7], { emissive: true });
+        }
+        break;
       case 'decisionpath':
         box(1.05, 0.72, 1.0, 0xffffff, [-2.0, 0.45, 0], { edge: 0x8ba0b4 });
         sph(0.24, 0xffa12b, [-0.55, 0.62, 0]);
@@ -2619,6 +2731,31 @@
         box(0.06, 1.55, 2.9, 0x00aeb3, [-0.28, 0.78, 0], { opacity: 0.28, glass: true, edge: 0x00aeb3 });
         box(2.9, 1.55, 0.06, riskOn ? 0xda291c : 0xffa12b, [0.28, 0.78, 0], { opacity: 0.32, glass: true, edge: riskOn ? 0xda291c : 0xffa12b });
         tor(1.35, 0.025, riskOn ? 0xda291c : 0x1b2a4a, [0, 0.85, 0], [Math.PI / 2, 0, 0]);
+        break;
+      case 'outcomelens':
+        box(1.55, 0.08, 0.52, 0xffffff, [-2.25, 0.12, -0.58], { edge: 0x8ba0b4 });
+        box(1.55, 0.08, 0.52, 0xffffff, [-2.25, 0.12, 0.58], { edge: 0x8ba0b4 });
+        for (var ol = 0; ol < 5; ol++) {
+          sph(0.08, 0x00aeb3, [-2.82 + ol * 0.22, 0.3, -0.58 + (ol % 2) * 0.12]);
+          sph(0.08, ol > 2 ? 0xda291c : 0xffa12b, [-2.82 + ol * 0.22, 0.3, 0.58 + (ol % 2) * 0.12], { emissive: ol > 2 && riskOn });
+        }
+        box(0.18, 1.28, 2.35, 0x1b2a4a, [-0.18, 0.68, 0], { opacity: 0.9, edge: 0xffffff });
+        box(1.35, 0.1, 2.62, 0x00aeb3, [-0.18, 1.34, 0], { opacity: 0.2, glass: true, edge: 0x00aeb3 });
+        tor(0.82, 0.02, pathOn || riskOn ? 0xda291c : 0x00aeb3, [-0.18, 0.78, 0], [Math.PI / 2, 0, 0], { opacity: 0.82 });
+        box(2.25, 0.09, 0.48, 0xe7f3ec, [1.45, 0.14, -0.68], { edge: 0x1c7a43 });
+        box(1.45, 0.09, 0.34, 0xfbe9ea, [1.08, 0.14, 0.68], { edge: 0xda291c });
+        box(0.22, 0.72, 0.82, 0xda291c, [1.9, 0.48, 0.68], { opacity: riskOn ? 0.9 : 0.68, edge: 0xffffff });
+        tube([[-1.55, 0.38, -0.58], [-0.7, 0.72, -0.52], [0.45, 0.48, -0.68], [2.25, 0.32, -0.68]], pathOn ? 0x1c7a43 : 0x8ba0b4, 0.024);
+        tube([[-1.55, 0.38, 0.58], [-0.7, 0.72, 0.48], [0.42, 0.48, 0.68], [1.62, 0.5, 0.68]], pathOn || riskOn ? 0xda291c : 0x8ba0b4, 0.028);
+        for (var ob = 0; ob < 5; ob++) {
+          var bx = 2.18 + (ob % 2) * 0.18, bz = 0.46 + Math.floor(ob / 2) * 0.18;
+          box(0.16, 0.16, 0.16, 0xda291c, [bx, 0.24 + ob * 0.08, bz], { edge: 0xffffff, emissive: riskOn });
+        }
+        if (riskOn) {
+          tor(0.42, 0.018, 0xda291c, [2.18, 0.72, 0.78], [Math.PI / 2, 0, 0], { opacity: 0.9 });
+          tor(0.34, 0.018, 0xda291c, [2.38, 0.77, 0.58], [Math.PI / 2, 0.2, 0], { opacity: 0.75 });
+          box(0.92, 0.05, 0.7, 0xfbe9ea, [2.25, 1.06, 0.68], { edge: 0xda291c });
+        }
         break;
       case 'pipeline':
         rowBlocks(5, 0x00aeb3, riskOn ? 3 : -1);
