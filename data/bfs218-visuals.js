@@ -27,6 +27,24 @@ window.BFS218_VISUALS = {
       title: 'The same rule can produce unequal outcomes.',
       scene: 'Two groups enter the same neutral-looking rule gate. One lane stays wide and open. The other lane narrows, hits a red barrier, and stacks extra burden at the intersection. That is why CRT asks what the system does, who pays, and who is hit hardest.',
       modelNote: 'Start with the identical rule, then compare the two outcome lanes. The red lane shows why unequal results matter even when the rule looks neutral.',
+      learningJob: 'This visual teaches the Week 2 move: judge a system by its results, not only by whether anyone meant to discriminate.',
+      display: {
+        observe: {
+          focus: 'Same rule, different outcomes.',
+          action: 'Compare the two case cards after they pass through the same rule gate.',
+          learning: 'CRT asks what the system does in practice, not only what the rule claims to be.'
+        },
+        path: {
+          focus: 'The outcome is the evidence.',
+          action: 'Follow the open lane and the blocked lane from left to right.',
+          learning: 'A neutral-looking process can still reproduce an old pattern when its results are unequal.'
+        },
+        risk: {
+          focus: 'The burden is not evenly shared.',
+          action: 'Inspect the stacked red and orange markers where the blocked path builds pressure.',
+          learning: 'Intersectionality asks who is hit hardest when systems overlap.'
+        }
+      },
       steps: [
         ['Start with the same rule', 'Both groups enter the same surface rule, so intent alone cannot explain the result.'],
         ['Compare the lanes', 'One lane stays open while the other narrows and blocks. The outcome is the evidence.'],
@@ -39,6 +57,24 @@ window.BFS218_VISUALS = {
         modelTitle: 'Activity model: case outcome to mechanism.',
         modelScene: 'A case file travels through an outcomes lens before it reaches the concept bins. Use this model to see that the activity is asking for the mechanism that explains the result, not a guess about intent.',
         modelNote: 'Read what happened first, pass it through the outcomes lens, then choose the course idea that explains why the harm repeats.',
+        modelLearningJob: 'This activity model helps you explain why a harm repeats, using a course concept instead of a personal guess.',
+        modelDisplay: {
+          predict: {
+            focus: 'Start with what happened.',
+            action: 'Read the case file before you choose a term.',
+            learning: 'A strong answer begins with the outcome, not with a guess about someone\'s intention.'
+          },
+          try: {
+            focus: 'Run the mechanism test.',
+            action: 'Pass the case through the lens and ask what rule, record, default, or overlap is doing the work.',
+            learning: 'The right concept should explain how the harm is produced, not just sound related.'
+          },
+          explain: {
+            focus: 'Match the mechanism.',
+            action: 'Use the feedback to decide whether your chosen concept explains the repeated result.',
+            learning: 'By the end, you should be able to say: this happened because the system worked this way.'
+          }
+        },
         modelSteps: [
           ['Read the outcome', 'Stay with what happened in the example before judging intent.'],
           ['Ask why it repeats', 'Look for the system rule, old record, default, or overlap doing the work.'],

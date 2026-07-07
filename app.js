@@ -2178,6 +2178,8 @@
       title: custom.modelTitle || p.title,
       scene: custom.modelScene || p.scene,
       modelNote: custom.modelNote || p.modelNote,
+      learningJob: custom.modelLearningJob || custom.learningJob || p.learningJob,
+      display: custom.modelDisplay || p.display,
       steps: custom.modelSteps || p.steps,
       labels: custom.modelLabels || p.labels || [],
       activity: custom
@@ -2197,6 +2199,29 @@
       var on = active === d[0];
       return '<button onclick="SOC.visualView(' + w + ',\'' + context + '\',\'' + d[0] + '\')" aria-pressed="' + on + '" class="' + (on ? 'on' : '') + '">' + esc(d[1]) + '</button>';
     }).join('') + '</div>';
+  }
+  function visualLearningJob(spec, context) {
+    if (spec.learningJob) return spec.learningJob;
+    var steps = spec.steps || [];
+    var first = steps[0] && steps[0][0] ? steps[0][0] : 'start with the example';
+    var last = steps[2] && steps[2][0] ? steps[2][0] : 'name the impact';
+    if (context === 'activity') return 'This model prepares you to move from "' + first + '" to "' + last + '" before you answer.';
+    return 'This visual helps you move from "' + first + '" to "' + last + '" so the week becomes a process you can explain.';
+  }
+  function visualDisplayHtml(spec, context, view) {
+    var display = spec.display || {};
+    var d = display[view] || {};
+    var modeNames = context === 'activity'
+      ? { predict: 'Prediction display', try: 'Action display', explain: 'Explanation display' }
+      : { observe: 'Orientation display', path: 'Path display', risk: 'Risk display' };
+    var focus = d.focus || spec.title || 'Read the model as a process.';
+    var action = d.action || ((spec.steps && spec.steps[1] && spec.steps[1][1]) || spec.scene || 'Follow the movement from left to right.');
+    var learning = d.learning || visualLearningJob(spec, context);
+    return '<div class="wk-holo-display" aria-label="Learning display for this 3D model">'
+      + '<div class="wk-holo-kicker">' + esc(modeNames[view] || 'Learning display') + '</div>'
+      + '<b>' + esc(focus) + '</b>'
+      + '<dl><dt>Do</dt><dd>' + esc(action) + '</dd><dt>Learn</dt><dd>' + esc(learning) + '</dd></dl>'
+      + '</div>';
   }
   function visualLabels(spec) {
     var labels = spec.labels || [];
@@ -2218,6 +2243,7 @@
     return '<div class="wk-model-shell wk-model-kind-' + esc(shellKind) + '">'
       + '<canvas class="wk-model-canvas" role="img" aria-label="' + esc(label) + '" data-topic-model="' + esc(context) + '" data-week="' + w + '" data-kind="' + esc(spec.kind || 'pipeline') + '" data-view="' + esc(view) + '"></canvas>'
       + '<div class="wk-model-note"><b>' + esc(spec.title) + '</b><span>' + esc(noteText) + ' Drag to rotate. Callout lines stay attached to the model. Use the buttons below to change what the model highlights.</span></div>'
+      + visualDisplayHtml(spec, context, view)
       + visualLabels(spec)
       + visualControls(w, context, view)
       + '<div class="wk-model-fallback" hidden>The 3D model could not load. The explanation below still walks you through the idea.</div>'
@@ -2401,12 +2427,14 @@
     if (THREE.ACESFilmicToneMapping) renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.08;
     var scene = new THREE.Scene();
+    scene.fog = new THREE.Fog(0xf8fbfd, 8, 18);
     var camera = new THREE.PerspectiveCamera(42, 16 / 9, 0.1, 90);
     camera.position.set(4.8, 3.4, 6.6);
     camera.lookAt(0, 0.55, 0);
     scene.add(new THREE.HemisphereLight(0xffffff, 0xb8c4d0, 2.5));
     var sun = new THREE.DirectionalLight(0xffffff, 3.0); sun.position.set(3.5, 6.5, 4.8); scene.add(sun);
     var fill = new THREE.DirectionalLight(0xe7f7ff, 1.0); fill.position.set(-4, 3, -3); scene.add(fill);
+    var rim = new THREE.DirectionalLight(0xcff9ff, 0.65); rim.position.set(-3.2, 4.4, 4.5); scene.add(rim);
     var root = new THREE.Group(); root.scale.set(0.9, 0.9, 0.9); root.position.set(0, -0.05, 0); scene.add(root);
     var labelEls = shell ? Array.prototype.slice.call(shell.querySelectorAll('.wk-model-label[data-anchor]')) : [];
     labelEls.forEach(function (el) {
@@ -2469,8 +2497,8 @@
       if (kind === 'outcomelens') {
         slots = [
           { x: shellW * 0.18, y: canvasTop + canvasH * 0.36 },
-          { x: shellW * 0.75, y: canvasTop + canvasH * 0.18 },
-          { x: shellW * 0.9, y: canvasTop + canvasH * 0.34 }
+          { x: shellW * 0.6, y: canvasTop + canvasH * 0.38 },
+          { x: shellW * 0.84, y: canvasTop + canvasH * 0.54 }
         ];
       } else if (kind === 'mechanismatch') {
         slots = [
@@ -2525,12 +2553,25 @@
     var mats = {};
     function m(color, opt) {
       opt = opt || {};
-      var key = color + '|' + (opt.opacity == null ? 1 : opt.opacity) + '|' + !!opt.glass + '|' + !!opt.emissive;
+      var opacityKey = opt.opacity == null ? 1 : opt.opacity;
+      var roughKey = opt.rough == null ? 0.48 : opt.rough;
+      var metalKey = opt.metal == null ? 0.06 : opt.metal;
+      var transKey = opt.transmission == null ? 0.12 : opt.transmission;
+      var key = color + '|' + opacityKey + '|' + roughKey + '|' + metalKey + '|' + transKey + '|' + !!opt.glass + '|' + !!opt.emissive + '|' + !!opt.clearcoat;
       if (!mats[key]) {
-        var args = { color: color, roughness: opt.rough == null ? 0.48 : opt.rough, metalness: opt.metal == null ? 0.06 : opt.metal };
+        var args = { color: color, roughness: roughKey, metalness: metalKey };
         if (opt.opacity != null && opt.opacity < 1) { args.transparent = true; args.opacity = opt.opacity; }
         if (opt.emissive) { args.emissive = color; args.emissiveIntensity = 0.25; }
-        mats[key] = opt.glass ? new THREE.MeshPhysicalMaterial(Object.assign(args, { transmission: 0.12 })) : new THREE.MeshStandardMaterial(args);
+        if (opt.glass) {
+          args.transparent = true;
+          args.opacity = opt.opacity == null ? 0.38 : opt.opacity;
+          args.depthWrite = false;
+          if (opt.clearcoat) {
+            args.roughness = Math.min(args.roughness, 0.22);
+            args.metalness = Math.max(args.metalness, 0.08);
+          }
+        }
+        mats[key] = new THREE.MeshStandardMaterial(args);
       }
       return mats[key];
     }
@@ -2551,6 +2592,26 @@
     function cyl(r, h, color, pos, rot, opt) { return mesh(new THREE.CylinderGeometry(r, r, h, 22), m(color, opt), pos, rot); }
     function tor(r, tube, color, pos, rot, opt) { return mesh(new THREE.TorusGeometry(r, tube, 14, 80), m(color, opt), pos, rot); }
     function cone(r, h, color, pos, rot, opt) { return mesh(new THREE.ConeGeometry(r, h, 32, 1, true), m(color, opt), pos, rot); }
+    var contactShadowTexture = null;
+    function contactShadow(wd, dp, pos, opt) {
+      opt = opt || {};
+      if (!contactShadowTexture) {
+        var c = document.createElement('canvas');
+        c.width = 128; c.height = 128;
+        var ctx = c.getContext('2d');
+        var g = ctx.createRadialGradient(64, 64, 6, 64, 64, 60);
+        g.addColorStop(0, 'rgba(27,42,74,.24)');
+        g.addColorStop(0.55, 'rgba(27,42,74,.10)');
+        g.addColorStop(1, 'rgba(27,42,74,0)');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, 128, 128);
+        contactShadowTexture = new THREE.CanvasTexture(c);
+      }
+      var mat = new THREE.MeshBasicMaterial({ map: contactShadowTexture, transparent: true, opacity: opt.opacity == null ? 0.34 : opt.opacity, depthWrite: false });
+      var sh = mesh(new THREE.PlaneGeometry(wd, dp), mat, [pos[0], -0.028, pos[2]], [-Math.PI / 2, 0, opt.rot || 0]);
+      sh.renderOrder = -4;
+      return sh;
+    }
     function edge(x, color) {
       var e = new THREE.LineSegments(new THREE.EdgesGeometry(x.geometry), new THREE.LineBasicMaterial({ color: color || 0xffffff, transparent: true, opacity: 0.55 }));
       e.position.copy(x.position); e.rotation.copy(x.rotation); e.scale.copy(x.scale); root.add(e);
@@ -2559,11 +2620,44 @@
       var curve = new THREE.CatmullRomCurve3(points.map(function (p) { return new THREE.Vector3(p[0], p[1], p[2]); }));
       mesh(new THREE.TubeGeometry(curve, 28, radius || 0.025, 10, false), m(color, { rough: 0.35, metal: 0.12, emissive: riskOn && color === 0xda291c }));
     }
-    root.add(new THREE.GridHelper(7.2, 10, 0xd6dde5, 0xd6dde5));
+    var grid = new THREE.GridHelper(7.2, 10, 0xd6dde5, 0xd6dde5);
+    var gridMats = Array.isArray(grid.material) ? grid.material : [grid.material];
+    gridMats.forEach(function (gm) {
+      gm.transparent = true;
+      gm.opacity = (kind === 'outcomelens' || kind === 'mechanismatch') ? 0.16 : 0.24;
+    });
+    root.add(grid);
     box(7.3, 0.08, 5.2, 0xe9eef2, [0, -0.08, 0], { rough: 0.72 });
     function miniPerson(x, z, color) {
       cyl(0.11, 0.38, color || 0x1b2a4a, [x, 0.22, z]);
       sph(0.14, 0x9fdde0, [x, 0.5, z], { rough: 0.36 });
+    }
+    function paperCard(x, z, wd, dp, accent, rot) {
+      var y = 0.24;
+      var r = rot || 0;
+      var card = box(wd, 0.04, dp, 0xffffff, [x, y, z], { edge: 0xc9d3dc, rough: 0.24, metal: 0.01 });
+      card.rotation.y = r;
+      var tab = box(wd * 0.28, 0.045, dp * 0.16, accent || 0x00aeb3, [x - wd * 0.26, y + 0.052, z - dp * 0.34], { edge: 0xffffff, rough: 0.3 });
+      tab.rotation.y = r;
+      for (var pc = 0; pc < 3; pc++) {
+        var line = box(wd * (0.62 - pc * 0.08), 0.026, dp * 0.045, pc === 0 ? 0x1b2a4a : 0x8ba0b4, [x + wd * 0.08, y + 0.075 + pc * 0.055, z - dp * 0.16 + pc * dp * 0.16], { edge: pc === 0 ? 0x1b2a4a : 0x8ba0b4, rough: 0.38 });
+        line.rotation.y = r;
+      }
+      return card;
+    }
+    function decisionMark(x, z, good) {
+      var c = good ? 0x1c7a43 : 0xda291c;
+      if (good) {
+        tube([[x - 0.18, 0.56, z], [x - 0.05, 0.43, z], [x + 0.22, 0.72, z]], c, 0.026);
+      } else {
+        tube([[x - 0.2, 0.44, z - 0.16], [x + 0.2, 0.76, z + 0.16]], c, 0.026);
+        tube([[x + 0.2, 0.44, z - 0.16], [x - 0.2, 0.76, z + 0.16]], c, 0.026);
+      }
+    }
+    function burdenDiscs(x, z, n) {
+      for (var bd = 0; bd < n; bd++) {
+        cyl(0.18 + bd * 0.018, 0.09, bd > 1 ? 0xda291c : 0xffa12b, [x + (bd % 2) * 0.1, 0.23 + bd * 0.095, z + Math.floor(bd / 2) * 0.1], null, { rough: 0.26, metal: 0.16, emissive: bd > 2 && riskOn });
+      }
     }
     function arrow(a, b, color) {
       tube([a, [(a[0] + b[0]) / 2, Math.max(a[1], b[1]) + 0.18, (a[2] + b[2]) / 2], b], color || 0x1b2a4a, 0.028);
@@ -2600,15 +2694,17 @@
         sph(0.14, riskOn ? 0xda291c : 0x1c7a43, [2.75, 0.62, 0.08]);
         break;
       case 'mechanismatch':
-        box(1.48, 0.1, 1.08, 0xffffff, [-2.32, 0.14, -0.42], { edge: 0x8ba0b4 });
-        box(1.08, 0.07, 0.12, 0x1b2a4a, [-2.42, 0.31, -0.76], { edge: 0x1b2a4a });
-        box(0.86, 0.055, 0.1, 0x8ba0b4, [-2.42, 0.43, -0.52], { edge: 0x8ba0b4 });
-        box(0.62, 0.055, 0.1, 0x8ba0b4, [-2.42, 0.54, -0.31], { edge: 0x8ba0b4 });
-        box(0.38, 0.08, 0.34, riskOn ? 0xda291c : 0xffa12b, [-1.76, 0.34, -0.1], { edge: 0xffffff, emissive: riskOn });
+        contactShadow(1.62, 1.16, [-2.32, 0, -0.42], { opacity: 0.2 });
+        contactShadow(1.55, 1.35, [-0.28, 0, 0], { opacity: 0.16 });
+        contactShadow(2.3, 1.25, [2.05, 0, 0.05], { opacity: 0.18 });
+        paperCard(-2.32, -0.42, 1.48, 1.08, 0xffa12b);
+        box(0.22, 0.12, 0.22, 0x1b2a4a, [-2.86, 0.46, -0.07], { rough: 0.34, metal: 0.08 });
+        box(0.22, 0.12, 0.22, 0xda291c, [-2.58, 0.46, 0.02], { rough: 0.3, metal: 0.1, emissive: riskOn });
+        box(0.38, 0.08, 0.34, riskOn ? 0xda291c : 0xffa12b, [-1.76, 0.34, -0.1], { edge: 0xffffff, rough: 0.26, metal: 0.08, emissive: riskOn });
         tube([[-1.64, 0.42, -0.2], [-1.08, 0.78, -0.08], [-0.52, 0.84, 0]], pathOn || riskOn ? 0xda291c : 0x1b2a4a, 0.03);
-        tor(0.66, 0.026, pathOn || riskOn ? 0xda291c : 0x00aeb3, [-0.28, 0.72, 0], [Math.PI / 2, 0, 0], { opacity: 0.92, emissive: riskOn });
-        box(0.12, 1.26, 1.42, 0x9fdde0, [-0.28, 0.72, 0], { opacity: 0.34, glass: true, edge: 0x00aeb3 });
-        box(1.16, 0.045, 1.16, 0xffffff, [-0.28, 0.18, 0], { opacity: 0.44, glass: true, edge: 0xd6dde5 });
+        tor(0.66, 0.026, pathOn || riskOn ? 0xda291c : 0x00aeb3, [-0.28, 0.72, 0], [Math.PI / 2, 0, 0], { opacity: 0.92, rough: 0.22, metal: 0.18, emissive: riskOn });
+        box(0.12, 1.26, 1.42, 0x9fdde0, [-0.28, 0.72, 0], { opacity: 0.3, glass: true, transmission: 0.2, clearcoat: true, edge: 0x00aeb3, rough: 0.18, metal: 0.03 });
+        box(1.16, 0.045, 1.16, 0xffffff, [-0.28, 0.18, 0], { opacity: 0.44, glass: true, transmission: 0.16, clearcoat: true, edge: 0xd6dde5, rough: 0.22 });
         tube([[-0.02, 0.82, 0.02], [0.7, 1.02, 0.24], [1.2, 0.68, 0.34]], pathOn || riskOn ? 0xda291c : 0x8ba0b4, 0.028);
         [
           [-0.05, -0.66, 0x9fdde0, 0x00aeb3],
@@ -2618,9 +2714,9 @@
         ].forEach(function (p, mm) {
           var hot = riskOn ? mm === 2 : (pathOn ? mm === 1 : false);
           var px = 1.42 + p[0], pz = p[1];
-          box(0.78, hot ? 0.64 : 0.46, 0.66, hot ? 0xda291c : p[2], [px, hot ? 0.42 : 0.34, pz], { opacity: hot ? 0.92 : 0.62, glass: !hot, edge: hot ? 0xda291c : p[3], emissive: hot });
-          box(0.48, 0.045, 0.1, hot ? 0xffffff : 0x1b2a4a, [px, hot ? 0.78 : 0.62, pz - 0.14], { edge: hot ? 0xffffff : 0x1b2a4a });
-          box(0.34, 0.035, 0.08, hot ? 0xffffff : 0x8ba0b4, [px, hot ? 0.89 : 0.72, pz + 0.08], { edge: hot ? 0xffffff : 0x8ba0b4 });
+          box(0.78, hot ? 0.64 : 0.46, 0.66, hot ? 0xda291c : p[2], [px, hot ? 0.42 : 0.34, pz], { opacity: hot ? 0.92 : 0.62, glass: !hot, transmission: hot ? 0 : 0.14, clearcoat: !hot, rough: hot ? 0.28 : 0.2, metal: hot ? 0.08 : 0.03, edge: hot ? 0xda291c : p[3], emissive: hot });
+          box(0.48, 0.045, 0.1, hot ? 0xffffff : 0x1b2a4a, [px, hot ? 0.78 : 0.62, pz - 0.14], { edge: hot ? 0xffffff : 0x1b2a4a, rough: 0.3 });
+          box(0.34, 0.035, 0.08, hot ? 0xffffff : 0x8ba0b4, [px, hot ? 0.89 : 0.72, pz + 0.08], { edge: hot ? 0xffffff : 0x8ba0b4, rough: 0.3 });
         });
         if (riskOn) {
           tor(0.48, 0.018, 0xda291c, [1.38, 0.88, 0.5], [Math.PI / 2, 0, 0], { opacity: 0.9, emissive: true });
@@ -2746,20 +2842,28 @@
         tor(1.35, 0.025, riskOn ? 0xda291c : 0x1b2a4a, [0, 0.85, 0], [Math.PI / 2, 0, 0]);
         break;
       case 'outcomelens':
-        box(1.62, 0.1, 0.66, 0xffffff, [-2.72, 0.14, -0.86], { edge: 0x8ba0b4 });
-        box(1.62, 0.1, 0.66, 0xffffff, [-2.72, 0.14, 0.86], { edge: 0x8ba0b4 });
+        contactShadow(1.74, 0.74, [-2.72, 0, -0.86], { opacity: 0.14 });
+        contactShadow(1.74, 0.74, [-2.72, 0, 0.86], { opacity: 0.14 });
+        contactShadow(1.1, 2.5, [-0.72, 0, 0], { opacity: 0.18 });
+        contactShadow(3.15, 0.78, [1.4, 0, -0.86], { opacity: 0.13 });
+        contactShadow(1.7, 0.85, [1.55, 0, 0.86], { opacity: 0.22 });
+        paperCard(-2.72, -0.86, 1.62, 0.66, 0x00aeb3);
+        paperCard(-2.72, 0.86, 1.62, 0.66, 0xffa12b);
         for (var ol = 0; ol < 6; ol++) {
-          sph(0.075, 0x00aeb3, [-3.22 + ol * 0.18, 0.32, -0.92 + (ol % 2) * 0.13]);
-          sph(0.075, ol > 2 ? 0xda291c : 0xffa12b, [-3.22 + ol * 0.18, 0.32, 0.8 + (ol % 2) * 0.15], { emissive: ol > 2 && riskOn });
+          sph(0.075, 0x00aeb3, [-3.22 + ol * 0.18, 0.32, -0.92 + (ol % 2) * 0.13], { rough: 0.34, metal: 0.08 });
+          sph(0.075, ol > 2 ? 0xda291c : 0xffa12b, [-3.22 + ol * 0.18, 0.32, 0.8 + (ol % 2) * 0.15], { rough: 0.34, metal: 0.08, emissive: ol > 2 && riskOn });
         }
-        box(0.18, 1.52, 2.68, 0xffffff, [-0.72, 0.78, 0], { opacity: 0.82, glass: true, edge: 0x8ba0b4 });
-        box(0.1, 1.2, 2.28, 0x1b2a4a, [-0.72, 0.72, 0], { opacity: 0.88, edge: 0xffffff });
-        box(0.08, 0.06, 1.48, 0xffffff, [-0.9, 1.02, 0], { edge: 0xffffff });
-        box(0.08, 0.06, 1.48, 0xffffff, [-0.9, 0.82, 0], { edge: 0xffffff });
-        box(1.46, 0.08, 2.88, 0x9fdde0, [-0.72, 1.5, 0], { opacity: 0.22, glass: true, edge: 0x00aeb3 });
-        box(2.82, 0.1, 0.64, 0xe7f3ec, [1.18, 0.15, -0.86], { edge: 0x1c7a43 });
-        box(1.28, 0.1, 0.36, 0xfbe9ea, [0.7, 0.18, 0.86], { edge: 0xda291c });
-        box(0.34, 0.96, 0.9, 0xda291c, [1.58, 0.64, 0.86], { opacity: riskOn ? 0.95 : 0.76, edge: 0xffffff, emissive: riskOn });
+        box(0.18, 1.52, 2.68, 0xffffff, [-0.72, 0.78, 0], { opacity: 0.78, glass: true, transmission: 0.18, clearcoat: true, edge: 0x8ba0b4, rough: 0.2, metal: 0.03 });
+        box(0.1, 1.2, 2.28, 0x1b2a4a, [-0.72, 0.72, 0], { opacity: 0.88, edge: 0xffffff, rough: 0.32, metal: 0.12 });
+        box(0.08, 0.06, 1.48, 0xffffff, [-0.9, 1.02, 0], { edge: 0xffffff, rough: 0.28 });
+        box(0.08, 0.06, 1.48, 0xffffff, [-0.9, 0.82, 0], { edge: 0xffffff, rough: 0.28 });
+        box(1.46, 0.08, 2.88, 0x9fdde0, [-0.72, 1.5, 0], { opacity: 0.2, glass: true, transmission: 0.22, clearcoat: true, edge: 0x00aeb3, rough: 0.16 });
+        paperCard(1.18, -0.86, 1.72, 0.64, 0x1c7a43);
+        decisionMark(2.25, -0.86, true);
+        paperCard(0.72, 0.86, 1.16, 0.5, 0xda291c);
+        box(0.34, 0.96, 0.9, 0xda291c, [1.58, 0.64, 0.86], { opacity: riskOn ? 0.95 : 0.76, edge: 0xffffff, rough: 0.24, metal: 0.12, emissive: riskOn });
+        burdenDiscs(2.02, 0.58, 5);
+        decisionMark(1.42, 0.86, false);
         tube([[-1.9, 0.42, -0.86], [-1.12, 0.8, -0.82], [-0.46, 0.64, -0.84], [0.48, 0.42, -0.86], [2.56, 0.34, -0.86]], pathOn ? 0x1c7a43 : 0x8ba0b4, 0.032);
         tube([[-1.9, 0.42, 0.86], [-1.12, 0.8, 0.78], [-0.48, 0.64, 0.84], [0.36, 0.5, 0.86], [1.38, 0.58, 0.86]], pathOn || riskOn ? 0xda291c : 0x8ba0b4, 0.04);
         cone(0.13, 0.35, pathOn ? 0x1c7a43 : 0x8ba0b4, [2.62, 0.34, -0.86], [Math.PI / 2, 0, 0]);
