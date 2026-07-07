@@ -24,7 +24,7 @@
     return !!(v && v.screen);
   }
   function cleanScreen(s) {
-    return ['journey', 'library', 'station', 'detail', 'pathways', 'assignments', 'starter', 'videos', 'readings', 'compare', 'reading', 'glossary', 'career', 'cards', 'sandbox', 'activity'].indexOf(s) >= 0 ? s : 'journey';
+    return ['journey', 'library', 'station', 'detail', 'pathways', 'assignments', 'assignment-program', 'assignment-details', 'assignment-rubric', 'assignment-release', 'assignment-ai', 'assignment-faq', 'starter', 'videos', 'readings', 'compare', 'reading', 'glossary', 'career', 'cards', 'sandbox', 'activity'].indexOf(s) >= 0 ? s : 'journey';
   }
   function cleanWeek(w) {
     w = Number(w);
@@ -4309,7 +4309,7 @@
       ['Can I email my assignment or send a link?', 'No. The assessment briefs say Blackboard submission only. Email submissions or email-only links are not accepted.'],
       ['Are all five assignments separate?', 'They are graded separately, but they build one thing: your Personal Cartography. Each assignment adds another layer to the same map.'],
       ['What if I miss a deadline?', 'The course assessment documents describe firm deadlines. Check Blackboard for the exact date and time, and ask the instructor early if you are unsure.'],
-      ['Can I use generative AI?', 'Only as study support. You may use it to brainstorm, check clarity, or organize your own notes, but you must disclose the tool, date, and purpose. Do not submit AI-written or AI-rewritten work as your own. Use the AI Use tab for examples.'],
+      ['Can I use generative AI?', 'Only as study support. You may use it to brainstorm, check clarity, or organize your own notes, but you must disclose the tool, date, and purpose. Do not submit AI-written or AI-rewritten work as your own. Use the AI Use page for examples.'],
       ['What happens if AI writes my paper?', 'Submitting AI-written or AI-rewritten work as your own can be treated as academic misconduct. That can lead to a zero on the assignment, a formal academic-integrity process, and further course or institutional penalties. If you are unsure, do not submit the AI text. Ask first and disclose.'],
       ['Can AI fix my grammar?', 'A grammar or clarity check is different from having AI write the assignment. If a tool changes wording, structure, claims, sources, or analysis, disclose it. Your final ideas, course connections, examples, and evidence must be yours.'],
       ['What if screenshots do not work for my example?', 'Use another artifact you can explain clearly: a form field, prompt, output, setting, rule, notice, policy line, captioned photo, or short audio description.'],
@@ -4357,11 +4357,11 @@
       }).join('') + '</div></section>';
   }
   function assignmentJumpNav() {
-    var active = cleanAssignmentTab(state.assignmentTab);
+    var active = assignmentActivePage();
     var items = [['story', 'Story'], ['program', 'Program Lens'], ['assignments', 'Assignments'], ['quality', 'Rubric'], ['release', 'Release Dates'], ['ai', 'AI Use'], ['faq', 'FAQ']];
     return '<nav class="asg-jump" aria-label="Assignments guide sections">' + items.map(function (it) {
       var on = active === it[0];
-      return '<button type="button" onclick="SOC.assignTab(\'' + it[0] + '\')" aria-current="' + (on ? 'page' : 'false') + '" class="' + (on ? 'on' : '') + '">' + esc(it[1]) + '</button>';
+      return '<button type="button" onclick="SOC.assignmentPage(\'' + it[0] + '\')" aria-current="' + (on ? 'page' : 'false') + '" class="' + (on ? 'on' : '') + '">' + esc(it[1]) + '</button>';
     }).join('') + '</nav>';
   }
   function assignmentQualityPath() {
@@ -4643,37 +4643,72 @@
   }
   function assignmentAiDisclosureGuide() {
     var allowed = [
-      ['Brainstorming', 'You can ask for possible example areas, then choose your own example and check it against the readings.'],
-      ['Study support', 'You can ask for a plain-language explanation of a course term, then verify it with the assigned reading.'],
-      ['Clarity check', 'You can use spelling, grammar, or sentence-level clarity support if it does not add claims, evidence, or analysis.']
+      ['Brainstorming a direction', 'You can ask for possible places to look, then choose your own example and check it against the readings.'],
+      ['Understanding a term', 'You can ask for a plain-language explanation of a course term, then verify the explanation with the assigned reading.'],
+      ['Planning a search', 'You can ask for search terms or public-source places to check. You still need to find, read, and judge the sources yourself.'],
+      ['Organizing your own notes', 'You can ask for help turning your own notes into a checklist, table, or outline before you write.'],
+      ['Clarity check', 'You can use spelling, grammar, or sentence-level clarity support if it does not add claims, evidence, course concepts, or analysis.']
     ];
     var prohibited = [
       ['Writing the paper', 'Do not ask AI to draft paragraphs, answers, reflections, scripts, or assignment sections for submission.'],
       ['Rewriting your voice', 'Do not paste your draft into AI and submit a rewritten version as your own work.'],
+      ['Replacing the reading', 'Do not use an AI summary instead of reading the assigned source. Your assignment must use course evidence accurately.'],
+      ['Creating sources', 'Do not ask AI to invent sources, quotations, cases, statistics, citations, links, or legal facts.'],
       ['Hiding AI use', 'Do not leave AI use undisclosed. A vague line like "I used AI" is not enough.']
     ];
     var good = [
       ['No AI used', 'I did not use generative AI tools for this assignment.'],
-      ['Brainstorming only', 'I used ChatGPT on [date] to brainstorm possible examples after I read the Week [number] material. I chose my own example, checked it against the reading, and wrote the final analysis myself.'],
+      ['Brainstorming only', 'I used ChatGPT on [date] to brainstorm possible example areas after I read the Week [number] material. I chose my own example, checked it against the reading, and wrote the final analysis myself.'],
+      ['Term support', 'I used Microsoft Copilot on [date] to help me restate the term [course term] in simpler language. I checked the meaning against [reading name] before using it.'],
+      ['Search planning', 'I used Perplexity on [date] to identify search terms for Canadian public reports about [topic]. I opened and read the sources myself before deciding what to use.'],
+      ['Organizing notes', 'I used ChatGPT on [date] to turn my own point-form notes into a planning checklist. I wrote the assignment myself and did not submit AI-written sentences.'],
       ['Clarity check', 'I used Grammarly or Microsoft Editor on [date] to check grammar and sentence clarity. I did not use it to add course concepts, sources, claims, or analysis.']
+    ];
+    var assignmentExamples = [
+      ['Map Exchange', 'I used ChatGPT on [date] to list possible digital systems I might notice in my program area. I chose the weekly example myself, connected it to the reading, and wrote the post in my own words.'],
+      ['Coded Encounter', 'I used Microsoft Copilot on [date] to help me make a checklist of what to look for in a screenshot or form. The artifact, annotation, and explanation are my own.'],
+      ['Canadian Case File', 'I used Perplexity on [date] to find search terms for Canadian oversight reports. I read the reports myself, checked the facts, and wrote the case file in my own words.'],
+      ['Design the Repair', 'I used ChatGPT on [date] to organize my own notes into categories: rule, review step, appeal path, and accountability. The repair idea and final explanation are mine.'],
+      ['Cartography Capstone', 'I used Microsoft Editor on [date] for grammar and sentence clarity only. The map, reflection, examples, and recorded walkthrough are my own work.']
+    ];
+    var promptPairs = [
+      ['Safer prompt', 'Give me five questions I could ask about passenger screening. Do not write my assignment.'],
+      ['Risky prompt', 'Write my Canadian Case File on passenger screening with sources.'],
+      ['Safer prompt', 'Turn these notes I wrote into a checklist. Do not add new claims or examples.'],
+      ['Risky prompt', 'Rewrite my draft so it sounds academic and stronger.'],
+      ['Safer prompt', 'Explain intersectionality in plain language, then tell me what I should verify in Crenshaw before using it.'],
+      ['Risky prompt', 'Give me a paragraph using intersectionality for my assignment.']
     ];
     var weak = [
       ['Too vague', 'I used AI.'],
       ['Not acceptable', 'AI helped write my assignment.'],
-      ['Not enough', 'I used AI to make it better.']
+      ['Not enough', 'I used AI to make it better.'],
+      ['Missing boundary', 'I used ChatGPT for research.'],
+      ['Missing ownership', 'AI helped with my wording.']
     ];
-    return '<section id="asg-ai" class="asg-ai asg-ai-page" aria-label="AI disclosure examples"><div class="asg-ai-head"><span>AI use</span><b>Use AI only as support</b><small>Name the tool, date, purpose, and boundary.</small></div>'
+    return '<section id="asg-ai" class="asg-ai asg-ai-page" aria-label="AI Use page"><div class="asg-ai-head"><span>AI USE PAGE</span><b>Use AI only as support</b><small>Name the tool, date, purpose, and boundary.</small></div>'
       + '<div class="asg-ai-warning"><b>Penalty risk: do not use AI to write your papers.</b><p>Submitting AI-written or AI-rewritten work as your own can be treated as academic misconduct. Penalties can include a zero on the assignment, a formal academic-integrity process, and further course or institutional consequences. When unsure, do not submit the AI text. Ask first and disclose.</p></div>'
+      + '<div class="asg-ai-rule"><b>The simple rule</b><p>AI can help you prepare to think. It cannot do the thinking, reading, evidence selection, course analysis, reflection, script, or final writing for you.</p></div>'
       + '<div class="asg-ai-columns"><div><h3>Acceptable study support</h3>' + allowed.map(function (a) {
         return '<article><b>' + esc(a[0]) + '</b><p>' + esc(a[1]) + '</p></article>';
       }).join('') + '</div><div><h3>Not acceptable</h3>' + prohibited.map(function (p) {
         return '<article><b>' + esc(p[0]) + '</b><p>' + esc(p[1]) + '</p></article>';
       }).join('') + '</div></div>'
+      + '<div class="asg-ai-example-head"><h3>Disclosure examples you can adapt</h3><p>Replace the brackets with the real tool, date, week, source, and purpose. Do not copy an example that is not true for your work.</p></div>'
       + '<div class="asg-ai-grid">' + good.map(function (g) {
-      return '<article><b>' + esc(g[0]) + '</b><p>' + esc(g[1]) + '</p></article>';
-    }).join('') + '</div><div class="asg-ai-weak"><b>Weak disclosures to avoid</b><div>' + weak.map(function (w) {
-      return '<span><strong>' + esc(w[0]) + ':</strong> ' + esc(w[1]) + '</span>';
-    }).join('') + '</div></div><p class="asg-ai-bottom">The standard is simple: a reader should know what tool touched the work and what parts are still fully yours.</p></section>';
+        return '<article><b>' + esc(g[0]) + '</b><p>' + esc(g[1]) + '</p></article>';
+      }).join('') + '</div>'
+      + '<div class="asg-ai-example-head"><h3>Assignment-specific examples</h3><p>These show the level of detail I expect when AI was part of your preparation.</p></div>'
+      + '<div class="asg-ai-grid asg-ai-grid-wide">' + assignmentExamples.map(function (g) {
+        return '<article><b>' + esc(g[0]) + '</b><p>' + esc(g[1]) + '</p></article>';
+      }).join('') + '</div>'
+      + '<div class="asg-ai-example-head"><h3>Prompt boundary examples</h3><p>The safer prompts ask for planning help. The risky prompts ask the tool to do assignment work for you.</p></div>'
+      + '<div class="asg-ai-grid">' + promptPairs.map(function (g) {
+        var risk = g[0] === 'Risky prompt';
+        return '<article class="' + (risk ? 'risk' : 'safe') + '"><b>' + esc(g[0]) + '</b><p>' + esc(g[1]) + '</p></article>';
+      }).join('') + '</div><div class="asg-ai-weak"><b>Weak disclosures to avoid</b><div>' + weak.map(function (w) {
+        return '<span><strong>' + esc(w[0]) + ':</strong> ' + esc(w[1]) + '</span>';
+      }).join('') + '</div></div><p class="asg-ai-bottom">The standard is simple: a reader should know what tool touched the work, what it was used for, and what parts are still fully yours.</p></section>';
   }
   function assignmentReleaseSchedule(items) {
     return '<section id="asg-release" class="asg-release" aria-label="Assignment opening schedule"><div><div class="mono">BLACKBOARD OPENING DATES</div><h2>When each assignment will be opened on Blackboard</h2><p>The companion guide stays open so you can prepare. The complete assignment instructions and submission dropboxes will be opened on Blackboard on the dates below.</p></div><div class="asg-release-grid">' + items.map(function (a) {
@@ -4855,7 +4890,7 @@
     return '<section id="asg-starter-chooser" class="asg-starter-chooser" aria-label="Selected assignment for the starter studio"><div><div class="mono">STEP 1</div><h2>Confirm the assignment you selected</h2><p>This preparation page uses the assignment you chose on the guide. To change assignments, return to the Assignments Guide first.</p></div><div>' + items.map(function (a, i) {
       var on = i === idx;
       return '<button type="button" ' + (on ? '' : 'aria-disabled="true" tabindex="-1" ') + 'class="' + (on ? 'current' : 'locked') + '" aria-pressed="' + (on ? 'true' : 'false') + '"><span>' + esc(assignmentDateLabel(a.release)) + '</span><b>' + esc(a.title) + '</b><small>' + esc(a.short) + '</small></button>';
-    }).join('') + '</div><button type="button" class="asg-starter-change" onclick="SOC.go(\'assignments\')">Return to Assignments Guide to change</button></section>';
+    }).join('') + '</div><button type="button" class="asg-starter-change" onclick="SOC.assignmentPage(\'assignments\')">Return to Assignments Page to change</button></section>';
   }
   function assignmentProgramBrief(a, L) {
     var fit = assignmentProgramFit(a, L);
@@ -4932,28 +4967,91 @@
       + summary
       + '<section id="asg-story" class="asg-story"><div><div class="mono">THE STORY</div><h2>You are building one map across the term</h2><p>The assignments are not random separate tasks. You begin by noticing real digital life, then you inspect one encounter, investigate one Canadian system, design a repair, and finally walk someone through the map of how your thinking changed.</p></div><ol><li>Notice</li><li>Break down</li><li>Investigate</li><li>Repair</li><li>Integrate</li></ol></section>';
   }
-  function assignmentTabContent(tab, items, selected, L, summary) {
-    if (tab === 'release') return assignmentReleaseSchedule(items);
-    if (tab === 'quality') return assignmentQualityPath();
-    if (tab === 'program') return assignmentProgramGuide(L);
-    if (tab === 'ai') return assignmentAiDisclosureGuide();
-    if (tab === 'assignments') return assignmentDirectory(items) + assignmentRoom(selected, L);
-    if (tab === 'faq') return assignmentFaqSection();
-    return assignmentStorySection(summary);
+  function assignmentActivePage() {
+    if (state.screen === 'assignment-program') return 'program';
+    if (state.screen === 'assignment-details') return 'assignments';
+    if (state.screen === 'assignment-rubric') return 'quality';
+    if (state.screen === 'assignment-release') return 'release';
+    if (state.screen === 'assignment-ai') return 'ai';
+    if (state.screen === 'assignment-faq') return 'faq';
+    return 'story';
   }
-  function assignmentsPage() {
+  function assignmentScreenFor(tab) {
+    tab = cleanAssignmentTab(tab);
+    if (tab === 'program') return 'assignment-program';
+    if (tab === 'assignments') return 'assignment-details';
+    if (tab === 'quality') return 'assignment-rubric';
+    if (tab === 'release') return 'assignment-release';
+    if (tab === 'ai') return 'assignment-ai';
+    if (tab === 'faq') return 'assignment-faq';
+    return 'assignments';
+  }
+  function assignmentPageHero(label, title, text, extraClass) {
+    return '<section class="asg-hero ' + esc(extraClass || '') + '"><div class="mono">' + esc(label) + '</div><h1>' + esc(title) + '</h1><p>' + esc(text) + '</p></section>';
+  }
+  function assignmentSummaryPanel() {
+    return '<section class="asg-summary" aria-label="Assignment overview"><div><span>5 assignments</span><b>Each is worth 20%</b><small>Together they build one Personal Cartography.</small></div><div><span>First half</span><b>Due by Study Week</b><small>Map Exchange checkpoint, Coded Encounter, and Canadian Case File.</small></div><div><span>Second half</span><b>Due by Week 13</b><small>Design the Repair, final Map Exchange close, and capstone.</small></div></section>';
+  }
+  function assignmentSelectedContext() {
     var items = assignmentsData();
     var L = lensParse();
     var idx = Math.max(0, Math.min(items.length - 1, Number(state.assignmentIndex) || 0));
     var selected = items[idx] || items[0];
-    var tab = cleanAssignmentTab(state.assignmentTab);
-    var summary = '<section class="asg-summary" aria-label="Assignment overview"><div><span>5 assignments</span><b>Each is worth 20%</b><small>Together they build one Personal Cartography.</small></div><div><span>First half</span><b>Due by Study Week</b><small>Map Exchange checkpoint, Coded Encounter, and Canadian Case File.</small></div><div><span>Second half</span><b>Due by Week 13</b><small>Design the Repair, final Map Exchange close, and capstone.</small></div></section>';
-    return '<div class="rise asg-page">'
-      + '<section class="asg-hero"><div class="mono">ASSIGNMENT GUIDE</div><h1>Understanding the Assignments</h1><p>One map, five pieces. This page explains what each assignment is asking you to do, what you submit, and how the grading criteria work in plain language.</p></section>'
-      + assignmentPreviewBanner()
-      + assignmentLensPanel(L)
+    return { items: items, L: L, selected: selected };
+  }
+  function assignmentsPage() {
+    return '<div class="rise asg-page asg-story-route">'
+      + assignmentPageHero('ASSIGNMENT STORY', 'Understanding the Assignments', 'The five assignments build one map across the term. This page explains the arc before you enter the specific assignment rooms.')
       + assignmentJumpNav()
-      + '<div class="asg-tabpanel">' + assignmentTabContent(tab, items, selected, L, summary) + '</div>'
+      + '<div class="asg-tabpanel">' + assignmentStorySection(assignmentSummaryPanel()) + '</div>'
+      + '</div>';
+  }
+  function assignmentProgramPage() {
+    var ctx = assignmentSelectedContext();
+    return '<div class="rise asg-page asg-program-route">'
+      + assignmentPageHero('PROGRAM LENS', 'Use Your Program to Choose Better Examples', 'Choose a program lens when you want examples, artifacts, and starter questions to fit the field you are studying.')
+      + assignmentLensPanel(ctx.L)
+      + assignmentJumpNav()
+      + '<div class="asg-tabpanel">' + assignmentProgramGuide(ctx.L) + '</div>'
+      + '</div>';
+  }
+  function assignmentDetailsPage() {
+    var ctx = assignmentSelectedContext();
+    return '<div class="rise asg-page asg-details-route">'
+      + assignmentPageHero('ASSIGNMENTS', 'Assignment Rooms', 'Open one assignment at a time. Each room explains the purpose, submission pieces, marking criteria, program connection, and preparation option.')
+      + assignmentPreviewBanner()
+      + assignmentLensPanel(ctx.L)
+      + assignmentJumpNav()
+      + '<div class="asg-tabpanel">' + assignmentDirectory(ctx.items) + assignmentRoom(ctx.selected, ctx.L) + '</div>'
+      + '</div>';
+  }
+  function assignmentRubricPage() {
+    return '<div class="rise asg-page asg-rubric-route">'
+      + assignmentPageHero('RUBRIC', 'How Stronger Work Grows', 'Use the rubric page to understand what stronger work does before you submit in Blackboard.')
+      + assignmentJumpNav()
+      + '<div class="asg-tabpanel">' + assignmentQualityPath() + '</div>'
+      + '</div>';
+  }
+  function assignmentReleasePage() {
+    var ctx = assignmentSelectedContext();
+    return '<div class="rise asg-page asg-release-route">'
+      + assignmentPageHero('RELEASE DATES', 'Blackboard Opening Dates', 'This page lists when the complete assignment files and dropboxes will be opened on Blackboard.')
+      + assignmentJumpNav()
+      + '<div class="asg-tabpanel">' + assignmentReleaseSchedule(ctx.items) + '</div>'
+      + '</div>';
+  }
+  function assignmentFaqPage() {
+    return '<div class="rise asg-page asg-faq-route">'
+      + assignmentPageHero('FAQ', 'Assignment Questions Students Usually Ask', 'Use this page for quick answers about submissions, Blackboard, AI disclosure, evidence, accommodations, and assignment scope.')
+      + assignmentJumpNav()
+      + '<div class="asg-tabpanel">' + assignmentFaqSection() + '</div>'
+      + '</div>';
+  }
+  function assignmentAiPage() {
+    return '<div class="rise asg-page asg-ai-route">'
+      + '<section class="asg-hero asg-ai-hero"><div><div class="mono">AI USE</div><h1>AI Use Page</h1><p>This page gives the AI-use rules in plain language, with examples students can adapt honestly. Use it before submitting any assignment if a generative AI tool helped you brainstorm, organize, search, or check clarity.</p></div><div class="asg-ai-page-actions"><button type="button" onclick="SOC.assignmentPage(\'assignments\')">Open Assignments Page</button></div></section>'
+      + assignmentJumpNav()
+      + '<div class="asg-tabpanel">' + assignmentAiDisclosureGuide() + '</div>'
       + '</div>';
   }
   function scholarMedia() {
@@ -5242,6 +5340,12 @@
     if (state.screen === 'detail') return homeBar() + detail();
     if (state.screen === 'pathways') return homeBar() + pathwaysPage();
     if (state.screen === 'assignments') return homeBar() + assignmentsPage();
+    if (state.screen === 'assignment-program') return homeBar() + assignmentProgramPage();
+    if (state.screen === 'assignment-details') return homeBar() + assignmentDetailsPage();
+    if (state.screen === 'assignment-rubric') return homeBar() + assignmentRubricPage();
+    if (state.screen === 'assignment-release') return homeBar() + assignmentReleasePage();
+    if (state.screen === 'assignment-ai') return homeBar() + assignmentAiPage();
+    if (state.screen === 'assignment-faq') return homeBar() + assignmentFaqPage();
     if (state.screen === 'starter') return homeBar() + starterPage();
     if (state.screen === 'videos') return homeBar() + videosPage();
     if (state.screen === 'readings') return homeBar() + readingsGallery();
@@ -5727,13 +5831,26 @@
       var items = assignmentsData(), idx = Math.max(0, Math.min(items.length - 1, Number(i) || 0));
       state.assignmentIndex = idx;
       state.assignmentTab = 'assignments';
+      state.screen = 'assignment-details';
       render();
       scrollToId('asg-assignments');
     },
     openStarter: function () { if (state.screen !== 'starter') rememberPrevious(); state.screen = 'starter'; state.assignmentTab = 'assignments'; focusTarget = 'soc-main'; render(); topScroll(); },
     starterPick: function (i) { var items = assignmentsData(); state.assignmentIndex = Math.max(0, Math.min(items.length - 1, Number(i) || 0)); persist(); render(); scrollToId('asg-starter-chooser'); },
     asgJump: function (id) { scrollToId(id); },
-    assignTab: function (t) { state.assignmentTab = cleanAssignmentTab(t); if (state.assignmentTab !== 'faq') state.assignmentFaq = null; render(); topScroll(); },
+    assignmentPage: function (t) {
+      var tab = cleanAssignmentTab(t);
+      var target = assignmentScreenFor(tab);
+      if (target !== state.screen) rememberPrevious();
+      state.screen = target;
+      state.assignmentTab = tab;
+      if (state.assignmentTab !== 'faq') state.assignmentFaq = null;
+      focusTarget = 'soc-main';
+      render();
+      topScroll();
+    },
+    assignTab: function (t) { this.assignmentPage(t); },
+    assignmentAi: function () { this.assignmentPage('ai'); },
     assignFaq: function (i) { state.assignmentFaq = (state.assignmentFaq === i) ? null : i; renderKeepScroll(); },
     assignCheck: function (id, i) { state.assignmentChecks = state.assignmentChecks || {}; state.assignmentChecks[id] = state.assignmentChecks[id] || {}; state.assignmentChecks[id][i] = !state.assignmentChecks[id][i]; renderKeepScroll(); },
     starterAnswer: function (id, key, value) { state.assignmentStarter = state.assignmentStarter || {}; state.assignmentStarter[id] = state.assignmentStarter[id] || { format: 'all', answers: {} }; state.assignmentStarter[id].answers = state.assignmentStarter[id].answers || {}; state.assignmentStarter[id].answers[key] = value; persist(); },
