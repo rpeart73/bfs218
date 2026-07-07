@@ -97,6 +97,8 @@
     kcShortRate: (saved0.kcShortRate && typeof saved0.kcShortRate === 'object') ? saved0.kcShortRate : {},
     kcHist: (saved0.kcHist && typeof saved0.kcHist === 'object') ? saved0.kcHist : {},
     careerField: resumeView0 ? (view0.careerField || '') : '',
+    programViewField: resumeView0 ? (view0.programViewField || '') : '',
+    programViewAssignment: resumeView0 ? (view0.programViewAssignment || 'all') : 'all',
     careerReflect: (saved0.careerReflect && typeof saved0.careerReflect === 'object') ? saved0.careerReflect : {},
     mediaNotes: (saved0.mediaNotes && typeof saved0.mediaNotes === 'object') ? saved0.mediaNotes : {},
     libScroll: 0,
@@ -146,6 +148,8 @@
         detailId: state.detailId,
         cardWeek: state.cardWeek,
         careerField: state.careerField,
+        programViewField: state.programViewField,
+        programViewAssignment: state.programViewAssignment || 'all',
         activeTypes: state.activeTypes || [],
         activeWeek: state.activeWeek,
         search: state.search || '',
@@ -201,6 +205,7 @@
 
   /* ---------- helpers ---------- */
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function jsArg(s) { return String(s == null ? '' : s).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/[\r\n]+/g, ' '); }
   function typeMeta(t) { return D.types[t] || D.types.Article; }
   function rec(id) { for (var i = 0; i < D.records.length; i++) if (D.records[i].id === id) return D.records[i]; return null; }
   // Only free, openly accessible readings get a public link. Copyrighted or
@@ -3454,7 +3459,7 @@
       + '<section class="path-summary"><div><span class="path-mark">1</span><b>Same course</b><p>Same readings, activities, assignments, and expectations.</p></div><div><span class="path-mark">2</span><b>Different rhythm</b><p>Async is self-paced. Sync is class-connected.</p></div><div><span class="path-mark">3</span><b>One weekly record</b><p>Both routes end with Generate Your Weekly Notes.</p></div></section>'
       + '<div class="path-routes">' + route('async', 'Asynchronous route', 'Use the weekly page as the full learning room.', asyncSteps)
       + route('sync', 'Synchronous route', 'Use the site around class so class time goes deeper.', syncSteps) + '</div>'
-      + '<section class="path-close"><h2>Which route should you follow?</h2><p>No live weekly class? Use the asynchronous route. Scheduled class meetings? Use the synchronous route. Unsure? Start with the asynchronous route because it is the complete self-paced path. Enter the weekly room first. Use walkthroughs from inside the week when you need the ideas explained again.</p><div class="path-actions"><button type="button" class="primary" onclick="SOC.station(2)"><b>Enter Week 2 Learning Room</b><small>Start the full module.</small></button><button type="button" onclick="SOC.careerLens()"><b>Choose My Program Lens</b><small>Personalize the examples.</small></button><button type="button" onclick="SOC.careerChoices()"><b>Career Choices</b><small>See how BFS218 connects to your path.</small></button><button type="button" class="guide" onclick="SOC.go(\'assignments\')"><b>Open Assignments Guide</b><small>Understand the graded work.</small></button></div></section>'
+      + '<section class="path-close"><h2>Which route should you follow?</h2><p>No live weekly class? Use the asynchronous route. Scheduled class meetings? Use the synchronous route. Unsure? Start with the asynchronous route because it is the complete self-paced path. Enter the weekly room first. Use walkthroughs from inside the week when you need the ideas explained again.</p><div class="path-actions"><button type="button" class="primary" onclick="SOC.station(2)"><b>Enter Week 2 Learning Room</b><small>Start the full module.</small></button><button type="button" onclick="SOC.assignmentPage(\'program\')"><b>Understand your Program\'s Connection to the Course</b><small>Preview field examples.</small></button><button type="button" onclick="SOC.careerChoices()"><b>Career Choices</b><small>See how BFS218 connects to your path.</small></button><button type="button" class="guide" onclick="SOC.assignmentPage(\'assignments\')"><b>Starting Your Assignment</b><small>Plan the graded work.</small></button></div></section>'
       + '</div>';
   }
   /* ---------- generic week activities: match / scenario / toggle / assemble / lab ---------- */
@@ -3662,11 +3667,33 @@
 
   /* ---------- render ---------- */
   /* ---------- Field Lens: persistent, visible, optional program personalization ---------- */
-  function lensParse() {
-    var raw = state.careerField || '';
+  function programAreaForName(name) {
+    var PROG = window.SENECA_PROGRAMS || null;
+    name = String(name || '');
+    if (!PROG || !name) return null;
+    var areas = Object.keys(PROG);
+    for (var i = 0; i < areas.length; i++) {
+      if ((PROG[areas[i]] || []).indexOf(name) >= 0) return areas[i];
+    }
+    return null;
+  }
+  function normalizeLensRaw(raw) {
+    raw = String(raw || '');
+    if (!raw || raw === '__explore' || raw.indexOf('::') >= 0) return raw;
+    var area = programAreaForName(raw);
+    return area ? (area + '::' + raw) : raw;
+  }
+  function lensFromRaw(raw) {
+    raw = normalizeLensRaw(raw);
     if (!raw || raw === '__explore') return null;
     if (raw.indexOf('::') >= 0) { var p = raw.split('::'); return { area: p[0], program: p[1], label: p[1] }; }
     return { area: raw, program: null, label: 'All of ' + raw };
+  }
+  function lensParse() {
+    return lensFromRaw(state.careerField || '');
+  }
+  function programViewParse() {
+    return lensFromRaw(state.programViewField || '');
   }
   function lensProgramOpts(raw, placeholder) {
     var C = window[(D.course && D.course.code) + '_CAREER'] || {};
@@ -3688,11 +3715,37 @@
   }
   function assignmentLensPicker() {
     var raw = state.careerField || '';
-    return '<label class="asg-inline-lens"><span>Program lens</span><select onchange="SOC.assignmentLens(this.value)" aria-label="Choose a program lens for assignment examples">' + lensProgramOpts(raw, '') + '</select><small>Changing this updates the examples and starter questions on this page.</small></label>';
+    return '<label class="asg-inline-lens"><span>Program lens</span><select onchange="SOC.assignmentLens(this.value)" aria-label="Choose a program lens for assignment examples">' + lensProgramOpts(raw, '') + '</select><small>Changing this updates the assignment rooms and starter questions below.</small></label>';
   }
   function assignmentLensPanel(L) {
     var label = L ? (L.program || L.area) : 'General stream';
-    return '<section class="asg-lens-panel" aria-label="Assignment program lens selector"><div><div class="mono">PROGRAM LENS</div><h2>Choose once, then the guide updates</h2><p>Use this selector to make assignment examples more specific to your program. The assignment prompt, grading, due dates, and Blackboard submission rules stay the same.</p></div><div>' + assignmentLensPicker() + '<p>Current lens: <b>' + esc(label) + '</b>.</p></div></section>';
+    return '<section class="asg-lens-panel" aria-label="Assignment program lens selector"><div><div class="mono">ASSIGNMENT PROCESS</div><h2>Choose your program for the assignments</h2><p>Start here when you are ready to plan assignment examples. This choice updates the assignment rooms and Starter Studio only. The assignment prompt, grading, due dates, and Blackboard submission rules stay the same.</p></div><div>' + assignmentLensPicker() + '<p>Current assignment lens: <b>' + esc(label) + '</b>.</p></div></section>';
+  }
+  function programViewPicker() {
+    var raw = state.programViewField || '';
+    return '<label class="asg-inline-lens"><span>View program</span><select onchange="SOC.viewProgram(this.value);return false" aria-label="Preview a program connection without changing assignments">' + lensProgramOpts(raw, '') + '</select><small>Selecting here changes only this page. Starting Your Assignment has its own program choice.</small></label>';
+  }
+  function programViewAssignmentId() {
+    var id = state.programViewAssignment || 'all';
+    if (id === 'all') return 'all';
+    var items = assignmentsData();
+    for (var i = 0; i < items.length; i++) if (items[i].id === id) return id;
+    return 'all';
+  }
+  function programViewAssignmentItem() {
+    var id = programViewAssignmentId();
+    if (id === 'all') return null;
+    var items = assignmentsData();
+    for (var i = 0; i < items.length; i++) if (items[i].id === id) return items[i];
+    return null;
+  }
+  function programViewAssignmentPicker() {
+    var id = programViewAssignmentId();
+    var opts = '<option value="all"' + (id === 'all' ? ' selected' : '') + '>All assignments</option>';
+    assignmentsData().forEach(function (a) {
+      opts += '<option value="' + esc(a.id) + '"' + (id === a.id ? ' selected' : '') + '>' + esc(a.title) + '</option>';
+    });
+    return '<label class="asg-inline-lens asg-assignment-focus"><span>Assignment focus</span><select onchange="SOC.viewProgramAssignment(this.value);return false" aria-label="Choose which assignment Section 3 should focus on">' + opts + '</select><small>This changes only Section 3 on this page.</small></label>';
   }
   function lensChip() {
     var C = window[(D.course && D.course.code) + '_CAREER'] || null;
@@ -4309,7 +4362,7 @@
       ['Can I email my assignment or send a link?', 'No. The assessment briefs say Blackboard submission only. Email submissions or email-only links are not accepted.'],
       ['Are all five assignments separate?', 'They are graded separately, but they build one thing: your Personal Cartography. Each assignment adds another layer to the same map.'],
       ['What if I miss a deadline?', 'The course assessment documents describe firm deadlines. Check Blackboard for the exact date and time, and ask the instructor early if you are unsure.'],
-      ['Can I use generative AI?', 'Only as study support. You may use it to brainstorm, check clarity, or organize your own notes, but you must disclose the tool, date, and purpose. Do not submit AI-written or AI-rewritten work as your own. Use the AI Use page for examples.'],
+      ['Can I use generative AI?', 'Only as study support. You may use it to brainstorm, check clarity, or organize your own notes, but you must disclose the tool, date, and purpose. Do not submit AI-written or AI-rewritten work as your own. Use How to Use AI Properly for examples.'],
       ['What happens if AI writes my paper?', 'Submitting AI-written or AI-rewritten work as your own can be treated as academic misconduct. That can lead to a zero on the assignment, a formal academic-integrity process, and further course or institutional penalties. If you are unsure, do not submit the AI text. Ask first and disclose.'],
       ['Can AI fix my grammar?', 'A grammar or clarity check is different from having AI write the assignment. If a tool changes wording, structure, claims, sources, or analysis, disclose it. Your final ideas, course connections, examples, and evidence must be yours.'],
       ['What if screenshots do not work for my example?', 'Use another artifact you can explain clearly: a form field, prompt, output, setting, rule, notice, policy line, captioned photo, or short audio description.'],
@@ -4358,7 +4411,7 @@
   }
   function assignmentJumpNav() {
     var active = assignmentActivePage();
-    var items = [['story', 'Story'], ['program', 'Program Lens'], ['assignments', 'Assignments'], ['quality', 'Rubric'], ['release', 'Release Dates'], ['ai', 'AI Use'], ['faq', 'FAQ']];
+    var items = [['story', 'Overview'], ['program', 'View Programs'], ['assignments', 'Starting Your Assignment'], ['quality', 'How I Grade'], ['release', 'Release & Due Dates'], ['ai', 'How to Use AI Properly'], ['faq', 'FAQ']];
     return '<nav class="asg-jump" aria-label="Assignments guide sections">' + items.map(function (it) {
       var on = active === it[0];
       return '<button type="button" onclick="SOC.assignmentPage(\'' + it[0] + '\')" aria-current="' + (on ? 'page' : 'false') + '" class="' + (on ? 'on' : '') + '">' + esc(it[1]) + '</button>';
@@ -4371,15 +4424,38 @@
       ['Demonstrating', 'You meet the task clearly. Your example, evidence, course language, and explanation work together and are easy to follow.'],
       ['Connecting', 'You show how the example, evidence, course idea, your position, and the people affected fit together. The work explains why the connection matters.']
     ];
-    var moves = [
-      ['Reflection', 'Connect the topic to your own position, experience, and way of thinking.'],
-      ['Respect', 'Use sources carefully, look for relationships between ideas, and avoid treating one view as the whole story.'],
-      ['Realization', 'Show what changed in your understanding after working with the evidence.'],
-      ['Responsibility', 'Explain what your conclusion asks you, your field, or a system to do next.']
+    var readFor = [
+      ['Specific evidence', 'Name the exact tool, rule, form, score, platform, source, case, screen, or decision point. I need to see what you are analysing.'],
+      ['Course thinking', 'Use the course concept to explain what the system does. Do not just name the term and move on.'],
+      ['Your own voice', 'A polished answer that says little is weaker than a rougher answer that is honestly working through evidence.'],
+      ['Connection', 'Show how the example, people affected, source evidence, and your own position fit together.'],
+      ['Responsibility', 'Explain what the example asks a person, field, institution, or system to notice or change.']
     ];
-    return '<section id="asg-quality" class="asg-qualitypath" aria-label="Rubric"><div><div class="mono">RUBRIC</div><h2>Emerging to Connecting</h2><p>Use this as a quick guide to what stronger work does.</p></div><div class="asg-qualitypath-grid">' + levels.map(function (l) {
+    var process = [
+      ['Start with the task', 'I first ask whether the submission answered the actual prompt and included the required pieces.'],
+      ['Read the evidence', 'I look for concrete proof: an artifact, source, scene, case, data point, or documented system.'],
+      ['Check the concept', 'I check whether the course idea is accurate and whether it is being used to explain the example.'],
+      ['Look for growth', 'Across the term, stronger work becomes more specific, more careful, and more connected.'],
+      ['Write useful feedback', 'Feedback names what is working and the next one or two moves that would make the work stronger.']
+    ];
+    var integrity = [
+      ['Format is not the grade', 'Text, audio, video, map, table, or diagram can all work when the substance answers the prompt.'],
+      ['Polish is not proof', 'Clean writing helps, but it does not replace evidence, course language, or your own analysis.'],
+      ['AI cannot write the work', 'If a tool writes or rewrites the assignment, that can become an academic-integrity issue. Use How to Use AI Properly before submitting.'],
+      ['Late and wrong-channel work', 'Blackboard is the official submission space. Late work and email submissions follow the course rules posted in Blackboard.']
+    ];
+    return '<section id="asg-quality" class="asg-qualitypath" aria-label="How I Grade"><div><div class="mono">HOW I GRADE</div><h2>What I read for</h2><p>Every assignment is marked out of 20. The exact criteria change by assignment, but the standard stays consistent: specific evidence, accurate course thinking, your own voice, and a clear connection to why the system matters.</p></div>'
+      + '<div class="asg-grade-note"><b>The short version</b><p>I am looking for the part of the work that could only have come from you: the example you noticed, the evidence you chose, the course idea you used, and the connection you made. Feedback is help, not punishment.</p></div>'
+      + '<div class="asg-qualitypath-grid">' + levels.map(function (l) {
       return '<article><b>' + esc(l[0]) + '</b><p>' + esc(l[1]) + '</p></article>';
-    }).join('') + '</div><details class="asg-moves"><summary>What I am looking for</summary><div>' + moves.map(function (m) {
+    }).join('') + '</div>'
+      + '<div class="asg-program-wide"><div class="mono">WHAT COUNTS AS STRONGER WORK</div><h3>Specific before polished</h3><div class="asg-lens-map">' + readFor.map(function (m) {
+      return '<article><span>' + esc(m[0]) + '</span><p>' + esc(m[1]) + '</p></article>';
+    }).join('') + '</div></div>'
+      + '<div class="asg-program-wide"><div class="mono">HOW THE GRADE IS BUILT</div><h3>How I move through a submission</h3><div class="asg-lens-steps">' + process.map(function (m) {
+      return '<article><b>' + esc(m[0]) + '</b><p>' + esc(m[1]) + '</p></article>';
+    }).join('') + '</div></div>'
+      + '<details class="asg-moves"><summary>Important grading boundaries</summary><div>' + integrity.map(function (m) {
       return '<article><b>' + esc(m[0]) + '</b><p>' + esc(m[1]) + '</p></article>';
     }).join('') + '</div></details></section>';
   }
@@ -4623,23 +4699,56 @@
       starter: fit.starter || base.starter
     };
   }
-  function assignmentProgramGuide(L) {
-    var label = L ? (L.program || L.area) : 'your program';
-    var profile = assignmentLensProfile(L);
-    if (!L) {
-      return '<section id="asg-program" class="asg-program" aria-label="Using your program in assignments"><div><div class="mono">PROGRAM LENS</div><h2>Use your program to choose better examples</h2><p>No program lens selected yet. Use the selector at the top of this page if you want examples to update for your field.</p></div><ol><li><b>Choose</b><span>Pick one real system from a field you know.</span></li><li><b>Ask</b><span>What does it do, and who feels the effect?</span></li><li><b>Show</b><span>Use a visible detail, artifact, or source as evidence.</span></li></ol></section>';
+  function assignmentProgramGuide() {
+    var L = programViewParse();
+    var intro = '<div><div class="mono">VIEW PROGRAMS</div><h2>Understand your program\'s connection to the course</h2><p>Use this page when you want help seeing how the course can connect to a program area. It is optional. It does not choose your assignment lens, generate assignment work, or change your saved assignment setup.</p><small>When you are ready to plan an assignment, go to Starting Your Assignment.</small></div>';
+    var picker = '<div class="asg-program-picker"><h3>Choose a program to understand the connection</h3>' + programViewPicker() + '<p>The explanation below changes when you select a field or a specific program. Use it to see possible systems, artifacts, people affected, and course questions.</p></div>';
+    var guard = '<div class="asg-program-alert"><b>Understanding page only.</b><span>This page helps you see possible connections. Starting Your Assignment is where the program choice updates assignment examples, starter questions, tables, diagrams, and the Word starter pack.</span></div>';
+    var route = '<div class="asg-program-route-card"><div><span>Ready to start planning?</span><b>Go to Starting Your Assignment.</b><p>Use that page when you want to choose an assignment, select a program lens for that assignment, answer preparation questions, and generate a starter pack.</p></div><button type="button" onclick="SOC.assignmentPage(\'assignments\')">Starting Your Assignment</button></div>';
+    var preview = '';
+    if (L) {
+      var profile = assignmentLensProfile(L);
+      var ctx = lensFieldContext(L);
+      var cases = [
+        ['Neutral tools are still choices', 'A screen, checklist, score, camera, or form can look routine while still shaping who is trusted, delayed, exposed, or given extra work.'],
+        ['Records can carry old patterns forward', 'The course asks students to notice how past decisions, missing data, labels, and defaults can become part of a new system.'],
+        ['Challenge matters', 'A useful example asks whether a person can see the decision, understand it, correct it, appeal it, or refuse it without being punished.']
+      ].map(function (c) { return '<article><b>' + esc(c[0]) + '</b><p>' + esc(c[1]) + '</p></article>'; }).join('');
+      var check = assignmentProgramStrengthCheck(L, profile).map(function (r) {
+        return '<article><span>' + esc(r[0]) + '</span><p>' + esc(r[1]) + '</p></article>';
+      }).join('');
+      var focusA = programViewAssignmentItem();
+      var section3 = '';
+      if (focusA) {
+        var fit = assignmentProgramFit(focusA, L);
+        var fitCards = (fit.cards || []).map(function (c) {
+          return '<article><span>' + esc(c[0]) + '</span><p>' + esc(c[1]) + '</p></article>';
+        }).join('');
+        var brief = (focusA.really || []).map(function (s, i) {
+          return '<article><span>Task ' + (i + 1) + '</span><p>' + esc(s) + '</p></article>';
+        }).join('');
+        var steps = (fit.steps || []).map(function (s, i) {
+          return '<article><b>' + esc(['Choose', 'Show', 'Connect'][i] || ('Move ' + (i + 1))) + '</b><p>' + esc(s) + '</p></article>';
+        }).join('');
+        section3 = '<div class="asg-program-wide"><div class="mono">SECTION 3</div><h3>How to integrate this into ' + esc(focusA.title) + '</h3><p>' + esc(fit.intro) + '</p>' + programViewAssignmentPicker()
+          + '<div class="asg-program-grid" style="margin-top:12px">' + fitCards + '</div>'
+          + '<div class="asg-program-wide asg-inner-panel"><div class="mono">WHAT THIS ASSIGNMENT ASKS</div><div class="asg-lens-steps">' + brief + '</div></div>'
+          + '<div class="asg-program-wide asg-inner-panel"><div class="mono">HOW TO USE THE PROGRAM CONNECTION</div><div class="asg-lens-steps">' + steps + '</div></div>'
+          + '<div class="asg-program-alert asg-answer-shape"><b>Possible answer shape</b><span>' + esc(fit.starter) + '</span></div>'
+          + '<div class="asg-lens-check" style="margin-top:12px"><div><div class="mono">FROM BROAD TO USABLE</div><h3>Before you write</h3></div><div>' + check + '</div></div></div>';
+      } else {
+        var map = assignmentProgramAssignmentRows(L, profile).map(function (r) {
+          return '<article><b>' + esc(r[0]) + '</b><span>' + esc(r[1]) + '</span><p>' + esc(r[2]) + '</p></article>';
+        }).join('');
+        section3 = '<div class="asg-program-wide"><div class="mono">SECTION 3</div><h3>How to integrate this into the actual assignments</h3><p>The program gives the example. The course gives the analysis: what the system does, who it sorts, who benefits, who is exposed, and who can challenge the outcome.</p>' + programViewAssignmentPicker() + '<div class="asg-lens-map" style="margin-top:12px">' + map + '</div><div class="asg-lens-check" style="margin-top:12px"><div><div class="mono">FROM BROAD TO USABLE</div><h3>Before you write</h3></div><div>' + check + '</div></div></div>';
+      }
+      preview = '<div class="asg-program-wide asg-program-preview"><div class="mono">SECTION 1</div><h3>Program overview: ' + esc(L.label) + '</h3><p>' + esc(ctx.label) + ' gives students concrete places to look: ' + esc(ctx.setting) + '. The course connection begins with everyday systems, not with a broad opinion about the whole field.</p><div class="asg-program-grid"><article><span>Where to look</span><p>' + esc(ctx.place) + '</p></article><article><span>Common decisions</span><p>' + esc(ctx.decision) + '</p></article><article><span>People in the picture</span><p>' + esc(ctx.people) + '</p></article></div></div>'
+        + '<div class="asg-program-wide"><div class="mono">SECTION 2</div><h3>How this can interface with techno-racism and course themes</h3><p>Techno-racism is not only about hostile intent. It can appear when a system sorts people through data, defaults, records, scores, screens, or rules that feel objective but produce unequal consequences.</p><div class="asg-lens-steps">' + cases + '</div><div class="asg-program-grid" style="margin-top:10px"><article><span>Strong starting points</span><p>' + esc(profile.topics.join(', ')) + '</p></article><article><span>Evidence you could use</span><p>' + esc(profile.artifacts.join(', ')) + '</p></article><article><span>Question to carry</span><p>' + esc(profile.question) + '</p></article></div></div>'
+        + section3;
+    } else {
+      preview = '<div class="asg-program-wide asg-program-preview"><div class="mono">OPTIONAL SUPPORT</div><h3>Choose a program only if it helps</h3><p>The course works even if a student stays with the general stream. Choosing a program here simply makes the examples easier to picture. It helps students notice a real system instead of starting with a broad topic.</p><div class="asg-program-grid"><article><span>Systems</span><p>Tools, forms, scores, dashboards, platforms, rules, records, cameras, and defaults.</p></article><article><span>Artifacts</span><p>Screenshots, policy lines, notices, checklists, reports, outputs, labels, case files, and source documents.</p></article><article><span>Course questions</span><p>What does the system do, who is sorted, who benefits, who is exposed, and who can challenge the outcome?</p></article></div></div>';
     }
-    var focus = profile.focus.replace(/^For this program, pay special attention to /, 'Focus on ');
-    var cases = assignmentProgramCaseCards(L, profile).map(function (c) {
-      return '<article><b>' + esc(c[0]) + '</b><p>' + esc(c[1]) + '</p></article>';
-    }).join('');
-    var map = assignmentProgramAssignmentRows(L, profile).map(function (r) {
-      return '<article><b>' + esc(r[0]) + '</b><span>' + esc(r[1]) + '</span><p>' + esc(r[2]) + '</p></article>';
-    }).join('');
-    var check = assignmentProgramStrengthCheck(L, profile).map(function (r) {
-      return '<article><span>' + esc(r[0]) + '</span><p>' + esc(r[1]) + '</p></article>';
-    }).join('');
-    return '<section id="asg-program" class="asg-program compact expanded" aria-label="Using your program in assignments"><div><div class="mono">PROGRAM LENS</div><h2>Apply the ' + esc(label) + ' lens</h2><p>The prompt does not change. The lens helps you move from a broad topic to a concrete system you can inspect.</p><small>' + esc(focus) + '</small></div><div class="asg-program-grid"><article><span>Strong starting points</span><p>' + esc(profile.topics.join(', ')) + '</p></article><article><span>Evidence you could use</span><p>' + esc(profile.artifacts.join(', ')) + '</p></article><article><span>Question to keep in view</span><p>' + esc(profile.question) + '</p></article></div><div class="asg-program-alert"><b>Do not drift into career advice.</b><span>Your program gives you the example. The course gives you the analysis: what the system does, who it sorts, who benefits, who is exposed, and who can challenge the outcome.</span></div><div class="asg-program-wide"><div class="mono">HOW TO USE THE LENS</div><h3>Turn the program into an example, not a different assignment</h3><div class="asg-lens-steps">' + cases + '</div></div><div class="asg-program-wide"><div class="mono">ASSIGNMENT MAP</div><h3>Where the lens fits across the term</h3><div class="asg-lens-map">' + map + '</div></div><div class="asg-program-wide asg-lens-check"><div><div class="mono">STRENGTH CHECK</div><h3>Move from broad to usable</h3></div><div>' + check + '</div></div></section>';
+    return '<section id="asg-program" class="asg-program compact expanded" aria-label="View program connections">' + intro + picker + guard + preview + route + '</section>';
   }
   function assignmentAiDisclosureGuide() {
     var allowed = [
@@ -4686,7 +4795,7 @@
       ['Missing boundary', 'I used ChatGPT for research.'],
       ['Missing ownership', 'AI helped with my wording.']
     ];
-    return '<section id="asg-ai" class="asg-ai asg-ai-page" aria-label="AI Use page"><div class="asg-ai-head"><span>AI USE PAGE</span><b>Use AI only as support</b><small>Name the tool, date, purpose, and boundary.</small></div>'
+    return '<section id="asg-ai" class="asg-ai asg-ai-page" aria-label="How to Use AI Properly"><div class="asg-ai-head"><span>HOW TO USE AI PROPERLY</span><b>Use AI only as support</b><small>Name the tool, date, purpose, and boundary.</small></div>'
       + '<div class="asg-ai-warning"><b>Penalty risk: do not use AI to write your papers.</b><p>Submitting AI-written or AI-rewritten work as your own can be treated as academic misconduct. Penalties can include a zero on the assignment, a formal academic-integrity process, and further course or institutional consequences. When unsure, do not submit the AI text. Ask first and disclose.</p></div>'
       + '<div class="asg-ai-rule"><b>The simple rule</b><p>AI can help you prepare to think. It cannot do the thinking, reading, evidence selection, course analysis, reflection, script, or final writing for you.</p></div>'
       + '<div class="asg-ai-columns"><div><h3>Acceptable study support</h3>' + allowed.map(function (a) {
@@ -4711,9 +4820,9 @@
       }).join('') + '</div></div><p class="asg-ai-bottom">The standard is simple: a reader should know what tool touched the work, what it was used for, and what parts are still fully yours.</p></section>';
   }
   function assignmentReleaseSchedule(items) {
-    return '<section id="asg-release" class="asg-release" aria-label="Assignment opening schedule"><div><div class="mono">BLACKBOARD OPENING DATES</div><h2>When each assignment will be opened on Blackboard</h2><p>The companion guide stays open so you can prepare. The complete assignment instructions and submission dropboxes will be opened on Blackboard on the dates below.</p></div><div class="asg-release-grid">' + items.map(function (a) {
+    return '<section id="asg-release" class="asg-release" aria-label="Assignment release and due date schedule"><div><div class="mono">BLACKBOARD RELEASE & DUE DATES</div><h2>When each assignment opens and when it is due</h2><p>The companion guide stays open so you can prepare. The complete assignment instructions and submission dropboxes will be released on Blackboard on the dates below. The due date tells you when the work must be submitted in Blackboard.</p></div><div class="asg-release-grid">' + items.map(function (a) {
       var dp = assignmentDateParts(a.release);
-      return '<article><div class="asg-release-head"><div class="asg-date"><span>' + esc(dp.month) + '</span><b>' + esc(dp.day) + '</b><small>' + esc(dp.year) + '</small></div><div><b>' + esc(a.title) + '</b><p>Assignment opened on Blackboard: ' + esc(assignmentDateLabel(a.release)) + '.</p></div></div><small class="asg-due">' + esc(a.due) + '</small></article>';
+      return '<article><div class="asg-release-head"><div class="asg-date"><span>' + esc(dp.month) + '</span><b>' + esc(dp.day) + '</b><small>' + esc(dp.year) + '</small></div><div><b>' + esc(a.title) + '</b><p>Released on Blackboard: ' + esc(assignmentDateLabel(a.release)) + '.</p></div></div><small class="asg-due">' + esc(a.due) + '</small></article>';
     }).join('') + '</div></section>';
   }
   function assignmentList(title, arr) {
@@ -4765,9 +4874,9 @@
         ['Answer shape', 'The case matters because the system turns a technical rule into a real consequence for people.']
       ],
       'repair': [
-        ['Field move', 'Return to one harm you already documented in ' + field + ', preferably from an artifact or system you can explain clearly.'],
-        ['Course move', 'Change a rule, process, design, review step, or accountability path.'],
-        ['Answer shape', 'The repair fits because it changes who has voice, protection, appeal, or control.']
+        ['Start from evidence', 'Return to one harm you already documented in ' + field + '. Use the artifact, source, or system detail that proves the harm is real.'],
+        ['Name what changes', 'Choose one concrete repair: a rule, review step, design choice, appeal path, record-keeping habit, or accountability process.'],
+        ['Explain the difference', 'Show who gains voice, protection, appeal, control, safety, or a clearer way to challenge the system.']
       ],
       'cartography': [
         ['Field move', 'Choose earlier pieces that show how your thinking about ' + field + ' changed.'],
@@ -4887,15 +4996,15 @@
   }
   function assignmentStarterAssignmentChooser(items) {
     var idx = Math.max(0, Math.min(items.length - 1, Number(state.assignmentIndex) || 0));
-    return '<section id="asg-starter-chooser" class="asg-starter-chooser" aria-label="Selected assignment for the starter studio"><div><div class="mono">STEP 1</div><h2>Confirm the assignment you selected</h2><p>This preparation page uses the assignment you chose on the guide. To change assignments, return to the Assignments Guide first.</p></div><div>' + items.map(function (a, i) {
+    return '<section id="asg-starter-chooser" class="asg-starter-chooser" aria-label="Selected assignment for the starter studio"><div><div class="mono">STEP 1</div><h2>Confirm the assignment you selected</h2><p>This preparation page uses the assignment you chose on Starting Your Assignment. To change assignments, return there first.</p></div><div>' + items.map(function (a, i) {
       var on = i === idx;
       return '<button type="button" ' + (on ? '' : 'aria-disabled="true" tabindex="-1" ') + 'class="' + (on ? 'current' : 'locked') + '" aria-pressed="' + (on ? 'true' : 'false') + '"><span>' + esc(assignmentDateLabel(a.release)) + '</span><b>' + esc(a.title) + '</b><small>' + esc(a.short) + '</small></button>';
-    }).join('') + '</div><button type="button" class="asg-starter-change" onclick="SOC.assignmentPage(\'assignments\')">Return to Assignments Page to change</button></section>';
+    }).join('') + '</div><button type="button" class="asg-starter-change" onclick="SOC.assignmentPage(\'assignments\')">Return to Starting Your Assignment to change</button></section>';
   }
   function assignmentProgramBrief(a, L) {
     var fit = assignmentProgramFit(a, L);
     if (!L) {
-      return '<section class="asg-program-brief" aria-label="Program lens for this assignment"><div><div class="mono">PROGRAM CONNECTION</div><h3>Using the general course path</h3><p>The assignment prompt stays the same. Return to the Assignments Guide if you want to choose a program lens before building the preparation pack.</p></div></section>';
+      return '<section class="asg-program-brief" aria-label="Program lens for this assignment"><div><div class="mono">PROGRAM CONNECTION</div><h3>Using the general course path</h3><p>The assignment prompt stays the same. Return to Starting Your Assignment if you want to choose a program lens before building the preparation pack.</p></div></section>';
     }
     var cards = (fit.cards || []).slice(0, 3).map(function (m) {
       return '<article><span>' + esc(m[0]) + '</span><p>' + esc(m[1]) + '</p></article>';
@@ -4917,7 +5026,7 @@
       var id = 'starter-' + a.id + '-' + q[0];
       return '<label for="' + esc(id) + '"><span>' + (optional ? 'Optional' : 'Required') + '</span><b>' + esc(q[1]) + '</b><small>' + esc(q[2]) + '</small><textarea id="' + esc(id) + '" oninput="SOC.starterAnswer(\'' + esc(a.id) + '\',\'' + esc(q[0]) + '\',this.value)" placeholder="Write your answer here...">' + esc(answers[q[0]] || '') + '</textarea></label>';
     };
-    var lensLine = L ? 'Using ' + (L.program || L.area) + '. This lens was chosen on the Assignments Guide and now shapes the guidance below.' : 'Using the general course path selected on the Assignments Guide.';
+    var lensLine = L ? 'Using ' + (L.program || L.area) + '. This lens was chosen on Starting Your Assignment and now shapes the guidance below.' : 'Using the general course path selected on Starting Your Assignment.';
     return '<section id="asg-starter" class="asg-starter asg-starter-full" aria-label="Assignment preparation studio">'
       + '<div class="asg-starter-top"><div class="asg-starter-context"><div><div class="mono">STEP 2</div><h1>Start strong before you write</h1><p>You are planning <b>' + esc(a.title) + '</b>. Answer in your own words. The preparation pack organizes your thinking, but it does not write the assignment for you.</p><small>' + esc(lensLine) + '</small></div><div class="asg-starter-flow"><span>Read the tailored guidance</span><span>Answer the questions</span><span>Generate a preparation pack</span></div></div></div>'
       + assignmentProgramBlock(a, L, true)
@@ -4965,7 +5074,7 @@
   function assignmentStorySection(summary) {
     return assignmentPolicyPanel()
       + summary
-      + '<section id="asg-story" class="asg-story"><div><div class="mono">THE STORY</div><h2>You are building one map across the term</h2><p>The assignments are not random separate tasks. You begin by noticing real digital life, then you inspect one encounter, investigate one Canadian system, design a repair, and finally walk someone through the map of how your thinking changed.</p></div><ol><li>Notice</li><li>Break down</li><li>Investigate</li><li>Repair</li><li>Integrate</li></ol></section>';
+      + '<section id="asg-story" class="asg-story"><div><div class="mono">ASSIGNMENT OVERVIEW</div><h2>You are building one map across the term</h2><p>The assignments are not random separate tasks. You begin by noticing real digital life, then you inspect one encounter, investigate one Canadian system, design a repair, and finally walk someone through the map of how your thinking changed.</p></div><ol><li>Notice</li><li>Break down</li><li>Investigate</li><li>Repair</li><li>Integrate</li></ol></section>';
   }
   function assignmentActivePage() {
     if (state.screen === 'assignment-program') return 'program';
@@ -5001,56 +5110,54 @@
   }
   function assignmentsPage() {
     return '<div class="rise asg-page asg-story-route">'
-      + assignmentPageHero('ASSIGNMENT STORY', 'Understanding the Assignments', 'The five assignments build one map across the term. This page explains the arc before you enter the specific assignment rooms.')
       + assignmentJumpNav()
+      + assignmentPageHero('OVERVIEW', 'Understanding the Assignments', 'The five assignments build one map across the term. This page explains the arc before you enter the specific assignment rooms.')
       + '<div class="asg-tabpanel">' + assignmentStorySection(assignmentSummaryPanel()) + '</div>'
       + '</div>';
   }
   function assignmentProgramPage() {
-    var ctx = assignmentSelectedContext();
     return '<div class="rise asg-page asg-program-route">'
-      + assignmentPageHero('PROGRAM LENS', 'Use Your Program to Choose Better Examples', 'Choose a program lens when you want examples, artifacts, and starter questions to fit the field you are studying.')
-      + assignmentLensPanel(ctx.L)
       + assignmentJumpNav()
-      + '<div class="asg-tabpanel">' + assignmentProgramGuide(ctx.L) + '</div>'
+      + assignmentPageHero('VIEW PROGRAMS', 'Understand Your Program\'s Connection to the Course', 'Preview how different program areas can supply concrete examples for the course. This page is exploratory; the assignment workflow starts on Starting Your Assignment.')
+      + '<div class="asg-tabpanel">' + assignmentProgramGuide() + '</div>'
       + '</div>';
   }
   function assignmentDetailsPage() {
     var ctx = assignmentSelectedContext();
     return '<div class="rise asg-page asg-details-route">'
-      + assignmentPageHero('ASSIGNMENTS', 'Assignment Rooms', 'Open one assignment at a time. Each room explains the purpose, submission pieces, marking criteria, program connection, and preparation option.')
+      + assignmentJumpNav()
+      + assignmentPageHero('STARTING YOUR ASSIGNMENT', 'Assignment Rooms', 'Open one assignment at a time. Each room explains the purpose, submission pieces, marking criteria, program connection, and preparation option.')
       + assignmentPreviewBanner()
       + assignmentLensPanel(ctx.L)
-      + assignmentJumpNav()
       + '<div class="asg-tabpanel">' + assignmentDirectory(ctx.items) + assignmentRoom(ctx.selected, ctx.L) + '</div>'
       + '</div>';
   }
   function assignmentRubricPage() {
     return '<div class="rise asg-page asg-rubric-route">'
-      + assignmentPageHero('RUBRIC', 'How Stronger Work Grows', 'Use the rubric page to understand what stronger work does before you submit in Blackboard.')
       + assignmentJumpNav()
+      + assignmentPageHero('HOW I GRADE', 'How Stronger Work Grows', 'Use this page to understand what stronger work does before you submit in Blackboard.')
       + '<div class="asg-tabpanel">' + assignmentQualityPath() + '</div>'
       + '</div>';
   }
   function assignmentReleasePage() {
     var ctx = assignmentSelectedContext();
     return '<div class="rise asg-page asg-release-route">'
-      + assignmentPageHero('RELEASE DATES', 'Blackboard Opening Dates', 'This page lists when the complete assignment files and dropboxes will be opened on Blackboard.')
       + assignmentJumpNav()
+      + assignmentPageHero('RELEASE & DUE DATES', 'Blackboard Opening and Due Dates', 'This page lists when the complete assignment files and dropboxes will be opened on Blackboard and when the work is due.')
       + '<div class="asg-tabpanel">' + assignmentReleaseSchedule(ctx.items) + '</div>'
       + '</div>';
   }
   function assignmentFaqPage() {
     return '<div class="rise asg-page asg-faq-route">'
-      + assignmentPageHero('FAQ', 'Assignment Questions Students Usually Ask', 'Use this page for quick answers about submissions, Blackboard, AI disclosure, evidence, accommodations, and assignment scope.')
       + assignmentJumpNav()
+      + assignmentPageHero('FAQ', 'Assignment Questions Students Usually Ask', 'Use this page for quick answers about submissions, Blackboard, AI disclosure, evidence, accommodations, and assignment scope.')
       + '<div class="asg-tabpanel">' + assignmentFaqSection() + '</div>'
       + '</div>';
   }
   function assignmentAiPage() {
     return '<div class="rise asg-page asg-ai-route">'
-      + '<section class="asg-hero asg-ai-hero"><div><div class="mono">AI USE</div><h1>AI Use Page</h1><p>This page gives the AI-use rules in plain language, with examples students can adapt honestly. Use it before submitting any assignment if a generative AI tool helped you brainstorm, organize, search, or check clarity.</p></div><div class="asg-ai-page-actions"><button type="button" onclick="SOC.assignmentPage(\'assignments\')">Open Assignments Page</button></div></section>'
       + assignmentJumpNav()
+      + '<section class="asg-hero asg-ai-hero"><div><div class="mono">HOW TO USE AI PROPERLY</div><h1>How to Use AI Properly</h1><p>This page gives the AI-use rules in plain language, with examples students can adapt honestly. Use it before submitting any assignment if a generative AI tool helped you brainstorm, organize, search, or check clarity.</p></div><div class="asg-ai-page-actions"><button type="button" onclick="SOC.assignmentPage(\'assignments\')">Starting Your Assignment</button></div></section>'
       + '<div class="asg-tabpanel">' + assignmentAiDisclosureGuide() + '</div>'
       + '</div>';
   }
@@ -5488,6 +5595,8 @@
       assignmentIndex: state.assignmentIndex || 0,
       assignmentTab: state.assignmentTab || 'story',
       assignmentFaq: state.assignmentFaq,
+      programViewField: state.programViewField || '',
+      programViewAssignment: state.programViewAssignment || 'all',
       videoWeek: state.videoWeek || 'all',
       mediaKind: state.mediaKind || 'all'
     };
@@ -5528,6 +5637,8 @@
     state.assignmentIndex = Number(v.assignmentIndex) || 0;
     state.assignmentTab = cleanAssignmentTab(v.assignmentTab);
     state.assignmentFaq = v.assignmentFaq == null ? null : Number(v.assignmentFaq);
+    state.programViewField = v.programViewField || '';
+    state.programViewAssignment = v.programViewAssignment || 'all';
     state.videoWeek = v.videoWeek || 'all';
     state.mediaKind = v.mediaKind || 'all';
     state.navOpen = false;
@@ -5852,6 +5963,8 @@
     assignTab: function (t) { this.assignmentPage(t); },
     assignmentAi: function () { this.assignmentPage('ai'); },
     assignFaq: function (i) { state.assignmentFaq = (state.assignmentFaq === i) ? null : i; renderKeepScroll(); },
+    viewProgram: function (v) { state.programViewField = normalizeLensRaw(v); renderKeepScroll(); },
+    viewProgramAssignment: function (v) { state.programViewAssignment = v || 'all'; renderKeepScroll(); },
     assignCheck: function (id, i) { state.assignmentChecks = state.assignmentChecks || {}; state.assignmentChecks[id] = state.assignmentChecks[id] || {}; state.assignmentChecks[id][i] = !state.assignmentChecks[id][i]; renderKeepScroll(); },
     starterAnswer: function (id, key, value) { state.assignmentStarter = state.assignmentStarter || {}; state.assignmentStarter[id] = state.assignmentStarter[id] || { format: 'all', answers: {} }; state.assignmentStarter[id].answers = state.assignmentStarter[id].answers || {}; state.assignmentStarter[id].answers[key] = value; persist(); },
     starterFormat: function (id, fmt) { state.assignmentStarter = state.assignmentStarter || {}; state.assignmentStarter[id] = state.assignmentStarter[id] || { format: 'all', answers: {} }; state.assignmentStarter[id].format = cleanStarterFormat(fmt); persist(); renderKeepScroll(); },
