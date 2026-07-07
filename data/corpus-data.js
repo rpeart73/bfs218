@@ -751,6 +751,12 @@ window.BFS218 = {
    "week": 1
   },
   {
+   "term": "Racism",
+   "def": "Racism is a system of advantage and disadvantage organized around race. It can show up in individual prejudice, but in this course the key point is that racism also works through ordinary rules, institutions, data, defaults, and habits that produce unequal outcomes even when no one says a racist word or intends harm.",
+   "cite": "Benjamin, R. (2019). Race After Technology. Polity Press; Crenshaw, K. (1991). Mapping the Margins. Stanford Law Review, 43(6), 1241-1299.",
+   "week": 2
+  },
+  {
    "term": "Critical Race Theory",
    "def": "Critical race theory is a body of scholarship holding that racism is ordinary and structural, built into laws, institutions, and everyday systems, not only into individual prejudice. A central CRT claim is that systems can produce racially unequal outcomes while appearing neutral, which is why this course studies design and data, not only attitudes.",
    "cite": "Crenshaw, K. (1991). Mapping the Margins. Stanford Law Review, 43(6), 1241-1299.",

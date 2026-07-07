@@ -404,7 +404,7 @@
   }
   function sidebar() {
     var s = state;
-    var navDefs = [['journey', 'Home', 'gauge'], ['pathways', 'Course Pathways', 'map'], ['readings', 'Readings Library', 'gallery'], ['compare', 'Compare Readings', 'columns'], ['reading', 'Reading Practice', 'book'], ['videos', 'Videos and Podcasts', 'play'], ['glossary', 'Glossary', 'book'], ['cards', 'Concept Flashcards', 'clipboard'], ['assignments', 'Assignments Guide', 'clipboard'], ['career', 'Career Choices', 'globe']];
+    var navDefs = [['journey', 'Home', 'gauge'], ['pathways', 'Course Pathways', 'map'], ['readings', 'Readings Library', 'gallery'], ['compare', 'Compare Readings', 'columns'], ['reading', 'Reading Practice', 'book'], ['videos', 'Videos and Podcasts', 'play'], ['glossary', 'Glossary', 'book'], ['cards', 'Concept Flashcards', 'clipboard'], ['assignments', 'Starting Your Assignment', 'clipboard'], ['career', 'Career Choices', 'globe']];
     var btns = navDefs.map(function (d) {
       var key = d[0], active = (key === 'journey' && (s.screen === 'journey' || s.screen === 'library' || s.screen === 'station' || s.screen === 'detail')) || s.screen === key;
       var badge = '';
@@ -1605,6 +1605,13 @@
       if (t && defs[t.term]) return { term: t.term, def: defs[t.term], cite: t.cite };
       return t;
     });
+    if (!w2.terms.some(function (t) { return t && t.term === 'Racism'; })) {
+      w2.terms.unshift({
+        term: 'Racism',
+        def: 'a system of advantage and disadvantage organized around race. It can show up in individual prejudice, but in this course the key point is that racism also works through ordinary rules, institutions, data, defaults, and habits that produce unequal outcomes even when no one says a racist word or intends harm.',
+        cite: 'Benjamin, 2019; Crenshaw, 1991'
+      });
+    }
   })();
   (function strengthenWeek5Terms() {
     var c = (D.course && D.course.code) || '', w5 = WEEKPAGE[c] && WEEKPAGE[c][5];
