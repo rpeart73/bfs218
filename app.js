@@ -14,7 +14,7 @@
   var VKEY = SKEY + '.view.v1';
   var HKEY = SKEY + '.hardResetNext';
   function load() { try { var o = JSON.parse(localStorage.getItem(SKEY) || '{}'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; } }
-  function persist() { try { localStorage.setItem(SKEY, JSON.stringify({ saved: state.saved, cmpNotes: state.cmpNotes, rcNotes: state.rcNotes, sgNotes: state.sgNotes, sgTick: state.sgTick, wkCheck: state.wkCheck, wkReflect: state.wkReflect, wkNotes: state.wkNotes, act: state.act, mcSel: state.mcSel, mcConf: state.mcConf, kcVersion: state.kcVersion, kcShort: state.kcShort, kcShortRate: state.kcShortRate, kcHist: state.kcHist, careerReflect: state.careerReflect, mediaNotes: state.mediaNotes })); } catch (e) {} }
+  function persist() { try { localStorage.setItem(SKEY, JSON.stringify({ saved: state.saved, cmpNotes: state.cmpNotes, rcNotes: state.rcNotes, sgNotes: state.sgNotes, sgTick: state.sgTick, wkCheck: state.wkCheck, wkReflect: state.wkReflect, wkNotes: state.wkNotes, actResult: state.actResult, mcSel: state.mcSel, mcConf: state.mcConf, kcVersion: state.kcVersion, kcShort: state.kcShort, kcShortRate: state.kcShortRate, kcHist: state.kcHist, careerReflect: state.careerReflect, mediaNotes: state.mediaNotes })); } catch (e) {} }
   function loadView() { try { var o = JSON.parse(sessionStorage.getItem(VKEY) || '{}'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; } }
   function clearView() { try { sessionStorage.removeItem(VKEY); sessionStorage.removeItem(HKEY); } catch (e) {} }
   function shouldResumeView(v) {
@@ -32,7 +32,7 @@
   }
   function cleanWeekPart(part) {
     part = String(part || '');
-    return ['ov', 'path', 'vid', 'pre', 'learn', 'out', 'gq', 'lens', 'con', 'term', 'read', 'rescue', 'visual', 'watch', 'case', 'do', 'reflect', 'sg', 'kc', 'how', 'catch'].indexOf(part) >= 0 ? part : null;
+    return ['ov', 'path', 'vid', 'pre', 'learn', 'out', 'gq', 'lens', 'con', 'term', 'read', 'rescue', 'visual', 'watch', 'case', 'do', 'reflect', 'sg', 'kc', 'notes', 'how', 'catch'].indexOf(part) >= 0 ? part : null;
   }
   function initialRoute() {
     try {
@@ -58,7 +58,8 @@
     wkCheck: (saved0.wkCheck && typeof saved0.wkCheck === 'object') ? saved0.wkCheck : {},
     wkReflect: (saved0.wkReflect && typeof saved0.wkReflect === 'object') ? saved0.wkReflect : {},
     wkNotes: (saved0.wkNotes && typeof saved0.wkNotes === 'object') ? saved0.wkNotes : {},
-    act: (saved0.act && typeof saved0.act === 'object') ? saved0.act : {},
+    act: (resumeView0 && view0.act && typeof view0.act === 'object') ? view0.act : {},
+    actResult: (saved0.actResult && typeof saved0.actResult === 'object') ? saved0.actResult : {},
     layout: 'byweek',
     search: '',
     activeTypes: [],
@@ -149,6 +150,7 @@
         auditSlice: state.auditSlice || 'overall',
         auditView: state.auditView || 'errors',
         auditedSystems: state.auditedSystems || {},
+        act: state.act || {},
         assignmentIndex: state.assignmentIndex || 0,
         assignmentFaq: state.assignmentFaq,
         videoWeek: state.videoWeek || 'all',
@@ -1565,6 +1567,20 @@
     }
   };
   function weekData(w) { var c = (D.course && D.course.code) || ''; return (WEEKPAGE[c] && WEEKPAGE[c][w]) || null; }
+  (function strengthenWeek2Terms() {
+    var c = (D.course && D.course.code) || '', w2 = WEEKPAGE[c] && WEEKPAGE[c][2];
+    if (!w2 || !Array.isArray(w2.terms)) return;
+    var defs = {
+      'Critical race theory (CRT)': 'a way of studying racism as more than individual prejudice. CRT asks how normal rules, policies, institutions, and everyday systems can repeatedly produce racial advantage and disadvantage while still sounding neutral. In this course, it helps you ask what a digital system does, who benefits, who is burdened, and what evidence would show harm.',
+      'Structural and systemic racism': 'racial inequality produced by the routine design of systems: the data they use, the rules they apply, the defaults they assume, and the decisions they repeat. It does not require a single person with racist intent. A screening tool can reproduce housing, policing, or employment inequities because those inequities are already built into the records and rules it learns from.',
+      'The New Jim Code': 'Benjamin\'s term for technologies that carry old racial inequities into new tools while being marketed as objective, efficient, fair, or progressive. The danger is not only that the tool reproduces harm, but that its technical language makes the harm harder to see and easier to defend.',
+      'Intersectionality': 'Crenshaw\'s framework for seeing how systems of power overlap. It is not just adding identities together; it asks how race, gender, class, disability, immigration status, and other forces combine to create a specific kind of harm. In technology, it helps students ask who is harmed most clearly at the overlap, not only on one axis at a time.'
+    };
+    w2.terms = w2.terms.map(function (t) {
+      if (t && defs[t.term]) return { term: t.term, def: defs[t.term], cite: t.cite };
+      return t;
+    });
+  })();
   function wkOptBtns(key) {
     var sel = state.wkCheck[key], opts = ['New to me', 'Getting it', 'I can'];
     return opts.map(function (o, i) { var on = sel === i; return '<button onclick="SOC.wkCheck(\'' + key + '\',' + i + ')" aria-pressed="' + on + '" title="' + (on ? 'Click again to clear this rating' : 'Set this rating') + '" class="wk-opt' + (on ? ' on' : '') + '">' + o + '</button>'; }).join('');
@@ -2810,7 +2826,9 @@
       + '<h3 style="margin:16px 0 4px">Your reflection</h3><p style="margin:0 0 8px;font-size:.95rem">' + esc(d.reflectPrompt) + '</p>'
       + '<textarea oninput="SOC.wkReflect(' + w + ',this.value)" class="wk-ta" placeholder="Your reflection...">' + esc(state.wkReflect[w] || '') + '</textarea>'
       + weekNoteBox(w, 'revisit', 'What I Still Need to Revisit', 'Name anything you want to return to before the assessment or discussion.')
-      + '<div class="wk-savebox"><h3>Generate your weekly notes</h3><p style="margin:0 0 4px;font-size:.9rem">This makes one Word file (.docx) on Seneca letterhead. It organizes your notes and practice results so you can review them before Blackboard work.</p><ul><li>your notes from readings, visuals, walkthrough, activity, media, and reflection</li><li>your before-and-after understanding check</li><li>your activity, knowledge-check, and reading-comprehension practice results</li></ul><button onclick="SOC.saveWeek(' + w + ')" class="wk-save">Generate Your Weekly Notes</button></div>'
+      + '</section>';
+    var notes = '<section id="wk-notes" class="node"><h2 class="wk-sec">Generate Your Weekly Notes</h2>'
+      + '<div class="wk-savebox" style="margin-top:0"><h3>Your organized Week ' + w + ' record</h3><p style="margin:0 0 4px;font-size:.9rem">This makes one Word file (.docx) on Seneca letterhead. It organizes your notes and private practice results so you can review them before Blackboard work.</p><ul><li>your notes from readings, visuals, walkthrough, activity, media, and reflection</li><li>your before-and-after understanding check</li><li>your activity, knowledge-check, and reading-comprehension practice results</li></ul><button onclick="SOC.saveWeek(' + w + ')" class="wk-save">Generate Your Weekly Notes</button></div>'
       + '</section>';
     var navRow = '<div style="display:flex;gap:12px;margin-top:18px;flex-wrap:wrap">'
       + (prev != null ? '<button onclick="SOC.station(' + prev + ')" style="flex:1;min-width:180px;text-align:left;border:1px solid var(--border);background:#fff;border-radius:12px;padding:13px 16px;cursor:pointer"><div class="mono" style="font-size:.66rem;color:var(--ink-faint)">&larr; PREVIOUS</div><div style="font-size:.92rem;font-weight:700;color:var(--ink);margin-top:2px">Week ' + prev + ': ' + esc(weekTitle(prev)) + '</div></button>' : '')
@@ -2820,9 +2838,9 @@
     var kcR = kcSection(w);
     var kc = kcR.html, kcItems = kcR.items;
     var rail = '<aside class="wk-rail"><div class="wk-railbox"><div class="wk-railh">IN THIS WEEK</div>'
-      + [['ov', 'Overview'], ['path', 'Your learning path']].concat(VID ? [['vid', 'This week in 80 seconds']] : []).concat([['pre', 'Before you begin'], ['learn', 'Purpose'], ['out', 'Learning outcomes'], ['gq', 'Guiding questions']]).concat(programLens ? [['lens', 'For your program']] : []).concat([['con', 'Key concepts'], ['term', 'Key terms'], ['read', 'Readings']]).concat(rescue ? [['rescue', 'Reading Rescue']] : []).concat([['visual', 'A Visual Overview']]).concat(d.deck ? [['watch', 'Walkthrough']] : []).concat(programCase ? [['case', 'Case study']] : []).concat([['do', 'The activity'], ['reflect', 'Reflection &amp; save']]).concat(sg ? [['sg', 'Study Guide']] : []).concat(kcItems.length ? [['kc', 'Knowledge Check']] : []).map(function (it) { return '<a href="#wk-' + it[0] + '"><span class="s"></span>' + it[1] + '</a>'; }).join('')
+      + [['ov', 'Overview'], ['path', 'Your learning path']].concat(VID ? [['vid', 'This week in 80 seconds']] : []).concat([['pre', 'Before you begin'], ['learn', 'Purpose'], ['out', 'Learning outcomes'], ['gq', 'Guiding questions']]).concat(programLens ? [['lens', 'For your program']] : []).concat([['con', 'Key concepts'], ['term', 'Key terms'], ['read', 'Readings']]).concat(rescue ? [['rescue', 'Reading Rescue']] : []).concat([['visual', 'A Visual Overview']]).concat(d.deck ? [['watch', 'Walkthrough']] : []).concat(programCase ? [['case', 'Case study']] : []).concat([['do', 'The activity'], ['reflect', 'Reflection']]).concat(sg ? [['sg', 'Study Guide']] : []).concat(kcItems.length ? [['kc', 'Knowledge Check']] : []).concat([['notes', 'Generate notes']]).map(function (it) { return '<a href="#wk-' + it[0] + '"><span class="s"></span>' + it[1] + '</a>'; }).join('')
       + '<div class="wk-railt">' + ic('clock', 12) + ' ' + esc(d.time.split('(')[0].trim()) + '</div></div></aside>';
-    return '<div class="rise">' + mobileWeekActions(w, d) + hero + path + '<div class="wk-grid"><section>' + vid + pre + purpose + outcomes + guiding + programLens + concepts + terms + readings + rescue + visual + watch + programCase + act + reflect + sg + kc + navRow + '</section>' + rail + '</div></div>';
+    return '<div class="rise">' + mobileWeekActions(w, d) + hero + path + '<div class="wk-grid"><section>' + vid + pre + purpose + outcomes + guiding + programLens + concepts + terms + readings + rescue + visual + watch + programCase + act + reflect + sg + kc + notes + navRow + '</section>' + rail + '</div></div>';
   }
   /* ---------- generic week activities: match / scenario / toggle / assemble / lab ---------- */
   function actCard(inner) { return '<div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin:0 0 12px">' + inner + '</div>'; }
@@ -2837,7 +2855,7 @@
       var btns = uniq.map(function (o, oi) {
         var picked = (sel === oi), correct = (o === p.match), bg = '#fff', bd = 'var(--border)', col = 'var(--ink)';
         if (sel != null) { if (correct) { bg = '#E7F3EC'; bd = '#1C7A43'; col = '#155f34'; } else if (picked) { bg = '#FBE9EA'; bd = '#B11722'; col = '#8f1119'; } }
-        return '<button onclick="SOC.actPick(\'' + key + '\',' + oi + ')" style="text-align:left;border:1px solid ' + bd + ';background:' + bg + ';color:' + col + ';border-radius:9px;padding:8px 12px;font-size:.86rem;font-weight:600;cursor:pointer;margin:0 6px 6px 0">' + esc(o) + '</button>';
+        return '<button onclick="SOC.actPick(\'' + key + '\',' + oi + ')" aria-pressed="' + picked + '" style="text-align:left;border:1px solid ' + bd + ';background:' + bg + ';color:' + col + ';border-radius:9px;padding:8px 12px;font-size:.86rem;font-weight:600;cursor:pointer;margin:0 6px 6px 0">' + esc(o) + '</button>';
       }).join('');
       var fb = (sel != null) ? '<div style="margin-top:8px;font-size:.86rem;color:var(--ink-dim)">' + (uniq[sel] === p.match ? '<b style="color:#1C7A43">Yes. </b>' : '<b style="color:#B11722">Not quite. </b>') + esc(p.why) + actCite(p.cite) + '</div>' : '';
       return actCard('<div style="font-size:.7rem;font-weight:700;color:var(--red);margin-bottom:5px">EXAMPLE ' + (i + 1) + '</div><div style="font-size:1rem;font-weight:600;color:var(--ink);margin-bottom:10px">' + esc(p.item) + '</div><div style="font-size:.78rem;color:var(--ink-faint);margin-bottom:6px">Which mechanism does this show?</div>' + btns + fb);
@@ -2908,17 +2926,18 @@
   }
   function activitySummary(w, d) {
     var a = d.activity || {};
+    var actMap = (state.actResult && typeof state.actResult === 'object') ? state.actResult : (state.act || {});
     if (a.screen === 'sandbox' || a.archetype == null) {
       var audited = Object.keys(state.auditedSystems || {});
       return audited.length ? ('You audited ' + audited.length + ' of 3 systems. Every system you tested failed darker-skinned women the most (up to 34.7 percent), against near-zero error for lighter-skinned men. The disparity was hidden by overall accuracy and only an intersectional cut revealed it.') : '(activity not run yet)';
     }
     var data = a.data || {};
-    if (a.archetype === 'match') { var pairs = data.pairs || [], uniq = [], seen = {}, done = 0, correct = 0; pairs.forEach(function (q) { if (!seen[q.match]) { seen[q.match] = 1; uniq.push(q.match); } }); pairs.forEach(function (p, i) { var s = state.act['a|' + w + '|m|' + i]; if (s != null) { done++; if (uniq[s] === p.match) correct++; } }); return done ? ('You matched ' + correct + ' of ' + pairs.length + ' examples to the mechanism each one shows.') : '(activity not started yet)'; }
-    if (a.archetype === 'scenario') { var steps = data.steps || [], n = 0; steps.forEach(function (st, i) { if (state.act['a|' + w + '|s|' + i] != null) n++; }); return n ? ('You worked through ' + n + ' of ' + steps.length + ' decision points and saw which design choices lead to harm.') : '(activity not started yet)'; }
-    if (a.archetype === 'toggle') { var tgs = data.toggles || [], n2 = 0; tgs.forEach(function (t, i) { if (state.act['a|' + w + '|t|' + i]) n2++; }); return 'You explored the system defaults and saw who each one harms (' + n2 + ' of ' + tgs.length + ' turned on).'; }
-    if (a.archetype === 'assemble') { var comps = data.components || [], added = (state.act['a|' + w + '|asm'] || []).length; return added ? ('You assembled ' + added + ' of ' + comps.length + ' parts and saw how they work together as a system.') : '(activity not started yet)'; }
-    if (a.archetype === 'lab') { var levers = data.levers || [], ch = state.act['a|' + w + '|lab'] || []; if (!ch.length) return '(activity not started yet)'; var names = ch.map(function (i) { return levers[i] ? levers[i].label : ''; }).filter(Boolean); return 'For the case, you chose: ' + names.join(', ') + '. Each lever buys something and costs something.'; }
-    if (a.archetype === 'capstone') { var citems = data.items || [], cn = 0; citems.forEach(function (it, i) { if (state.act['a|' + w + '|cap|' + i]) cn++; }); return cn ? ('You revisited ' + cn + ' of ' + citems.length + ' dimensions of your cartography across the term.') : '(revisit not started yet)'; }
+    if (a.archetype === 'match') { var pairs = data.pairs || [], uniq = [], seen = {}, done = 0, correct = 0; pairs.forEach(function (q) { if (!seen[q.match]) { seen[q.match] = 1; uniq.push(q.match); } }); pairs.forEach(function (p, i) { var s = actMap['a|' + w + '|m|' + i]; if (s != null) { done++; if (uniq[s] === p.match) correct++; } }); return done ? ('You matched ' + correct + ' of ' + pairs.length + ' examples to the mechanism each one shows.') : '(activity not started yet)'; }
+    if (a.archetype === 'scenario') { var steps = data.steps || [], n = 0; steps.forEach(function (st, i) { if (actMap['a|' + w + '|s|' + i] != null) n++; }); return n ? ('You worked through ' + n + ' of ' + steps.length + ' decision points and saw which design choices lead to harm.') : '(activity not started yet)'; }
+    if (a.archetype === 'toggle') { var tgs = data.toggles || [], n2 = 0; tgs.forEach(function (t, i) { if (actMap['a|' + w + '|t|' + i]) n2++; }); return 'You explored the system defaults and saw who each one harms (' + n2 + ' of ' + tgs.length + ' turned on).'; }
+    if (a.archetype === 'assemble') { var comps = data.components || [], added = (actMap['a|' + w + '|asm'] || []).length; return added ? ('You assembled ' + added + ' of ' + comps.length + ' parts and saw how they work together as a system.') : '(activity not started yet)'; }
+    if (a.archetype === 'lab') { var levers = data.levers || [], ch = actMap['a|' + w + '|lab'] || []; if (!ch.length) return '(activity not started yet)'; var names = ch.map(function (i) { return levers[i] ? levers[i].label : ''; }).filter(Boolean); return 'For the case, you chose: ' + names.join(', ') + '. Each lever buys something and costs something.'; }
+    if (a.archetype === 'capstone') { var citems = data.items || [], cn = 0; citems.forEach(function (it, i) { if (actMap['a|' + w + '|cap|' + i]) cn++; }); return cn ? ('You revisited ' + cn + ' of ' + citems.length + ' dimensions of your cartography across the term.') : '(revisit not started yet)'; }
     return '(activity not started yet)';
   }
   var WEEK_DATES = { 1: 'Week of Sept 8', 2: 'Week of Sept 14', 3: 'Week of Sept 21', 4: 'Week of Sept 28', 5: 'Week of Oct 5', 6: 'Week of Oct 13', 7: 'Week of Oct 19', 8: 'Week of Nov 2', 9: 'Week of Nov 9', 10: 'Week of Nov 16', 11: 'Week of Nov 23', 12: 'Week of Nov 30', 13: 'Week of Dec 7', 14: 'Week of Dec 14' };
@@ -2942,15 +2961,17 @@
       + (d.reflectPrompt ? '<p style="margin:0 0 8px;font-size:.95rem">' + esc(d.reflectPrompt) + '</p>' : '')
       + '<textarea oninput="SOC.wkReflect(' + w + ',this.value)" class="wk-ta" placeholder="Your reflection...">' + esc(state.wkReflect[w] || '') + '</textarea>'
       + weekNoteBox(w, 'revisit', 'What I Still Need to Revisit', 'Name anything you want to return to before you finish the course.')
-      + '<div class="wk-savebox"><h3>Generate your weekly notes</h3><p style="margin:0 0 6px;font-size:.9rem">This makes one Word file (.docx) on Seneca letterhead, your organized weekly record.</p><button onclick="SOC.saveWeek(' + w + ')" class="wk-save">Generate Your Weekly Notes</button></div></section>';
+      + '</section>';
+    var notes = '<section id="wk-notes" class="node"><h2 class="wk-sec">Generate Your Weekly Notes</h2>'
+      + '<div class="wk-savebox" style="margin-top:0"><h3>Your organized Week ' + w + ' record</h3><p style="margin:0 0 6px;font-size:.9rem">This makes one Word file (.docx) on Seneca letterhead, your organized weekly record.</p><button onclick="SOC.saveWeek(' + w + ')" class="wk-save">Generate Your Weekly Notes</button></div></section>';
     var navRow = '<div style="display:flex;gap:12px;margin-top:18px;flex-wrap:wrap">'
       + (prev != null ? '<button onclick="SOC.station(' + prev + ')" style="flex:1;min-width:180px;text-align:left;border:1px solid var(--border);background:#fff;border-radius:12px;padding:13px 16px;cursor:pointer"><div class="mono" style="font-size:.66rem;color:var(--ink-faint)">&larr; PREVIOUS</div><div style="font-size:.92rem;font-weight:700;color:var(--ink);margin-top:2px">Week ' + prev + ': ' + esc(weekTitle(prev)) + '</div></button>' : '')
       + (next != null ? '<button onclick="SOC.station(' + next + ')" style="flex:1;min-width:180px;text-align:right;border:1px solid var(--border);background:#fff;border-radius:12px;padding:13px 16px;cursor:pointer"><div class="mono" style="font-size:.66rem;color:var(--red)">NEXT &rarr;</div><div style="font-size:.92rem;font-weight:700;color:var(--ink);margin-top:2px">Week ' + next + ': ' + esc(weekTitle(next)) + '</div></button>' : '')
       + '</div>';
     var rail = '<aside class="wk-rail"><div class="wk-railbox"><div class="wk-railh">IN THIS WEEK</div>'
-      + [['ov', 'This week'], ['path', 'Your learning path'], ['visual', 'A Visual Overview']].concat(d.activity ? [['do', 'Your capstone']] : []).concat([['reflect', 'Reflection & save']]).map(function (it) { return '<a href="#wk-' + it[0] + '"><span class="s"></span>' + it[1] + '</a>'; }).join('')
+      + [['ov', 'This week'], ['path', 'Your learning path'], ['visual', 'A Visual Overview']].concat(d.activity ? [['do', 'Your capstone']] : []).concat([['reflect', 'Reflection'], ['notes', 'Generate notes']]).map(function (it) { return '<a href="#wk-' + it[0] + '"><span class="s"></span>' + it[1] + '</a>'; }).join('')
       + '<div class="wk-railt">' + ic('clock', 12) + ' No new material</div></div></aside>';
-    return '<div class="rise">' + mobileWeekActions(w, d, { activityLabel: 'Capstone' }) + hero + path + '<div class="wk-grid"><section>' + visual + act + reflect + navRow + '</section>' + rail + '</div></div>';
+    return '<div class="rise">' + mobileWeekActions(w, d, { activityLabel: 'Capstone' }) + hero + path + '<div class="wk-grid"><section>' + visual + act + reflect + notes + navRow + '</section>' + rail + '</div></div>';
   }
   var OVERVIEW_WEEK = 1;
   function overviewPage(w) {
@@ -3996,7 +4017,10 @@
     ];
     if (d.deck) items.push(mobileJumpItem('Walkthrough', "SOC.jumpWeek(" + w + ",'watch')", false));
     if (d.activity) items.push(mobileJumpItem(opt.activityLabel || 'Activity', "SOC.jumpWeek(" + w + ",'do')", false));
-    if (opt.reflect !== false) items.push(mobileJumpItem('Reflect/save', "SOC.jumpWeek(" + w + ",'reflect')", false));
+    if (opt.reflect !== false) {
+      items.push(mobileJumpItem('Reflect', "SOC.jumpWeek(" + w + ",'reflect')", false));
+      items.push(mobileJumpItem('Notes', "SOC.jumpWeek(" + w + ",'notes')", false));
+    }
     return '<nav class="soc-mobile-jump" aria-label="Mobile week shortcuts">' + items.join('') + '</nav>';
   }
   function mobileActivityActions(w, d) {
@@ -4007,7 +4031,8 @@
       mobileJumpItem('Home', "SOC.go('journey')", false)
     ];
     if (d.deck) items.push(mobileJumpItem('Walkthrough', "SOC.jumpWeek(" + w + ",'watch')", false));
-    items.push(mobileJumpItem('Reflect/save', "SOC.jumpWeek(" + w + ",'reflect')", false));
+    items.push(mobileJumpItem('Reflect', "SOC.jumpWeek(" + w + ",'reflect')", false));
+    items.push(mobileJumpItem('Notes', "SOC.jumpWeek(" + w + ",'notes')", false));
     return '<nav class="soc-mobile-jump" aria-label="Mobile activity shortcuts">' + items.join('') + '</nav>';
   }
   function body() {
@@ -4210,10 +4235,10 @@
     wkReflect: function (w, v) { state.wkReflect[w] = v; persist(); },
     wkNote: function (k, v) { state.wkNotes = state.wkNotes || {}; state.wkNotes[k] = v; persist(); },
     visualView: function (w, context, v) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; state.visualView = state.visualView || {}; state.visualView[(context || 'week') + '|' + w] = v; if (context === 'activity') keepActivityRoute(w, 'activity'); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
-    actPick: function (key, idx) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; routeActivityFromKey(key); state.act[key] = idx; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
-    actToggle: function (key) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; routeActivityFromKey(key); state.act[key] = !state.act[key]; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
-    actAdd: function (key, idx) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; routeActivityFromKey(key); var arr = state.act[key] || []; if (arr.indexOf(idx) < 0) arr.push(idx); state.act[key] = arr; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
-    actLabPick: function (key, idx, max) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; routeActivityFromKey(key); var arr = state.act[key] || [], p = arr.indexOf(idx); if (p >= 0) arr.splice(p, 1); else { if (arr.length >= max) arr.shift(); arr.push(idx); } state.act[key] = arr; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
+    actPick: function (key, idx) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; routeActivityFromKey(key); state.act[key] = idx; state.actResult = state.actResult || {}; state.actResult[key] = idx; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
+    actToggle: function (key) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; routeActivityFromKey(key); var val = !state.act[key]; state.act[key] = val; state.actResult = state.actResult || {}; state.actResult[key] = val; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
+    actAdd: function (key, idx) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; routeActivityFromKey(key); var arr = state.act[key] || []; if (arr.indexOf(idx) < 0) arr.push(idx); state.act[key] = arr; state.actResult = state.actResult || {}; state.actResult[key] = arr.slice(); persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
+    actLabPick: function (key, idx, max) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; routeActivityFromKey(key); var arr = state.act[key] || [], p = arr.indexOf(idx); if (p >= 0) arr.splice(p, 1); else { if (arr.length >= max) arr.shift(); arr.push(idx); } state.act[key] = arr; state.actResult = state.actResult || {}; state.actResult[key] = arr.slice(); persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },
     saveWeek: function (w) {
       var d = weekData(w); if (!d) { flash('Open a week first.'); return; }
       var sections = [
