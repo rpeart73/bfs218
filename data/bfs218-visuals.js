@@ -25,20 +25,20 @@ window.BFS218_VISUALS = {
     2: {
       kind: 'outcomelens',
       title: 'The same rule can produce unequal outcomes.',
-      scene: 'Two groups pass through one rule that claims to be neutral. One path stays open while another path narrows, blocks, and stacks burden at the overlap. That is why CRT asks what the system does, who pays, and who is hit hardest.',
-      modelNote: 'Same surface rule. Different outcome paths. Follow the blocked red path to see why outcomes matter more than intent.',
+      scene: 'Two groups enter the same neutral-looking rule gate. One lane stays wide and open. The other lane narrows, hits a red barrier, and stacks extra burden at the intersection. That is why CRT asks what the system does, who pays, and who is hit hardest.',
+      modelNote: 'Start with the identical rule, then compare the two outcome lanes. The red lane shows why unequal results matter even when the rule looks neutral.',
       steps: [
-        ['Start with the same rule', 'Both groups meet the same surface rule, so intent alone cannot explain the result.'],
-        ['Compare the outcomes', 'The open lane and blocked lane show what the system actually does.'],
-        ['Find the overlap', 'Intersectionality asks which subgroup carries the heaviest burden.']
+        ['Start with the same rule', 'Both groups enter the same surface rule, so intent alone cannot explain the result.'],
+        ['Compare the lanes', 'One lane stays open while the other narrows and blocks. The outcome is the evidence.'],
+        ['Find the burden stack', 'Intersectionality asks which subgroup carries the heaviest load at the overlap.']
       ],
       activity: {
         title: 'Use the model to name the mechanism.',
         steps: ['Read the case outcome.', 'Ask which course idea explains how the harm happens.', 'Choose the mechanism, then use the feedback as evidence.'],
         modelKind: 'mechanismatch',
         modelTitle: 'Activity model: case outcome to mechanism.',
-        modelScene: 'A case card goes through an outcomes lens before it reaches the concept bins. Use this model to see that the activity is asking for the mechanism that explains the result.',
-        modelNote: 'Start with the case outcome, pass it through the outcomes lens, then choose the mechanism that explains the result.',
+        modelScene: 'A case file travels through an outcomes lens before it reaches the concept bins. Use this model to see that the activity is asking for the mechanism that explains the result, not a guess about intent.',
+        modelNote: 'Read what happened first, pass it through the outcomes lens, then choose the course idea that explains why the harm repeats.',
         modelSteps: [
           ['Read the outcome', 'Stay with what happened in the example before judging intent.'],
           ['Ask why it repeats', 'Look for the system rule, old record, default, or overlap doing the work.'],

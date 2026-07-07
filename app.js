@@ -2214,7 +2214,8 @@
     var labelList = (spec.labels || []).map(function (l) { return (l.t || '') + ': ' + (l.sub || ''); }).join('. ');
     var label = (context === 'activity' ? 'Activity model for Week ' : 'Visual overview for Week ') + w + ': ' + spec.title + '. ' + spec.scene + ' Labels: ' + labelList + '. ' + rotateHelp;
     var noteText = spec.modelNote || spec.scene;
-    return '<div class="wk-model-shell">'
+    var shellKind = String(spec.kind || 'pipeline').replace(/[^a-z0-9_-]/gi, '').toLowerCase() || 'pipeline';
+    return '<div class="wk-model-shell wk-model-kind-' + esc(shellKind) + '">'
       + '<canvas class="wk-model-canvas" role="img" aria-label="' + esc(label) + '" data-topic-model="' + esc(context) + '" data-week="' + w + '" data-kind="' + esc(spec.kind || 'pipeline') + '" data-view="' + esc(view) + '"></canvas>'
       + '<div class="wk-model-note"><b>' + esc(spec.title) + '</b><span>' + esc(noteText) + ' Drag to rotate. Callout lines stay attached to the model. Use the buttons below to change what the model highlights.</span></div>'
       + visualLabels(spec)
@@ -2397,6 +2398,8 @@
     canvas.__topicGL = renderer.getContext ? renderer.getContext() : null;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     if (THREE.SRGBColorSpace) renderer.outputColorSpace = THREE.SRGBColorSpace;
+    if (THREE.ACESFilmicToneMapping) renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.08;
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(42, 16 / 9, 0.1, 90);
     camera.position.set(4.8, 3.4, 6.6);
@@ -2597,22 +2600,32 @@
         sph(0.14, riskOn ? 0xda291c : 0x1c7a43, [2.75, 0.62, 0.08]);
         break;
       case 'mechanismatch':
-        box(1.35, 0.12, 1.02, 0xffffff, [-2.2, 0.16, -0.4], { edge: 0x8ba0b4 });
-        box(0.92, 0.08, 0.12, 0x1b2a4a, [-2.34, 0.32, -0.74], { edge: 0x1b2a4a });
-        box(0.72, 0.08, 0.12, 0x1b2a4a, [-2.34, 0.44, -0.5], { edge: 0x1b2a4a });
-        sph(0.12, riskOn ? 0xda291c : 0xffa12b, [-1.74, 0.36, -0.1], { emissive: riskOn });
-        tor(0.56, 0.025, pathOn || riskOn ? 0xda291c : 0x00aeb3, [-0.25, 0.72, 0], [Math.PI / 2, 0, 0], { opacity: 0.9 });
-        box(0.1, 1.15, 1.28, 0x00aeb3, [-0.25, 0.72, 0], { opacity: 0.26, glass: true, edge: 0x00aeb3 });
-        [['CRT', -0.05, -0.62, 0x9fdde0], ['SYS', 0.82, -0.62, 0xffcc66], ['NJC', -0.05, 0.42, 0xffa12b], ['INT', 0.82, 0.42, 0x9fdde0]].forEach(function (p, mm) {
-          var hot = riskOn ? mm === 1 : (pathOn ? mm === 2 : false);
-          box(0.72, 0.42, 0.62, hot ? 0xda291c : p[3], [1.45 + p[1], 0.36, p[2]], { opacity: hot ? 0.88 : 0.58, glass: !hot, edge: hot ? 0xda291c : 0x00aeb3 });
-          box(0.42, 0.045, 0.08, hot ? 0xffffff : 0x1b2a4a, [1.45 + p[1], 0.62, p[2] - 0.12], { edge: hot ? 0xffffff : 0x1b2a4a });
+        box(1.48, 0.1, 1.08, 0xffffff, [-2.32, 0.14, -0.42], { edge: 0x8ba0b4 });
+        box(1.08, 0.07, 0.12, 0x1b2a4a, [-2.42, 0.31, -0.76], { edge: 0x1b2a4a });
+        box(0.86, 0.055, 0.1, 0x8ba0b4, [-2.42, 0.43, -0.52], { edge: 0x8ba0b4 });
+        box(0.62, 0.055, 0.1, 0x8ba0b4, [-2.42, 0.54, -0.31], { edge: 0x8ba0b4 });
+        box(0.38, 0.08, 0.34, riskOn ? 0xda291c : 0xffa12b, [-1.76, 0.34, -0.1], { edge: 0xffffff, emissive: riskOn });
+        tube([[-1.64, 0.42, -0.2], [-1.08, 0.78, -0.08], [-0.52, 0.84, 0]], pathOn || riskOn ? 0xda291c : 0x1b2a4a, 0.03);
+        tor(0.66, 0.026, pathOn || riskOn ? 0xda291c : 0x00aeb3, [-0.28, 0.72, 0], [Math.PI / 2, 0, 0], { opacity: 0.92, emissive: riskOn });
+        box(0.12, 1.26, 1.42, 0x9fdde0, [-0.28, 0.72, 0], { opacity: 0.34, glass: true, edge: 0x00aeb3 });
+        box(1.16, 0.045, 1.16, 0xffffff, [-0.28, 0.18, 0], { opacity: 0.44, glass: true, edge: 0xd6dde5 });
+        tube([[-0.02, 0.82, 0.02], [0.7, 1.02, 0.24], [1.2, 0.68, 0.34]], pathOn || riskOn ? 0xda291c : 0x8ba0b4, 0.028);
+        [
+          [-0.05, -0.66, 0x9fdde0, 0x00aeb3],
+          [0.84, -0.66, 0xffcc66, 0xffa12b],
+          [-0.05, 0.5, 0xffa12b, 0xda291c],
+          [0.84, 0.5, 0xe7f3ec, 0x1c7a43]
+        ].forEach(function (p, mm) {
+          var hot = riskOn ? mm === 2 : (pathOn ? mm === 1 : false);
+          var px = 1.42 + p[0], pz = p[1];
+          box(0.78, hot ? 0.64 : 0.46, 0.66, hot ? 0xda291c : p[2], [px, hot ? 0.42 : 0.34, pz], { opacity: hot ? 0.92 : 0.62, glass: !hot, edge: hot ? 0xda291c : p[3], emissive: hot });
+          box(0.48, 0.045, 0.1, hot ? 0xffffff : 0x1b2a4a, [px, hot ? 0.78 : 0.62, pz - 0.14], { edge: hot ? 0xffffff : 0x1b2a4a });
+          box(0.34, 0.035, 0.08, hot ? 0xffffff : 0x8ba0b4, [px, hot ? 0.89 : 0.72, pz + 0.08], { edge: hot ? 0xffffff : 0x8ba0b4 });
         });
-        tube([[-1.58, 0.42, -0.22], [-0.82, 0.82, -0.06], [-0.25, 0.82, 0]], pathOn || riskOn ? 0xda291c : 0x1b2a4a, 0.026);
-        tube([[-0.04, 0.82, 0.02], [0.82, 0.98, 0.28], [1.72, 0.58, 0.42]], pathOn || riskOn ? 0xda291c : 0x8ba0b4, 0.026);
         if (riskOn) {
-          box(1.18, 0.06, 0.78, 0xfbe9ea, [2.15, 0.9, 0.42], { edge: 0xda291c });
-          sph(0.08, 0xda291c, [2.66, 1.05, 0.7], { emissive: true });
+          tor(0.48, 0.018, 0xda291c, [1.38, 0.88, 0.5], [Math.PI / 2, 0, 0], { opacity: 0.9, emissive: true });
+          box(1.06, 0.06, 0.72, 0xfbe9ea, [2.22, 0.94, 0.5], { edge: 0xda291c });
+          sph(0.08, 0xda291c, [2.68, 1.08, 0.74], { emissive: true });
         }
         break;
       case 'decisionpath':
@@ -2733,28 +2746,34 @@
         tor(1.35, 0.025, riskOn ? 0xda291c : 0x1b2a4a, [0, 0.85, 0], [Math.PI / 2, 0, 0]);
         break;
       case 'outcomelens':
-        box(1.55, 0.08, 0.52, 0xffffff, [-2.25, 0.12, -0.58], { edge: 0x8ba0b4 });
-        box(1.55, 0.08, 0.52, 0xffffff, [-2.25, 0.12, 0.58], { edge: 0x8ba0b4 });
-        for (var ol = 0; ol < 5; ol++) {
-          sph(0.08, 0x00aeb3, [-2.82 + ol * 0.22, 0.3, -0.58 + (ol % 2) * 0.12]);
-          sph(0.08, ol > 2 ? 0xda291c : 0xffa12b, [-2.82 + ol * 0.22, 0.3, 0.58 + (ol % 2) * 0.12], { emissive: ol > 2 && riskOn });
+        box(1.62, 0.1, 0.66, 0xffffff, [-2.72, 0.14, -0.86], { edge: 0x8ba0b4 });
+        box(1.62, 0.1, 0.66, 0xffffff, [-2.72, 0.14, 0.86], { edge: 0x8ba0b4 });
+        for (var ol = 0; ol < 6; ol++) {
+          sph(0.075, 0x00aeb3, [-3.22 + ol * 0.18, 0.32, -0.92 + (ol % 2) * 0.13]);
+          sph(0.075, ol > 2 ? 0xda291c : 0xffa12b, [-3.22 + ol * 0.18, 0.32, 0.8 + (ol % 2) * 0.15], { emissive: ol > 2 && riskOn });
         }
-        box(0.18, 1.28, 2.35, 0x1b2a4a, [-0.18, 0.68, 0], { opacity: 0.9, edge: 0xffffff });
-        box(1.35, 0.1, 2.62, 0x00aeb3, [-0.18, 1.34, 0], { opacity: 0.2, glass: true, edge: 0x00aeb3 });
-        tor(0.82, 0.02, pathOn || riskOn ? 0xda291c : 0x00aeb3, [-0.18, 0.78, 0], [Math.PI / 2, 0, 0], { opacity: 0.82 });
-        box(2.25, 0.09, 0.48, 0xe7f3ec, [1.45, 0.14, -0.68], { edge: 0x1c7a43 });
-        box(1.45, 0.09, 0.34, 0xfbe9ea, [1.08, 0.14, 0.68], { edge: 0xda291c });
-        box(0.22, 0.72, 0.82, 0xda291c, [1.9, 0.48, 0.68], { opacity: riskOn ? 0.9 : 0.68, edge: 0xffffff });
-        tube([[-1.55, 0.38, -0.58], [-0.7, 0.72, -0.52], [0.45, 0.48, -0.68], [2.25, 0.32, -0.68]], pathOn ? 0x1c7a43 : 0x8ba0b4, 0.024);
-        tube([[-1.55, 0.38, 0.58], [-0.7, 0.72, 0.48], [0.42, 0.48, 0.68], [1.62, 0.5, 0.68]], pathOn || riskOn ? 0xda291c : 0x8ba0b4, 0.028);
-        for (var ob = 0; ob < 5; ob++) {
-          var bx = 2.18 + (ob % 2) * 0.18, bz = 0.46 + Math.floor(ob / 2) * 0.18;
-          box(0.16, 0.16, 0.16, 0xda291c, [bx, 0.24 + ob * 0.08, bz], { edge: 0xffffff, emissive: riskOn });
+        box(0.18, 1.52, 2.68, 0xffffff, [-0.72, 0.78, 0], { opacity: 0.82, glass: true, edge: 0x8ba0b4 });
+        box(0.1, 1.2, 2.28, 0x1b2a4a, [-0.72, 0.72, 0], { opacity: 0.88, edge: 0xffffff });
+        box(0.08, 0.06, 1.48, 0xffffff, [-0.9, 1.02, 0], { edge: 0xffffff });
+        box(0.08, 0.06, 1.48, 0xffffff, [-0.9, 0.82, 0], { edge: 0xffffff });
+        box(1.46, 0.08, 2.88, 0x9fdde0, [-0.72, 1.5, 0], { opacity: 0.22, glass: true, edge: 0x00aeb3 });
+        box(2.82, 0.1, 0.64, 0xe7f3ec, [1.18, 0.15, -0.86], { edge: 0x1c7a43 });
+        box(1.28, 0.1, 0.36, 0xfbe9ea, [0.7, 0.18, 0.86], { edge: 0xda291c });
+        box(0.34, 0.96, 0.9, 0xda291c, [1.58, 0.64, 0.86], { opacity: riskOn ? 0.95 : 0.76, edge: 0xffffff, emissive: riskOn });
+        tube([[-1.9, 0.42, -0.86], [-1.12, 0.8, -0.82], [-0.46, 0.64, -0.84], [0.48, 0.42, -0.86], [2.56, 0.34, -0.86]], pathOn ? 0x1c7a43 : 0x8ba0b4, 0.032);
+        tube([[-1.9, 0.42, 0.86], [-1.12, 0.8, 0.78], [-0.48, 0.64, 0.84], [0.36, 0.5, 0.86], [1.38, 0.58, 0.86]], pathOn || riskOn ? 0xda291c : 0x8ba0b4, 0.04);
+        cone(0.13, 0.35, pathOn ? 0x1c7a43 : 0x8ba0b4, [2.62, 0.34, -0.86], [Math.PI / 2, 0, 0]);
+        cone(0.13, 0.35, pathOn || riskOn ? 0xda291c : 0x8ba0b4, [1.4, 0.58, 0.86], [Math.PI / 2, 0, 0]);
+        tor(0.48, 0.018, 0x00aeb3, [1.98, 0.54, -0.86], [Math.PI / 2, 0, 0], { opacity: 0.58 });
+        tor(0.46, 0.018, 0xffa12b, [1.96, 0.58, 0.74], [Math.PI / 2, 0.12, 0], { opacity: 0.62 });
+        for (var ob = 0; ob < 8; ob++) {
+          var bx = 1.94 + (ob % 2) * 0.19, bz = 0.54 + Math.floor(ob / 2) * 0.15;
+          box(0.17, 0.17, 0.17, 0xda291c, [bx, 0.25 + ob * 0.07, bz], { edge: 0xffffff, emissive: riskOn });
         }
         if (riskOn) {
-          tor(0.42, 0.018, 0xda291c, [2.18, 0.72, 0.78], [Math.PI / 2, 0, 0], { opacity: 0.9 });
-          tor(0.34, 0.018, 0xda291c, [2.38, 0.77, 0.58], [Math.PI / 2, 0.2, 0], { opacity: 0.75 });
-          box(0.92, 0.05, 0.7, 0xfbe9ea, [2.25, 1.06, 0.68], { edge: 0xda291c });
+          tor(0.58, 0.02, 0xda291c, [2.08, 0.88, 0.76], [Math.PI / 2, 0, 0], { opacity: 0.92, emissive: true });
+          tor(0.36, 0.018, 0xda291c, [2.34, 0.82, 0.56], [Math.PI / 2, 0.2, 0], { opacity: 0.78, emissive: true });
+          box(1.08, 0.06, 0.74, 0xfbe9ea, [2.18, 1.15, 0.72], { edge: 0xda291c });
         }
         break;
       case 'pipeline':
@@ -2876,7 +2895,20 @@
     try { reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
     function resize() {
       var wd = Math.max(320, shell.clientWidth || canvas.clientWidth || 720);
-      var ht = Math.max(300, Math.round(wd * 0.56));
+      var focusModel = kind === 'outcomelens' || kind === 'mechanismatch';
+      var narrow = wd <= 520;
+      var ht = focusModel && narrow ? 430 : Math.max(300, Math.round(wd * 0.56));
+      if (focusModel && narrow) {
+        root.scale.set(0.82, 0.82, 0.82);
+        root.position.set(0, 0.04, 0);
+        camera.position.set(5.6, 3.8, 8.2);
+        camera.lookAt(0, 0.6, 0);
+      } else {
+        root.scale.set(0.9, 0.9, 0.9);
+        root.position.set(0, -0.05, 0);
+        camera.position.set(4.8, 3.4, 6.6);
+        camera.lookAt(0, 0.55, 0);
+      }
       renderer.setSize(wd, ht, false);
       camera.aspect = wd / ht;
       camera.updateProjectionMatrix();
