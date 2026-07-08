@@ -1706,6 +1706,29 @@
         ctx.renderer.toneMappingExposure = 1.22;
       } catch (e) {}
       scene(K, ctx);
+      /* in-scene prediction pads for activity experiments */
+      var pickMeshes = [];
+      if (ctx.context === 'activity' && ctx.expOptions && ctx.expOptions.length) {
+        var padPos = [[-2.3, 0.02, 1.9], [0, 0.02, 2.6], [2.3, 0.02, 1.9]];
+        var letters = ['A', 'B', 'C'];
+        ctx.expOptions.forEach(function (o, i) {
+          var pos = padPos[i] || padPos[0];
+          var chosen = ctx.expPick === i;
+          var dim = ctx.expRan && !chosen;
+          var padMat = chosen ? K.mat.neon(0x1c7a43, 1.0) : dim ? K.mat.plastic(0xd8dee6, 0.6) : K.mat.neon(PAL.teal, 0.55);
+          var pad = K.cyl(0.52, 0.58, 0.09, padMat, [pos[0], pos[1] + 0.045, pos[2]]);
+          if (!dim) {
+            K.halo(0.66, chosen ? 0x1c7a43 : PAL.teal, [pos[0], pos[1] + 0.1, pos[2]], { spin: chosen ? 0.9 : 0.35 });
+          }
+          K.tag(letters[i] + '. ' + (o.tag || 'OPTION ' + letters[i]), [pos[0], i === 1 ? 0.9 : 0.6, pos[2]], { warn: false });
+          if (chosen) K.tag('YOUR PREDICTION', [pos[0], 0.95, pos[2]], { warn: false });
+          var hit = new THREE.Mesh(new THREE.SphereGeometry(0.85, 8, 6), K.own(new THREE.MeshBasicMaterial({ visible: false })));
+          hit.position.set(pos[0], 0.35, pos[2]);
+          ctx.root.add(hit);
+          K.own(hit.geometry);
+          pickMeshes.push({ mesh: hit, idx: i });
+        });
+      }
       var tags = TAGS[ctx.kind] || [];
       for (var tgi = 0; tgi < tags.length; tgi++) {
         try { K.tag(tags[tgi][0], tags[tgi][1], { warn: !!tags[tgi][2] }); } catch (e) {}
@@ -1714,6 +1737,7 @@
       for (var ti = 0; ti < K.ticks.length; ti++) { try { K.ticks[ti](0); } catch (e) {} }
       return {
         skipDefaultStage: true,
+        pickMeshes: pickMeshes,
         tick: function (t) {
           for (var i = 0; i < K.ticks.length; i++) {
             try { K.ticks[i](t); } catch (e) {}

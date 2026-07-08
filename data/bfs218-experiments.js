@@ -4,9 +4,9 @@ window.BFS218_EXPERIMENTS = {
     setup: 'Look at the scene above: a student surrounded by a phone, a camera, a tap-to-pay terminal, and an ID kiosk. Ordinary tools, an ordinary day. One of them is sorting people right now.',
     commit: 'Before the course tells you anything: which one?',
     options: [
-      { label: 'The camera. Watching is the obvious sorting machine.', lens: 'visibility' },
-      { label: 'The payment terminal. Money is where people get sorted.', lens: 'money' },
-      { label: 'None of them. They are just tools until someone misuses them.', lens: 'neutral-tools' }
+      { label: 'The camera. Watching is the obvious sorting machine.', lens: 'visibility', tag: 'THE CAMERA' },
+      { label: 'The payment terminal. Money is where people get sorted.', lens: 'money', tag: 'THE PAYMENT' },
+      { label: 'None of them. They are just tools until someone misuses them.', lens: 'neutral-tools', tag: 'JUST TOOLS' }
     ],
     outcome: {
       headline: 'All four were sorting the whole time.',
@@ -24,9 +24,9 @@ window.BFS218_EXPERIMENTS = {
     setup: 'A screening rule reads two applications. They are identical in every way a person would check: same qualifications, same answers. File A carries an old flag from a database built years ago; File B carries none. The rule is brand new, and it treats every file by exactly the same steps.',
     commit: 'Before you run it: what does the rule do?',
     options: [
-      { label: 'Both get through. The rule is new and neutral, so identical files get identical results.', lens: 'neutrality' },
-      { label: 'File A is slowed or denied. The old flag rides along inside the neutral rule.', lens: 'outcome' },
-      { label: 'File B gets extra checks. A file with no history looks riskier to a new system.', lens: 'unfamiliar' }
+      { label: 'Both get through. The rule is new and neutral, so identical files get identical results.', lens: 'neutrality', tag: 'BOTH PASS' },
+      { label: 'File A is slowed or denied. The old flag rides along inside the neutral rule.', lens: 'outcome', tag: 'FILE A DENIED' },
+      { label: 'File B gets extra checks. A file with no history looks riskier to a new system.', lens: 'unfamiliar', tag: 'EXTRA CHECKS' }
     ],
     outcome: {
       headline: 'File A is routed to DENIED.',
@@ -44,9 +44,9 @@ window.BFS218_EXPERIMENTS = {
     setup: 'A support program has limited seats, and a prediction tool scores every student. Records above the line get a seat; records below it wait. The tool’s maker shipped it with the line at 71. You are the administrator today, and the line is yours to place.',
     commit: 'Where do you set the cutoff?',
     options: [
-      { label: 'Lower it to 65. More students get through to support.', lens: 'inclusion' },
-      { label: 'Keep it at 71. The maker set the default for a reason.', lens: 'default' },
-      { label: 'Raise it to 78. Focus the seats on the clearest need the score can show.', lens: 'efficiency' }
+      { label: 'Lower it to 65. More students get through to support.', lens: 'inclusion', tag: 'LOWER TO 65' },
+      { label: 'Keep it at 71. The maker set the default for a reason.', lens: 'default', tag: 'KEEP AT 71' },
+      { label: 'Raise it to 78. Focus the seats on the clearest need the score can show.', lens: 'efficiency', tag: 'RAISE TO 78' }
     ],
     outcome: {
       headline: 'Whichever line you chose, the same thing happened just below it.',
@@ -64,9 +64,9 @@ window.BFS218_EXPERIMENTS = {
     setup: 'An organization is embarrassed by its biased decision history. It deletes the old case files, keeps the scoring tool those files trained, and relaunches it as a fresh start.',
     commit: 'Does the new system start clean?',
     options: [
-      { label: 'Yes. The biased records are gone, so the bias went with them.', lens: 'clean-slate' },
-      { label: 'No. The scores are the old records wearing new clothes.', lens: 'laundering' },
-      { label: 'Mostly. New cases will gradually wash the old pattern out.', lens: 'dilution' }
+      { label: 'Yes. The biased records are gone, so the bias went with them.', lens: 'clean-slate', tag: 'STARTS CLEAN' },
+      { label: 'No. The scores are the old records wearing new clothes.', lens: 'laundering', tag: 'SCORES REMEMBER' },
+      { label: 'Mostly. New cases will gradually wash the old pattern out.', lens: 'dilution', tag: 'WASHES OUT' }
     ],
     outcome: {
       headline: 'The pattern survived its own deletion.',
@@ -84,9 +84,9 @@ window.BFS218_EXPERIMENTS = {
     setup: 'A new campus system ships with settings already chosen: a default language, a default name format, a default way to prove who you are. Most people click straight through.',
     commit: 'What is a default, really?',
     options: [
-      { label: 'A necessity. Something has to be pre-chosen, or nothing works.', lens: 'necessity' },
-      { label: 'A decision. It advantages whoever it already fits.', lens: 'choice' },
-      { label: 'A suggestion. Anyone can change it, so it hardly matters.', lens: 'agency' }
+      { label: 'A necessity. Something has to be pre-chosen, or nothing works.', lens: 'necessity', tag: 'A NECESSITY' },
+      { label: 'A decision. It advantages whoever it already fits.', lens: 'choice', tag: 'A DECISION' },
+      { label: 'A suggestion. Anyone can change it, so it hardly matters.', lens: 'agency', tag: 'JUST A SUGGESTION' }
     ],
     outcome: {
       headline: 'The default decided before anyone noticed.',
@@ -104,9 +104,9 @@ window.BFS218_EXPERIMENTS = {
     setup: 'A checkpoint system wrongly flags a traveller. At the desk, a human catches the error in minutes and clears them to continue.',
     commit: 'What happens to the flag itself?',
     options: [
-      { label: 'It is deleted. The error was found and fixed at the source.', lens: 'correction' },
-      { label: 'It has already travelled. Copies reached other systems before the fix.', lens: 'propagation' },
-      { label: 'It stays, but marked as disputed, so future systems will know.', lens: 'annotation' }
+      { label: 'It is deleted. The error was found and fixed at the source.', lens: 'correction', tag: 'FLAG DELETED' },
+      { label: 'It has already travelled. Copies reached other systems before the fix.', lens: 'propagation', tag: 'FLAG TRAVELS' },
+      { label: 'It stays, but marked as disputed, so future systems will know.', lens: 'annotation', tag: 'MARKED DISPUTED' }
     ],
     outcome: {
       headline: 'The person was cleared. The flag kept travelling.',
@@ -124,9 +124,9 @@ window.BFS218_EXPERIMENTS = {
     setup: 'Half the course is behind you. Before you review, make a prediction about your own memory.',
     commit: 'Which of your course knowledge has decayed the most?',
     options: [
-      { label: 'The newest ideas. They have had the least rehearsal.', lens: 'recency' },
-      { label: 'The earliest weeks. Time has worn them down.', lens: 'decay' },
-      { label: 'The ideas I was surest about. I stopped checking them.', lens: 'confidence' }
+      { label: 'The newest ideas. They have had the least rehearsal.', lens: 'recency', tag: 'NEWEST FADES' },
+      { label: 'The earliest weeks. Time has worn them down.', lens: 'decay', tag: 'OLDEST FADES' },
+      { label: 'The ideas I was surest about. I stopped checking them.', lens: 'confidence', tag: 'SUREST FADES' }
     ],
     outcome: {
       headline: 'The costliest fading is the one you cannot feel.',
@@ -144,9 +144,9 @@ window.BFS218_EXPERIMENTS = {
     setup: 'A dataset about a community exists. It is accurate. A project wants to use it to improve services, and everyone involved means well.',
     commit: 'What is the first question to settle?',
     options: [
-      { label: 'Is the data accurate enough to act on?', lens: 'accuracy' },
-      { label: 'Who consented, and who controls what the data says and does?', lens: 'sovereignty' },
-      { label: 'Will using it help more people than it could harm?', lens: 'utility' }
+      { label: 'Is the data accurate enough to act on?', lens: 'accuracy', tag: 'IS IT ACCURATE?' },
+      { label: 'Who consented, and who controls what the data says and does?', lens: 'sovereignty', tag: 'WHO CONTROLS IT?' },
+      { label: 'Will using it help more people than it could harm?', lens: 'utility', tag: 'DOES IT HELP?' }
     ],
     outcome: {
       headline: 'Accurate, useful, and still not theirs.',
@@ -164,9 +164,9 @@ window.BFS218_EXPERIMENTS = {
     setup: 'A free wellness app is offered to every student. No ads, friendly design, and it genuinely helps people plan sleep and manage stress.',
     commit: 'What is the price?',
     options: [
-      { label: 'There is none that matters. Institutions vet these tools.', lens: 'trust' },
-      { label: 'Attention. Free tools eventually sell your eyes to someone.', lens: 'ads' },
-      { label: 'The trail. The record of your stress is the product.', lens: 'extraction' }
+      { label: 'There is none that matters. Institutions vet these tools.', lens: 'trust', tag: 'NO REAL PRICE' },
+      { label: 'Attention. Free tools eventually sell your eyes to someone.', lens: 'ads', tag: 'MY ATTENTION' },
+      { label: 'The trail. The record of your stress is the product.', lens: 'extraction', tag: 'MY DATA TRAIL' }
     ],
     outcome: {
       headline: 'The help was real. So was the funnel behind it.',
@@ -184,9 +184,9 @@ window.BFS218_EXPERIMENTS = {
     setup: 'A screening gate has been harming the same group for years, and now there is budget to respond, once. You choose the move.',
     commit: 'Spend it:',
     options: [
-      { label: 'Retrain the system on bigger, better, more diverse data.', lens: 'patch' },
-      { label: 'Fund an appeal seat with real authority, staffed from the affected community.', lens: 'power' },
-      { label: 'Replace the vendor with one whose product audits cleaner.', lens: 'swap' }
+      { label: 'Retrain the system on bigger, better, more diverse data.', lens: 'patch', tag: 'RETRAIN IT' },
+      { label: 'Fund an appeal seat with real authority, staffed from the affected community.', lens: 'power', tag: 'FUND THE SEAT' },
+      { label: 'Replace the vendor with one whose product audits cleaner.', lens: 'swap', tag: 'SWAP VENDOR' }
     ],
     outcome: {
       headline: 'Run the Week 11 test: after your move, who decides?',
@@ -204,9 +204,9 @@ window.BFS218_EXPERIMENTS = {
     setup: 'A harmful tool is exposed in the news. Everyone agrees it is bad. Three forces move to stop it.',
     commit: 'Which one most reliably stops it, everywhere, for good?',
     options: [
-      { label: 'Public pressure. Shame moves fast and companies fear it.', lens: 'attention' },
-      { label: 'The company itself. It promises reform and self-regulates.', lens: 'goodwill' },
-      { label: 'Law that binds every vendor, with enforcement and appeal.', lens: 'structure' }
+      { label: 'Public pressure. Shame moves fast and companies fear it.', lens: 'attention', tag: 'PUBLIC PRESSURE' },
+      { label: 'The company itself. It promises reform and self-regulates.', lens: 'goodwill', tag: 'SELF-REGULATION' },
+      { label: 'Law that binds every vendor, with enforcement and appeal.', lens: 'structure', tag: 'BINDING LAW' }
     ],
     outcome: {
       headline: 'The stack decided, like it always does.',

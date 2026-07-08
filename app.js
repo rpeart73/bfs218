@@ -2583,8 +2583,9 @@
     var label = (context === 'activity' ? 'Activity model for Week ' : 'Visual overview for Week ') + w + ': ' + spec.title + '. ' + spec.scene + ' Labels: ' + labelList + '. ' + rotateHelp;
     var noteText = spec.modelNote || spec.scene;
     var shellKind = String(spec.kind || 'pipeline').replace(/[^a-z0-9_-]/gi, '').toLowerCase() || 'pipeline';
+    var holoDriven = !!(window.BFS218_HOLO && window.BFS218_HOLO.supports && window.BFS218_HOLO.supports(spec.kind));
     return '<div class="wk-model-frame">'
-      + visualControls(w, spec, context, view)
+      + (holoDriven ? '' : visualControls(w, spec, context, view))
       + '<div class="wk-model-shell wk-model-kind-' + esc(shellKind) + '">'
       + '<canvas class="wk-model-canvas" role="img" aria-label="' + esc(label) + '" data-topic-model="' + esc(context) + '" data-week="' + w + '" data-kind="' + esc(spec.kind || 'pipeline') + '" data-view="' + esc(view) + '"></canvas>'
       + '<div class="wk-model-note"><b>' + esc(spec.title) + '</b><span>' + esc(noteText) + ' The labels inside the scene name each part. You can turn the scene by dragging any open space in the picture; nothing needs to be dropped anywhere. The buttons and the steps below change what the scene shows.</span></div>'
@@ -2608,7 +2609,7 @@
     var last = steps[2] && steps[2][0] ? steps[2][0] : 'the risk or result';
     var taskSteps = task.steps || [
       'Press each display button below the model. After each press, read the Do and Learn lines.',
-      'Drag the model once. You are not solving a puzzle; you are using a movable diagram to see the process.',
+      'Turn the model once with your mouse or finger if you like. You are not solving a puzzle and nothing gets dropped anywhere; it is a movable diagram for seeing the process.',
       'In your notes, finish this sentence: ' + first + ' leads to ' + last + ' because...'
     ];
     var title = task.title || 'What to do with this visual';
@@ -3195,7 +3196,16 @@
     var holo = null;
     if (window.BFS218_HOLO && window.BFS218_HOLO.supports && window.BFS218_HOLO.supports(kind)) {
       try {
-        holo = window.BFS218_HOLO.build(THREE, { kind: kind, week: week, view: view, riskOn: riskOn, pathOn: pathOn, root: root, scene: scene, camera: camera, renderer: renderer, canvas: canvas, sun: sun });
+        var expCtx = null;
+        try {
+          var EXH = window.BFS218_EXPERIMENTS || {};
+          var ctxName = canvas.getAttribute('data-topic-model');
+          if (ctxName === 'activity' && EXH[week]) {
+            var est = (state.exp && state.exp[week]) || {};
+            expCtx = { options: EXH[week].options, pick: typeof est.pick === 'number' ? est.pick : null, ran: !!est.ran };
+          }
+        } catch (e2) {}
+        holo = window.BFS218_HOLO.build(THREE, { kind: kind, week: week, view: view, riskOn: riskOn, pathOn: pathOn, root: root, scene: scene, camera: camera, renderer: renderer, canvas: canvas, sun: sun, context: canvas.getAttribute('data-topic-model'), expOptions: expCtx && expCtx.options, expPick: expCtx && expCtx.pick, expRan: expCtx && expCtx.ran });
       } catch (e) {
         holo = null;
         try { (window.__HOLO_ERRS = window.__HOLO_ERRS || []).push(kind + ': ' + (e && (e.message || e))); } catch (e2) {}
@@ -3643,6 +3653,25 @@
       if (renderer.forceContextLoss) renderer.forceContextLoss();
       canvas.__topicGL = null;
     }
+    if (holo && holo.pickMeshes && holo.pickMeshes.length) {
+      var pickDown = null;
+      var pickCaster = new THREE.Raycaster();
+      var pickVec = new THREE.Vector2();
+      canvas.addEventListener('pointerdown', function (e) { pickDown = [e.clientX, e.clientY]; }, true);
+      canvas.addEventListener('click', function (e) {
+        if (pickDown && (Math.abs(e.clientX - pickDown[0]) > 7 || Math.abs(e.clientY - pickDown[1]) > 7)) return;
+        var r = canvas.getBoundingClientRect();
+        pickVec.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+        pickVec.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+        pickCaster.setFromCamera(pickVec, camera);
+        var hits = pickCaster.intersectObjects(holo.pickMeshes.map(function (pm) { return pm.mesh; }), false);
+        if (!hits.length) return;
+        var first = hits[0].object;
+        for (var pi = 0; pi < holo.pickMeshes.length; pi++) {
+          if (holo.pickMeshes[pi].mesh === first) { SOC.expPick(week, holo.pickMeshes[pi].idx); break; }
+        }
+      });
+    }
     registerModelCleanup(cleanupTopicModel);
     function animate() {
       if (!canvas.isConnected || canvas.__topicStamp !== auditRenderStamp) {
@@ -3880,6 +3909,7 @@
     var callout = d.callout ? '<div style="margin-top:14px;background:#15171C;color:#fff;border-radius:12px;padding:16px 18px"><div style="font-size:.7rem;font-weight:700;color:#F2A900;margin-bottom:5px">YOUR CAPSTONE</div><div style="font-size:.95rem;line-height:1.5">' + esc(d.callout) + '</div></div>' : '';
     return '<p style="margin:0 0 14px;color:var(--ink-dim)">' + esc(d.prompt || 'Revisit your cartography one dimension at a time. Mark each as you reread it.') + '</p>' + rows + callout;
   }
+  var expRunning = 0;
   function experimentSection(w) {
     var EX = window.BFS218_EXPERIMENTS || {};
     var ex = EX[w];
@@ -3887,13 +3917,29 @@
     var st = (state.exp && state.exp[w]) || {};
     var picked = typeof st.pick === 'number' ? st.pick : null;
     var ran = !!st.ran;
-    var opts = ex.options.map(function (o, i) {
-      var on = picked === i;
-      return '<button type="button" class="exp-opt' + (on ? ' on' : '') + '" aria-pressed="' + on + '"' + (ran ? ' disabled' : '') + ' onclick="SOC.expPick(' + w + ',' + i + ')">' + esc(o.label) + '</button>';
-    }).join('');
-    var run = '<button type="button" class="wk-cta exp-run"' + (picked == null || ran ? ' disabled' : '') + ' onclick="SOC.expRun(' + w + ')">Run the experiment ' + ic('chevron', 16, 2.4) + '</button>';
-    var result = '';
-    if (ran && picked != null) {
+    var running = expRunning === w;
+    var stage = ran ? 3 : running ? 2 : picked != null ? 1 : 0;
+    var rail = ['Predict', 'Run', 'The reveal', 'Your mirror'].map(function (nm, i) {
+      var cls = i < stage ? 'done' : i === stage ? 'now' : '';
+      return '<span class="exp-station ' + cls + '"><i>' + (i + 1) + '</i>' + nm + '</span>';
+    }).join('<span class="exp-rail-line" aria-hidden="true"></span>');
+    var body = '';
+    if (!ran && !running) {
+      var opts = ex.options.map(function (o, i) {
+        var on = picked === i;
+        return '<button type="button" class="exp-opt' + (on ? ' on' : '') + '" aria-pressed="' + on + '" onclick="SOC.expPick(' + w + ',' + i + ')">' + esc(o.label) + '</button>';
+      }).join('');
+      body = '<p class="exp-phase-title">Step 1. Make your prediction</p>'
+        + '<p class="exp-setup">' + esc(ex.setup) + '</p>'
+        + '<p class="exp-commit"><b>' + esc(ex.commit) + '</b> Click one of the three glowing prediction pads inside the scene above, or choose a written option here; they are the same choices.</p>'
+        + '<div class="exp-opts">' + opts + '</div>'
+        + (picked != null
+          ? '<p class="exp-locked">Your prediction is chosen. Nothing runs until you press the button.</p><button type="button" class="wk-cta exp-run" onclick="SOC.expRun(' + w + ')">Step 2. Run the experiment ' + ic('chevron', 16, 2.4) + '</button>'
+          : '<p class="exp-locked">Choose one prediction above to unlock the run button. The gap between your guess and the outcome is where the learning is.</p>');
+    } else if (running) {
+      body = '<p class="exp-phase-title">Step 2. Running</p>'
+        + '<div class="exp-running" role="status">Your prediction is locked in. The system is running...</div>';
+    } else {
       var lens = (ex.options[picked] || {}).lens;
       var runsSoFar = Object.keys(state.exp).filter(function (k) { return state.exp[k] && state.exp[k].ran; }).length;
       var lensCounts = {};
@@ -3906,17 +3952,17 @@
       var pattern = runsSoFar >= 2 && topLens
         ? '<p class="exp-pattern">Across your ' + runsSoFar + ' experiments so far, your first instinct has leaned toward the <b>' + esc(topLens) + '</b> lens ' + topN + ' time' + (topN === 1 ? '' : 's') + '. That is not a verdict on you; it is a pattern worth knowing you carry into systems.</p>'
         : '';
-      result = '<div class="exp-outcome"><div class="mono">WHAT HAPPENED</div><b>' + esc(ex.outcome.headline) + '</b><p>' + esc(ex.outcome.body) + '</p></div>'
-        + '<div class="exp-mirror"><div class="mono">YOUR PREDICTION, MIRRORED</div><p>' + esc(ex.mirrors[lens] || '') + '</p>' + pattern + '</div>'
-        + weekNoteBox(w, 'experiment', 'Your experiment note', ex.reflect)
+      body = '<p class="exp-echo"><span class="mono">YOU PREDICTED</span> ' + esc((ex.options[picked] || {}).label) + '</p>'
+        + '<div class="exp-outcome"><p class="exp-phase-title" style="color:#9aa3af">Step 3. What actually happened</p><b>' + esc(ex.outcome.headline) + '</b><p>' + esc(ex.outcome.body) + '</p></div>'
+        + '<div class="exp-mirror"><p class="exp-phase-title" style="color:#2c6b3f">Step 4. The mirror: what your prediction shows</p><p>' + esc(ex.mirrors[lens] || '') + '</p>' + pattern + '</div>'
+        + weekNoteBox(w, 'experiment', 'Step 5. Keep one sentence', ex.reflect)
         + '<button type="button" class="exp-reset" onclick="SOC.expReset(' + w + ')">Reset and try a different prediction</button>';
     }
     return '<section class="exp-card" aria-label="This week\'s experiment">'
-      + '<div class="mono exp-kicker">EXPERIMENT</div>'
+      + '<div class="mono exp-kicker">THE WEEK ' + w + ' EXPERIMENT</div>'
       + '<h2>' + esc(ex.title) + '</h2>'
-      + '<p class="exp-setup">' + esc(ex.setup) + '</p>'
-      + '<p class="exp-commit"><b>' + esc(ex.commit) + '</b> Commit to a prediction before anything runs; the gap between your guess and the outcome is where the learning is.</p>'
-      + '<div class="exp-opts">' + opts + '</div>' + run + result
+      + '<div class="exp-rail" aria-hidden="true">' + rail + '</div>'
+      + body
       + '</section>';
   }
   function activityScreen() {
@@ -3927,7 +3973,7 @@
     var inner = '';
     switch (a.archetype) { case 'match': inner = actMatch(w, a); break; case 'scenario': inner = actScenario(w, a); break; case 'toggle': inner = actToggle(w, a); break; case 'assemble': inner = actAssemble(w, a); break; case 'lab': inner = actLab(w, a); break; case 'capstone': inner = actCapstone(w, a); break; default: inner = '<p style="color:var(--ink-dim)">This activity is not set up yet.</p>'; }
     var foot = '<div style="margin-top:22px;padding-top:18px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap"><div style="font-size:.86rem;color:var(--ink-dim)">When you are done, go back to the week to answer the reflection and save your work.</div><button onclick="SOC.station(' + w + ')" class="wk-cta" style="margin:0">Back to Week ' + w + ' ' + ic('chevron', 16, 2.4) + '</button></div>';
-    return '<div class="rise" style="margin:0 auto">' + mobileActivityActions(w, d) + head + experimentSection(w) + activityInteractionGuide(w, a) + activityOutputGuide(w, a) + inner + weekNoteBox(w, 'activity', 'Activity Notes', 'What did this activity make you notice about the week\'s idea?') + foot + '</div>';
+    return '<div class="rise" style="margin:0 auto">' + mobileActivityActions(w, d) + head + experimentSection(w) + '<div class="exp-workbench-head"><span class="mono">THE WORKBENCH</span><b>Now practise the idea the experiment just showed you</b></div>' + activityInteractionGuide(w, a) + activityOutputGuide(w, a) + inner + weekNoteBox(w, 'activity', 'Activity Notes', 'What did this activity make you notice about the week\'s idea?') + foot + '</div>';
   }
   function activitySummary(w, d) {
     var a = d.activity || {};
@@ -6884,9 +6930,21 @@
     expRun: function (w) {
       state.exp[w] = state.exp[w] || {};
       if (typeof state.exp[w].pick !== 'number') return;
-      state.exp[w].ran = true;
-      persist(); renderKeepScroll();
-      announce('Experiment complete. Read what happened, then the mirror on your prediction.');
+      var reduced = false;
+      try { reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+      var finish = function () {
+        expRunning = 0;
+        state.exp[w].ran = true;
+        state.visualView = state.visualView || {};
+        state.visualView['activity|' + w] = 'explain';
+        persist(); renderKeepScroll();
+        announce('Experiment complete. Read what happened, then the mirror on your prediction.');
+      };
+      if (reduced) { finish(); return; }
+      expRunning = w;
+      renderKeepScroll();
+      announce('Running the experiment.');
+      setTimeout(finish, 1100);
     },
     expReset: function (w) {
       state.exp[w] = {};
