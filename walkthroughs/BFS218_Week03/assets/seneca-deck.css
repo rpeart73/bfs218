@@ -60,7 +60,7 @@
   position: fixed; top: 22px; right: 26px; height: 30px; z-index: 41;
 }
 .deck-menu-toggle {
-  position: fixed; top: 18px; left: 18px; z-index: 70;
+  position: fixed; top: 18px; right: 118px; z-index: 70;
   width: 42px; height: 42px; border-radius: 11px;
   border: 1px solid #d8dde5; background: rgba(255,255,255,.96); color: var(--ink);
   display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;

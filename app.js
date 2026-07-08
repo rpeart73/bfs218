@@ -2571,7 +2571,7 @@
     var title = step[0] || '';
     var body = step[1] || '';
     return '<div class="wk-step-strip" role="group" aria-label="Story steps for this model">'
-      + '<button type="button" class="wk-step-btn" onclick="return SOC.visualStep(event,' + w + ',\'' + context + '\',-1)"' + (idx === 0 ? ' disabled' : '') + '>&#9664; Back</button>'
+      + '<button type="button" class="wk-step-btn wk-step-prev" onclick="return SOC.visualStep(event,' + w + ',\'' + context + '\',-1)"' + (idx === 0 ? ' disabled' : '') + '>&#9664; Back</button>'
       + '<div class="wk-step-text"><b>Step ' + (idx + 1) + ' of ' + order.length + ': ' + esc(title) + '.</b> ' + esc(body) + '</div>'
       + '<button type="button" class="wk-step-btn wk-step-next" onclick="return SOC.visualStep(event,' + w + ',\'' + context + '\',1)"' + (idx === order.length - 1 ? ' disabled' : '') + '>Next step &#9654;</button>'
       + '</div>';
@@ -2588,6 +2588,14 @@
       + (holoDriven ? '' : visualControls(w, spec, context, view))
       + '<div class="wk-model-shell wk-model-kind-' + esc(shellKind) + '">'
       + '<canvas class="wk-model-canvas" role="img" aria-label="' + esc(label) + '" data-topic-model="' + esc(context) + '" data-week="' + w + '" data-kind="' + esc(spec.kind || 'pipeline') + '" data-view="' + esc(view) + '"></canvas>'
+      + '<div class="wk-cam-ctl" role="group" aria-label="3D view controls">'
+      + '<button type="button" onclick="return SOC.camCtl(event,\'spin\',-1)" aria-label="Rotate left" title="Rotate left">&#8634;</button>'
+      + '<button type="button" onclick="return SOC.camCtl(event,\'spin\',1)" aria-label="Rotate right" title="Rotate right">&#8635;</button>'
+      + '<button type="button" onclick="return SOC.camCtl(event,\'zoom\',-1)" aria-label="Zoom out" title="Zoom out">&#8722;</button>'
+      + '<button type="button" onclick="return SOC.camCtl(event,\'zoom\',1)" aria-label="Zoom in" title="Zoom in">+</button>'
+      + '<button type="button" class="wk-cam-reset" onclick="return SOC.camCtl(event,\'reset\',0)">Reset view</button>'
+      + '<span class="wk-cam-hint">Drag the scene to turn it. Pinch, or click then scroll, to zoom.</span>'
+      + '</div>'
       + '<div class="wk-model-note"><b>' + esc(spec.title) + '</b><span>' + esc(noteText) + ' The labels inside the scene name each part. You can turn the scene by dragging any open space in the picture; nothing needs to be dropped anywhere. The buttons and the steps below change what the scene shows.</span></div>'
       + visualDisplayHtml(spec, context, view)
       + '<div class="wk-model-fallback" hidden>The 3D model could not load. The explanation below still walks you through the idea.</div>'
@@ -2624,6 +2632,16 @@
   }
   function visualOverviewSection(w, d) {
     var spec = visualSpec(w, d);
+    var V = window.BFS218_VISUALS || {};
+    var vw = V.weeks && V.weeks[w];
+    if (vw && vw.activity && vw.activity.modelKind && d && d.activity && d.activity.screen) {
+      return '<section id="wk-visual" class="node"><h2 class="wk-sec">A Visual Overview</h2>'
+        + '<div class="wk-visual-card"><b>' + esc(spec.title) + '</b>'
+        + '<p>' + esc(spec.scene) + '</p>'
+        + '<p class="wk-hint">This week has one interactive 3D model, and it lives inside the activity, so you explore it while you experiment. You can rotate it, zoom it, and click inside it.</p>'
+        + '<button type="button" class="wk-cta" onclick="SOC.startActivity(\'' + d.activity.screen + '\',' + w + ')">Open the 3D model in this week\'s activity</button>'
+        + '</div></section>';
+    }
     return '<section id="wk-visual" class="node"><h2 class="wk-sec">A Visual Overview</h2>'
       + '<p class="wk-hint">Use this as a labelled, movable teaching diagram. The point is not the picture by itself; the point is the process it helps you explain.</p>'
       + visualGuideHtml(spec)
@@ -3563,8 +3581,20 @@
       default:
         rowBlocks(4, 0x00aeb3, riskOn ? 2 : -1);
     }
-    var target = { x: pathOn ? -0.02 : (riskOn ? -0.52 : -0.28), y: pathOn ? 0.42 : (riskOn ? -1.05 : -0.5) };
+    var fr0 = (window.BFS218_HOLO && window.BFS218_HOLO.frame) ? window.BFS218_HOLO.frame(kind, false) : null;
+    var target = (riskOn && fr0 && fr0.swingRisk)
+      ? { x: fr0.swingRisk[0], y: fr0.swingRisk[1] }
+      : { x: pathOn ? -0.02 : (riskOn ? -0.52 : -0.28), y: pathOn ? 0.42 : (riskOn ? -1.05 : -0.5) };
     var cur = { x: target.x, y: target.y }, dragging = false, last = null, animating = false, frames = 0;
+    var view0 = { x: target.x, y: target.y };
+    var zoom = 1, pinchD = 0, wheelArmed = false;
+    var baseCam = new THREE.Vector3(4.8, 3.4, 6.6), baseLook = new THREE.Vector3(0, 0.55, 0), camTmp = new THREE.Vector3();
+    function applyZoom() {
+      camTmp.copy(baseCam).sub(baseLook).multiplyScalar(1 / zoom);
+      camera.position.copy(baseLook).add(camTmp);
+      camera.lookAt(baseLook);
+    }
+    function zoomBy(f) { zoom = Math.max(0.55, Math.min(2.4, zoom * f)); applyZoom(); frames = 0; schedule(); }
     function schedule() { if (!animating) { animating = true; requestAnimationFrame(animate); } }
     function begin(x, y) { dragging = true; last = { x: x, y: y }; frames = 0; schedule(); }
     function move(x, y) {
@@ -3579,8 +3609,20 @@
     function up() { dragging = false; last = null; frames = 0; schedule(); }
     function onPointer(e) { begin(e.clientX, e.clientY); if (e.currentTarget && e.currentTarget.setPointerCapture) e.currentTarget.setPointerCapture(e.pointerId); }
     function movePointer(e) { move(e.clientX, e.clientY); }
-    function onTouchStart(e) { if (e.touches && e.touches[0]) { e.preventDefault(); begin(e.touches[0].clientX, e.touches[0].clientY); } }
-    function onTouchMove(e) { if (e.touches && e.touches[0]) { e.preventDefault(); move(e.touches[0].clientX, e.touches[0].clientY); } }
+    function pinchDist(t) { var dx = t[0].clientX - t[1].clientX, dy = t[0].clientY - t[1].clientY; return Math.sqrt(dx * dx + dy * dy) || 1; }
+    function onTouchStart(e) {
+      if (e.touches && e.touches.length === 2) { e.preventDefault(); pinchD = pinchDist(e.touches); dragging = false; return; }
+      if (e.touches && e.touches[0]) { e.preventDefault(); begin(e.touches[0].clientX, e.touches[0].clientY); }
+    }
+    function onTouchMove(e) {
+      if (e.touches && e.touches.length === 2 && pinchD) { e.preventDefault(); var pd = pinchDist(e.touches); zoomBy(pd / pinchD); pinchD = pd; return; }
+      if (e.touches && e.touches[0]) { e.preventDefault(); move(e.touches[0].clientX, e.touches[0].clientY); }
+    }
+    function onWheel(e) {
+      if (!wheelArmed && !e.ctrlKey) return;
+      e.preventDefault();
+      zoomBy(e.deltaY < 0 ? 1.12 : 0.89);
+    }
     canvas.addEventListener('pointerdown', onPointer);
     canvas.addEventListener('pointermove', movePointer);
     canvas.addEventListener('pointerup', up);
@@ -3588,6 +3630,19 @@
     canvas.addEventListener('touchstart', onTouchStart, { passive: false });
     canvas.addEventListener('touchmove', onTouchMove, { passive: false });
     canvas.addEventListener('touchend', up);
+    canvas.addEventListener('wheel', onWheel, { passive: false });
+    canvas.addEventListener('pointerdown', function () { wheelArmed = true; });
+    canvas.addEventListener('pointerleave', function () { wheelArmed = false; });
+    canvas.__camApi = {
+      zoom: function (dir) { zoomBy(dir > 0 ? 1.18 : 0.85); },
+      spin: function (dir) { target.y += dir * 0.45; canvas.setAttribute('data-dragged', '1'); frames = 0; schedule(); },
+      reset: function () {
+        zoom = 1; target.x = view0.x; target.y = view0.y;
+        applyZoom(); frames = 0;
+        canvas.removeAttribute('data-dragged');
+        schedule();
+      }
+    };
     var reduced = false;
     try { reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
     function resize() {
@@ -3599,24 +3654,25 @@
         var hf = window.BFS218_HOLO.frame(kind, narrow);
         root.scale.set(hf.scale, hf.scale, hf.scale);
         root.position.set(0, -0.02, 0);
-        camera.position.set(hf.cam[0], hf.cam[1], hf.cam[2]);
-        camera.lookAt(hf.look[0], hf.look[1], hf.look[2]);
+        baseCam.set(hf.cam[0], hf.cam[1], hf.cam[2]);
+        baseLook.set(hf.look[0], hf.look[1], hf.look[2]);
       } else if (focusModel && narrow) {
         root.scale.set(0.82, 0.82, 0.82);
         root.position.set(0, 0.04, 0);
-        camera.position.set(5.6, 3.8, 8.2);
-        camera.lookAt(0, 0.6, 0);
+        baseCam.set(5.6, 3.8, 8.2);
+        baseLook.set(0, 0.6, 0);
       } else if (focusModel) {
         root.scale.set(0.76, 0.76, 0.76);
         root.position.set(0, -0.34, 0);
-        camera.position.set(4.9, 3.5, 7.1);
-        camera.lookAt(0, 0.32, 0);
+        baseCam.set(4.9, 3.5, 7.1);
+        baseLook.set(0, 0.32, 0);
       } else {
         root.scale.set(0.9, 0.9, 0.9);
         root.position.set(0, -0.05, 0);
-        camera.position.set(4.8, 3.4, 6.6);
-        camera.lookAt(0, 0.55, 0);
+        baseCam.set(4.8, 3.4, 6.6);
+        baseLook.set(0, 0.55, 0);
       }
+      applyZoom();
       renderer.setSize(wd, ht, false);
       camera.aspect = wd / ht;
       camera.updateProjectionMatrix();
@@ -3647,6 +3703,8 @@
       canvas.removeEventListener('touchstart', onTouchStart);
       canvas.removeEventListener('touchmove', onTouchMove);
       canvas.removeEventListener('touchend', up);
+      canvas.removeEventListener('wheel', onWheel);
+      canvas.__camApi = null;
       if (holo && holo.dispose) { try { holo.dispose(); } catch (e) {} }
       disposeThreeScene(scene);
       renderer.dispose();
@@ -6951,6 +7009,16 @@
       persist(); renderKeepScroll();
       announce('Experiment reset. Choose a new prediction.');
     },
+    camCtl: function (ev, op, dir) {
+      if (ev && ev.preventDefault) ev.preventDefault();
+      var host = ev && ev.currentTarget && ev.currentTarget.closest ? ev.currentTarget.closest('.wk-model-shell') : null;
+      var cv = host ? host.querySelector('canvas[data-topic-model]') : null;
+      if (!cv || !cv.__camApi) return false;
+      if (op === 'zoom') cv.__camApi.zoom(dir);
+      else if (op === 'spin') cv.__camApi.spin(dir);
+      else cv.__camApi.reset();
+      return false;
+    },
     visualStep: function (ev, w, context, dir) {
       var order = context === 'activity' ? ['predict', 'try', 'explain'] : ['observe', 'path', 'risk'];
       var cur = order.indexOf(visualViewFor(w, context));
@@ -6961,17 +7029,27 @@
       if (typeof ev === 'number') { v = context; context = w; w = ev; ev = null; }
       if (ev && ev.preventDefault) ev.preventDefault();
       if (ev && ev.stopPropagation) ev.stopPropagation();
-      if (ev && ev.currentTarget && ev.currentTarget.blur) ev.currentTarget.blur();
+      var focusSel = null;
+      if (ev && ev.currentTarget) {
+        var cls = String(ev.currentTarget.className || '');
+        if (cls.indexOf('wk-step-next') >= 0) focusSel = '.wk-step-next';
+        else if (cls.indexOf('wk-step-prev') >= 0) focusSel = '.wk-step-prev';
+      }
       var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0;
+      var wy = window.pageYOffset || 0;
       state.visualView = state.visualView || {};
       state.visualView[(context || 'week') + '|' + w] = v;
       if (context === 'activity') keepActivityRoute(w, 'activity');
       render();
-      var restore = function () { var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; };
+      var restore = function () { var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; window.scrollTo(0, wy); };
       restore();
       if (window.requestAnimationFrame) window.requestAnimationFrame(restore);
       setTimeout(restore, 0);
       setTimeout(restore, 80);
+      if (focusSel) setTimeout(function () {
+        var fb = document.querySelector(focusSel + ':not(:disabled)') || document.querySelector(focusSel);
+        if (fb && fb.focus) { try { fb.focus({ preventScroll: true }); } catch (e2) { fb.focus(); } }
+      }, 90);
       return false;
     },
     actPick: function (key, idx) { var m = document.getElementById('soc-main'), top = m ? m.scrollTop : 0; routeActivityFromKey(key); state.act[key] = idx; state.actResult = state.actResult || {}; state.actResult[key] = idx; persist(); render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = top; },

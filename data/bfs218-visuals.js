@@ -237,15 +237,15 @@ window.BFS218_VISUALS = {
         ['Judge the effect', 'A good intention does not cancel a harmful outcome.']
       ],
       activity: {
-        title: 'Use the model to test a helpful promise.',
-        steps: ['Name the promise.', 'Follow what the tool collects or decides.', 'Decide who gains power and who loses it.'],
-        modelKind: 'promisefunnel',
-        modelTitle: 'Activity model: test the promise funnel.',
-        modelScene: 'A polished help tool feeds data into a hidden funnel. Use this model to compare what the tool promises with what it collects, predicts, or controls.',
+        title: 'Predict who the AI detector accuses.',
+        steps: ['Read the three writers.', 'Commit to a prediction.', 'Compare it with the documented result.'],
+        modelKind: 'detector',
+        modelTitle: 'Activity model: three essays meet one detector.',
+        modelScene: 'Three student essays move through an AI-writing detector that advertises near-perfect accuracy. The verdict board shows who actually gets flagged.',
         modelSteps: [
-          ['Read the promise', 'What help does the tool say it gives?'],
-          ['Trace the funnel', 'What data or prediction happens behind the promise?'],
-          ['Judge the effect', 'Who gains power, and who becomes more exposed?']
+          ['Read the writers', 'Three essays: one AI-assisted, two fully human.'],
+          ['Watch the scan', 'The detector scores how predictable the wording is.'],
+          ['Read the verdicts', 'Who gets flagged, and who walks through untouched?']
         ]
       }
     },

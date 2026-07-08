@@ -160,24 +160,24 @@ window.BFS218_EXPERIMENTS = {
     reflect: 'In your field, who holds data about people who cannot refuse its use? One sentence.'
   },
   9: {
-    title: 'The free helper',
-    setup: 'A free wellness app is offered to every student. No ads, friendly design, and it genuinely helps people plan sleep and manage stress.',
-    commit: 'What is the price?',
+    title: 'Who gets accused?',
+    setup: 'Three students submit essays for the same assignment. Amara Osei wrote hers in English, her third language, using the careful academic style she spent years learning. Jordan Miller drafted his with an AI chatbot and lightly edited the result. Thu Nguyen, bilingual since childhood, wrote hers unaided the night before it was due. The college runs every submission through an AI-writing detector that advertises near-perfect accuracy.',
+    commit: 'The detector flags at least one essay. Which one?',
     options: [
-      { label: 'There is none that matters. Institutions vet these tools.', lens: 'trust', tag: 'NO REAL PRICE' },
-      { label: 'Attention. Free tools eventually sell your eyes to someone.', lens: 'ads', tag: 'MY ATTENTION' },
-      { label: 'The trail. The record of your stress is the product.', lens: 'extraction', tag: 'MY DATA TRAIL' }
+      { label: 'The AI-assisted essay. Catching that is the whole point of the tool.', lens: 'trust', tag: 'THE AI ESSAY' },
+      { label: 'The strongest essay. Polished writing is what looks machine-made.', lens: 'polish', tag: 'THE POLISHED ONE' },
+      { label: 'The multilingual writers. The tool reads learned English as machine English.', lens: 'bias', tag: 'MULTILINGUAL WRITERS' }
     ],
     outcome: {
-      headline: 'The help was real. So was the funnel behind it.',
-      body: 'Every check-in, mood log, and sleep entry flowed into a profile: who is struggling, when, and how much. That profile is valuable to insurers, advertisers, and anyone pricing risk, and the student never sees it move. Week 9 is about exactly this shape: a tool sold as support that also sorts, exposes, or controls, where the kindness on the surface is what keeps the funnel fed.'
+      headline: 'The detector flagged the two human writers and passed the AI essay.',
+      body: 'This is the documented pattern, not a thought experiment. Liang and colleagues (2023) ran human-written essays through seven widely used AI detectors: on average the detectors wrongly flagged 61 percent of essays by non-native English writers as machine-generated, while judging native speakers\' essays almost perfectly, and nearly one in five of those human essays was flagged by every single detector. The reason sits in the tool\'s own logic. Detectors score how predictable the wording is, and carefully learned academic English is predictable in exactly that way. Meanwhile lightly edited AI text can slip under the same threshold. A tool marketed as protecting fairness quietly redistributes suspicion along lines of language, culture, and race, and the accused student is left to prove a negative.'
     },
     mirrors: {
-      trust: 'You extended institutional trust: someone must have checked. Sometimes someone has. The Week 9 discipline is to ask what the vetting actually covered, because a privacy review of the interface says nothing about where the profile goes in three years.',
-      ads: 'You expected the familiar trade of attention for service. Close, but one step behind this week: the intimate record itself, not your attention, is the asset. What you tell a helper is worth more than what you watch.',
-      extraction: 'You followed the data trail, the Week 9 lens working. The harder second step: the help is genuine, and saying so matters. Critique that denies the benefit gets dismissed; critique that names both the benefit and the funnel gets heard.'
+      trust: 'You trusted the tool to do what its marketing says, which is the reasonable default. It is also exactly the gap Week 9 names: a benevolent purpose does not guarantee a benevolent mechanism. Ask what the tool actually measures, not what it promises to catch.',
+      polish: 'You guessed the tell would be quality. Close to the mechanism, but inverted: detectors do not flag good writing, they flag predictable writing, and the writers most likely to sound predictable are the ones who learned academic English by the book. The suspicion lands on effort, not on polish.',
+      bias: 'You saw where the suspicion would land, which is the Week 9 lens working. The harder second step: the harm is not only the wrong flag, it is the process after it. The flagged student faces an accusation that is nearly impossible to disprove, while the actual AI user walks away. Name both the error and the burden it assigns.'
     },
-    reflect: 'Name one helpful tool you use whose records would hurt you if they travelled. One sentence.'
+    reflect: 'One sentence: knowing the detector fails in this patterned way, what should a fair first step be when a submission gets flagged?'
   },
   11: {
     title: 'Fix the gate',

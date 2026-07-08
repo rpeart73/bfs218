@@ -158,7 +158,13 @@
     };
     K.screen = function (w, h, draw, opts) {
       opts = opts || {};
-      var tex = K.texture(512, Math.round(512 * (h / w)), draw);
+      var tex = K.texture(512, Math.round(512 * (h / w)), function (g, cw, ch) {
+        var s = cw / w;
+        g.save();
+        g.scale(s, s);
+        draw(g, w, h);
+        g.restore();
+      });
       var mat = K.own(new THREE.MeshStandardMaterial({ map: tex, emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: opts.glow == null ? 0.62 : opts.glow, roughness: 0.32, metalness: 0.02 }));
       return mat;
     };
@@ -1381,6 +1387,56 @@
   };
   ANCHORS.promisefunnel = [[-2.0, 1.55, -0.2], [0.4, 1.0, -0.2], [2.15, 1.15, 0.45]];
 
+  /* W9 activity: detector - who gets accused of AI writing */
+  SCENES.detector = function (K, ctx) {
+    K.stage();
+    var hot = ctx.riskOn;
+    var essays = [
+      ['A. OSEI', 'human written', 'English learned 3rd'],
+      ['J. MILLER', 'AI-assisted draft', 'native speaker'],
+      ['T. NGUYEN', 'human written', 'bilingual writer']
+    ];
+    essays.forEach(function (es, ei) {
+      var pn = K.add(new K.THREE.PlaneGeometry(1.0, 0.62), K.screen(56, 34, function (g, w, h) {
+        g.fillStyle = '#fdfdfb'; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#1b2a4a'; g.font = 'bold ' + Math.round(w * 0.105) + 'px sans-serif'; g.fillText(es[0], w * 0.07, h * 0.26);
+        g.fillStyle = '#33456b'; g.font = Math.round(w * 0.072) + 'px sans-serif';
+        g.fillText(es[1], w * 0.07, h * 0.46);
+        g.fillText(es[2], w * 0.07, h * 0.62);
+        g.strokeStyle = '#b9c4cf'; g.lineWidth = Math.max(2, w * 0.006);
+        for (var li = 0; li < 3; li++) { g.beginPath(); g.moveTo(w * 0.07, h * (0.74 + li * 0.09)); g.lineTo(w * 0.9, h * (0.74 + li * 0.09)); g.stroke(); }
+      }, { glow: 0.34 }), [-2.15, 1.72 - ei * 0.62, 0.1], [0, 0.55, 0], { shadow: false });
+      K.float(pn, 0.03, 0.9 + ei * 0.15);
+      K.flow([[-1.7, 1.62 - ei * 0.58, 0.1], [-0.7, 1.0, 0], [0.12, 0.9, -0.1]], { color: hot ? PAL.red : PAL.line, pulseColor: hot ? PAL.red : PAL.teal, pulses: 2, speed: 0.1 + ei * 0.02 });
+    });
+    K.cyl(0.04, 0.055, 1.35, K.mat.metal(), [-2.15, 0.65, 0.1]);
+    K.archGate([0.12, 0, -0.1], { w: 1.5, h: 1.85, light: hot ? PAL.red : PAL.teal, beamColor: hot ? PAL.red : PAL.teal, beamSpeed: 1.5 });
+    var badge = K.add(new K.THREE.PlaneGeometry(0.9, 0.3), K.screen(52, 18, function (g, w, h) {
+      g.fillStyle = '#0d1526'; g.fillRect(0, 0, w, h);
+      g.fillStyle = '#9fdde0'; g.font = 'bold ' + Math.round(w * 0.095) + 'px monospace'; g.fillText('AI DETECTOR', w * 0.14, h * 0.44);
+      g.fillStyle = '#8ba0b4'; g.font = Math.round(w * 0.062) + 'px monospace'; g.fillText('"near-perfect accuracy"', w * 0.1, h * 0.8);
+    }, { glow: 0.8 }), [0.12, 2.12, -0.1], null, { shadow: false });
+    K.float(badge, 0.03, 1.1);
+    var board = K.add(new K.THREE.PlaneGeometry(1.35, 0.95), K.screen(60, 42, function (g, w, h) {
+      g.fillStyle = '#0d1526'; g.fillRect(0, 0, w, h);
+      g.fillStyle = '#8ba0b4'; g.font = 'bold ' + Math.round(w * 0.065) + 'px monospace'; g.fillText('VERDICTS', w * 0.07, h * 0.15);
+      var rows = hot
+        ? [['OSEI', '#da291c', 'FLAGGED'], ['MILLER', '#1c7a43', 'PASS'], ['NGUYEN', '#da291c', 'FLAGGED']]
+        : [['OSEI', '#8ba0b4', '?'], ['MILLER', '#8ba0b4', '?'], ['NGUYEN', '#8ba0b4', '?']];
+      rows.forEach(function (r, ri) {
+        var y = h * (0.3 + ri * 0.2);
+        g.fillStyle = '#d7dee6'; g.font = Math.round(w * 0.075) + 'px monospace'; g.fillText(r[0], w * 0.07, y);
+        g.fillStyle = r[1]; g.font = 'bold ' + Math.round(w * 0.075) + 'px monospace'; g.fillText(r[2], w * 0.52, y);
+      });
+      if (hot) { g.fillStyle = '#ffa12b'; g.font = Math.round(w * 0.052) + 'px monospace'; g.fillText('61% of non-native essays flagged', w * 0.07, h * 0.93); }
+    }, { glow: 0.75 }), [2.25, 1.15, 0.35], [0, -0.55, 0], { shadow: false });
+    K.float(board, 0.04, 1.0);
+    K.cyl(0.035, 0.05, 0.75, K.mat.metal(), [2.25, 0.38, 0.35]);
+    K.flow([[0.55, 0.9, -0.1], [1.4, 1.0, 0.1], [2.25, 1.05, 0.32]], { color: hot ? PAL.red : PAL.line, pulseColor: hot ? PAL.red : PAL.orange, pulses: 3, speed: 0.12 });
+    K.person({ pos: [1.5, 0, 1.35], face: -2.6, scale: 0.95, color: PAL.ink });
+  };
+  ANCHORS.detector = [[-2.15, 2.0, 0.1], [0.12, 1.9, -0.1], [2.25, 1.6, 0.35]];
+
   /* W10 activity: thresholdaudit - test the cutoff, add human review */
   SCENES.thresholdaudit = function (K, ctx) {
     K.stage();
@@ -1639,6 +1695,7 @@
     toolkit: [['PIECES TO REVIEW', [-0.75, 1.15, 0.1]], ['YOUR REVIEW KIT', [0.95, 1.35, 0.1]], ['WHAT YOU CAN SAY NOW', [2.2, 1.45, 0.7]]],
     datastory: [['THE RECORD', [-1.9, 1.65, -0.3]], ['THE STORY IT TELLS', [0.55, 1.75, -0.05]], ['THE PEOPLE IT IS ABOUT', [0.5, 1.15, 1.5]], ['THE KEY = WHO GOVERNS', [2.2, 1.25, 0.45]]],
     promisefunnel: [['THE PROMISE', [-2.0, 1.95, -0.2]], ['THE FUNNEL, X-RAYED', [0.4, 1.85, -0.2], 1], ['WHO GAINS, WHO IS EXPOSED', [2.15, 1.65, 0.45]]],
+    detector: [['THREE ESSAYS', [-2.15, 2.35, 0.1]], ['THE DETECTOR', [0.12, 2.45, -0.1]], ['WHO GETS FLAGGED', [2.25, 1.95, 0.35], 1]],
     thresholdaudit: [['THE SCORE', [-1.95, 1.75, -0.25]], ['THE CUTOFF', [0.15, 1.85, 0], 1], ['SUPPORT', [1.8, 1.55, -0.95]], ['JUST MISSED IT', [1.15, 1.75, 1.35], 1], ['HUMAN REVIEW', [1.15, 0.85, 1.35]]],
     repairtable: [['THE HARM', [0, 1.55, 0]], ['PATCH', [-1.65, 1.35, -0.75]], ['REAL REPAIR', [-1.55, 1.35, 0.95]], ['WHO SITS AT THE TABLE', [1.4, 1.15, 1.1]]],
     policydeck: [['POLICY LEVERS', [-0.4, 2.15, 0.35]], ['WHAT EACH FIXES', [2.3, 1.75, -0.2]], ['THE GAP LEFT OVER', [0.9, 1.15, -0.75], 1]],
@@ -1673,6 +1730,7 @@
     vault: { scale: 1.08, cam: [3.45, 2.6, 4.7], look: [0, 0.8, 0] },
     benevolence: { scale: 1.06, cam: [3.5, 2.6, 4.8], look: [0, 0.7, 0] },
     promisefunnel: { scale: 1.08, cam: [3.45, 2.55, 4.7], look: [0, 0.7, 0] },
+    detector: { scale: 1.02, cam: [3.55, 2.6, 4.9], look: [0, 0.75, 0], swingRisk: [-0.24, -0.3] },
     switches: { scale: 1.06, cam: [3.5, 2.6, 4.8], look: [0, 0.65, 0] },
     audit: { scale: 1.1, cam: [3.35, 2.6, 4.6], look: [0, 0.6, 0] },
     matchwork: { scale: 1.08, cam: [3.45, 2.55, 4.7], look: [0, 0.55, 0] },
