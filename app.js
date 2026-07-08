@@ -4675,6 +4675,7 @@
       ['What if I miss a deadline?', 'The course assessment documents describe firm deadlines. Check Blackboard for the exact date and time, and ask the instructor early if you are unsure.'],
       ['Can I use generative AI?', 'Only as study support. You may use it to brainstorm, check clarity, or organize your own notes, but you must disclose the tool, date, and purpose. Do not submit AI-written or AI-rewritten work as your own. Use How to Use AI Properly for examples.'],
       ['What happens if AI writes my paper?', 'Submitting AI-written or AI-rewritten work as your own can be treated as academic misconduct. That can lead to a zero on the assignment, a formal academic-integrity process, and further course or institutional penalties. If you are unsure, do not submit the AI text. Ask first and disclose.'],
+      ['What happens if there is an academic-integrity concern?', 'The instructor will contact you first and identify the concern so you can respond before any formal report. The review focuses on the suspected issue, your explanation, assignment evidence, and Blackboard process records where relevant.'],
       ['Can AI fix my grammar?', 'A grammar or clarity check is different from having AI write the assignment. If a tool changes wording, structure, claims, sources, or analysis, disclose it. Your final ideas, course connections, examples, and evidence must be yours.'],
       ['What if screenshots do not work for my example?', 'Use another artifact you can explain clearly: a form field, prompt, output, setting, rule, notice, policy line, captioned photo, or short audio description.'],
       ['Do I need advanced technical knowledge?', 'No. The course asks you to notice patterns, explain evidence, connect to readings, and speak clearly. You do not need to code or reverse-engineer a system.'],
@@ -4686,11 +4687,22 @@
       ['Blackboard is official', 'Use Blackboard for assignment instructions, submissions, due dates, feedback, and grades.'],
       ['The site is a guide', 'This page explains the assignment arc in plain language. It does not replace the official Blackboard dropboxes or assessment files.'],
       ['Your work stays yours', 'Use the activities and notes here to practise. Export or submit only through the course process described in Blackboard.'],
-      ['AI disclosure matters', 'If you use generative AI as study support, disclose it. Do not use AI to write or rewrite submitted work as if it were yours.']
+      ['AI disclosure matters', 'If you use generative AI as study support, disclose it. Do not use AI to write or rewrite submitted work as if it were yours.'],
+      ['Concerns are discussed first', 'If an academic-integrity concern arises, the instructor contacts you before any formal report so you can respond to the specific issue.']
     ];
     return '<section class="asg-policy" aria-label="Important assignment rules">' + policies.map(function (p) {
       return '<div><b>' + esc(p[0]) + '</b><span>' + esc(p[1]) + '</span></div>';
     }).join('') + '</section>';
+  }
+  function assignmentIntegrityProcessNote() {
+    var rows = [
+      ['Instructor contact first', 'If there is an academic-integrity concern, the instructor contacts you and names the specific issue before any formal report is submitted.'],
+      ['Your response matters', 'The first step is information gathering. You have a chance to explain your process, disclosure, sources, and assignment choices.'],
+      ['Blackboard records', 'Blackboard Activity Log evidence may be reviewed. A Progress report is not enough by itself and needs the Activity Log with it.']
+    ];
+    return '<div class="asg-ai-rule"><b>Academic-integrity process</b><p>Concerns are handled through direct communication and evidence review, not guesses about writing style alone.</p><div class="asg-lens-steps">' + rows.map(function (r) {
+      return '<article><b>' + esc(r[0]) + '</b><p>' + esc(r[1]) + '</p></article>';
+    }).join('') + '</div></div>';
   }
   function assignmentLocalDate() {
     var d = new Date(), m = String(d.getMonth() + 1).padStart(2, '0'), day = String(d.getDate()).padStart(2, '0');
@@ -5203,6 +5215,7 @@
     ];
     return '<section id="asg-ai" class="asg-ai asg-ai-page" aria-label="How to Use AI Properly"><div class="asg-ai-head"><span>HOW TO USE AI PROPERLY</span><b>Use AI only as support</b><small>Name the tool, date, purpose, and boundary.</small></div>'
       + '<div class="asg-ai-warning"><b>Penalty risk: do not use AI to write your papers.</b><p>Submitting AI-written or AI-rewritten work as your own can be treated as academic misconduct. Penalties can include a zero on the assignment, a formal academic-integrity process, and further course or institutional consequences. When unsure, do not submit the AI text. Ask first and disclose.</p></div>'
+      + assignmentIntegrityProcessNote()
       + '<div class="asg-ai-rule"><b>The simple rule</b><p>AI can help you prepare to think. It cannot do the thinking, reading, evidence selection, course analysis, reflection, script, or final writing for you.</p></div>'
       + '<div class="asg-ai-columns"><div><h3>Acceptable study support</h3>' + allowed.map(function (a) {
         return '<article><b>' + esc(a[0]) + '</b><p>' + esc(a[1]) + '</p></article>';
@@ -5487,6 +5500,7 @@
   }
   function assignmentStorySection(summary) {
     return assignmentPolicyPanel()
+      + assignmentIntegrityProcessNote()
       + summary
       + '<section id="asg-story" class="asg-story"><div><div class="mono">ASSIGNMENT OVERVIEW</div><h2>You are building one map across the term</h2><p>The assignments are not random separate tasks. You begin by noticing real digital life, then you inspect one encounter, investigate one Canadian system, design a repair, and finally walk someone through the map of how your thinking changed.</p></div><ol><li>Notice</li><li>Break down</li><li>Investigate</li><li>Repair</li><li>Integrate</li></ol></section>';
   }
@@ -5542,6 +5556,7 @@
       + assignmentJumpNav()
       + assignmentPageHero('STARTING YOUR ASSIGNMENT', 'Assignment Rooms', 'Open one assignment at a time. Each room explains the purpose, submission pieces, marking criteria, program connection, and preparation option.')
       + assignmentPreviewBanner()
+      + assignmentIntegrityProcessNote()
       + assignmentLensPanel(ctx.L)
       + '<div class="asg-tabpanel">' + assignmentDirectory(ctx.items) + assignmentRoom(ctx.selected, ctx.L) + '</div>'
       + '</div>';
