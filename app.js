@@ -2889,7 +2889,10 @@
     if (window.BFS218_HOLO && window.BFS218_HOLO.supports && window.BFS218_HOLO.supports(kind)) {
       try {
         holo = window.BFS218_HOLO.build(THREE, { kind: kind, week: week, view: view, riskOn: riskOn, pathOn: pathOn, root: root, scene: scene, camera: camera, renderer: renderer, canvas: canvas, sun: sun });
-      } catch (e) { holo = null; }
+      } catch (e) {
+        holo = null;
+        try { (window.__HOLO_ERRS = window.__HOLO_ERRS || []).push(kind + ': ' + (e && (e.message || e))); } catch (e2) {}
+      }
     }
     if (!holo) {
       var grid = new THREE.GridHelper(7.2, 10, 0xd6dde5, 0xd6dde5);
