@@ -14,7 +14,7 @@
   var VKEY = SKEY + '.view.v1';
   var HKEY = SKEY + '.hardResetNext';
   function load() { try { var o = JSON.parse(localStorage.getItem(SKEY) || '{}'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; } }
-  function persist() { try { localStorage.setItem(SKEY, JSON.stringify({ saved: state.saved, cmpNotes: state.cmpNotes, rcNotes: state.rcNotes, sgNotes: state.sgNotes, sgTick: state.sgTick, wkCheck: state.wkCheck, wkReflect: state.wkReflect, wkNotes: state.wkNotes, actResult: state.actResult, mcSel: state.mcSel, mcConf: state.mcConf, kcVersion: state.kcVersion, kcShort: state.kcShort, kcShortRate: state.kcShortRate, kcHist: state.kcHist, careerReflect: state.careerReflect, mediaNotes: state.mediaNotes, assignmentStarter: state.assignmentStarter, rl: state.rl })); } catch (e) {} }
+  function persist() { try { localStorage.setItem(SKEY, JSON.stringify({ saved: state.saved, cmpNotes: state.cmpNotes, rcNotes: state.rcNotes, sgNotes: state.sgNotes, sgTick: state.sgTick, wkCheck: state.wkCheck, wkReflect: state.wkReflect, wkNotes: state.wkNotes, actResult: state.actResult, mcSel: state.mcSel, mcConf: state.mcConf, kcVersion: state.kcVersion, kcShort: state.kcShort, kcShortRate: state.kcShortRate, kcHist: state.kcHist, careerReflect: state.careerReflect, mediaNotes: state.mediaNotes, assignmentStarter: state.assignmentStarter, rl: state.rl, exp: state.exp })); } catch (e) {} }
   function loadView() { try { var o = JSON.parse(sessionStorage.getItem(VKEY) || '{}'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; } }
   function clearView() { try { sessionStorage.removeItem(VKEY); sessionStorage.removeItem(HKEY); } catch (e) {} }
   function shouldResumeView(v) {
@@ -115,6 +115,7 @@
     assignmentTab: resumeView0 ? cleanAssignmentTab(view0.assignmentTab) : 'story',
     assignmentFaq: resumeView0 ? (view0.assignmentFaq == null ? null : Number(view0.assignmentFaq)) : null,
     assignmentStarter: (saved0.assignmentStarter && typeof saved0.assignmentStarter === 'object') ? saved0.assignmentStarter : {},
+    exp: (saved0.exp && typeof saved0.exp === 'object') ? saved0.exp : {},
     assignmentChecks: {},
     videoWeek: resumeView0 ? (view0.videoWeek || 'all') : 'all',
     mediaKind: resumeView0 ? (view0.mediaKind || 'all') : 'all',
@@ -3866,6 +3867,45 @@
     var callout = d.callout ? '<div style="margin-top:14px;background:#15171C;color:#fff;border-radius:12px;padding:16px 18px"><div style="font-size:.7rem;font-weight:700;color:#F2A900;margin-bottom:5px">YOUR CAPSTONE</div><div style="font-size:.95rem;line-height:1.5">' + esc(d.callout) + '</div></div>' : '';
     return '<p style="margin:0 0 14px;color:var(--ink-dim)">' + esc(d.prompt || 'Revisit your cartography one dimension at a time. Mark each as you reread it.') + '</p>' + rows + callout;
   }
+  function experimentSection(w) {
+    var EX = window.BFS218_EXPERIMENTS || {};
+    var ex = EX[w];
+    if (!ex) return '';
+    var st = (state.exp && state.exp[w]) || {};
+    var picked = typeof st.pick === 'number' ? st.pick : null;
+    var ran = !!st.ran;
+    var opts = ex.options.map(function (o, i) {
+      var on = picked === i;
+      return '<button type="button" class="exp-opt' + (on ? ' on' : '') + '" aria-pressed="' + on + '"' + (ran ? ' disabled' : '') + ' onclick="SOC.expPick(' + w + ',' + i + ')">' + esc(o.label) + '</button>';
+    }).join('');
+    var run = '<button type="button" class="wk-cta exp-run"' + (picked == null || ran ? ' disabled' : '') + ' onclick="SOC.expRun(' + w + ')">Run the experiment ' + ic('chevron', 16, 2.4) + '</button>';
+    var result = '';
+    if (ran && picked != null) {
+      var lens = (ex.options[picked] || {}).lens;
+      var runsSoFar = Object.keys(state.exp).filter(function (k) { return state.exp[k] && state.exp[k].ran; }).length;
+      var lensCounts = {};
+      Object.keys(state.exp).forEach(function (k) {
+        var s2 = state.exp[k];
+        if (s2 && s2.ran && s2.lens) lensCounts[s2.lens] = (lensCounts[s2.lens] || 0) + 1;
+      });
+      var topLens = null, topN = 0;
+      Object.keys(lensCounts).forEach(function (l) { if (lensCounts[l] > topN) { topN = lensCounts[l]; topLens = l; } });
+      var pattern = runsSoFar >= 2 && topLens
+        ? '<p class="exp-pattern">Across your ' + runsSoFar + ' experiments so far, your first instinct has leaned toward the <b>' + esc(topLens) + '</b> lens ' + topN + ' time' + (topN === 1 ? '' : 's') + '. That is not a verdict on you; it is a pattern worth knowing you carry into systems.</p>'
+        : '';
+      result = '<div class="exp-outcome"><div class="mono">WHAT HAPPENED</div><b>' + esc(ex.outcome.headline) + '</b><p>' + esc(ex.outcome.body) + '</p></div>'
+        + '<div class="exp-mirror"><div class="mono">YOUR PREDICTION, MIRRORED</div><p>' + esc(ex.mirrors[lens] || '') + '</p>' + pattern + '</div>'
+        + weekNoteBox(w, 'experiment', 'Your experiment note', ex.reflect)
+        + '<button type="button" class="exp-reset" onclick="SOC.expReset(' + w + ')">Reset and try a different prediction</button>';
+    }
+    return '<section class="exp-card" aria-label="This week\'s experiment">'
+      + '<div class="mono exp-kicker">EXPERIMENT</div>'
+      + '<h2>' + esc(ex.title) + '</h2>'
+      + '<p class="exp-setup">' + esc(ex.setup) + '</p>'
+      + '<p class="exp-commit"><b>' + esc(ex.commit) + '</b> Commit to a prediction before anything runs; the gap between your guess and the outcome is where the learning is.</p>'
+      + '<div class="exp-opts">' + opts + '</div>' + run + result
+      + '</section>';
+  }
   function activityScreen() {
     var w = state.activityReturn, d = weekData(w);
     if (!d || !d.activity) return '<div style="padding:30px 0;color:var(--ink-dim)">No activity here. <button onclick="SOC.go(\'journey\')" style="background:none;border:none;color:var(--red);font-weight:600;cursor:pointer">Back to your journey</button></div>';
@@ -3874,7 +3914,7 @@
     var inner = '';
     switch (a.archetype) { case 'match': inner = actMatch(w, a); break; case 'scenario': inner = actScenario(w, a); break; case 'toggle': inner = actToggle(w, a); break; case 'assemble': inner = actAssemble(w, a); break; case 'lab': inner = actLab(w, a); break; case 'capstone': inner = actCapstone(w, a); break; default: inner = '<p style="color:var(--ink-dim)">This activity is not set up yet.</p>'; }
     var foot = '<div style="margin-top:22px;padding-top:18px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap"><div style="font-size:.86rem;color:var(--ink-dim)">When you are done, go back to the week to answer the reflection and save your work.</div><button onclick="SOC.station(' + w + ')" class="wk-cta" style="margin:0">Back to Week ' + w + ' ' + ic('chevron', 16, 2.4) + '</button></div>';
-    return '<div class="rise" style="margin:0 auto">' + mobileActivityActions(w, d) + head + activityInteractionGuide(w, a) + activityOutputGuide(w, a) + inner + weekNoteBox(w, 'activity', 'Activity Notes', 'What did this activity make you notice about the week\'s idea?') + foot + '</div>';
+    return '<div class="rise" style="margin:0 auto">' + mobileActivityActions(w, d) + head + experimentSection(w) + activityInteractionGuide(w, a) + activityOutputGuide(w, a) + inner + weekNoteBox(w, 'activity', 'Activity Notes', 'What did this activity make you notice about the week\'s idea?') + foot + '</div>';
   }
   function activitySummary(w, d) {
     var a = d.activity || {};
@@ -6810,6 +6850,27 @@
     },
     wkReflect: function (w, v) { state.wkReflect[w] = v; persist(); },
     wkNote: function (k, v) { state.wkNotes = state.wkNotes || {}; state.wkNotes[k] = v; persist(); },
+    expPick: function (w, i) {
+      state.exp[w] = state.exp[w] || {};
+      if (state.exp[w].ran) return;
+      state.exp[w].pick = i;
+      var EX = window.BFS218_EXPERIMENTS || {};
+      state.exp[w].lens = ((EX[w] || {}).options[i] || {}).lens;
+      persist(); renderKeepScroll();
+      announce('Prediction chosen. Run the experiment when you are ready.');
+    },
+    expRun: function (w) {
+      state.exp[w] = state.exp[w] || {};
+      if (typeof state.exp[w].pick !== 'number') return;
+      state.exp[w].ran = true;
+      persist(); renderKeepScroll();
+      announce('Experiment complete. Read what happened, then the mirror on your prediction.');
+    },
+    expReset: function (w) {
+      state.exp[w] = {};
+      persist(); renderKeepScroll();
+      announce('Experiment reset. Choose a new prediction.');
+    },
     visualStep: function (ev, w, context, dir) {
       var order = context === 'activity' ? ['predict', 'try', 'explain'] : ['observe', 'path', 'risk'];
       var cur = order.indexOf(visualViewFor(w, context));
