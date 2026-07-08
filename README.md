@@ -1,8 +1,8 @@
-# BFS218
+# BFS218 Companion Website
 
-The reading room for **BFS218: Racism and the Digital Age (Understanding Techno-Racism)** at Seneca Polytechnic.
+Instructor-created companion website for **BFS218: Racism and the Digital Age (Understanding Techno-Racism)** at Seneca Polytechnic.
 
-A student-facing source library on the shared corpus engine: search and filter the course readings, move through the course by week, drill into one source, browse the glossary and key thinkers, and run self-check cards. Weekly pages carry the overview, purpose, outcomes, guiding questions, concepts, readings, an embedded walkthrough deck, and an activity. The repo also serves the weekly walkthrough decks at `/walkthroughs/`.
+A student-facing weekly learning pathway on the shared corpus engine: search and filter the course readings, move through the course by week, drill into one source, browse the glossary and key thinkers, and run self-check cards. Weekly pages carry the overview, purpose, outcomes, guiding questions, concepts, readings, an embedded walkthrough deck, and an activity. The repo also serves the weekly walkthrough decks at `/walkthroughs/`.
 
 It is a **companion to Blackboard**, not a replacement. Official course records, discussion, grades, and submission live in Blackboard. No accounts, no grading, no student-to-student interaction, no analytics, no PDFs, and no reproduced reading text. Reading links point outward (open access, publisher, Seneca Library, or Blackboard).
 
