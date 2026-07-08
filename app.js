@@ -2608,7 +2608,7 @@
   function weekNoteBox(w, part, title, prompt) {
     var key = wkNoteKey(w, part), id = 'wk-note-' + w + '-' + part;
     var val = (state.wkNotes && state.wkNotes[key]) || '';
-    return '<label class="wk-notebox" for="' + id + '"><b>' + esc(title) + '</b><span>' + esc(prompt) + '</span><textarea id="' + id + '" oninput="SOC.wkNote(\'' + key + '\',this.value)" placeholder="Write a short note for your weekly document...">' + esc(val) + '</textarea></label>';
+    return '<label class="wk-notebox" for="' + id + '"><b>' + esc(title) + '</b><span>' + esc(prompt) + '</span><textarea id="' + id + '" oninput="SOC.wkNote(\'' + key + '\',this.value)" placeholder="Write a short note for your weekly document...">' + esc(val) + '</textarea><small class="wk-save-note">Saves automatically in this browser on this device, and is never submitted. It will be here when you come back in this browser. To keep a copy anywhere, use Generate Your Weekly Notes.</small></label>';
   }
   function weekActionLine(w, d) {
     var concept = d && d.concepts && d.concepts[0] ? d.concepts[0].h : weekTitle(w);
@@ -5534,7 +5534,7 @@
   }
   function assignmentChecklist(a) {
     var checked = (state.assignmentChecks && state.assignmentChecks[a.id]) || {};
-    return '<div class="asg-submit"><h3>Before you submit</h3><p>Use this as a quick self-check. It stays in this browser session and is not submitted.</p><div>'
+    return '<div class="asg-submit"><h3>Before you submit</h3><p>Use this as a quick self-check. It is saved in this browser on this device and is not submitted.</p><div>'
       + a.checks.map(function (c, i) {
         var on = !!checked[i];
         return '<button type="button" onclick="SOC.assignCheck(\'' + a.id + '\',' + i + ')" aria-pressed="' + (on ? 'true' : 'false') + '" class="' + (on ? 'on' : '') + '"><span>' + (on ? '&#10003;' : '') + '</span>' + esc(c) + '</button>';
@@ -6261,7 +6261,7 @@
       if (f.roles && f.roles.length) out += box('WHERE THIS SHOWS UP', '<p>' + f.roles.map(esc).join(' &middot; ') + '</p>');
     }
     var rk = 'career|' + area, rv = esc((state.careerReflect && state.careerReflect[rk]) || '');
-    out += '<div class="career-note"><h3 style="margin:10px 0 4px;font-size:1.02rem">Where might this land in your field?</h3><p class="wk-hint" style="margin-bottom:8px">A quick note to yourself, saved on your device. Nothing is submitted.</p>'
+    out += '<div class="career-note"><h3 style="margin:10px 0 4px;font-size:1.02rem">Where might this land in your field?</h3><p class="wk-hint" style="margin-bottom:8px">A quick note to yourself, saved in this browser on this device. Nothing is submitted. Use Generate Your Weekly Notes to keep a permanent copy.</p>'
       + '<textarea oninput="SOC.careerReflect(\'' + rk + '\',this.value)" aria-label="Your reflection" class="wk-ta" placeholder="One place I can already picture this showing up in my field...">' + rv + '</textarea></div></section>';
     return '<div class="rise career-page">' + hero + impact + out + '</div>';
   }
