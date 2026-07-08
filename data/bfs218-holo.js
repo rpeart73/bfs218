@@ -260,6 +260,40 @@
       return ring;
     };
 
+    /* --- in-scene billboard label --- */
+    K.tag = function (text, pos, opts) {
+      opts = opts || {};
+      var warn = !!opts.warn;
+      var c = document.createElement('canvas');
+      var g = c.getContext('2d');
+      g.font = '700 34px "Segoe UI", Verdana, sans-serif';
+      var w = Math.ceil(g.measureText(text).width) + 44;
+      c.width = w; c.height = 62;
+      g = c.getContext('2d');
+      g.fillStyle = warn ? 'rgba(150,26,19,.95)' : 'rgba(16,35,63,.93)';
+      g.beginPath();
+      if (g.roundRect) { g.roundRect(1, 1, w - 2, 60, 14); } else { g.rect(1, 1, w - 2, 60); }
+      g.fill();
+      g.strokeStyle = warn ? '#FFD3CC' : '#7EF0F2';
+      g.lineWidth = 2.5;
+      g.stroke();
+      g.font = '700 34px "Segoe UI", Verdana, sans-serif';
+      g.fillStyle = '#FFFFFF';
+      g.textBaseline = 'middle';
+      g.fillText(text, 22, 33);
+      var tex = new THREE.CanvasTexture(c);
+      if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
+      K.textures.push(tex);
+      var mat = K.own(new THREE.SpriteMaterial({ map: tex, depthTest: false, transparent: true }));
+      var sp = new THREE.Sprite(mat);
+      var hgt = 0.19;
+      var wid = Math.min(1.7, hgt * w / 62);
+      sp.scale.set(wid, hgt, 1);
+      sp.position.set(pos[0], pos[1], pos[2]);
+      sp.renderOrder = 60;
+      ctx.root.add(sp);
+      return sp;
+    };
     /* --- scan beam sweep --- */
     K.beam = function (w, h, color, pos, opts) {
       opts = opts || {};
@@ -1579,6 +1613,38 @@
   };
   ANCHORS.futurecompass = [[-1.7, 1.0, -0.3], [0.75, 0.7, -0.05], [2.85, 1.1, -0.85]];
 
+
+  /* in-scene labels: what each key object IS (comprehension first) */
+  var TAGS = {
+    map: [['A STUDENT', [0, 1.15, 0]], ['PHONE', [-1.9, 1.25, 1.0]], ['CAMERA', [-2.0, 2.05, -1.2]], ['TAP TO PAY', [1.95, 1.15, 1.05]], ['ID CHECK', [2.0, 1.55, -1.15]], ['YOUR NOTICING MAP', [0, 1.0, 1.85]]],
+    outcomelens: [['THE SAME RULE', [-1.1, 2.3, 0]], ['OPEN PATH', [-0.25, 0.75, 1.6]], ['BLOCKED', [-1.78, 1.05, 1.15], 1], ['EXTRA BURDEN', [1.35, 1.25, 0.9], 1], ['CASE: APPROVED', [0.4, 1.85, -1.5]], ['CASE: DENIED', [1.55, 1.85, -0.9], 1]],
+    pipeline: [['OLD RECORDS', [-2.5, 1.5, -0.1]], ['CONVEYOR', [-1.0, 0.75, 0]], ['SCORING RULE', [0.55, 1.75, 0]], ['APPROVED', [2.45, 0.95, -0.75]], ['DENIED', [2.45, 0.95, 0.75], 1]],
+    switches: [['DEFAULT SETTINGS', [-0.55, 1.95, -0.4]], ['THE DOOR', [2.3, 1.95, -0.15]], ['FITS THE DEFAULT', [1.45, 1.35, 0.35]], ['MUST ADAPT', [1.35, 1.35, 1.35], 1]],
+    audit: [['THE BENCHMARK TEST', [0, 1.05, 0]], ['AVERAGE LOOKS FINE', [0, 1.95, -0.9]], ['ERRORS CLUSTER HERE', [0, 1.15, 0.85], 1], ['THE AUDITOR', [-2.05, 1.35, 1.15]]],
+    gate: [['CHECKPOINT', [0, 2.25, 0]], ['CAMERAS', [-0.95, 2.25, -0.45]], ['FLAGGED', [0, 1.75, 0.9], 1], ['DATABASES', [2.45, 1.75, -0.2]], ['WHO DECIDES?', [-2.3, 1.65, 0.9]]],
+    review: [['WEEKS 1 TO 6', [0, 1.55, -1.3]], ['THE PATTERN RETURNS', [0, 2.0, 0]], ['REST IS PART OF IT', [0, 0.95, 1.5]]],
+    vault: [['DATA VAULT', [-1.5, 2.35, -0.55]], ['STORIES ABOUT PEOPLE', [0.4, 1.85, 0.4]], ['THE KEY = CONTROL', [1.75, 1.25, 0.85]], ['THE COMMUNITY', [1.55, 1.35, 1.8]]],
+    benevolence: [['LOOKS LIKE HELP', [-1.1, 2.05, 0.4]], ['HIDDEN DATA FUNNEL', [1.15, 1.75, -0.75], 1], ['WHERE IT GOES', [2.45, 1.75, -0.35], 1], ['WHO GAINS?', [2.0, 1.65, 1.3]]],
+    sorting: [['STUDENT RECORDS', [-1.75, 1.05, 0]], ['THE CUTOFF', [0, 1.95, 0], 1], ['GETS SUPPORT', [2.0, 1.05, -1.1]], ['LEFT WAITING', [1.75, 1.05, 1.2], 1]],
+    repair: [['THE HARMED SYSTEM', [0, 1.7, 0]], ['PATCH TOOLS', [-2.2, 1.55, -0.3]], ['WHO LEADS?', [0, 1.15, 1.55]], ['POWER MOVES HERE', [0, 1.75, 0.9]]],
+    policy: [['THE PRODUCT', [1.6, 0.45, 0]], ['THE INSTITUTION', [1.35, 0.9, 0]], ['THE LAW', [1.15, 1.35, 0]], ['RIGHTS', [0.95, 1.8, 0]], ['THE GAP', [1.35, 1.5, 0.55], 1], ['LEFT EXPOSED', [2.05, 1.35, 1.1], 1]],
+    'return': [['WEEK 1: FIRST NOTES', [2.1, 0.95, -1.15]], ['YOUR CLIMB', [0, 2.15, 0]], ['WEEK 13: WHAT YOU SEE NOW', [-0.4, 2.25, 0.75]]],
+    compass: [['THE COURSE QUESTION', [-1.5, 1.55, -1.5]], ['YOUR MAP', [1.55, 1.55, 1.5]], ['YOUR ANSWER POINTS FORWARD', [0, 1.05, 0]], ['YOU, GOING ON', [1.1, 1.45, -1.75]]],
+    startermap: [['PICK ONE TOOL', [-2.0, 1.15, -0.65]], ['ASK WHAT IT ASSUMES', [-0.85, 1.45, -0.15]], ['YOUR FIRST MAP ENTRY', [0.35, 1.15, 0.55]]],
+    matchwork: [['THE EXAMPLE', [-2.05, 1.45, -0.35]], ['YOUR CHOICE', [-0.2, 1.0, 0.35]], ['COURSE IDEAS', [1.95, 1.15, 0]], ['FEEDBACK', [2.75, 1.15, 0]]],
+    mechanismatch: [['THE CASE FILE', [-2.2, 1.15, -0.4]], ['OUTCOMES LENS', [-0.45, 1.95, 0]], ['THE MECHANISMS', [1.85, 1.35, 0]]],
+    decisionpath: [['THE INPUT', [-2.15, 1.35, 0]], ['THE DECISION', [-0.35, 1.55, 0]], ['HELPED', [2.3, 1.15, -1.5]], ['HARMED', [2.3, 1.15, 1.5], 1]],
+    defaultboard: [['THE DEFAULTS', [-0.85, 2.15, -0.55]], ['WHO ADAPTS?', [1.85, 1.75, -0.35]], ['FITS', [1.35, 1.35, 0.85]], ['CARRIES THE COST', [2.25, 1.35, 0.85], 1]],
+    surveillanceflow: [['CHECKPOINT', [-2.0, 1.85, 0]], ['THE FLAG', [-0.55, 1.65, 0.1], 1], ['DATABASE', [0.85, 1.65, -0.85]], ['NEXT CHECKPOINT', [2.35, 1.75, 0.35]], ['APPEAL? ROPED OFF', [0.4, 1.45, 1.6], 1]],
+    toolkit: [['PIECES TO REVIEW', [-0.75, 1.15, 0.1]], ['YOUR REVIEW KIT', [0.95, 1.35, 0.1]], ['WHAT YOU CAN SAY NOW', [2.2, 1.45, 0.7]]],
+    datastory: [['THE RECORD', [-1.9, 1.65, -0.3]], ['THE STORY IT TELLS', [0.55, 1.75, -0.05]], ['THE PEOPLE IT IS ABOUT', [0.5, 1.15, 1.5]], ['THE KEY = WHO GOVERNS', [2.2, 1.25, 0.45]]],
+    promisefunnel: [['THE PROMISE', [-2.0, 1.95, -0.2]], ['THE FUNNEL, X-RAYED', [0.4, 1.85, -0.2], 1], ['WHO GAINS, WHO IS EXPOSED', [2.15, 1.65, 0.45]]],
+    thresholdaudit: [['THE SCORE', [-1.95, 1.75, -0.25]], ['THE CUTOFF', [0.15, 1.85, 0], 1], ['SUPPORT', [1.8, 1.55, -0.95]], ['JUST MISSED IT', [1.15, 1.75, 1.35], 1], ['HUMAN REVIEW', [1.15, 0.85, 1.35]]],
+    repairtable: [['THE HARM', [0, 1.55, 0]], ['PATCH', [-1.65, 1.35, -0.75]], ['REAL REPAIR', [-1.55, 1.35, 0.95]], ['WHO SITS AT THE TABLE', [1.4, 1.15, 1.1]]],
+    policydeck: [['POLICY LEVERS', [-0.4, 2.15, 0.35]], ['WHAT EACH FIXES', [2.3, 1.75, -0.2]], ['THE GAP LEFT OVER', [0.9, 1.15, -0.75], 1]],
+    capstonemap: [['YOUR WEEK 1 ENTRY', [-1.85, 1.75, -0.55]], ['YOUR WEEK 12 ENTRY', [-1.55, 1.75, 1.05]], ['WHAT CHANGED', [-1.15, 2.0, 0.25]], ['YOUR FINAL PLAN', [1.45, 1.05, 0.15]]],
+    futurecompass: [['YOUR COMPASS', [-1.7, 1.45, -0.3]], ['EVIDENCE', [-0.35, 0.95, 0.35]], ['RESPONSE', [0.75, 1.05, -0.05]], ['COMMITMENT', [1.9, 1.15, -0.45]], ['YOUR FIELD, AHEAD', [2.85, 1.95, -0.85]]]
+  };
   /* ------------------------------------------------------------ dispatcher */
   /* per-kind camera framing: wide dioramas pull back, bench scenes lean in */
   var FRAMES = {
@@ -1640,6 +1706,10 @@
         ctx.renderer.toneMappingExposure = 1.22;
       } catch (e) {}
       scene(K, ctx);
+      var tags = TAGS[ctx.kind] || [];
+      for (var tgi = 0; tgi < tags.length; tgi++) {
+        try { K.tag(tags[tgi][0], tags[tgi][1], { warn: !!tags[tgi][2] }); } catch (e) {}
+      }
       /* settle one frame at t=0 so static/reduced-motion renders place every animated part */
       for (var ti = 0; ti < K.ticks.length; ti++) { try { K.ticks[ti](0); } catch (e) {} }
       return {

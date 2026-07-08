@@ -2549,6 +2549,19 @@
       return '<span class="wk-model-label" data-label-index="' + i + '" data-anchor="' + esc(anchor.join(',')) + '" style="left:' + left + '%;top:' + top + '%"><b>' + esc(l.t || '') + '</b><small>' + esc(l.sub || '') + '</small></span>';
     }).join('') + '</div>';
   }
+  function visualStepStrip(w, spec, context, view) {
+    var order = context === 'activity' ? ['predict', 'try', 'explain'] : ['observe', 'path', 'risk'];
+    var idx = Math.max(0, order.indexOf(view));
+    var steps = spec.steps || [];
+    var step = steps[idx] || [];
+    var title = step[0] || '';
+    var body = step[1] || '';
+    return '<div class="wk-step-strip" role="group" aria-label="Story steps for this model">'
+      + '<button type="button" class="wk-step-btn" onclick="return SOC.visualStep(event,' + w + ',\'' + context + '\',-1)"' + (idx === 0 ? ' disabled' : '') + '>&#9664; Back</button>'
+      + '<div class="wk-step-text"><b>Step ' + (idx + 1) + ' of ' + order.length + ': ' + esc(title) + '.</b> ' + esc(body) + '</div>'
+      + '<button type="button" class="wk-step-btn wk-step-next" onclick="return SOC.visualStep(event,' + w + ',\'' + context + '\',1)"' + (idx === order.length - 1 ? ' disabled' : '') + '>Next step &#9654;</button>'
+      + '</div>';
+  }
   function visualModelHtml(w, spec, context) {
     var view = visualViewFor(w, context);
     var rotateHelp = 'Click or touch and drag anywhere inside this 3D picture to rotate the scene. The numbered labels below the model explain what to inspect without covering the scene.';
@@ -2560,10 +2573,11 @@
       + visualControls(w, spec, context, view)
       + '<div class="wk-model-shell wk-model-kind-' + esc(shellKind) + '">'
       + '<canvas class="wk-model-canvas" role="img" aria-label="' + esc(label) + '" data-topic-model="' + esc(context) + '" data-week="' + w + '" data-kind="' + esc(spec.kind || 'pipeline') + '" data-view="' + esc(view) + '"></canvas>'
-      + '<div class="wk-model-note"><b>' + esc(spec.title) + '</b><span>' + esc(noteText) + ' Drag to rotate. Use the display buttons above the model, then read the numbered labels below it.</span></div>'
+      + '<div class="wk-model-note"><b>' + esc(spec.title) + '</b><span>' + esc(noteText) + ' The labels inside the scene name each part. Drag to rotate, and use Next step to walk through the story.</span></div>'
       + visualDisplayHtml(spec, context, view)
       + '<div class="wk-model-fallback" hidden>The 3D model could not load. The explanation below still walks you through the idea.</div>'
       + '</div>'
+      + visualStepStrip(w, spec, context, view)
       + visualLabels(spec)
       + '</div>';
   }
@@ -6796,6 +6810,12 @@
     },
     wkReflect: function (w, v) { state.wkReflect[w] = v; persist(); },
     wkNote: function (k, v) { state.wkNotes = state.wkNotes || {}; state.wkNotes[k] = v; persist(); },
+    visualStep: function (ev, w, context, dir) {
+      var order = context === 'activity' ? ['predict', 'try', 'explain'] : ['observe', 'path', 'risk'];
+      var cur = order.indexOf(visualViewFor(w, context));
+      var nxt = Math.max(0, Math.min(order.length - 1, (cur < 0 ? 0 : cur) + dir));
+      return SOC.visualView(ev, w, context, order[nxt]);
+    },
     visualView: function (ev, w, context, v) {
       if (typeof ev === 'number') { v = context; context = w; w = ev; ev = null; }
       if (ev && ev.preventDefault) ev.preventDefault();
