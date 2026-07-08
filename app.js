@@ -1705,7 +1705,7 @@
   }
   // a check is {t: a key idea from the week, look?: where to revisit it}. The student rates their OWN grasp:
   // New to me (0) / Getting it (1) / I can (2). This monitors understanding; there is no right or wrong.
-  function checkText(c) { return (typeof c === 'string') ? c : c.t; }
+  function checkText(c) { return (typeof c === 'string') ? c : ((c && c.t) ? c.t : ''); }
   function checkStat(w, phase, d) {
     var items = d.checks.map(function (c, i) {
       var r = state.wkCheck[phase + '|' + w + '|' + i];
@@ -2534,7 +2534,7 @@
           'Your map is not just a folder of examples.',
           'It is a record of your seeing getting sharper over time.',
           'Look for places where your language changed, your examples got closer, or your questions became harder.',
-          'That change is the evidence you need for the final revisiting video.'
+          'That change is the evidence you need for the Personal Cartography Capstone walkthrough.'
         ],
         watch: ['Reread an early map entry and notice what you can now name.', 'Look for a place where your question became sharper.', 'Use your own map as evidence of your learning.']
       },
@@ -4425,6 +4425,10 @@
         opens: 'Starts Week 2',
         release: '2026-09-14',
         due: 'Checkpoint due by October 30, 2026. Final close due by December 11, 2026.',
+        sectionDue: {
+          async: 'Checkpoint due by October 30, 2026; final close due by December 11, 2026.',
+          sync: 'Weekly Weeks 2 to 12; closes in Week 12.'
+        },
         purpose: 'This assignment builds the habit that makes the rest of the course possible: noticing how ordinary digital systems shape people differently.',
         role: 'This is the weekly habit. You keep noticing where technology sorts, watches, helps, hides, or misreads people in everyday life.',
         really: [
@@ -4464,6 +4468,10 @@
         opens: 'Week 4',
         release: '2026-09-28',
         due: 'Due by October 30, 2026.',
+        sectionDue: {
+          async: 'Due by October 30, 2026.',
+          sync: 'Due in Week 4.'
+        },
         purpose: 'This assignment teaches you to slow down one real digital encounter and prove how the mechanism works with artifacts.',
         role: 'This is your first deeper analysis. You take one real encounter and show how the mechanism works.',
         really: [
@@ -4503,6 +4511,10 @@
         opens: 'After Week 6',
         release: '2026-10-19',
         due: 'Due by October 30, 2026.',
+        sectionDue: {
+          async: 'Due by October 30, 2026.',
+          sync: 'Due in Week 8.'
+        },
         purpose: 'This assignment moves from personal observation to a public Canadian system so your analysis is grounded in documented evidence.',
         role: 'This turns the course outward. You move from your own encounter to a real Canadian system with sources.',
         really: [
@@ -4542,6 +4554,10 @@
         opens: 'Week 11',
         release: '2026-11-23',
         due: 'Due by December 11, 2026.',
+        sectionDue: {
+          async: 'Due by December 11, 2026.',
+          sync: 'Due in Week 12.'
+        },
         purpose: 'This assignment asks you to stop at neither critique nor outrage. You design a concrete response to a harm you can explain.',
         role: 'This is where the course refuses to stop at critique. You design a response that fits one harm you already mapped.',
         really: [
@@ -4581,6 +4597,10 @@
         opens: 'Week 13',
         release: '2026-12-07',
         due: 'Due by December 11, 2026. Nothing is due in Week 14.',
+        sectionDue: {
+          async: 'Due by December 11, 2026. Nothing is due in Week 14.',
+          sync: 'Due by December 7, 2026. Nothing is due in Week 14.'
+        },
         purpose: 'This assignment gathers the whole course into one map and asks you to explain how your way of seeing changed.',
         role: 'This is the final integration. You gather the pieces and show how your way of seeing changed across the term.',
         really: [
@@ -4657,6 +4677,17 @@
       day: String(d.getDate()),
       year: String(d.getFullYear())
     };
+  }
+  function assignmentDueText(a) {
+    if (!a || !a.sectionDue) return (a && a.due) || '';
+    return 'Asynchronous: ' + a.sectionDue.async + ' Synchronous: ' + a.sectionDue.sync;
+  }
+  function assignmentDueHtml(a) {
+    if (!a || !a.sectionDue) return '<small class="asg-due">' + esc((a && a.due) || '') + '</small>';
+    return '<div class="asg-due" style="display:grid;gap:5px;font-size:.84rem;line-height:1.45;color:var(--ink)">'
+      + '<span><b>Asynchronous:</b> ' + esc(a.sectionDue.async) + '</span>'
+      + '<span><b>Synchronous:</b> ' + esc(a.sectionDue.sync) + '</span>'
+      + '</div>';
   }
   function assignmentPreviewBanner() {
     return '<section class="asg-preview-mode" aria-label="Assignment guide status"><b>Preparation guide</b><p>This page helps you understand the assignment arc and prepare stronger examples. The complete official assignment files, dropboxes, due dates, feedback, and grades will be opened on Blackboard.</p></section>';
@@ -5165,7 +5196,7 @@
   function assignmentReleaseSchedule(items) {
     return '<section id="asg-release" class="asg-release" aria-label="Assignment release and due date schedule"><div><div class="mono">BLACKBOARD RELEASE & DUE DATES</div><h2>When each assignment opens and when it is due</h2><p>The companion guide stays open so you can prepare. The complete assignment instructions and submission dropboxes will be released on Blackboard on the dates below. The due date tells you when the work must be submitted in Blackboard.</p></div><div class="asg-release-grid">' + items.map(function (a) {
       var dp = assignmentDateParts(a.release);
-      return '<article><div class="asg-release-head"><div class="asg-date"><span>' + esc(dp.month) + '</span><b>' + esc(dp.day) + '</b><small>' + esc(dp.year) + '</small></div><div><b>' + esc(a.title) + '</b><p>Released on Blackboard: ' + esc(assignmentDateLabel(a.release)) + '.</p></div></div><small class="asg-due">' + esc(a.due) + '</small></article>';
+      return '<article><div class="asg-release-head"><div class="asg-date"><span>' + esc(dp.month) + '</span><b>' + esc(dp.day) + '</b><small>' + esc(dp.year) + '</small></div><div><b>' + esc(a.title) + '</b><p>Released on Blackboard: ' + esc(assignmentDateLabel(a.release)) + '.</p></div></div>' + assignmentDueHtml(a) + '</article>';
     }).join('') + '</div></section>';
   }
   function assignmentList(title, arr) {
@@ -5409,7 +5440,7 @@
       + assignmentPrepPrompt(a, L);
     return '<section id="asg-' + esc(a.id) + '" class="asg-detail asg-room" aria-label="' + esc(a.title) + ' details">'
       + '<div class="asg-detail-head"><div><h2>' + esc(a.title) + '</h2><p>' + esc(a.purpose) + '</p></div>'
-      + '<dl><div><dt>Weight</dt><dd>' + esc(a.weight) + '</dd></div><div><dt>Opened on Blackboard</dt><dd>' + esc(assignmentDateLabel(a.release)) + '</dd></div><div><dt>Timing</dt><dd>' + esc(a.timing) + '</dd></div></dl></div>'
+      + '<dl><div><dt>Weight</dt><dd>' + esc(a.weight) + '</dd></div><div><dt>Opened on Blackboard</dt><dd>' + esc(assignmentDateLabel(a.release)) + '</dd></div><div><dt>Due by section</dt><dd>' + esc(assignmentDueText(a)) + '</dd></div><div><dt>Timing</dt><dd>' + esc(a.timing) + '</dd></div></dl></div>'
       + body
       + '</section>';
   }
@@ -5450,7 +5481,7 @@
     return '<section class="asg-hero ' + esc(extraClass || '') + '"><div class="mono">' + esc(label) + '</div><h1>' + esc(title) + '</h1><p>' + esc(text) + '</p></section>';
   }
   function assignmentSummaryPanel() {
-    return '<section class="asg-summary" aria-label="Assignment overview"><div><span>5 assignments</span><b>Each is worth 20%</b><small>Together they build one Personal Cartography.</small></div><div><span>First half</span><b>Due by Study Week</b><small>Map Exchange checkpoint, Coded Encounter, and Canadian Case File.</small></div><div><span>Second half</span><b>Due by Week 13</b><small>Design the Repair, final Map Exchange close, and capstone.</small></div></section>';
+    return '<section class="asg-summary" aria-label="Assignment overview"><div><span>5 assignments</span><b>Each is worth 20%</b><small>Together they build one Personal Cartography.</small></div><div><span>Asynchronous section</span><b>Due by the end of Study Week</b><small>First half due October 30; second half due December 11.</small></div><div><span>Synchronous section</span><b>Week-by-week due dates</b><small>Coded Encounter Week 4; Canadian Case File Week 8; Design the Repair Week 12; capstone December 7.</small></div></section>';
   }
   function assignmentSelectedContext() {
     var items = assignmentsData();
@@ -5743,7 +5774,7 @@
     var note = docBlank(wkNoteValue(w, 'revisit'));
     if (!d || !d.checks || !d.checks.length) return note;
     var post = checkStat(w, 'post', d);
-    var auto = (post.items || []).filter(function (it) { return it.r !== 2; }).map(function (it, i) { return (i + 1) + '. ' + checkText(it.q); }).join('\n');
+    var auto = (post.items || []).filter(function (it) { return it.r !== 2; }).map(function (it, i) { return (i + 1) + '. ' + checkText(it); }).join('\n');
     return note + (auto ? '\n\nAuto-suggested revisit list from your final understanding check:\n' + auto : '');
   }
   function checklistDoc(w, d) {
