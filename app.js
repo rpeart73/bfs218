@@ -393,10 +393,12 @@
   function rlDockWire(on) {
     if (on) {
       document.addEventListener('pointermove', rlDockPointer, true);
+      document.addEventListener('pointerdown', rlDockPointer, true);
       document.addEventListener('focusin', rlDockFocus, true);
       document.addEventListener('keydown', rlDockKey, true);
     } else {
       document.removeEventListener('pointermove', rlDockPointer, true);
+      document.removeEventListener('pointerdown', rlDockPointer, true);
       document.removeEventListener('focusin', rlDockFocus, true);
       document.removeEventListener('keydown', rlDockKey, true);
     }
@@ -2576,7 +2578,7 @@
   }
   function visualModelHtml(w, spec, context) {
     var view = visualViewFor(w, context);
-    var rotateHelp = 'Click or touch and drag anywhere inside this 3D picture to rotate the scene. The numbered labels below the model explain what to inspect without covering the scene.';
+    var rotateHelp = 'Click or touch and drag any open space in this 3D picture to turn the scene; there is no drag-and-drop here. The numbered labels below the model explain what to inspect without covering the scene.';
     var labelList = (spec.labels || []).map(function (l) { return (l.t || '') + ': ' + (l.sub || ''); }).join('. ');
     var label = (context === 'activity' ? 'Activity model for Week ' : 'Visual overview for Week ') + w + ': ' + spec.title + '. ' + spec.scene + ' Labels: ' + labelList + '. ' + rotateHelp;
     var noteText = spec.modelNote || spec.scene;
@@ -2585,7 +2587,7 @@
       + visualControls(w, spec, context, view)
       + '<div class="wk-model-shell wk-model-kind-' + esc(shellKind) + '">'
       + '<canvas class="wk-model-canvas" role="img" aria-label="' + esc(label) + '" data-topic-model="' + esc(context) + '" data-week="' + w + '" data-kind="' + esc(spec.kind || 'pipeline') + '" data-view="' + esc(view) + '"></canvas>'
-      + '<div class="wk-model-note"><b>' + esc(spec.title) + '</b><span>' + esc(noteText) + ' The labels inside the scene name each part. Drag to rotate, and use Next step to walk through the story.</span></div>'
+      + '<div class="wk-model-note"><b>' + esc(spec.title) + '</b><span>' + esc(noteText) + ' The labels inside the scene name each part. You can turn the scene by dragging any open space in the picture; nothing needs to be dropped anywhere. The buttons and the steps below change what the scene shows.</span></div>'
       + visualDisplayHtml(spec, context, view)
       + '<div class="wk-model-fallback" hidden>The 3D model could not load. The explanation below still walks you through the idea.</div>'
       + '</div>'
@@ -3551,7 +3553,7 @@
       default:
         rowBlocks(4, 0x00aeb3, riskOn ? 2 : -1);
     }
-    var target = { x: pathOn ? -0.18 : -0.28, y: riskOn ? -0.72 : -0.5 };
+    var target = { x: pathOn ? -0.02 : (riskOn ? -0.52 : -0.28), y: pathOn ? 0.42 : (riskOn ? -1.05 : -0.5) };
     var cur = { x: target.x, y: target.y }, dragging = false, last = null, animating = false, frames = 0;
     function schedule() { if (!animating) { animating = true; requestAnimationFrame(animate); } }
     function begin(x, y) { dragging = true; last = { x: x, y: y }; frames = 0; schedule(); }
@@ -6761,6 +6763,7 @@
     closeNav: function () { state.navOpen = false; renderKeepScroll(); },
     toggleReaderLens: function () {
       state.readerLensOpen = !state.readerLensOpen;
+      if (state.readerLensOpen) state.rlPanelOpen = false;
       rlDockWire(state.readerLensOpen);
       renderKeepScroll();
       announce(state.readerLensOpen ? 'Magnifier on. Text under your pointer or keyboard focus appears in large print at the bottom of the screen.' : 'Magnifier off.');
