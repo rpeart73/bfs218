@@ -3275,7 +3275,13 @@
       var focusModel = kind === 'outcomelens' || kind === 'mechanismatch';
       var narrow = wd <= 520;
       var ht = focusModel && narrow ? 430 : Math.max(300, Math.round(wd * 0.56));
-      if (focusModel && narrow) {
+      if (holo && window.BFS218_HOLO && window.BFS218_HOLO.frame) {
+        var hf = window.BFS218_HOLO.frame(kind, narrow);
+        root.scale.set(hf.scale, hf.scale, hf.scale);
+        root.position.set(0, -0.02, 0);
+        camera.position.set(hf.cam[0], hf.cam[1], hf.cam[2]);
+        camera.lookAt(hf.look[0], hf.look[1], hf.look[2]);
+      } else if (focusModel && narrow) {
         root.scale.set(0.82, 0.82, 0.82);
         root.position.set(0, 0.04, 0);
         camera.position.set(5.6, 3.8, 8.2);
@@ -3344,7 +3350,7 @@
       renderer.render(scene, camera);
       updateTopicLabels();
       var holoLive = holo && inView && !reduced;
-      if (dragging || frames < 180 || holoLive) requestAnimationFrame(animate);
+      if (!window.__HOLO_FREEZE && (dragging || frames < 180 || holoLive)) requestAnimationFrame(animate);
       else animating = false;
     }
     schedule();

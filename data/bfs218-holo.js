@@ -1580,9 +1580,46 @@
   ANCHORS.futurecompass = [[-1.7, 1.0, -0.3], [0.75, 0.7, -0.05], [2.85, 1.1, -0.85]];
 
   /* ------------------------------------------------------------ dispatcher */
+  /* per-kind camera framing: wide dioramas pull back, bench scenes lean in */
+  var FRAMES = {
+    _default: { scale: 1.1, cam: [3.35, 2.55, 4.6], look: [0, 0.6, 0] },
+    outcomelens: { scale: 0.98, cam: [3.7, 2.75, 5.05], look: [0, 0.55, 0] },
+    mechanismatch: { scale: 1.02, cam: [3.6, 2.65, 4.9], look: [0, 0.6, 0] },
+    pipeline: { scale: 1.0, cam: [3.65, 2.7, 4.95], look: [0, 0.6, 0] },
+    sorting: { scale: 1.0, cam: [3.65, 2.7, 4.95], look: [0, 0.6, 0] },
+    compass: { scale: 1.0, cam: [3.6, 2.75, 4.9], look: [0, 0.5, 0] },
+    'return': { scale: 1.0, cam: [3.6, 2.8, 4.9], look: [0, 0.85, 0] },
+    map: { scale: 1.02, cam: [3.6, 2.65, 4.9], look: [0, 0.55, 0] },
+    gate: { scale: 1.04, cam: [3.55, 2.7, 4.85], look: [0, 0.75, 0] },
+    review: { scale: 1.05, cam: [3.5, 2.6, 4.8], look: [0, 0.6, 0] },
+    policy: { scale: 1.08, cam: [3.45, 2.65, 4.7], look: [0, 0.85, 0] },
+    policydeck: { scale: 1.05, cam: [3.5, 2.7, 4.8], look: [0, 0.8, 0] },
+    surveillanceflow: { scale: 1.04, cam: [3.55, 2.6, 4.85], look: [0, 0.65, 0] },
+    decisionpath: { scale: 1.06, cam: [3.5, 2.6, 4.8], look: [0, 0.55, 0] },
+    thresholdaudit: { scale: 1.06, cam: [3.5, 2.6, 4.8], look: [0, 0.6, 0] },
+    capstonemap: { scale: 1.08, cam: [3.45, 2.55, 4.7], look: [0, 0.7, 0] },
+    futurecompass: { scale: 1.08, cam: [3.45, 2.55, 4.7], look: [0, 0.55, 0] },
+    repairtable: { scale: 1.14, cam: [3.25, 2.6, 4.45], look: [0, 0.62, 0] },
+    repair: { scale: 1.1, cam: [3.35, 2.6, 4.6], look: [0, 0.7, 0] },
+    toolkit: { scale: 1.16, cam: [3.2, 2.45, 4.4], look: [0, 0.65, 0] },
+    startermap: { scale: 1.12, cam: [3.3, 2.5, 4.5], look: [0, 0.6, 0] },
+    datastory: { scale: 1.12, cam: [3.3, 2.5, 4.5], look: [0, 0.75, 0] },
+    vault: { scale: 1.08, cam: [3.45, 2.6, 4.7], look: [0, 0.8, 0] },
+    benevolence: { scale: 1.06, cam: [3.5, 2.6, 4.8], look: [0, 0.7, 0] },
+    promisefunnel: { scale: 1.08, cam: [3.45, 2.55, 4.7], look: [0, 0.7, 0] },
+    switches: { scale: 1.06, cam: [3.5, 2.6, 4.8], look: [0, 0.65, 0] },
+    audit: { scale: 1.1, cam: [3.35, 2.6, 4.6], look: [0, 0.6, 0] },
+    matchwork: { scale: 1.08, cam: [3.45, 2.55, 4.7], look: [0, 0.55, 0] },
+    defaultboard: { scale: 1.06, cam: [3.5, 2.6, 4.8], look: [0, 0.7, 0] }
+  };
   window.BFS218_HOLO = {
     version: 2,
     anchors: ANCHORS,
+    frame: function (kind, narrow) {
+      var f = FRAMES[kind] || FRAMES._default;
+      if (!narrow) return f;
+      return { scale: f.scale * 0.88, cam: [f.cam[0] * 1.16, f.cam[1] * 1.16, f.cam[2] * 1.16], look: f.look };
+    },
     supports: function (kind) { return !!SCENES[kind]; },
     build: function (THREE, ctx) {
       var scene = SCENES[ctx.kind];
@@ -1597,10 +1634,10 @@
         ctx.root.scale.setScalar(1.17);
         ctx.scene.fog = new THREE.Fog(0xf8fbfd, 12, 26);
         ctx.scene.traverse(function (o) {
-          if (o.isHemisphereLight) { o.intensity = 1.5; if (o.groundColor) o.groundColor.setHex(0x9aa8b8); }
-          else if (o.isDirectionalLight && o.intensity > 2) { o.intensity = 2.5; o.color.setHex(0xfff1de); }
+          if (o.isHemisphereLight) { o.intensity = 1.12; if (o.groundColor) o.groundColor.setHex(0x8d9cb0); }
+          else if (o.isDirectionalLight && o.intensity > 2) { o.intensity = 2.75; o.color.setHex(0xffedd6); }
         });
-        ctx.renderer.toneMappingExposure = 1.16;
+        ctx.renderer.toneMappingExposure = 1.22;
       } catch (e) {}
       scene(K, ctx);
       /* settle one frame at t=0 so static/reduced-motion renders place every animated part */
