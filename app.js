@@ -2059,6 +2059,8 @@
     return map[kind] || [[22, 64], [52, 64], [78, 64]];
   }
   function visualKindLabelAnchors(kind) {
+    var H = window.BFS218_HOLO;
+    if (H && H.anchors && H.anchors[kind]) return H.anchors[kind];
     var map = {
       matchwork: [[-2.15, 0.82, -0.55], [-0.18, 1.22, 0.15], [2.25, 0.9, 0.08]],
       decisionpath: [[-2.0, 1.08, 0], [-0.55, 1.05, 0], [1.28, 0.88, 0.82]],
@@ -2883,14 +2885,22 @@
       var curve = new THREE.CatmullRomCurve3(points.map(function (p) { return new THREE.Vector3(p[0], p[1], p[2]); }));
       mesh(new THREE.TubeGeometry(curve, 28, radius || 0.025, 10, false), m(color, { rough: 0.35, metal: 0.12, emissive: riskOn && color === 0xda291c }));
     }
-    var grid = new THREE.GridHelper(7.2, 10, 0xd6dde5, 0xd6dde5);
-    var gridMats = Array.isArray(grid.material) ? grid.material : [grid.material];
-    gridMats.forEach(function (gm) {
-      gm.transparent = true;
-      gm.opacity = (kind === 'outcomelens' || kind === 'mechanismatch') ? 0.16 : 0.24;
-    });
-    root.add(grid);
-    box(7.3, 0.08, 5.2, 0xe9eef2, [0, -0.08, 0], { rough: 0.72 });
+    var holo = null;
+    if (window.BFS218_HOLO && window.BFS218_HOLO.supports && window.BFS218_HOLO.supports(kind)) {
+      try {
+        holo = window.BFS218_HOLO.build(THREE, { kind: kind, week: week, view: view, riskOn: riskOn, pathOn: pathOn, root: root, scene: scene, camera: camera, renderer: renderer, canvas: canvas, sun: sun });
+      } catch (e) { holo = null; }
+    }
+    if (!holo) {
+      var grid = new THREE.GridHelper(7.2, 10, 0xd6dde5, 0xd6dde5);
+      var gridMats = Array.isArray(grid.material) ? grid.material : [grid.material];
+      gridMats.forEach(function (gm) {
+        gm.transparent = true;
+        gm.opacity = (kind === 'outcomelens' || kind === 'mechanismatch') ? 0.16 : 0.24;
+      });
+      root.add(grid);
+      box(7.3, 0.08, 5.2, 0xe9eef2, [0, -0.08, 0], { rough: 0.72 });
+    }
     function miniPerson(x, z, color) {
       cyl(0.11, 0.38, color || 0x1b2a4a, [x, 0.22, z]);
       sph(0.14, 0x9fdde0, [x, 0.5, z], { rough: 0.36 });
@@ -2934,7 +2944,7 @@
         if (i > 0) arrow([x - (4.8 / Math.max(1, n - 1)) + 0.38, 0.38, 0], [x - 0.42, 0.38, 0], pathOn || hot ? 0xda291c : 0x1b2a4a);
       }
     }
-      switch (kind) {
+      if (!holo) switch (kind) {
       case 'startermap':
         miniPerson(0, -0.1, 0x1b2a4a);
         [[-2.05, -1.05, 0xffffff], [-2.1, 0.95, 0xe7f3ec], [1.95, -1.05, 0xfbe9ea], [2.05, 0.95, 0xffffff]].forEach(function (p, si) {
@@ -3265,7 +3275,13 @@
       var focusModel = kind === 'outcomelens' || kind === 'mechanismatch';
       var narrow = wd <= 520;
       var ht = focusModel && narrow ? 430 : Math.max(300, Math.round(wd * 0.56));
-      if (focusModel && narrow) {
+      if (holo && window.BFS218_HOLO && window.BFS218_HOLO.frame) {
+        var hf = window.BFS218_HOLO.frame(kind, narrow);
+        root.scale.set(hf.scale, hf.scale, hf.scale);
+        root.position.set(0, -0.02, 0);
+        camera.position.set(hf.cam[0], hf.cam[1], hf.cam[2]);
+        camera.lookAt(hf.look[0], hf.look[1], hf.look[2]);
+      } else if (focusModel && narrow) {
         root.scale.set(0.82, 0.82, 0.82);
         root.position.set(0, 0.04, 0);
         camera.position.set(5.6, 3.8, 8.2);
@@ -3290,10 +3306,20 @@
     var ro = window.ResizeObserver ? new ResizeObserver(resize) : null;
     if (ro) ro.observe(shell);
     var disposed = false;
+    var inView = true;
+    var io = null;
+    if (holo && window.IntersectionObserver) {
+      io = new IntersectionObserver(function (entries) {
+        inView = !!(entries[0] && entries[0].isIntersecting);
+        if (inView) schedule();
+      }, { threshold: 0.05 });
+      io.observe(canvas);
+    }
     function cleanupTopicModel() {
       if (disposed) return;
       disposed = true;
       if (ro) ro.disconnect();
+      if (io) io.disconnect();
       canvas.removeEventListener('pointerdown', onPointer);
       canvas.removeEventListener('pointermove', movePointer);
       canvas.removeEventListener('pointerup', up);
@@ -3301,6 +3327,7 @@
       canvas.removeEventListener('touchstart', onTouchStart);
       canvas.removeEventListener('touchmove', onTouchMove);
       canvas.removeEventListener('touchend', up);
+      if (holo && holo.dispose) { try { holo.dispose(); } catch (e) {} }
       disposeThreeScene(scene);
       renderer.dispose();
       if (renderer.forceContextLoss) renderer.forceContextLoss();
@@ -3319,9 +3346,11 @@
       cur.y += (target.y - cur.y) * 0.08;
       root.rotation.x = cur.x;
       root.rotation.y = cur.y;
+      if (holo && holo.tick && !reduced) holo.tick(performance.now() / 1000);
       renderer.render(scene, camera);
       updateTopicLabels();
-      if (dragging || frames < 180) requestAnimationFrame(animate);
+      var holoLive = holo && inView && !reduced;
+      if (!window.__HOLO_FREEZE && (dragging || frames < 180 || holoLive)) requestAnimationFrame(animate);
       else animating = false;
     }
     schedule();
