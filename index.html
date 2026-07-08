@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; connect-src 'self'; frame-src 'self' https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BFS218 Companion: weekly learning pathway</title>
 <meta name="description" content="Instructor-created BFS218 companion website for weekly learning pathways, readings, concepts, walkthroughs, and study supports. Blackboard remains the official Seneca course platform.">
@@ -67,6 +69,10 @@
   .exp-mirror p{margin:6px 0 0;font-size:.9rem;line-height:1.6}
   .exp-pattern{border-top:1px dashed #9CC4A8;padding-top:9px}
   .exp-reset{margin-top:12px;border:none;background:none;color:#474C57;font-size:.8rem;text-decoration:underline;cursor:pointer;padding:0}
+  .vid-cover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,#1B2A4A 0%,#27436e 55%,#00777b 100%)}
+  .vid-cover-play{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.75);position:relative}
+  .vid-cover-play:after{content:"";position:absolute;left:21px;top:15px;border-left:18px solid #fff;border-top:11px solid transparent;border-bottom:11px solid transparent}
+  .vid-cover-note{font-size:.72rem;font-weight:600;letter-spacing:.04em;color:rgba(255,255,255,.85)}
   .rl-panel{position:fixed;z-index:96;top:70px;right:12px;width:min(340px,calc(100vw - 20px));background:#fff;border:1px solid #DEE3EA;border-radius:14px;box-shadow:0 18px 42px rgba(21,23,28,.24);padding:12px 14px 14px;max-height:calc(100vh - 86px);overflow:auto}
   .rl-head{display:flex;align-items:center;gap:8px;margin:0 0 2px}.rl-head strong{font-size:.98rem;flex:1}
   .rl-sub{font-size:.75rem;color:#474C57;margin:0 0 8px;line-height:1.5}
@@ -283,7 +289,7 @@
 </noscript>
 <div id="app"></div>
 <div id="soc-live" role="status" aria-live="polite" class="skip"></div>
-<script src="./data/corpus-data.js?v=36"></script>
+<script src="./data/corpus-data.js?v=37"></script>
 <script src="./data/bfs218-mc.js?v=25"></script>
 <script src="./data/bfs218-kc.js?v=2"></script>
 <script src="./data/bfs218-career.js?v=3"></script>
@@ -293,6 +299,6 @@
 <script src="./data/bfs218-experiments.js?v=1"></script>
 <script src="./data/bfs218-holo.js?v=2"></script>
 <script src="./data/videos.js?v=2"></script>
-<script src="./app.js?v=157"></script>
+<script src="./app.js?v=158"></script>
 </body>
 </html>
