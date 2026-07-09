@@ -25,7 +25,7 @@
     return !!(v && v.screen);
   }
   function cleanScreen(s) {
-    return ['journey', 'site', 'library', 'station', 'detail', 'pathways', 'assignments', 'assignment-program', 'assignment-details', 'assignment-rubric', 'assignment-release', 'assignment-ai', 'assignment-faq', 'starter', 'videos', 'readings', 'compare', 'reading', 'glossary', 'career', 'cards', 'walkthroughs', 'sandbox', 'activity'].indexOf(s) >= 0 ? s : 'journey';
+    return ['journey', 'site', 'library', 'station', 'detail', 'pathways', 'assignments', 'assignment-program', 'assignment-details', 'assignment-rubric', 'assignment-release', 'assignment-ai', 'assignment-faq', 'starter', 'videos', 'readings', 'compare', 'reading', 'glossary', 'career', 'cards', 'walkthroughs', 'sandbox', 'activity', 'calendar'].indexOf(s) >= 0 ? s : 'journey';
   }
   function cleanWeek(w) {
     w = Number(w);
@@ -742,7 +742,9 @@
     var guide = '<div style="border-radius:10px;padding:10px 12px;color:#474C57"><div style="display:flex;align-items:flex-start;gap:11px;font-size:.9375rem;font-weight:500;line-height:1.25"><span style="display:flex;align-items:center;justify-content:center;width:22px;height:22px;flex:none;color:#6B7280">' + ic('file', 19) + '</span><span style="flex:1;min-width:0">Course Website Instructions</span></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 0 33px"><a href="./guide/" target="_blank" rel="noopener" style="font-size:.75rem;font-weight:600;color:#1B2A4A;background:#EEF1F5;border:1px solid #DEE3EA;border-radius:999px;padding:4px 9px;text-decoration:none">Online guide <span aria-hidden="true">&#8599;</span></a><a href="./guide/BFS218-Companion-Guide.pdf" download style="font-size:.75rem;font-weight:600;color:#1B2A4A;background:#EEF1F5;border:1px solid #DEE3EA;border-radius:999px;padding:4px 9px;text-decoration:none">PDF <span aria-hidden="true">&#8595;</span></a></div></div>';
     var repActive = s.screen === 'report';
     var report = '<button onclick="SOC.reportProblem()" style="display:flex;align-items:center;gap:11px;width:100%;border:none;border-radius:10px;padding:10px 12px;font-size:.9375rem;font-weight:500;background:transparent;color:#474C57;text-align:left"><span style="display:flex;align-items:center;justify-content:center;width:22px;height:22px;flex:none;color:#6B7280">' + ic('help', 19) + '</span><span style="flex:1;text-align:left">Report a problem</span></button>';
-    var nav = btns[0] + btns[1] + guide + btns[2] + walk + btns.slice(3).join('') + report;
+    var calActive = s.screen === 'calendar';
+    var cal = '<button onclick="SOC.go(\'calendar\')" aria-current="' + (calActive ? 'page' : 'false') + '" style="display:flex;align-items:center;gap:11px;width:100%;border:none;border-radius:10px;padding:10px 12px;font-size:.9375rem;font-weight:' + (calActive ? '600' : '500') + ';background:' + (calActive ? '#EEF1F5' : 'transparent') + ';color:' + (calActive ? '#15171C' : '#474C57') + ';text-align:left"><span style="display:flex;align-items:center;justify-content:center;width:22px;height:22px;flex:none;color:' + (calActive ? 'var(--red)' : '#6B7280') + '">' + ic('calendar', 19) + '</span><span style="flex:1;text-align:left">Calendar and Due Dates</span></button>';
+    var nav = btns[0] + cal + btns[1] + guide + btns[2] + walk + btns.slice(3).join('') + report;
     var counts = {}; D.records.forEach(function (r) { counts[r.week] = (counts[r.week] || 0) + 1; });
     var navWeeks = [];
     for (var nw = 1; nw <= 14; nw++) navWeeks.push(nw);
@@ -5642,38 +5644,133 @@
       + '<div style="margin-top:9px;font-size:.76rem;line-height:1.45;color:var(--ink-dim)">' + esc(lensChangeLine()) + '</div>'
       + '</div>';
   }
-  function keyDatesCalendar() {
-    var K = [
+  function keyDatesList() {
+    return [
       { d: '2026-09-08', it: [['Term begins', 'Week 1 starts', 'ms']] },
-      { d: '2026-09-14', it: [['Map Exchange opens', '', 'op']] },
-      { d: '2026-09-28', it: [['Coded Encounter opens', '', 'op']] },
-      { d: '2026-10-19', it: [['Canadian Case File opens', '', 'op']] },
+      { d: '2026-09-14', it: [['Map Exchange opens', '', 'op', 0]] },
+      { d: '2026-09-28', it: [['Coded Encounter opens', '', 'op', 1]] },
+      { d: '2026-10-19', it: [['Canadian Case File opens', '', 'op', 2]] },
       { d: '2026-10-26', it: [['Study Week', 'Oct 26 to 30. No classes, no new work.', 'ms']] },
-      { d: '2026-10-30', it: [['Map Exchange checkpoint', 'due', 'due'], ['Coded Encounter', 'due', 'due'], ['Canadian Case File', 'due', 'due']] },
-      { d: '2026-11-23', it: [['Design the Repair opens', '', 'op']] },
-      { d: '2026-12-07', it: [['Personal Cartography opens', 'your final project', 'op']] },
-      { d: '2026-12-11', it: [['Design the Repair', 'due', 'due'], ['Map Exchange final close', 'due', 'due'], ['Personal Cartography', 'due', 'due']] },
+      { d: '2026-10-30', it: [['Map Exchange checkpoint', 'due', 'due', 0], ['Coded Encounter', 'due', 'due', 1], ['Canadian Case File', 'due', 'due', 2]] },
+      { d: '2026-11-23', it: [['Design the Repair opens', '', 'op', 3]] },
+      { d: '2026-12-07', it: [['Personal Cartography opens', 'your final project', 'op', 4]] },
+      { d: '2026-12-11', it: [['Design the Repair', 'due', 'due', 3], ['Map Exchange final close', 'due', 'due', 0], ['Personal Cartography', 'due', 'due', 4]] },
       { d: '2026-12-16', it: [['Last day of the term', '', 'ms']] }
     ];
-    var MON = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  }
+  var KD_MON = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  function kdDaysUntil(iso) {
+    try { var t = new Date(); var a0 = Date.UTC(t.getFullYear(), t.getMonth(), t.getDate()); var p = iso.split('-'); var b0 = Date.UTC(+p[0], +p[1] - 1, +p[2]); return Math.round((b0 - a0) / 86400000); } catch (e) { return 999; }
+  }
+  function kdMonthDay(iso) { var p = iso.split('-'); return KD_MON[+p[1] - 1] + ' ' + (+p[2]); }
+  function nextDue() {
+    var K = keyDatesList(), byDate = {};
+    K.forEach(function (row) { row.it.forEach(function (x) { if (x[2] === 'due') { (byDate[row.d] = byDate[row.d] || []).push(x[0]); } }); });
+    var dates = Object.keys(byDate).sort().filter(function (d) { return kdDaysUntil(d) >= 0; });
+    if (!dates.length) return null;
+    return { d: dates[0], names: byDate[dates[0]], days: kdDaysUntil(dates[0]) };
+  }
+  function dueReminderStrip() {
+    var nd = nextDue(); if (!nd) return '';
+    var lead = nd.days <= 0 ? 'Due today' : nd.days === 1 ? 'Due tomorrow' : nd.days <= 21 ? ('Due in ' + nd.days + ' days') : 'Next due';
+    var urgent = nd.days <= 7 ? ' due-strip-urgent' : '';
+    var open = !!state.dueExpanded;
+    return '<div class="due-wrap">'
+      + '<div class="due-strip' + urgent + '">'
+      + '<span class="due-strip-dot" aria-hidden="true"></span>'
+      + '<button type="button" class="due-strip-main" onclick="SOC.toggleDue()" aria-expanded="' + (open ? 'true' : 'false') + '" aria-controls="due-panel"><strong>' + esc(lead) + ':</strong> ' + esc(nd.names.join(', ')) + '</button>'
+      + '<span class="due-strip-date">' + esc(kdMonthDay(nd.d)) + '</span>'
+      + '<button type="button" id="due-toggle" class="due-strip-cta" onclick="SOC.toggleDue()" aria-expanded="' + (open ? 'true' : 'false') + '" aria-controls="due-panel">' + (open ? 'Hide dates' : 'See all dates') + '</button>'
+      + '</div>'
+      + '<div class="due-panel" id="due-panel"' + (open ? '' : ' hidden') + '>' + keyDatesCompact()
+      + '<div style="margin-top:12px"><button type="button" class="due-open-cal" onclick="SOC.go(\'calendar\')">Open the full calendar</button></div></div>'
+      + '</div>';
+  }
+  function keyDatesRows() {
+    var K = keyDatesList(), out = '', curMon = '';
     var todayIso = '';
     try { var t = new Date(); todayIso = t.getFullYear() + '-' + ('0' + (t.getMonth() + 1)).slice(-2) + '-' + ('0' + t.getDate()).slice(-2); } catch (e) {}
-    var out = '', curMon = '';
     K.forEach(function (row) {
-      var parts = row.d.split('-'), mi = parseInt(parts[1], 10) - 1, day = parseInt(parts[2], 10), mon = MON[mi];
+      var parts = row.d.split('-'), mi = parseInt(parts[1], 10) - 1, day = parseInt(parts[2], 10), mon = KD_MON[mi];
       if (mon !== curMon) { out += '<div class="kd-mon">' + mon + '</div>'; curMon = mon; }
       var past = todayIso && row.d < todayIso;
       var badge = '<div class="kd-date' + (past ? ' kd-past' : '') + '"><span class="kd-day">' + day + '</span><span class="kd-mo">' + mon.slice(0, 3) + '</span></div>';
-      var items = row.it.map(function (x) { return '<div class="kd-item kd-' + x[2] + '"><span class="kd-dot"></span><span class="kd-t">' + esc(x[0]) + (x[1] ? ' <em>' + esc(x[1]) + '</em>' : '') + '</span></div>'; }).join('');
+      var items = row.it.map(function (x) {
+        var inner = '<span class="kd-dot"></span><span class="kd-t">' + esc(x[0]) + (x[1] ? ' <em>' + esc(x[1]) + '</em>' : '') + '</span>';
+        if (x[3] != null) return '<button type="button" class="kd-item kd-' + x[2] + ' kd-link" onclick="SOC.assignPick(' + x[3] + ')" aria-label="Open the ' + esc(x[0]) + ' assignment">' + inner + '<span class="kd-go" aria-hidden="true">&#8594;</span></button>';
+        return '<div class="kd-item kd-' + x[2] + '">' + inner + '</div>';
+      }).join('');
       out += '<div class="kd-row' + (past ? ' kd-rowpast' : '') + '">' + badge + '<div class="kd-items">' + items + '</div></div>';
     });
+    return out;
+  }
+  function keyDatesCompact() { return '<div class="kd-list">' + keyDatesRows() + '</div>'; }
+  function keyDatesCalendar() {
     return '<section class="node kd-cal" aria-label="Key dates for this course">'
       + '<div class="mono" style="font-size:.7rem;letter-spacing:.08em;color:var(--red);font-weight:700;margin-bottom:4px">KEY DATES</div>'
       + '<h2 class="wk-sec" style="margin:0 0 4px">Everything due, at a glance</h2>'
       + '<p style="font-size:.9rem;line-height:1.55;color:var(--ink-dim);margin:0 0 14px">You do not need to add anything to a calendar app to see this. Red means a due date. Blackboard remains the official word on dates.</p>'
-      + '<div class="kd-list">' + out + '</div>'
+      + '<div class="kd-list">' + keyDatesRows() + '</div>'
       + (typeof ICS_PATH === 'string' && ICS_PATH ? '<div style="margin-top:14px"><a href="' + ICS_PATH + '" download style="font-size:.8rem;font-weight:600;color:#1B2A4A;background:#fff;border:1px solid #1B2A4A;border-radius:9px;padding:7px 13px;text-decoration:none">Prefer reminders on your phone? Add these dates</a></div>' : '')
       + '</section>';
+  }
+  function calEventsByIso() {
+    var K = keyDatesList(), map = {};
+    K.forEach(function (row) {
+      var dues = row.it.filter(function (x) { return x[2] === 'due'; });
+      var ms = row.it.filter(function (x) { return x[2] === 'ms'; });
+      var ops = row.it.filter(function (x) { return x[2] === 'op'; });
+      var asg = row.it.filter(function (x) { return x[3] != null; }).map(function (x) { return x[3]; });
+      var idx = asg.length === 1 ? asg[0] : (asg.length > 1 ? -1 : null);
+      if (dues.length) map[row.d] = { kind: 'due', label: dues.length > 1 ? (dues.length + ' assignments due') : dues[0][0] + ' due', idx: idx };
+      else if (ms.length) map[row.d] = { kind: 'ms', label: ms[0][0], idx: null };
+      else if (ops.length) map[row.d] = { kind: 'op', label: ops[0][0], idx: idx };
+    });
+    ['2026-10-26', '2026-10-27', '2026-10-28', '2026-10-29'].forEach(function (d) { map[d] = { kind: 'study', label: 'Study Week' }; });
+    return map;
+  }
+  function calMonthGrid(year, m) {
+    var first = new Date(Date.UTC(year, m, 1)).getUTCDay();
+    var days = new Date(Date.UTC(year, m + 1, 0)).getUTCDate();
+    var ev = calEventsByIso();
+    var todayIso = '';
+    try { var t = new Date(); todayIso = t.getFullYear() + '-' + ('0' + (t.getMonth() + 1)).slice(-2) + '-' + ('0' + t.getDate()).slice(-2); } catch (e) {}
+    var dow = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(function (x) { return '<div class="cal-dow">' + x + '</div>'; }).join('');
+    var cells = '';
+    for (var i = 0; i < first; i++) cells += '<div class="cal-cell cal-blank"></div>';
+    for (var d = 1; d <= days; d++) {
+      var iso = year + '-' + ('0' + (m + 1)).slice(-2) + '-' + ('0' + d).slice(-2);
+      var e = ev[iso], cls = 'cal-cell', tag = '';
+      if (e) { cls += ' cal-' + e.kind; tag = '<span class="cal-tag">' + esc(e.label) + '</span>'; }
+      if (iso === todayIso) cls += ' cal-today';
+      var inner = '<span class="cal-num">' + d + '</span>' + tag;
+      if (e && e.idx != null) {
+        var oc = e.idx >= 0 ? 'SOC.assignPick(' + e.idx + ')' : "SOC.go('assignment-details')";
+        cells += '<button type="button" class="' + cls + ' cal-link" onclick="' + oc + '" aria-label="Open assignment information">' + inner + '</button>';
+      } else {
+        cells += '<div class="' + cls + '">' + inner + '</div>';
+      }
+    }
+    return '<div class="cal-month"><div class="cal-mhead">' + KD_MON[m] + ' ' + year + '</div><div class="cal-grid">' + dow + cells + '</div></div>';
+  }
+  function calendarLegend() {
+    return '<div class="cal-legend">'
+      + '<span class="cal-lg"><span class="cal-sw cal-sw-due"></span>Due date</span>'
+      + '<span class="cal-lg"><span class="cal-sw cal-sw-ms"></span>Course milestone</span>'
+      + '<span class="cal-lg"><span class="cal-sw cal-sw-op"></span>Assignment opens</span>'
+      + '<span class="cal-lg"><span class="cal-sw cal-sw-study"></span>Study Week</span>'
+      + '</div>';
+  }
+  function calendarPage() {
+    var grids = [8, 9, 10, 11].map(function (m) { return calMonthGrid(2026, m); }).join('');
+    return '<div class="rise cal-page">'
+      + '<div class="mono" style="font-size:.7rem;letter-spacing:.08em;color:var(--red);font-weight:700;margin-bottom:4px">CALENDAR</div>'
+      + '<h1 style="font-size:1.9rem;line-height:1.15;font-weight:600;margin:0 0 8px;color:var(--ink)">Every date that matters</h1>'
+      + '<p style="font-size:1rem;line-height:1.6;color:var(--ink-dim);margin:0 0 20px;max-width:70ch">This is the full course calendar. Red days are due dates. You do not need to add anything to a calendar app to use it. Blackboard remains the official word on dates, and nothing here should ever be a surprise.</p>'
+      + calendarLegend()
+      + '<div class="cal-grids">' + grids + '</div>'
+      + keyDatesCalendar()
+      + '</div>';
   }
   function assignmentsData() {
     return [
@@ -7261,6 +7358,7 @@
     if (state.screen === 'pathways') return homeBar() + pathwaysPage();
     if (state.screen === 'site') return homeBar() + siteInfoPage();
     if (state.screen === 'assignments') return homeBar() + assignmentsPage();
+    if (state.screen === 'calendar') return homeBar() + calendarPage();
     if (state.screen === 'assignment-program') return homeBar() + assignmentProgramPage();
     if (state.screen === 'assignment-details') return homeBar() + assignmentDetailsPage();
     if (state.screen === 'assignment-rubric') return homeBar() + assignmentRubricPage();
@@ -7395,7 +7493,7 @@
       '<div style="min-height:100vh;display:flex;flex-direction:column;background:#F7F8FA">' + header()
       + (state.navOpen ? '<button class="soc-mobile-scrim" onclick="SOC.closeNav()" aria-label="Close course navigation"></button>' : '')
       + '<div style="display:flex;flex:1;min-height:0">' + sidebar()
-      + '<main id="soc-main" tabindex="-1" class="scrollarea" style="flex:1;min-width:0;overflow:auto;height:calc(100vh - 62px)"><div style="margin:0 auto;padding:30px 30px 110px">' + (['journey','library','station','videos'].indexOf(state.screen) >= 0 ? lensChip() : '') + body() + siteFooter() + '</div></main>'
+      + '<main id="soc-main" tabindex="-1" class="scrollarea" style="flex:1;min-width:0;overflow:auto;height:calc(100vh - 62px)"><div style="margin:0 auto;padding:30px 30px 110px">' + (['journey','library','station','videos'].indexOf(state.screen) >= 0 ? lensChip() : '') + dueReminderStrip() + body() + siteFooter() + '</div></main>'
       + '</div>' + readerLensOverlay() + rlPanelOverlay() + listenOverlay() + toast + '</div>';
     if (refocusSearch) {
       var el = document.getElementById('soc-search');
@@ -7942,6 +8040,14 @@
     week: function (w) { if (state.screen !== 'library' || state.activeWeek !== w) rememberPrevious(); state.activeWeek = (state.activeWeek === w) ? null : w; state.savedView = false; state.screen = 'library'; focusTarget = 'soc-main'; render(); topScroll(); },
     clearFilters: function () { state.activeTypes = []; state.activeWeek = null; state.search = ''; state.savedView = false; render(); },
     dismissIntro: function () { state.introOpen = false; persist(); render(); },
+    toggleDue: function () {
+      state.dueExpanded = !state.dueExpanded;
+      var pnl = document.getElementById('due-panel'), btn = document.getElementById('due-toggle'), mb = document.querySelector('.due-strip-main');
+      if (pnl) pnl.hidden = !state.dueExpanded;
+      var lbl = state.dueExpanded ? 'Hide dates' : 'See all dates', ax = state.dueExpanded ? 'true' : 'false';
+      if (btn) { btn.textContent = lbl; btn.setAttribute('aria-expanded', ax); }
+      if (mb) mb.setAttribute('aria-expanded', ax);
+    },
     save: function (id) { var a = state.saved, i = a.indexOf(id); var msg; if (i >= 0) { a.splice(i, 1); msg = 'Removed from saved.'; } else { a.push(id); msg = 'Saved to your shelf.'; } persist(); flash(msg); },
     compare: function (id) { var a = state.compareIds, i = a.indexOf(id); if (i >= 0) { a.splice(i, 1); persist(); flash('Removed from compare.'); } else { if (a.length >= 3) { flash('Compare holds three at a time.'); return; } a.push(id); persist(); flash('Added to compare.'); } render(); },
     synCopy: function () {
