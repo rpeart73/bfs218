@@ -7392,7 +7392,7 @@
     if (state.screen === 'pathways') return homeBar() + pathwaysPage();
     if (state.screen === 'site') return homeBar() + siteInfoPage();
     if (state.screen === 'assignments') return homeBar() + assignmentsPage();
-    if (state.screen === 'calendar') return homeBar() + calendarPage();
+    if (state.screen === 'calendar') return '<div class="page-return-row" aria-label="Page navigation"><button type="button" onclick="SOC.prev()">&#8592; Hide All Dates</button><button type="button" onclick="SOC.go(\'journey\')">Home</button></div>' + calendarPage();
     if (state.screen === 'assignment-program') return homeBar() + assignmentProgramPage();
     if (state.screen === 'assignment-details') return homeBar() + assignmentDetailsPage();
     if (state.screen === 'assignment-rubric') return homeBar() + assignmentRubricPage();
