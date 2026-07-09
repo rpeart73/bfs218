@@ -31,7 +31,7 @@
     menu.className = 'deck-menu';
     menu.hidden = true;
     menu.setAttribute('aria-label', 'BFS218 course navigation');
-    menu.innerHTML = '<a class="primary" href="' + weekUrl + '">Back to Week ' + (week || '') + ' in BFS218</a><a href="' + root + '">Course Home</a><a href="../">Weekly Walkthroughs</a><small>This fullscreen deck is outside the app shell. Use this menu to return to BFS218.</small>';
+    menu.innerHTML = '<a class="primary" href="' + weekUrl + '">Back to Week ' + (week || '') + ' in BFS218</a><a href="' + root + '">Course Home</a><a href="' + root + '?screen=walkthroughs">Weekly Walkthroughs</a><small>This fullscreen deck is outside the app shell. Use this menu to return to BFS218.</small>';
     var scrim = document.createElement('button');
     scrim.className = 'deck-menu-scrim';
     scrim.type = 'button';
