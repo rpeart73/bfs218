@@ -2950,6 +2950,15 @@
     }).join('');
     return '<section id="wk-con" class="node"><h2 class="wk-sec">Key concepts</h2>' + inner + '</section>';
   }
+  function termsSectionFor(w, d) {
+    if (!d || !d.terms || !d.terms.length) return '';
+    var inner = '<p class="wk-hint">These are the precise vocabulary. Learn them to speak and write accurately; they feed the flashcards and Knowledge Check.</p>' + d.terms.map(function (t) {
+      var te = '';
+      var ter = fieldExampleFor(w, 'term:' + t.term);
+      if (ter) te = '<div style="border-left:4px solid #B02318;padding:6px 0 6px 12px;margin:6px 0 2px"><div class="mono" style="font-size:.64rem;letter-spacing:.08em;color:#B02318;font-weight:700;margin-bottom:3px">IN ' + esc(ter.label).toUpperCase() + '</div><p style="margin:0;font-size:.9rem;line-height:1.55">' + esc(ter.text) + '</p></div>';
+      return '<div class="wk-term"><b>' + esc(t.term) + '</b>: ' + esc(t.def) + ' <span class="wk-cite">(' + esc(t.cite) + ')</span>' + te + '</div>'; }).join('');
+    return '<section id="wk-term" class="node"><h2 class="wk-sec">Key terms</h2>' + inner + '</section>';
+  }
   function audioPackSection(w) {
     var AU = window.BFS218_AUDIO || {};
     var ep = AU[w];
@@ -4444,7 +4453,7 @@
     var rail = '<aside class="wk-rail"><div class="wk-railbox"><div class="wk-railh">IN THIS WEEK</div>'
       + [['ov', 'This week'], ['path', 'Your learning path'], ['vid', 'This week in 80 seconds'], ['visual', 'A Visual Overview']].concat(d.activity ? [['do', 'Your capstone']] : []).concat([['reflect', 'Reflection'], ['notes', 'Generate notes']]).map(function (it) { return '<a href="#wk-' + it[0] + '"><span class="s"></span>' + it[1] + '</a>'; }).join('')
       + '<div class="wk-railt">' + ic('clock', 12) + ' No new material</div></div></aside>';
-    return '<div class="rise">' + mobileWeekActions(w, d, { activityLabel: 'Capstone' }) + hero + path + '<div class="wk-grid"><section>' + audioPk + conceptsSectionFor(w, d) + vid + visual + act + reflect + notes + navRow + '</section>' + rail + '</div></div>';
+    return '<div class="rise">' + mobileWeekActions(w, d, { activityLabel: 'Capstone' }) + hero + path + '<div class="wk-grid"><section>' + audioPk + conceptsSectionFor(w, d) + termsSectionFor(w, d) + vid + visual + act + reflect + notes + navRow + '</section>' + rail + '</div></div>';
   }
   var OVERVIEW_WEEK = 1;
   function overviewPage(w) {
@@ -4466,7 +4475,7 @@
     var rail = '<aside class="wk-rail"><div class="wk-railbox"><div class="wk-railh">IN THIS WEEK</div>'
       + [['ov', 'Overview'], ['path', 'Your learning path'], ['how', 'How this course works'], ['visual', 'A Visual Overview']].map(function (it) { return '<a href="#wk-' + it[0] + '"><span class="s"></span>' + it[1] + '</a>'; }).join('')
       + '<div class="wk-railt">' + ic('clock', 12) + ' Overview, no readings</div></div></aside>';
-    return '<div class="rise">' + mobileWeekActions(w, d, { reflect: false }) + hero + path + '<div class="wk-grid"><section>' + audioPk + conceptsSectionFor(w, d) + how + visual + beginRow + '</section>' + rail + '</div></div>';
+    return '<div class="rise">' + mobileWeekActions(w, d, { reflect: false }) + hero + path + '<div class="wk-grid"><section>' + audioPk + conceptsSectionFor(w, d) + termsSectionFor(w, d) + how + visual + beginRow + '</section>' + rail + '</div></div>';
   }
   var STUDY_WEEK = 7;
   function studyWeekPage(w) {
