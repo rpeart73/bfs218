@@ -125,6 +125,12 @@
   .exp-workbench-head{margin:22px 0 12px;padding:14px 18px;border:1px solid #DEE3EA;border-left:5px solid #1B2A4A;border-radius:12px;background:#fff}
   .exp-workbench-head .mono{display:block;font-size:.66rem;letter-spacing:.08em;color:#1B2A4A;font-weight:700;margin-bottom:3px}
   .exp-workbench-head b{font-size:.95rem}
+  @media print{
+  header,nav,.soc-mobile-scrim,.wk-coll-bar,.wk-coll-btn,.wk-cam-ctl,.rl-dock,.rl-panel,.wk-step-strip button{display:none!important}
+  #soc-main{height:auto!important;overflow:visible!important}
+  section.wk-collapsed > :not(h2.wk-sec){display:block!important}
+  body{background:#fff!important}
+  }
   .rl-panel{position:fixed;z-index:96;top:70px;right:12px;width:min(340px,calc(100vw - 20px));background:#fff;border:1px solid #DEE3EA;border-radius:14px;box-shadow:0 18px 42px rgba(21,23,28,.24);padding:12px 14px 14px;max-height:calc(100vh - 86px);overflow:auto}
   .rl-head{display:flex;align-items:center;gap:8px;margin:0 0 2px}.rl-head strong{font-size:.98rem;flex:1}
   .rl-sub{font-size:.75rem;color:#474C57;margin:0 0 8px;line-height:1.5}
@@ -351,6 +357,6 @@
 <script src="./data/bfs218-experiments.js?v=4"></script>
 <script src="./data/bfs218-holo.js?v=4"></script>
 <script src="./data/videos.js?v=3"></script>
-<script src="./app.js?v=168"></script>
+<script src="./app.js?v=169"></script>
 </body>
 </html>
