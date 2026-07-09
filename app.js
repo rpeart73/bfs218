@@ -1378,6 +1378,11 @@
       vw.n++; vw.last = Date.now();
     } catch (e) {}
   }
+  function wkOpenResetWeek(w) {
+    if (!state.wkOpen) return;
+    var pfx = w + '|';
+    Object.keys(state.wkOpen).forEach(function (k) { if (k.indexOf(pfx) === 0) delete state.wkOpen[k]; });
+  }
   function wkOpenKey(id) { return (state.stationWeek || 0) + '|' + id; }
   function wkOpenHas(id) { return !!(state.wkOpen && state.wkOpen[wkOpenKey(id)]); }
   function wkOpenSet(id, open) {
@@ -4139,7 +4144,7 @@
     var rail = '<aside class="wk-rail"><div class="wk-railbox"><div class="wk-railh">IN THIS WEEK</div>'
       + [['ov', 'Overview'], ['path', 'Your learning path']].concat(assignmentTiming ? [['asg', 'Assignment dates']] : []).concat([['vid', 'This week in 80 seconds']]).concat(audioPk ? [['audio', 'Listen to this week']] : []).concat([['pre', 'Before you begin'], ['learn', 'Purpose'], ['out', 'Learning outcomes'], ['gq', 'Guiding questions']]).concat(programLens ? [['lens', 'For your program']] : []).concat([['con', 'Key concepts'], ['term', 'Key terms'], ['read', 'Readings']]).concat([['visual', 'A Visual Overview']]).concat(d.deck ? [['watch', 'Walkthrough']] : []).concat(programCase ? [['case', 'Case study']] : []).concat([['do', 'The activity'], ['reflect', 'Reflection']]).concat(sg ? [['sg', 'Study Guide']] : []).concat(kcItems.length ? [['kc', 'Knowledge Check']] : []).concat([['notes', 'Generate notes']]).map(function (it) { return '<a href="#wk-' + it[0] + '"><span class="s"></span>' + it[1] + '</a>'; }).join('')
       + '<div class="wk-railt">' + ic('clock', 12) + ' ' + esc(d.time.split('(')[0].trim()) + '</div></div></aside>';
-    var collBar = '<div class="wk-coll-bar" role="group" aria-label="Section display controls"><button type="button" onclick="SOC.wkCollAll(' + w + ',1)">Collapse all sections</button><button type="button" onclick="SOC.wkCollAll(' + w + ',0)">Expand all</button><span>Weeks start folded so you can see the whole map. Open just what you need; your choices are remembered on this device.</span></div>';
+    var collBar = '<div class="wk-coll-bar" role="group" aria-label="Section display controls"><button type="button" onclick="SOC.wkCollAll(' + w + ',1)">Collapse all sections</button><button type="button" onclick="SOC.wkCollAll(' + w + ',0)">Expand all</button><span>Weeks start folded so you can see the whole map. Open just what you need; sections fold again when you leave the week.</span></div>';
     return '<div class="rise wk-page">' + mobileWeekActions(w, d) + hero + path + '<div class="wk-grid"><section>' + collBar + assignmentTiming + vid + audioPk + pre + purpose + outcomes + guiding + programLens + concepts + terms + readings + visual + watch + programCase + act + reflect + sg + kc + notes + navRow + '</section>' + rail + '</div></div>';
   }
   function weekHero(w, d, opt) {
@@ -7255,8 +7260,8 @@
     careerField: function (v) { state.careerField = v; persist(); render(); topScroll(); },
     lensOff: function () { state.careerField = ''; persist(); render(); },
     careerReflect: function (k, v) { state.careerReflect = state.careerReflect || {}; state.careerReflect[k] = v; persist(); },
-    station: function (w) { w = cleanWeek(w) || w; if (state.screen !== 'station' || state.stationWeek !== w) rememberPrevious(); state.navOpen = false; state.stationWeek = w; state.journeyWeek = w; state.activityReturn = null; state.screen = 'station'; trackVisit(w); persist(); focusTarget = 'soc-main'; render(); topScroll(); },
-    jumpWeek: function (w, part) { w = cleanWeek(w) || w; if (state.screen !== 'station' || state.stationWeek !== w) rememberPrevious(); state.navOpen = false; state.stationWeek = w; state.journeyWeek = w; state.activityReturn = null; state.screen = 'station'; trackVisit(w); persist(); focusTarget = 'soc-main'; render(); scrollWeekPart(part); },
+    station: function (w) { w = cleanWeek(w) || w; if (state.screen !== 'station' || state.stationWeek !== w) { rememberPrevious(); wkOpenResetWeek(w); } state.navOpen = false; state.stationWeek = w; state.journeyWeek = w; state.activityReturn = null; state.screen = 'station'; trackVisit(w); persist(); focusTarget = 'soc-main'; render(); topScroll(); },
+    jumpWeek: function (w, part) { w = cleanWeek(w) || w; if (state.screen !== 'station' || state.stationWeek !== w) { rememberPrevious(); wkOpenResetWeek(w); } state.navOpen = false; state.stationWeek = w; state.journeyWeek = w; state.activityReturn = null; state.screen = 'station'; trackVisit(w); persist(); focusTarget = 'soc-main'; render(); scrollWeekPart(part); },
     startActivity: function (s, w) { rememberPrevious(); keepActivityRoute(w, s); focusTarget = 'soc-main'; render(); topScroll(); },
     goWeek: function (s, w) { if (state.screen !== cleanScreen(s) || state.cardWeek !== w) rememberPrevious(); state.cardWeek = w; state.screen = cleanScreen(s); focusTarget = 'soc-main'; render(); topScroll(); },
     galWeek: function (w) { var m = document.getElementById('soc-main'); var y = m ? m.scrollTop : 0; state.galWeek = (state.galWeek === w) ? null : w; render(); var m2 = document.getElementById('soc-main'); if (m2) m2.scrollTop = y; },
