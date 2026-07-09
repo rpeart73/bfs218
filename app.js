@@ -1410,6 +1410,10 @@
     var secs = document.querySelectorAll('#soc-main section[id^="wk-"]');
     Array.prototype.forEach.call(secs, function (sec) {
       var h = sec.querySelector('h2.wk-sec');
+      if (!h && sec.id !== 'wk-ov' && sec.id !== 'wk-asg') {
+        h = sec.querySelector('h2');
+        if (h) h.classList.add('wk-sec');
+      }
       if (!h || h.parentElement !== sec || h.querySelector('.wk-coll-btn')) return;
       var id = sec.id;
       var collapsed = !wkOpenHas(id);

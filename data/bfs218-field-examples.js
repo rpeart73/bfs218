@@ -3,6 +3,21 @@
    fluidly in the vocabulary of the program itself, never templated; every empirical claim cited. */
 window.BFS218_FIELD_EXAMPLES = {
   'Health and Wellness': {
+    1: {
+      'Techno-racism': 'You will meet techno-racism as equipment and scores: devices calibrated on some bodies, algorithms trained on unequal care. This course names the pattern so that by Week 14 you can spot it on any ward before it reaches a patient.',
+      'The New Jim Code': 'In health care the New Jim Code arrives as upgrades: smart triage, predictive risk, digital intake, each promising objectivity. Keep one question through the term: what history did this helpful tool learn from?',
+      'Intersectionality': 'Crenshaw\'s insight is clinical reality: a Black woman\'s symptoms meet the system differently than either identity alone would predict, in pain scoring, in dismissal rates, in device accuracy. Care that cannot see intersections misses patients precisely.',
+    },
+    14: {
+      'The whole arc, in one breath': 'Techno-racism in health care, in one breath: tools calibrated elsewhere, scores trained on unequal spending, records that expose, helpers that collect, gates that triage, all fixable at the design and governance layers your career will touch. You can now say that sentence to a colleague in report; that is the course, kept.',
+      'The question, answered': 'Can a technology carry old racism forward? Your field answered with instruments: the oximeter, the equation, the referral score. Your answer, as a professional, is the audit reflex those cases installed: measure the tool against every population it touches before trusting it with any.',
+      'The map is yours to keep': 'Keep the map where your practice lives: the question set you bring to in-services, the validation demand you bring to procurement, the equity line you read in every dashboard. Patients will never see your map; they will feel its effects in care that checked its defaults.',
+    },
+    13: {
+      'The Personal Cartography as a record of change': 'Your map began with a wellness app or a hospital badge scanner; look at what it holds now: risk scores, calibration gaps, data governance, the anatomy of a patient journey through automated gates. The capstone asks you to read your own entries as evidence of a changed clinical eye, the same wards, seen structurally.',
+      'The four dimensions, as a single lens': 'In practice the four dimensions arrive as one patient: the default that missed them, the amplifier that deprioritized them, the exposure that documented them, the benevolence that packaged it as care. Your capstone\'s job is to narrate one health scenario through the single composed lens, because that is how you will meet it on shift.',
+      'From seeing to commitment': 'Clinical training turns seeing into orders: assessment becomes plan. The capstone asks the same discipline of your critique: one commitment you will carry onto placement, a question you will ask in every tech in-service, a default you will always check. Write it like an order: specific, actionable, signed.',
+    },
     12: {
       'Accountability is a stack, not a patch': 'Health care already runs accountability as a stack: licensure, hospital policy, provincial regulation, malpractice law, coroner review. Algorithmic tools must slot into every layer, procurement standards, clinical governance, incident reporting for model failures, not just receive a vendor\'s bias audit. When the risk score errs, the accountability question is the chart review question: which layer should have caught it?',
       'AI governance and its gaps': 'Health AI regulation is arriving unevenly: devices with diagnostic claims face approval pathways while wellness apps and admin algorithms, the referral scores, the schedulers, mostly do not. The gap is exactly where this course\'s cases live. Clinicians who can name the unregulated layer are the safety system until policy catches up.',
@@ -69,6 +84,21 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Business': {
+    1: {
+      'Techno-racism': 'Techno-racism reaches business as neutral-looking systems with patterned outcomes: screening, scoring, targeting. This course will train you to read those systems like financials, by what they actually produce.',
+      'The New Jim Code': 'Every quarter brings tools sold as objective: hiring AI, credit models, market segmentation. The New Jim Code names the gap between the sales deck and the outcome data. You will learn to demand the outcome data.',
+      'Intersectionality': 'Markets segment, but harms compound: the customer who is Black and a woman and older meets your systems at an intersection no single-variable audit sees. Disaggregation that stops at one variable is a blind spot with a dashboard.',
+    },
+    14: {
+      'The whole arc, in one breath': 'The arc in business terms: history enters as data, optimization amplifies it, gates distribute it, benevolent products launder it, governance can catch it. One breath, five control points, all of them jobs on an org chart. The course ends where your career starts: at the control points.',
+      'The question, answered': 'Is the algorithm just business? The cases answered: the resume ranker, the credit proxies, the delivery skew, business decisions with disparate impacts and legal names. Your professional answer is the disaggregated dashboard: what the firm measures by demographic, the firm can defend.',
+      'The map is yours to keep': 'Keep the map as a management artifact: the vendor questions, the audit clauses, the metrics you disaggregate by default. Competitors will read the same market; you will read the mechanism. That asymmetry is the course\'s parting gift to your career.',
+    },
+    13: {
+      'The Personal Cartography as a record of change': 'Your first entries probably mapped apps and ads; your recent ones map objective functions, proxies, and gates. That drift is the deliverable: evidence you now read a business system for what it optimizes and who absorbs its errors. The capstone curates that evidence into an argument about your own professional formation.',
+      'The four dimensions, as a single lens': 'Compose the dimensions into one customer journey or one employee lifecycle: the default data, the amplifying model, the visibility allocation, the helpful product carrying it all. One narrative, four mechanisms, no villain required. If you can brief that to a leadership table, the course did its work.',
+      'From seeing to commitment': 'Business rewards operationalized values, so operationalize yours: the question you will ask in every vendor demo, the metric you will always disaggregate, the clause you will push into contracts. A commitment that fits in a procurement checklist is a commitment that survives your first quarter.',
+    },
     12: {
       'Accountability is a stack, not a patch': 'Corporate accountability is already layered, board oversight, audit, regulation, liability, and algorithmic decisions belong in every layer: model inventories at the board, algorithmic impact in the audit plan, vendor accountability in contracts. A one-time bias audit is a patch; a standing line item in enterprise risk is a stack.',
       'AI governance and its gaps': 'Canada\'s evolving AI rules and the EU\'s risk-based regime are landing on business first: hiring tools, credit models, and profiling face the earliest obligations. The strategic read: compliance is the floor, and the gaps, unregulated internal tools, procurement pass-throughs, are where reputational risk lives. Govern past the statute.',
@@ -135,6 +165,21 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Law, Administration and Public Safety': {
+    1: {
+      'Techno-racism': 'Your field deploys the tools this course studies: databases, risk scores, recognition systems. Techno-racism names how they can distribute state power unevenly without a single biased officer. Fourteen weeks from now you will read them mechanically, not rhetorically.',
+      'The New Jim Code': 'New enforcement technology always arrives as reform: fairer, faster, objective. The New Jim Code is the caution: check what the training data recorded before trusting what the tool predicts. That check will be your professional signature.',
+      'Intersectionality': 'Crenshaw wrote from law: discrimination doctrine that saw race or sex could not see Black women\'s cases. Systems inherit the same blindness, and so do single-axis audits of them. Intersectional analysis is legal precision, not politics.',
+    },
+    14: {
+      'The whole arc, in one breath': 'The arc for your field: enforcement history becomes training data, tools amplify deployment into prediction, visibility compounds, reform language shields the loop, and rights law is arriving with jurisdiction. One breath, and every clause of it will cross your desk as a file, a procurement, or a policy draft.',
+      'The question, answered': 'Can systems discriminate without discriminating officers? The Supreme Court\'s context analysis, the audit data, and the feedback loops all answered yes. Your professional answer is procedural: treat algorithmic outputs as claims requiring evidence, never as evidence themselves.',
+      'The map is yours to keep': 'Keep the map in the language of your oath: the scrutiny you owe any tool that touches liberty, the disclosure you owe any process it enters, the pattern-reading you owe the communities it lands on. Your field runs on documented judgment; the map is yours, documented.',
+    },
+    13: {
+      'The Personal Cartography as a record of change': 'Your map likely opened with cameras and databases; it now holds feedback loops, threshold politics, and R. v. Le. The capstone reads that trajectory as professional development: the difference between knowing tools exist and knowing how they distribute state power. Document the difference; it is your admissible growth.',
+      'The four dimensions, as a single lens': 'One case file can carry all four dimensions, and your capstone should build that file: the neighbourhood\'s data history, the tool trained on it, the visibility it compounds, the reform language that shields it. Practitioners who can narrate the composition can also testify to it, which is the skill your field needs.',
+      'From seeing to commitment': 'Your field converts principles into procedure, so write your commitment as procedure: the disclosure you will always make, the score you will never treat as evidence without the error rates, the data-sharing clause you will flag every time. Discretion guided by written commitments is what professionalism means here.',
+    },
     12: {
       'Accountability is a stack, not a patch': 'Your field wrote the accountability stack: charter scrutiny, judicial review, oversight bodies, records law. The week\'s demand is jurisdiction: pull algorithmic decisions fully inside that stack, disclosure of tools in proceedings, reviewability of scores, oversight access to models. A vendor NDA is not a legal privilege; treat it accordingly.',
       'AI governance and its gaps': 'Policing and border tools often sit in governance gaps: procured quietly, piloted without frameworks, excluded from privacy regimes built for filing cabinets. Public administrators inherit the gap: your procurement signature is the de facto regulation until statutes arrive. Sign like a regulator.',
@@ -201,6 +246,21 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Information Technology': {
+    1: {
+      'Techno-racism': 'Techno-racism is a systems property you can test for: error and outcome distributions that pattern by race. This course treats it like any failure class: mechanisms, cases, detection, mitigation. Bring your debugging instincts; they transfer.',
+      'The New Jim Code': 'The New Jim Code describes shipped software: newer stacks carrying older data\'s bias under a progress narrative. By term\'s end you will read model provenance the way you read dependencies: nothing imports clean by default.',
+      'Intersectionality': 'Intersectionality is a testing insight: performance can hold for each group and fail at their intersection, darker-skinned women in the benchmark you will meet in Week 2. Slice your evals accordingly, always.',
+    },
+    14: {
+      'The whole arc, in one breath': 'The arc compiles to one sentence: data carries history, objectives amplify it, defaults ship it, telemetry exposes it, gates enforce it, and governance is the missing test suite. You will write systems on every clause of that sentence. The course was requirements gathering for a career of building them differently.',
+      'The question, answered': 'Are robots racist was never the question; can systems distribute error by race was, and the benchmarks answered. Your professional answer is the eval you run without being asked: performance sliced by population, logged, and owned like uptime. That reflex is the entire course in CI.',
+      'The map is yours to keep': 'Keep the map as living documentation: the checklist in your reviews, the provenance questions in your imports, the fairness slice in your dashboards. Codebases outlive their authors; so do defaults. Ship the ones you can stand behind in ten years\' incident reviews.',
+    },
+    13: {
+      'The Personal Cartography as a record of change': 'Diff your map: early entries name apps, late entries name pipelines, objectives, and governance layers. That diff is the course\'s output in version-control terms: your review checklist grew a fairness dimension with teeth. The capstone packages the diff with commentary, exactly like a good pull request.',
+      'The four dimensions, as a single lens': 'The dimensions compose like a system diagram: default data sources, amplifying feedback, exposure through telemetry, benevolent features carrying collection. Draw the composed diagram for one real system in your stack. If the arrows close into loops, you have understood the course at the architecture level.',
+      'From seeing to commitment': 'Commitments in your field are enforceable when they enter the workflow: the eval you will always run, the demographic slice you will never skip, the dataset provenance you will demand before import. Write yours as a pre-merge checklist, because that is where an engineer\'s ethics actually executes.',
+    },
     12: {
       'Accountability is a stack, not a patch': 'You know stacks: accountability composes like infrastructure, code review, audit logs, incident response, compliance, governance. A fairness metric without logging, appeal routes, and ownership is a patch pretending to be architecture. Design the accountability path the way you design the data path, end to end.',
       'AI governance and its gaps': 'Regulation is arriving with requirements that read like tickets: risk classification, documentation, human oversight, logging. The gaps are technical reality: rules written for models, applied to pipelines; audits of artifacts, not drift. Engineers who can operationalize governance, evals, model cards, audit APIs, own the next decade\'s infrastructure layer.',
@@ -267,6 +327,21 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Education, Community and Social Services': {
+    1: {
+      'Techno-racism': 'Your field runs on instruments: screeners, assessments, platforms. Techno-racism names how instruments normed on some children sort all children. This course gives you the eye to read every tool your placement hands you.',
+      'The New Jim Code': 'Edtech and case-management tools arrive as progress for exactly the families the old systems failed. The New Jim Code asks what those systems\' records now teach the new tools. Carry that question into every pilot.',
+      'Intersectionality': 'The student who is racialized, disabled, and poor meets services at an intersection no single program category holds. Crenshaw\'s frame is caseload reality: supports designed on one axis leave compound needs unseen.',
+    },
+    14: {
+      'The whole arc, in one breath': 'The arc in your field\'s breath: instruments normed on some children screen all children, files amplify, helpful platforms record, gates allocate futures, and community authority is the counterweight. Every placement will hand you one clause of that sentence; the course taught you to see the whole grammar.',
+      'The question, answered': 'Can a school system stream without a streaming policy? The grading algorithm, the proctoring cameras, and the referral patterns answered. Your answer is the disaggregation habit and the documentation conscience: what you write follows the child, so write like the system is listening, because it is.',
+      'The map is yours to keep': 'Keep the map beside your practice frameworks: the intake question, the flag you contextualize, the consent you actually explain, the community authority you build toward. Your field changes lives through accumulated small acts; the map just made yours structural.',
+    },
+    13: {
+      'The Personal Cartography as a record of change': 'Your map probably started with classroom apps and now holds screening logics, documentation power, and data sovereignty. Read it as your practicum\'s hidden syllabus: the systems literacy no placement teaches directly. The capstone curates it into the professional stance you will bring to your first caseload or classroom.',
+      'The four dimensions, as a single lens': 'Compose the dimensions around one learner or one family: the normed default, the amplifying screen, the thickening file, the helpful platform hosting it all. Your field\'s case-note skills are exactly the genre: write the composed case, and the analysis becomes something a colleague could act on.',
+      'From seeing to commitment': 'Your commitment should fit your practice tools: the intake field you will always question, the flag you will never pass along without context, the data-sharing consent you will actually explain. Care work runs on small repeated acts; choose the act this course changed and name it.',
+    },
     12: {
       'Accountability is a stack, not a patch': 'Your systems answer to boards, ministries, ombudspersons, and communities, and the tools deciding on children must answer through the same stack: school boards approving algorithmic tools publicly, appeal routes parents can actually use, incident reporting when screens misfire. One vendor audit is not accountability; a parent\'s working appeal is.',
       'AI governance and its gaps': 'Edtech and social-service tools sit in a striking gap: systems affecting children face lighter algorithmic scrutiny than systems affecting credit. Procurement is the gap-filler your sector controls: demand evidence, evaluation rights, and exit clauses, because the vendor\'s pilot deck is not a governance framework.',
@@ -333,6 +408,21 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Media and Communications': {
+    1: {
+      'Techno-racism': 'The feeds you study and staff distribute attention with patterned skews. Techno-racism names the pattern; this course gives you the cases and mechanisms to cover it as a beat rather than a vibe.',
+      'The New Jim Code': 'Platforms narrate themselves as progress; the New Jim Code is the counter-frame: new infrastructure, inherited bias. Ad-delivery evidence in Week 2 makes it empirical. Your job is making it public.',
+      'Intersectionality': 'Audiences and harms compound: moderation that measures race or gender separately misses the creators hit hardest at the intersection. Crenshaw\'s frame is an analytics requirement for anyone auditing reach.',
+    },
+    14: {
+      'The whole arc, in one breath': 'The arc as a lede: history enters the feed as data, optimization amplifies it, gates distribute reach, benevolent platforms host it, and governance is the developing story. One breath, one beat. The course handed you the beat with sources, cases, and the vocabulary to file on it for a career.',
+      'The question, answered': 'Who edits the algorithmic public? The delivery skews, the moderation patterns, and the ranking gates answered: objective functions, unbylined. Your professional answer is coverage: name the editor, publish the criteria, audit the reach. Journalism\'s oldest job, aimed at the newest press.',
+      'The map is yours to keep': 'Keep the map in your notebook: the platform questions, the delivery-data requests, the origination credits. Feeds forget by design; reporters are the ones who keep receipts. The map is your receipts, organized.',
+    },
+    13: {
+      'The Personal Cartography as a record of change': 'Your map opened with feeds and thumbnails; it now holds gates, delivery skews, and governance fights. Read it as an editor reads a reporter\'s growth: the questions sharpened. The capstone curates your entries into a pitch memo for the beat you can now cover: algorithmic power, with receipts.',
+      'The four dimensions, as a single lens': 'Compose the dimensions into one story arc: the default archive, the amplifying recommender, the unequal visibility, the helpful platform hosting it all. That is a feature structure, four acts, one system. Write the nut graf for it and you have both the capstone and a portfolio piece.',
+      'From seeing to commitment': 'Media commitments are editorial standards: the algorithm question you will ask in every platform story, the delivery data you will request with every campaign, the origination credit you will always report. Write yours as a style-guide entry, because that is where a journalist\'s principles compile.',
+    },
     12: {
       'Accountability is a stack, not a patch': 'Media accountability is layered, editorial standards, press councils, defamation law, platform policy, and algorithmic distribution needs the full stack: ranking transparency under press-council-style review, moderation appeals with teeth, platform decisions covered as institutional acts. A transparency report is a patch; enforceable standards with independent review are the stack.',
       'AI governance and its gaps': 'Platform governance is your beat\'s live constitutional moment: online-harms bills, transparency mandates, election rules, all drafted around the systems this course analyzed. The gaps, private thresholds, unauditable feeds, are precisely where journalism operates: making the ungoverned visible until governance arrives.',
@@ -399,6 +489,21 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Engineering Technology': {
+    1: {
+      'Techno-racism': 'Techno-racism is measurable in engineering terms: performance envelopes that exclude, calibrations that skew, infrastructure that burdens unevenly. This course adds the human distribution of error to your design vocabulary, permanently.',
+      'The New Jim Code': 'New systems inherit old data the way new designs inherit old assumptions. The New Jim Code is inherited technical debt with social interest. You will learn to read the provenance before certifying the upgrade.',
+      'Intersectionality': 'Design envelopes fail at intersections: the sensor works for dark skin in good light and light skin in low light, and fails darkest skin in lowest light. Test matrices need intersection cells, not just rows and columns.',
+    },
+    14: {
+      'The whole arc, in one breath': 'The arc as an engineer\'s breath: assumptions enter at spec, calibration sets the envelope, feedback amplifies, instrumentation exposes, benevolent systems collect, and standards are still being written. You will sign documents on every clause. The course extended your design basis to include the humans unevenly served.',
+      'The question, answered': 'Can infrastructure discriminate? Your field\'s own artifacts answered, from bridge clearances to sensor envelopes. Your professional answer is the widened validation matrix and the demographic line in acceptance tests: engineering\'s honest answer to any question is a measurement protocol.',
+      'The map is yours to keep': 'Keep the map in your professional practice file: the questions for design review, the demographic performance clause, the data-minimization default. Engineers inherit their predecessors\' specs; the map is you writing better ones for whoever inherits yours.',
+    },
+    13: {
+      'The Personal Cartography as a record of change': 'Your early entries mapped devices; your later ones map calibration populations, spec-stage politics, and accountability stacks. That progression is an engineering log of expanded requirements: the human distribution of error entered your design basis. The capstone writes it up like a project retrospective, findings and changed practice.',
+      'The four dimensions, as a single lens': 'Compose the dimensions as a failure chain across one system: default calibration, amplified signal, uneven detection envelope, benevolent instrumentation. You have run failure chains all program; this one includes people. The capstone asks for the full chain diagram and the interruption points an engineer controls.',
+      'From seeing to commitment': 'Engineering commitments live in checklists and sign-offs: the validation matrix you will require, the demographic performance line you will add to acceptance, the data-retention default you will always challenge. Write your commitment as a spec clause, because your signature is where your values become load-bearing.',
+    },
     12: {
       'Accountability is a stack, not a patch': 'Engineering accountability is already a stack: codes, standards, professional seals, inspection regimes, liability. Algorithmic components need the same chain: who seals a perception system, which standard covers demographic performance, what inspection regime catches drift. Until standards mature, the engineer\'s seal is the stack; understand what you are signing.',
       'AI governance and its gaps': 'Standards bodies are drafting AI rules the way they once drafted electrical codes, and the interim gap is familiar: technology deployed ahead of its code. Your profession\'s history says the code arrives after the failures unless engineers front-run it. Contributing field evidence to standards work is this week\'s professional action.',
@@ -465,6 +570,21 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Science': {
+    1: {
+      'Techno-racism': 'Science\'s instruments and datasets carry sampling histories, and techno-racism names their patterned consequences. This course treats the pattern as an empirical object: cases, mechanisms, measurements. Your methods training is the prerequisite.',
+      'The New Jim Code': 'New methods inherit old cohorts: the model is novel, the reference panel is not. The New Jim Code is a provenance question scientists are equipped to ask better than anyone. This term sharpens the asking.',
+      'Intersectionality': 'Stratified analysis that stops at single variables misses compound effects, which is Crenshaw\'s point in statistical form. Intersectionality is interaction terms taken seriously, in data and in the lives the data describes.',
+    },
+    14: {
+      'The whole arc, in one breath': 'The arc in a scientist\'s breath: archives skew, models consolidate the skew, aggregate validation hides it, benevolent deployment distributes it, and stratified, community-governed method corrects it. That sentence is a research program. The course handed you the standing questions; your discipline supplies the instruments.',
+      'The question, answered': 'Is bias in the science or the scientist? The reference panels, the atlases, and the pipelines answered: in the method, which means in your power. Your answer is methodological conscience: stratify, disclose provenance, and treat demographic validity as validity, full stop.',
+      'The map is yours to keep': 'Keep the map as a standing methods memo: the sampling question for every dataset, the governance question for every community-linked study, the stratification you pre-register. Science self-corrects only when scientists carry the correction; the map is yours to carry.',
+    },
+    13: {
+      'The Personal Cartography as a record of change': 'Your map\'s early nodes were probably tools; the recent ones are sampling frames, reference panels, and governance. The change is methodological: bias moved from a discussion-section caveat to a design-stage variable in your thinking. The capstone documents that shift with your own entries as the data.',
+      'The four dimensions, as a single lens': 'Compose the dimensions as one research pipeline: archive in, model trained, validation aggregated, deployment benevolent. Each week gave you a stage; the capstone asks for the assembled apparatus and where a methodologist would intervene. That assembly is systems thinking, which is to say, science.',
+      'From seeing to commitment': 'Scientific commitments are pre-registered: state yours like a protocol. The stratification you will always report, the provenance you will always disclose, the community governance you will build into any study that touches communities. A commitment written as methods is one reviewers can hold you to, which is the point.',
+    },
     12: {
       'Accountability is a stack, not a patch': 'Science\'s accountability stack, ethics boards, peer review, replication, retraction, must now process algorithmic instruments: models as methods requiring review, training data as materials requiring disclosure, demographic validity as a reviewable claim. A model card in the appendix is a patch; review standards that reject unstratified validation are the stack.',
       'AI governance and its gaps': 'Research AI largely escapes the governance landing on commerce: models deployed as science face peer review, not regulation, and peer review rarely audits pipelines. The gap is the discipline\'s to close: journals and funders setting algorithmic transparency requirements are the field\'s regulators. Support the ones that do.',
@@ -531,6 +651,21 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Aviation': {
+    1: {
+      'Techno-racism': 'Aviation processes millions through automated screening, matching, and scoring daily. Techno-racism names the patterned burden those systems can distribute. By Week 14 you will read the checkpoint the way you read a safety system: by its error distribution.',
+      'The New Jim Code': 'Every terminal upgrade is sold as frictionless progress: biometrics, e-gates, risk triage. The New Jim Code asks who inherits the friction that does not disappear. Aviation\'s own benchmarks will answer during the term.',
+      'Intersectionality': 'Screening burden compounds: the traveller whose name, passport, and face each add friction meets the checkpoint at an intersection no single system\'s audit sees. Intersectional thinking is burden analysis done properly.',
+    },
+    14: {
+      'The whole arc, in one breath': 'The arc at gate speed: documents carry geopolitics, matchers carry benchmarks\' gaps, scores compound records, frictionless tech carries it all, and the safety stack is the model for governing it. One breath, one terminal. The course gave you the passenger-processing stack as a safety discipline; the industry needs officers of it.',
+      'The question, answered': 'Can standardized screening burden travellers unequally? The error-rate benchmarks and the pat-down patterns answered. Your professional answer is aviation\'s own: measure the burden like an occurrence category, report it like safety data, and fix it like the system it is.',
+      'The map is yours to keep': 'Keep the map in your flight bag: the questions for every new screening system, the redress knowledge for every flagged traveller, the occurrence-report reflex for algorithmic failures. Aviation professionalizes vigilance; the map is vigilance, extended to the algorithms.',
+    },
+    13: {
+      'The Personal Cartography as a record of change': 'Your map started at the checkpoint and now spans watchlist governance, calibration envelopes, and accountability stacks. Read it as a route log: the same terminal, flown with better instruments. The capstone asks you to plot the track change, where your professional eye acquired the passenger-processing stack as a safety system.',
+      'The four dimensions, as a single lens': 'One passenger\'s journey composes the course: the default document, the amplifying score, the compounding secondary record, the frictionless technology that carries it. Your industry narrates incident chains for a living; narrate this one, curb to gate, with the interruption points marked.',
+      'From seeing to commitment': 'Aviation commitments are procedural: the question you will file when the screening system\'s numbers look patterned, the occurrence report you will write for algorithmic failures, the redress information you will actually give a flagged traveller. Safety culture is speaking up systematized; extend yours to the algorithms.',
+    },
     12: {
       'Accountability is a stack, not a patch': 'Aviation\'s accountability stack is the world\'s benchmark: certification, SMS, incident investigation, international standards. The week\'s demand is inclusion: screening algorithms and biometric systems inside the same stack, certified performance envelopes, mandatory occurrence reporting for algorithmic failures, investigation access to models. If it decides on passengers, it belongs in the SMS.',
       'AI governance and its gaps': 'Aviation regulates aircraft algorithms rigorously and passenger-processing algorithms barely: the autopilot faces certification the watchlist matcher never meets. That asymmetry is the governance gap in your terminal. Industry professionals can name it precisely, and naming it in safety language is how it gets fixed.',
@@ -597,6 +732,21 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Hospitality and Tourism': {
+    1: {
+      'Techno-racism': 'Booking engines, screening tools, and rankings decide who gets welcomed, at what price, with what suspicion. Techno-racism names the pattern in those decisions. This course teaches you to audit the algorithmic front desk.',
+      'The New Jim Code': 'Hospitality tech sells personalization and trust; the New Jim Code asks what histories the personalization learned. A field experiment on booking acceptance will make it concrete in Week 2. Bring your operator\'s eye.',
+      'Intersectionality': 'The guest who is racialized, foreign-passported, and paying with an unfamiliar card meets your systems at a compound intersection. Service that audits one variable at a time never sees who keeps hitting friction.',
+    },
+    14: {
+      'The whole arc, in one breath': 'The arc at check-in: defaults assume a guest, models price and screen, rankings allocate existence, personalization records intimacy, and governance is the house policy still being written. Every property runs the whole sentence nightly. You now read the stack behind the welcome; that reading is a management qualification.',
+      'The question, answered': 'Can hospitality discriminate at scale without a discriminating host? The acceptance-rate study and the screening models answered. Your answer is the audit habit: guest outcomes disaggregated like revenue, and a human path past every automated no. Service is a promise; the audit keeps it.',
+      'The map is yours to keep': 'Keep the map behind the front desk of your career: the data question in every system rollout, the retention default you challenge, the flag you route past a human. Hospitality remembers guests; your map remembers what the systems do with the remembering.',
+    },
+    13: {
+      'The Personal Cartography as a record of change': 'Your map opened with booking apps and review scores; it now holds ranking gates, screening models, and data trails that outlive checkouts. The capstone reads the map as a service audit of your own perception: the guest journey, re-seen as a data journey. Curate the before-and-after; that contrast is your professional edge.',
+      'The four dimensions, as a single lens': 'Compose one guest\'s stay through all four dimensions: the default the property assumed, the model that priced or flagged them, the visibility the platform allocated, the personalization that recorded everything. Hospitality thinks in journeys; this is the journey map your industry does not draw yet. Draw it.',
+      'From seeing to commitment': 'Write your commitment as standard operating procedure: the guest-data question you will raise in every system rollout, the flag you will always route past a human, the retention default you will challenge. Service excellence is habits; add one structural habit and the course walks into your career.',
+    },
     12: {
       'Accountability is a stack, not a patch': 'Hospitality answers to health codes, labour law, licensing, brand standards, and platform terms; algorithmic guest-screening and pricing belong in that stack: audit rights in franchise agreements, algorithmic conduct in brand standards, platform accountability in destination policy. A vendor\'s fairness page is a patch; a standard with inspections is a stack.',
       'AI governance and its gaps': 'Your industry\'s algorithms, pricing, screening, ranking, sit largely outside arriving AI rules aimed at higher-stakes domains, which makes self-governance the operative layer: platform policies, brand standards, destination regulations. The operators who set them now will set them for everyone; be in that room.',
@@ -663,6 +813,21 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Creative Arts, Animation and Design': {
+    1: {
+      'Techno-racism': 'Your tools inherit archives, and archives carry a gaze. Techno-racism names how creative technology can render some subjects worse by construction. This course puts that inheritance in your pipeline vocabulary.',
+      'The New Jim Code': 'Each new creative tool promises democratized making; the New Jim Code asks whose archive it learned beauty from. By term\'s end you will interrogate a model\'s taste as fluently as a client brief.',
+      'Intersectionality': 'Representation fails at intersections first: dark-skinned women were the benchmark\'s worst-served faces. In your work, test the compound cases, the features and tones the archive holds least, because that is where tools erase.',
+    },
+    14: {
+      'The whole arc, in one breath': 'The arc in your medium: archives carry a gaze, tools inherit it, defaults art-direct, platforms gate, and consent-based pipelines are the repair. One breath, one pipeline. The course trained your eye on the eye inside the tools; everything you make now knows it is being helped by history.',
+      'The question, answered': 'Do tools have taste? Your renders answered: taste trained on archives with exclusions. Your professional answer is the test pass across skin, hair, and features you now run by reflex, and the provenance question you ask before any model touches the work. Craft absorbed the critique; that is mastery.',
+      'The map is yours to keep': 'Keep the map in your process book: the pipeline tests, the credit standards, the refusal you are prepared to make. Style is a record of decisions; the map ensures the decisions were yours and not the defaults\'. Make things the archive did not predict.',
+    },
+    13: {
+      'The Personal Cartography as a record of change': 'Your map began with filters and feeds; it now holds archives, gazes, and pipeline politics. That is a portfolio development arc: the same tools, seen as carriers of aesthetic policy. The capstone curates your entries like a process book, showing how the eye that makes your work changed.',
+      'The four dimensions, as a single lens': 'Compose the dimensions through one image\'s lifecycle: the archive default, the amplifying model, the crop\'s allocation of visibility, the helpful feature logging the process. You storyboard causality professionally; storyboard this. The composed sequence is the course\'s argument in your native medium.',
+      'From seeing to commitment': 'Creative commitments live in practice: the provenance question you will ask of every tool, the skin-tone test you will run on every pipeline, the credit you will always write for cultural sources. Put it in your project checklist, beside the file-naming conventions, where working values actually survive deadlines.',
+    },
     12: {
       'Accountability is a stack, not a patch': 'Creative industries have accountability layers, credits, licensing, unions, standards bodies, and AI production needs them extended: training-data provenance in the credits, model disclosure in the deliverables, union language on synthetic performance. A tool\'s opt-out form is a patch; provenance in the pipeline contract is the stack.',
       'AI governance and its gaps': 'Copyright and performer-rights fights are writing your field\'s AI governance in real time, and the gaps are where working artists live: style mimicry, training on scraped portfolios, synthetic voices. Watch the cases, and set studio policy ahead of them; the house rules you draft now are the interim law of your shop.',
@@ -729,6 +894,21 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Fashion and Esthetics': {
+    1: {
+      'Techno-racism': 'Your industry digitized its standards, and the standards had exclusions built in. Techno-racism names what shade tech, fit prediction, and casting algorithms can carry forward. This course trains your buyer\'s eye on the algorithms.',
+      'The New Jim Code': 'Beauty tech markets itself as personalization for all; the New Jim Code asks whose archive trained it. An algorithmic beauty contest in Week 2 will show the stakes in your industry\'s own imagery.',
+      'Intersectionality': 'The client with deep skin and textured hair and a fuller body meets your tools at a compound intersection the training data holds least. Esthetics done professionally means testing exactly there first.',
+    },
+    14: {
+      'The whole arc, in one breath': 'The arc across the industry: archives set the standard, loops keep it stocked, algorithms recommend it, scanners enforce it, and ownership decides whether repair happens. One breath from shade wall to boardroom. You now see the system behind the trend; that sight is a buying, branding, and building advantage.',
+      'The question, answered': 'Was the standard ever neutral? The shade ranges, the fit curves, and the algorithmic pageant answered. Your answer is the coverage test: every tool and line validated on the full clientele it claims, with the claim checked on skin, not decks. Beauty is a promise to every face; hold the industry to the grammar.',
+      'The map is yours to keep': 'Keep the map in your kit: the range question at every launch, the data behind every sell-through claim, the sourcing check on every trend tool. Esthetics touches people at zero distance; your map keeps the systems that far away from doing quiet harm in your chair.',
+    },
+    13: {
+      'The Personal Cartography as a record of change': 'Your map probably started at a shade wall or a try-on app; it now spans assortment loops, archive politics, and rights frameworks. The capstone reads that as trend analysis of your own eye: what you now notice on every shop floor and in every app. Forecast from it: what will you refuse to ship?',
+      'The four dimensions, as a single lens': 'Compose the dimensions across one client\'s experience: the default the line assumed, the loop that kept their shade unstocked, the visibility the campaign allocated, the helpful scanner that misread them. Your industry maps customer journeys; this is the version where the journey meets the archive. Map it honestly.',
+      'From seeing to commitment': 'Commit in merchandising terms: the range test you will always run, the data behind any sell-through claim you will always pull, the sourcing question you will ask of every trend tool. Esthetics is intimacy at scale; your commitment is the standard that keeps the scale from erasing the intimacy.',
+    },
     12: {
       'Accountability is a stack, not a patch': 'Fashion answers to consumer-safety law, labour standards, advertising codes; its algorithms, sizing, screening, recommendation, need the same layered accountability: demographic performance in supplier terms, algorithmic claims under advertising standards, audit rights in platform deals. One inclusive campaign is a patch; a testable standard across the assortment system is a stack.',
       'AI governance and its gaps': 'Beauty tech\'s claims, skin analysis, shade matching, fit prediction, sit in a regulatory blind spot between cosmetics rules and software. The gap means the industry\'s own standards decide: retailers demanding validation across skin tones and bodies before shelf placement are the operative regulators. Buying power is governance; use it.',
@@ -795,6 +975,21 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Liberal Arts and University Transfers': {
+    1: {
+      'Techno-racism': 'Techno-racism is a concept with a lineage your disciplines can trace: technology as a carrier of social order. This course supplies the contemporary cases; your training supplies the analysis. The combination is a strong transfer portfolio.',
+      'The New Jim Code': 'Benjamin\'s coinage deliberately echoes the New Jim Crow: continuity thesis in two words. Evaluating that thesis, what carries over, what changes with automation, is the term\'s central intellectual work, and it is real scholarship.',
+      'Intersectionality': 'You will read Crenshaw directly: a legal-theory intervention that reorganized how institutions think about compound discrimination. Watch how a concept travels from law review to algorithm audits; that journey is itself a humanities case study.',
+    },
+    14: {
+      'The whole arc, in one breath': 'The arc as thesis: technologies inherit social order through data and design, launder it through neutrality claims, and can be governed because they were built. One breath, defensible for years. You can now argue it across disciplines with cases attached, which is what a transferable education means.',
+      'The question, answered': 'The course opened asking whether tools can carry racism forward; your essays closed the question with mechanisms: archives, objectives, defaults, gates. Your standing answer is the method: locate the mechanism before judging the machine. That method transfers to every institution you will ever study.',
+      'The map is yours to keep': 'Keep the map as your reading practice: sources interrogated for provenance, systems read as texts, frames named before claims are weighed. Degrees end; attention persists. The map is the attention, trained.',
+    },
+    13: {
+      'The Personal Cartography as a record of change': 'Your map is a primary source you authored: weeks of entries recording a mind acquiring a framework. The capstone is source analysis of yourself: periodize the entries, name the conceptual turns, cite your own earlier misreadings generously. That reflexive move is the most transferable skill this course teaches.',
+      'The four dimensions, as a single lens': 'The dimensions compose into a single analytic you can carry into any discipline: how systems default, amplify, expose, and benevolently persist. The capstone asks you to state that composed lens in your own prose, once, cleanly, the paragraph you will reuse in seminars for years.',
+      'From seeing to commitment': 'Humanities commitments are practices of attention: the source question you will now ask of every dataset, the framing you will interrogate in every policy text, the voice you will cite that the archive skips. Name the practice, and the course becomes method rather than memory.',
+    },
     12: {
       'Accountability is a stack, not a patch': 'Political theory gives you the vocabulary: accountability as layered institutions, not singular acts. Benjamin\'s stack claim is an institutional-design argument, checks distributed across law, oversight, community power, and it invites the comparative essay: how did societies build stacks for past technologies, and what failed when they patched instead?',
       'AI governance and its gaps': 'Governance gaps are your disciplines\' classic object: law lagging technology, regulation captured, rights unevenly enforced. The AI case offers living material, statutes drafted now, cases filed now. A policy-analysis essay written this term is scholarship on a moving target, which is the most instructive kind.',
