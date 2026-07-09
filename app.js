@@ -715,7 +715,7 @@
       + '<div class="soc-head-brand" style="display:flex;align-items:center;gap:10px;flex:none;min-width:0"><img src="./seneca-logo.png" alt="Seneca Polytechnic" style="height:34px;width:auto;display:block"><span class="soc-head-title" style="font-weight:600;font-size:1.0625rem;color:var(--ink);letter-spacing:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">BFS218 Companion</span></div>'
       + readerLensButton()
       + (D.course.mode ? '<span class="mono soc-head-mode" style="font-size:.75rem;font-weight:600;color:#474C57;background:#EFF1F4;padding:5px 10px;border-radius:6px;flex:none">' + esc(D.course.mode).toUpperCase() + '</span>' : '')
-      + (String(state.programViewField || state.careerField || '').trim() ? '<button type="button" class="mono soc-head-term" onclick="SOC.go(\'career\')" title="Change your program lens" style="font-size:.72rem;font-weight:600;color:#1B2A4A;background:#EEF1F5;border:1px solid #DEE3EA;padding:5px 10px;border-radius:6px;flex:none;cursor:pointer;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">VIEWING AS: ' + esc(state.programViewField || state.careerField) + '</button>' : '')
+      + (String(state.programViewField || state.careerField || '').trim() ? '<button type="button" class="mono soc-head-term" onclick="SOC.go(\'career\')" title="Change your program lens" style="font-size:.72rem;font-weight:600;color:#1B2A4A;background:#EEF1F5;border:1px solid #DEE3EA;padding:5px 10px;border-radius:6px;flex:none;cursor:pointer;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">VIEWING AS: ' + esc(selLabel(state.programViewField || state.careerField)) + '</button>' : '')
       + '<span class="mono soc-head-term" style="font-size:.75rem;font-weight:600;color:#B02318;background:#F6E3E1;padding:5px 10px;border-radius:6px;flex:none">FALL 2026</span>'
       + '</header>';
   }
@@ -1369,6 +1369,32 @@
       + '</footer>';
   }
   function focusWeek(sel) { var ws = weeksWithReadings(); return sel == null ? (ws[0] || 1) : sel; }
+  function selField(v) {
+    v = String(v || '').trim();
+    var i = v.indexOf('::');
+    return i >= 0 ? v.slice(0, i) : v;
+  }
+  function selProgram(v) {
+    v = String(v || '').trim();
+    var i = v.indexOf('::');
+    return i >= 0 ? v.slice(i + 2) : '';
+  }
+  function selLabel(v) { return selProgram(v) || selField(v); }
+  function fieldExampleFor(w, key) {
+    try {
+      var fx = window.BFS218_FIELD_EXAMPLES;
+      if (!fx) return null;
+      var raw = String(state.programViewField || state.careerField || '').trim();
+      if (!raw) return null;
+      var prog = selProgram(raw), fld = selField(raw);
+      var srcs = [prog, fld];
+      for (var i = 0; i < srcs.length; i++) {
+        var s = srcs[i];
+        if (s && fx[s] && fx[s][w] && fx[s][w][key]) return { label: selLabel(raw), text: fx[s][w][key] };
+      }
+      return null;
+    } catch (e) { return null; }
+  }
   function trackVisit(w) {
     try {
       var d = new Date(), dk = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
@@ -1496,7 +1522,7 @@
     var nameUi = name
       ? '<small class="sc-nameline">Saved as ' + esc(name) + ' in this browser only. <button type="button" class="sc-linkbtn" onclick="SOC.nameClear()">Remove my name</button></small>'
       : '<form class="sc-nameform" onsubmit="return SOC.nameSave(event)"><label for="sc-name">Add your first name (optional)</label><div><input id="sc-name" maxlength="40" autocomplete="off" placeholder="Your name"><button type="submit">Save</button></div><small>Stays in this browser on this device, is never sent anywhere, and Clear My Work removes it.</small></form>';
-    var scField = String(state.programViewField || state.careerField || '').trim();
+    var scField = selLabel(state.programViewField || state.careerField || '');
     var stats = (days || scField)
       ? '<div class="sc-stats">' + (days ? '<span><b>' + days + '</b> day' + (days === 1 ? '' : 's') + ' here</span><span><b>' + touched + '</b> of ' + total + ' weeks opened</span>' : '') + (scField ? '<span>Your lens: <b>' + esc(scField) + '</b></span>' : '') + '</div>'
       : '';
@@ -2918,11 +2944,8 @@
     if (!d || !d.concepts || !d.concepts.length) return '';
     var inner = '<p class="wk-hint">These are the week\'s big ideas, explained. Read them to understand the argument; this is what your discussions and written work draw on.</p>' + d.concepts.map(function (c) {
       var fe = '';
-      try {
-        var fexs = window.BFS218_FIELD_EXAMPLES;
-        var ff = String(state.programViewField || state.careerField || '').trim();
-        if (ff && fexs && fexs[ff] && fexs[ff][w] && fexs[ff][w][c.h]) fe = '<div class="wk-concept" style="border-left:4px solid #B02318;padding-left:12px;margin-top:8px"><h3 style="font-size:.95rem">In your program: ' + esc(ff) + '</h3><p>' + esc(fexs[ff][w][c.h]) + '</p></div>';
-      } catch (e) {}
+      var fer = fieldExampleFor(w, c.h);
+      if (fer) fe = '<div class="wk-concept" style="border-left:4px solid #B02318;padding-left:12px;margin-top:8px"><h3 style="font-size:.95rem">In your program: ' + esc(fer.label) + '</h3><p>' + esc(fer.text) + '</p></div>';
       return '<div class="wk-concept"><h3>' + esc(c.h) + '</h3><p>' + esc(c.body) + ' <span class="wk-cite">(' + esc(c.cite) + ')</span></p></div>' + fe;
     }).join('');
     return '<section id="wk-con" class="node"><h2 class="wk-sec">Key concepts</h2>' + inner + '</section>';
@@ -4139,7 +4162,7 @@
     var programCase = lensCaseStudySection(w, d);
     var fldEg = '';
     try {
-      var fld = String(state.programViewField || state.careerField || '').trim();
+      var fld = selField(state.programViewField || state.careerField || '');
       var bf = window.BFS218_CAREER && window.BFS218_CAREER.byField;
       if (fld && bf && bf[fld] && bf[fld].lens) {
         fldEg = '<div class="wk-concept" style="border-left:4px solid #1B2A4A;padding-left:12px"><h3>Through your ' + esc(fld) + ' lens</h3><p>' + esc(bf[fld].lens) + ' Hold each concept above against that question: where would it show up in your field this week?</p></div>';
@@ -4147,18 +4170,12 @@
     } catch (efe) {}
     var concepts = sec('con', 'Key concepts', '<p class="wk-hint">These are the week\'s big ideas, explained. Read them to understand the argument; this is what your discussions and written work draw on.</p>' + d.concepts.map(function (c) {
       var fe = '';
-      try {
-        var fexs = window.BFS218_FIELD_EXAMPLES;
-        var ff = String(state.programViewField || state.careerField || '').trim();
-        if (ff && fexs && fexs[ff] && fexs[ff][w] && fexs[ff][w][c.h]) fe = '<div class="wk-concept" style="border-left:4px solid #B02318;padding-left:12px;margin-top:8px"><h3 style="font-size:.95rem">In your program: ' + esc(ff) + '</h3><p>' + esc(fexs[ff][w][c.h]) + '</p></div>';
-      } catch (efx) {} return '<div class="wk-concept"><h3>' + esc(c.h) + '</h3><p>' + esc(c.body) + ' <span class="wk-cite">(' + esc(c.cite) + ')</span></p></div>' + fe; }).join('') + fldEg);
+      var fer = fieldExampleFor(w, c.h);
+      if (fer) fe = '<div class="wk-concept" style="border-left:4px solid #B02318;padding-left:12px;margin-top:8px"><h3 style="font-size:.95rem">In your program: ' + esc(fer.label) + '</h3><p>' + esc(fer.text) + '</p></div>'; return '<div class="wk-concept"><h3>' + esc(c.h) + '</h3><p>' + esc(c.body) + ' <span class="wk-cite">(' + esc(c.cite) + ')</span></p></div>' + fe; }).join('') + fldEg);
     var terms = sec('term', 'Key terms', '<p class="wk-hint">These are the precise vocabulary. Learn them to speak and write accurately; they feed the flashcards and Knowledge Check.</p>' + d.terms.map(function (t) {
       var te = '';
-      try {
-        var tfx = window.BFS218_FIELD_EXAMPLES;
-        var tf = String(state.programViewField || state.careerField || '').trim();
-        var tk = 'term:' + t.term; if (tf && tfx && tfx[tf] && tfx[tf][w] && tfx[tf][w][tk]) te = '<div style="border-left:4px solid #B02318;padding:6px 0 6px 12px;margin:6px 0 2px"><b style="font-size:.85rem">In your program: ' + esc(tf) + '</b><p style="margin:4px 0 0;font-size:.9rem;line-height:1.55">' + esc(tfx[tf][w][tk]) + '</p></div>';
-      } catch (etx) {}
+      var ter = fieldExampleFor(w, 'term:' + t.term);
+      if (ter) te = '<div style="border-left:4px solid #B02318;padding:6px 0 6px 12px;margin:6px 0 2px"><b style="font-size:.85rem">In your program: ' + esc(ter.label) + '</b><p style="margin:4px 0 0;font-size:.9rem;line-height:1.55">' + esc(ter.text) + '</p></div>';
       return '<div class="wk-term"><b>' + esc(t.term) + '</b>: ' + esc(t.def) + ' <span class="wk-cite">(' + esc(t.cite) + ')</span>' + te + '</div>'; }).join(''));
     var readingsInner = d.readings.map(function (r) { var resolves = (typeof rec === 'function') && r.id && rec(r.id); var tail = resolves ? '<button onclick="SOC.read(\'' + r.id + '\')" class="wk-scope">' + esc(r.scope || 'Open the reading') + ' &#8599;</button>' : (r.url ? '<a href="' + r.url + '" target="_blank" rel="noopener" class="wk-scope">' + esc(r.scope || 'Open the reading') + ' &#8599;</a>' : (r.scope ? '<div class="wk-scope" style="background:none;border:none;color:var(--ink-faint);padding:6px 0;cursor:default">' + esc(r.scope) + '</div>' : '')); return '<div class="wk-read"><div class="ref">' + r.apa + '</div>' + tail + '</div>'; }).join('')
       + weekNoteBox(w, 'readings', 'Readings Notes', 'After the reading or Reading Rescue, write the one idea you want to remember and where you saw it.');
