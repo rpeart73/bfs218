@@ -14,7 +14,7 @@
   var VKEY = SKEY + '.view.v1';
   var HKEY = SKEY + '.hardResetNext';
   function load() { try { var o = JSON.parse(localStorage.getItem(SKEY) || '{}'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; } }
-  function persist() { try { localStorage.setItem(SKEY, JSON.stringify({ saved: state.saved, cmpNotes: state.cmpNotes, rcNotes: state.rcNotes, sgNotes: state.sgNotes, sgTick: state.sgTick, wkCheck: state.wkCheck, wkReflect: state.wkReflect, wkNotes: state.wkNotes, actResult: state.actResult, mcSel: state.mcSel, mcConf: state.mcConf, kcVersion: state.kcVersion, kcShort: state.kcShort, kcShortRate: state.kcShortRate, kcHist: state.kcHist, careerReflect: state.careerReflect, mediaNotes: state.mediaNotes, assignmentStarter: state.assignmentStarter, rl: state.rl, exp: state.exp, wkOpen: state.wkOpen, studentName: state.studentName, visits: state.visits })); } catch (e) {} }
+  function persist() { try { localStorage.setItem(SKEY, JSON.stringify({ saved: state.saved, cmpNotes: state.cmpNotes, rcNotes: state.rcNotes, sgNotes: state.sgNotes, sgTick: state.sgTick, wkCheck: state.wkCheck, wkReflect: state.wkReflect, wkNotes: state.wkNotes, actResult: state.actResult, mcSel: state.mcSel, mcConf: state.mcConf, kcVersion: state.kcVersion, kcShort: state.kcShort, kcShortRate: state.kcShortRate, kcHist: state.kcHist, careerReflect: state.careerReflect, mediaNotes: state.mediaNotes, assignmentStarter: state.assignmentStarter, rl: state.rl, exp: state.exp, wkOpen: state.wkOpen, studentName: state.studentName, visits: state.visits, careerField: state.careerField, programViewField: state.programViewField })); } catch (e) {} }
   function loadView() { try { var o = JSON.parse(sessionStorage.getItem(VKEY) || '{}'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; } }
   function clearView() { try { sessionStorage.removeItem(VKEY); sessionStorage.removeItem(HKEY); } catch (e) {} }
   function shouldResumeView(v) {
@@ -105,8 +105,8 @@
     kcShortShown: {},
     kcShortRate: (saved0.kcShortRate && typeof saved0.kcShortRate === 'object') ? saved0.kcShortRate : {},
     kcHist: (saved0.kcHist && typeof saved0.kcHist === 'object') ? saved0.kcHist : {},
-    careerField: resumeView0 ? (view0.careerField || '') : '',
-    programViewField: resumeView0 ? (view0.programViewField || '') : '',
+    careerField: (typeof saved0.careerField === 'string' && saved0.careerField) ? saved0.careerField : (resumeView0 ? (view0.careerField || '') : ''),
+    programViewField: (typeof saved0.programViewField === 'string' && saved0.programViewField) ? saved0.programViewField : (resumeView0 ? (view0.programViewField || '') : ''),
     programViewAssignment: resumeView0 ? (view0.programViewAssignment || 'all') : 'all',
     careerReflect: (saved0.careerReflect && typeof saved0.careerReflect === 'object') ? saved0.careerReflect : {},
     mediaNotes: (saved0.mediaNotes && typeof saved0.mediaNotes === 'object') ? saved0.mediaNotes : {},
