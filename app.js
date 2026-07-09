@@ -1246,8 +1246,13 @@
   }
   function wkExpandFor(id) {
     if (!id || id.indexOf('wk-') !== 0 || id === 'wk-ov') return;
-    var sec = document.getElementById(id);
-    if (!sec || !sec.classList.contains('wk-collapsed')) return;
+    var el = document.getElementById(id);
+    if (!el) return;
+    var sec = null;
+    if (el.classList && el.classList.contains('wk-collapsed')) sec = el;
+    else if (el.closest) sec = el.closest('section.wk-collapsed');
+    if (!sec || !sec.id || sec.id === 'wk-ov') return;
+    id = sec.id;
     wkOpenSet(id, true);
     persist();
     sec.classList.remove('wk-collapsed');
@@ -2232,7 +2237,7 @@
         + (ladderDone ? '<div style="background:#E9EFE7;border:1px solid #9CC4A8;border-radius:12px;padding:13px 16px;font-size:.92rem;font-weight:600;color:#2c3b29">You have worked the whole ladder. You are ready for the Knowledge Check below. <a href="#wk-kc" style="color:#2c6b3f">Go to it \u2193</a></div>' : '')
         + '</div>';
     }
-    var html = '<section id="wk-sg" class="node"><h2 class="wk-sec">Study Guide <span class="mono" style="font-size:.62rem;letter-spacing:.06em;color:#2c6b3f;background:#E9EFE7;border:1px solid #9CC4A8;border-radius:999px;padding:3px 10px;margin-left:10px;vertical-align:middle">NOT GRADED</span></h2>'
+    var html = '<section id="wk-sg" class="node"><h2 class="wk-sec">Study Guide</h2>'
       + '<p class="wk-hint">Your rehearsal space before the Knowledge Check. Nothing here is recorded or graded; it lives only in your browser.</p>'
       + warm + tiles + ladder + '</section>';
     return { html: html };
@@ -3058,11 +3063,11 @@
     var q = readingRescueQuestion(w, d, anchor, concept);
     var conceptName = concept ? concept.h : 'the week\'s main concept';
     var conceptBody = concept ? concept.body.slice(0, 190).replace(/\s+\S*$/, '') + '...' : 'Use this concept to read the week, not just summarize it.';
-    return '<section id="wk-rescue" class="node wk-rescue" aria-label="Reading Rescue"><div class="wk-rescue-head"><div class="mono">READING RESCUE</div><h2>If you are behind, start here</h2><p>This is not a replacement for the readings. It is the shortest honest path back into them.</p></div>'
+    return '<div id="wk-rescue" class="wk-rescue" aria-label="Reading Rescue"><div class="wk-rescue-head"><div class="mono">READING RESCUE</div><h3>If you are behind, start here</h3><p>This is not a replacement for the readings. It is the shortest honest path back into them.</p></div>'
       + '<div class="wk-rescue-grid"><div><b>1. Read one anchor source</b><span>' + esc(rtitle) + (rauth ? ' by ' + esc(rauth) : '') + '</span>' + open + '</div>'
       + '<div><b>2. Carry one concept</b><span>' + esc(conceptName) + '</span><small>' + esc(conceptBody) + '</small></div>'
       + '<div><b>3. Answer one evidence question</b><span>' + esc(q) + '</span><small>Your answer should point back to the reading, not only the video, visual, or activity.</small></div></div>'
-      + '<div class="wk-rescue-foot"><b>Do not stop at the rescue path.</b><span>Use it when you are stuck, then return to the full reading list before you submit anything for marks.</span></div></section>';
+      + '<div class="wk-rescue-foot"><b>Do not stop at the rescue path.</b><span>Use it when you are stuck, then return to the full reading list before you submit anything for marks.</span></div></div>';
   }
   function activityModelSection(w, a) {
     var spec = activityVisualSpec(w, a);
@@ -3948,8 +3953,8 @@
     var terms = sec('term', 'Key terms', d.terms.map(function (t) { return '<div class="wk-term"><b>' + esc(t.term) + '</b>: ' + esc(t.def) + ' <span class="wk-cite">(' + esc(t.cite) + ')</span></div>'; }).join(''));
     var readingsInner = d.readings.map(function (r) { var resolves = (typeof rec === 'function') && r.id && rec(r.id); var tail = resolves ? '<button onclick="SOC.read(\'' + r.id + '\')" class="wk-scope">' + esc(r.scope || 'Open the reading') + ' &#8599;</button>' : (r.url ? '<a href="' + r.url + '" target="_blank" rel="noopener" class="wk-scope">' + esc(r.scope || 'Open the reading') + ' &#8599;</a>' : (r.scope ? '<div class="wk-scope" style="background:none;border:none;color:var(--ink-faint);padding:6px 0;cursor:default">' + esc(r.scope) + '</div>' : '')); return '<div class="wk-read"><div class="ref">' + r.apa + '</div>' + tail + '</div>'; }).join('')
       + weekNoteBox(w, 'readings', 'Readings Notes', 'After the reading or Reading Rescue, write the one idea you want to remember and where you saw it.');
-    var readings = sec('read', 'Readings', readingsInner);
     var rescue = readingRescueSection(w, d);
+    var readings = sec('read', 'Readings', readingsInner + rescue);
     var visual = visualOverviewSection(w, d);
     var watch = d.deck ? '<section id="wk-watch" class="node"><h2 class="wk-sec">Walkthrough</h2><p style="margin:0 0 12px;font-size:.92rem">Step through this week\'s walkthrough deck.</p><div class="wk-deck"><iframe src="./walkthroughs/' + d.deck + '/index.html?v=4" title="Week ' + w + ' walkthrough" loading="lazy" allowfullscreen></iframe></div><a href="./walkthroughs/' + d.deck + '/index.html?v=4" target="_blank" rel="noopener" class="wk-fs">Open the walkthrough fullscreen &#8599;</a>' + weekNoteBox(w, 'walkthrough', 'Walkthrough Notes', 'Write one thing the walkthrough made clearer, or one question you still have.') + '</section>' : '';
     var act = '<section id="wk-do" class="node interactive"><h2 class="wk-sec">The activity: ' + esc(d.activity.title) + '</h2><div class="wk-whatwhy"><b>What this is:</b> ' + esc(d.activity.what) + '<br><br><b>Why you are doing it:</b> ' + esc(d.activity.why) + '</div>' + activityStartGuide(w) + lensActivityBlock(w, d.activity, false) + '<button onclick="SOC.startActivity(\'' + d.activity.screen + '\',' + w + ')" class="wk-cta">Start the activity' + ic('chevron', 17, 2.4) + '</button><p style="margin:10px 0 0;font-size:.74rem;color:var(--ink-faint)">Each activity gives you a guided model first, then a specific set of choices or checks. Read the short guide before you click.</p>' + weekNoteBox(w, 'activity', 'Activity Notes', 'After trying the activity, write what the model or feedback helped you notice.') + '</section>';
@@ -3971,10 +3976,10 @@
     var kcR = kcSection(w);
     var kc = kcR.html, kcItems = kcR.items;
     var rail = '<aside class="wk-rail"><div class="wk-railbox"><div class="wk-railh">IN THIS WEEK</div>'
-      + [['ov', 'Overview'], ['path', 'Your learning path'], ['vid', 'This week in 80 seconds']].concat([['pre', 'Before you begin'], ['learn', 'Purpose'], ['out', 'Learning outcomes'], ['gq', 'Guiding questions']]).concat(assignmentTiming ? [['asg', 'Assignment dates']] : []).concat(programLens ? [['lens', 'For your program']] : []).concat([['con', 'Key concepts'], ['term', 'Key terms'], ['read', 'Readings']]).concat(rescue ? [['rescue', 'Reading Rescue']] : []).concat([['visual', 'A Visual Overview']]).concat(d.deck ? [['watch', 'Walkthrough']] : []).concat(programCase ? [['case', 'Case study']] : []).concat([['do', 'The activity'], ['reflect', 'Reflection']]).concat(sg ? [['sg', 'Study Guide']] : []).concat(kcItems.length ? [['kc', 'Knowledge Check']] : []).concat([['notes', 'Generate notes']]).map(function (it) { return '<a href="#wk-' + it[0] + '"><span class="s"></span>' + it[1] + '</a>'; }).join('')
+      + [['ov', 'Overview'], ['path', 'Your learning path']].concat(assignmentTiming ? [['asg', 'Assignment dates']] : []).concat([['vid', 'This week in 80 seconds']]).concat([['pre', 'Before you begin'], ['learn', 'Purpose'], ['out', 'Learning outcomes'], ['gq', 'Guiding questions']]).concat(programLens ? [['lens', 'For your program']] : []).concat([['con', 'Key concepts'], ['term', 'Key terms'], ['read', 'Readings']]).concat([['visual', 'A Visual Overview']]).concat(d.deck ? [['watch', 'Walkthrough']] : []).concat(programCase ? [['case', 'Case study']] : []).concat([['do', 'The activity'], ['reflect', 'Reflection']]).concat(sg ? [['sg', 'Study Guide']] : []).concat(kcItems.length ? [['kc', 'Knowledge Check']] : []).concat([['notes', 'Generate notes']]).map(function (it) { return '<a href="#wk-' + it[0] + '"><span class="s"></span>' + it[1] + '</a>'; }).join('')
       + '<div class="wk-railt">' + ic('clock', 12) + ' ' + esc(d.time.split('(')[0].trim()) + '</div></div></aside>';
     var collBar = '<div class="wk-coll-bar" role="group" aria-label="Section display controls"><button type="button" onclick="SOC.wkCollAll(' + w + ',1)">Collapse all sections</button><button type="button" onclick="SOC.wkCollAll(' + w + ',0)">Expand all</button><span>Weeks start folded so you can see the whole map. Open just what you need; your choices are remembered on this device.</span></div>';
-    return '<div class="rise wk-page">' + mobileWeekActions(w, d) + hero + path + '<div class="wk-grid"><section>' + collBar + vid + pre + purpose + outcomes + guiding + assignmentTiming + programLens + concepts + terms + readings + rescue + visual + watch + programCase + act + reflect + sg + kc + notes + navRow + '</section>' + rail + '</div></div>';
+    return '<div class="rise wk-page">' + mobileWeekActions(w, d) + hero + path + '<div class="wk-grid"><section>' + collBar + assignmentTiming + vid + pre + purpose + outcomes + guiding + programLens + concepts + terms + readings + visual + watch + programCase + act + reflect + sg + kc + notes + navRow + '</section>' + rail + '</div></div>';
   }
   function weekHero(w, d, opt) {
     d = d || {};
