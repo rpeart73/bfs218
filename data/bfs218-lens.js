@@ -1,4 +1,4 @@
-/* BFS218 Field Lens: per-area, per-week framing hooks (plain-language). */
+/* BFS218 Field Lens: per-area, per-week framing hooks (clear). */
 window.BFS218_LENS = {
  "byArea": {
   "Aviation": {

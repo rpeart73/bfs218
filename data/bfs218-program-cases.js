@@ -83,7 +83,7 @@ window.BFS218_PROGRAM_CASES = {
  "Business": {
   "s": "The franchise you assist installed a shift-scheduling optimizer that fills weekend closes with the workers least likely to refuse, a compliance score built from past acceptance. Single parents and students who once traded shifts freely now find refusal quietly priced into their hours. Head office loves the labour numbers; the store manager asks you what changed.",
   "q": [
-   "Answer the store manager: explain in plain language what the compliance score learned from past shift acceptances, and why refusal now costs hours.",
+   "Answer the store manager: explain clearly what the compliance score learned from past shift acceptances, and why refusal now costs hours.",
    "Find the workers subsidizing the labour numbers: whose weekend availability is compensating for the optimizer's assumptions, and what happens when they burn out?",
    "Propose the one scheduling constraint, hard-coded, that returns trade freedom without losing the coverage head office measures."
   ]

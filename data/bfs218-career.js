@@ -1,4 +1,4 @@
-/* BFS218 Career Choices (plain-language; byField + grounded byProgram). */
+/* BFS218 Career Choices (clear; byField + grounded byProgram). */
 window.BFS218_CAREER = {
  "intro": "At first this course can feel far from your program. It is not. This course looks at technologies that hire, screen, police, rank, and recommend. Those tools are already inside your field. Pick your field of study below. See how these ideas follow you into your real work.",
  "prompt": "Pick your field of study above. This course will show you where it lands in your future work.",
