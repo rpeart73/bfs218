@@ -13,6 +13,7 @@
   var SKEY = 'bfs218corpus.' + (location.pathname.split('/')[1] || 'local') + '.v2';
   var VKEY = SKEY + '.view.v1';
   var HKEY = SKEY + '.hardResetNext';
+  var WKKEY = SKEY + '.walk.v1';
   function load() { try { var o = JSON.parse(localStorage.getItem(SKEY) || '{}'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; } }
   function persist() { try { localStorage.setItem(SKEY, JSON.stringify({ saved: state.saved, cmpNotes: state.cmpNotes, rcNotes: state.rcNotes, sgNotes: state.sgNotes, sgTick: state.sgTick, wkCheck: state.wkCheck, wkReflect: state.wkReflect, wkNotes: state.wkNotes, actResult: state.actResult, mcSel: state.mcSel, mcConf: state.mcConf, kcVersion: state.kcVersion, kcShort: state.kcShort, kcShortRate: state.kcShortRate, kcHist: state.kcHist, careerReflect: state.careerReflect, mediaNotes: state.mediaNotes, assignmentStarter: state.assignmentStarter, rl: state.rl, exp: state.exp, studentName: state.studentName, visits: state.visits, careerField: state.careerField, programViewField: state.programViewField })); } catch (e) {} }
   function loadView() { try { var o = JSON.parse(sessionStorage.getItem(VKEY) || '{}'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; } }
@@ -61,7 +62,7 @@
   var resumeView0 = shouldResumeView(view0);
   var __isReload = false;
   try { var __nav = performance.getEntriesByType && performance.getEntriesByType('navigation'); __isReload = !!(__nav && __nav[0] && __nav[0].type === 'reload'); } catch (e) {}
-  if (__isReload) { route0 = null; resumeView0 = false; clearView(); }
+  /* a plain refresh resumes the last screen; the Home reset uses the hard flag */
   var routePart0 = route0 && route0.part;
 
   var state = {
@@ -6902,9 +6903,10 @@
     var d = weekData(w);
     if (!d || !d.deck) return null;
     var code = (D.course && D.course.code) || '';
-    var sufs = code === 'PSY355' ? ['-a', '-b', '-c'] : code === 'SOC122' ? ['-two-eyed', '-class-path', '-read-practice'] : ['', '-b', '-c'];
-    if (idx >= sufs.length) return null;
-    return 'walkthroughs/' + d.deck + '/images/fig-week' + walkPad(w) + sufs[idx] + '.svg';
+    var man = (typeof window !== 'undefined' && window[code + '_WALKFIGS']) || {};
+    var list = man[w] || man[String(w)];
+    if (!list || !list[idx]) return null;
+    return 'walkthroughs/' + d.deck + '/images/' + list[idx];
   }
   function walkTheme() { var r = rlState(); return r.walkTheme === 'light' ? 'light' : 'dark'; }
   function walkSlides(w) {
@@ -6912,6 +6914,7 @@
     if (!d) return [];
     var s = [];
     s.push({ kind: 'cover', title: weekTitle(w), question: (d.guiding && d.guiding[0]) || journeyQ(w), lead: firstSentence(d.overview || '') });
+    try { if (window.BFS218_HOLO && window.BFS218_HOLO.supports) { var _vs = visualSpec(w, d); if (_vs && window.BFS218_HOLO.supports(_vs.kind)) s.push({ kind: 'model', week: w }); } } catch (e) {}
     (d.concepts || []).forEach(function (c, ci) {
       s.push({ kind: 'concept', h: c.h, body: c.body, cite: c.cite });
       var fig = walkFig(w, ci);
@@ -6936,19 +6939,40 @@
         + (s.cite ? '<div class="walk-cite">' + esc(s.cite) + '</div>' : '');
     }
     if (s.kind === 'figure') {
-      return '<div class="walk-figwrap"><div class="walk-kicker">EXAMINE THE DIAGRAM</div>'
-        + '<p class="walk-figcap">Look closely at how ' + esc(s.h.toLowerCase()) + ' is put together. Drag to move it, use the buttons or scroll to zoom, and rotate it to study each part.</p>'
-        + '<div class="walk-figview"><img class="walk-figimg" src="' + esc(s.src) + '" alt="Diagram for ' + esc(s.h) + '" onerror="var f=this.closest(&quot;.walk-figwrap&quot;);if(f)f.querySelector(&quot;.walk-figview&quot;).innerHTML=&quot;<p style=padding:40px;text-align:center;opacity:.7>The diagram could not load.</p>&quot;"></div>'
-        + '<div class="walk-figctl" role="group" aria-label="Examine controls">'
-        + '<button type="button" onclick="SOC.walkFig(\'zin\')" aria-label="Zoom in">+</button>'
-        + '<button type="button" onclick="SOC.walkFig(\'zout\')" aria-label="Zoom out">&#8722;</button>'
-        + '<button type="button" onclick="SOC.walkFig(\'rl\')" aria-label="Rotate left">&#8634;</button>'
-        + '<button type="button" onclick="SOC.walkFig(\'rr\')" aria-label="Rotate right">&#8635;</button>'
-        + '<button type="button" onclick="SOC.walkFig(\'reset\')" aria-label="Reset the view">Reset</button>'
-        + '</div></div>';
+      return '<div class="walk-figwrap">'
+        + '<div class="walk-figtext">'
+        + '<div class="walk-kicker">THE DIAGRAM</div>'
+        + '<h2 class="walk-fighead">' + esc(s.h) + '</h2>'
+        + '<p class="walk-figcap">A visual map of this idea. Follow how each part connects.</p>'
+        + '</div>'
+        + '<div class="walk-figview"><img class="walk-figimg" src="' + esc(s.src) + '" alt="Diagram for ' + esc(s.h) + '" onerror="var f=this.closest(&quot;.walk-figwrap&quot;);if(f){var v=f.querySelector(&quot;.walk-figview&quot;);if(v)v.innerHTML=&quot;<p class=walk-fignote>The diagram could not load.</p>&quot;;}"></div>'
+        + '</div>';
+    }
+    if (s.kind === 'model') {
+      var md = weekData(s.week);
+      var sp = visualSpec(s.week, md);
+      var vw = visualViewFor(s.week, 'overview');
+      var mt = esc(sp.title || weekTitle(s.week));
+      return '<div class="walk-figwrap">'
+        + '<div class="walk-figtext">'
+        + '<div class="walk-kicker">EXAMINE IN 3D</div>'
+        + '<h2 class="walk-fighead">' + mt + '</h2>'
+        + '<p class="walk-figcap">A 3D model of the core idea for this week. Drag the scene to turn it, and use the buttons to zoom or reset.</p>'
+        + '</div>'
+        + '<div class="walk-figview walk-modelview"><div class="wk-model-shell walk-modelshell">'
+        + '<canvas class="wk-model-canvas" role="img" aria-label="Interactive 3D model for ' + mt + '" data-topic-model="overview" data-week="' + s.week + '" data-kind="' + esc(sp.kind || 'pipeline') + '" data-view="' + esc(vw) + '"></canvas>'
+        + '<div class="wk-cam-ctl" role="group" aria-label="3D view controls">'
+        + '<button type="button" onclick="return SOC.camCtl(event,\'spin\',-1)" aria-label="Rotate left">&#8634;</button>'
+        + '<button type="button" onclick="return SOC.camCtl(event,\'spin\',1)" aria-label="Rotate right">&#8635;</button>'
+        + '<button type="button" onclick="return SOC.camCtl(event,\'zoom\',1)" aria-label="Zoom in">+</button>'
+        + '<button type="button" onclick="return SOC.camCtl(event,\'zoom\',-1)" aria-label="Zoom out">&#8722;</button>'
+        + '<button type="button" onclick="return SOC.camCtl(event,\'reset\')" aria-label="Reset the view">Reset</button>'
+        + '</div></div></div>';
     }
     if (s.kind === 'terms') {
-      return '<div class="walk-kicker">THE WORDS TO KNOW</div><dl class="walk-terms">' + s.items.map(function (t) { return '<dt>' + esc(t.term) + '</dt><dd>' + esc(t.def) + (t.cite ? ' <i>(' + esc(t.cite) + ')</i>' : '') + '</dd>'; }).join('') + '</dl>';
+      return '<div class="walk-kicker">THE WORDS TO KNOW</div><div class="walk-terms">'
+        + s.items.map(function (t) { return '<div class="walk-term"><div class="walk-term-h">' + esc(t.term) + '</div><div class="walk-term-d">' + esc(t.def) + (t.cite ? ' <i>(' + esc(t.cite) + ')</i>' : '') + '</div></div>'; }).join('')
+        + '</div>';
     }
     if (s.kind === 'questions') {
       return '<div class="walk-kicker">CARRY THESE QUESTIONS</div><ul class="walk-qlist">' + s.items.map(function (q) { return '<li>' + esc(q) + '</li>'; }).join('') + '</ul>';
@@ -6980,11 +7004,12 @@
     var dots = slides.map(function (_, k) { return '<button type="button" class="walk-dot' + (k === i ? ' on' : '') + '" onclick="SOC.walkGoto(' + k + ')" aria-label="Slide ' + (k + 1) + '"></button>'; }).join('');
     ov.innerHTML = '<button type="button" class="walk-theme" onclick="SOC.walkTheme()" aria-label="Switch background between light and dark">' + (walkTheme() === 'dark' ? 'Light background' : 'Dark background') + '</button>'
       + '<button type="button" class="walk-close" onclick="SOC.walkClose()" aria-label="Close the walkthrough">' + ic('x', 20) + '</button>'
-      + '<div class="walk-stage"><div class="walk-slide walk-' + s.kind + '" key="' + i + '">' + walkSlideHtml(s, _walk.week) + '</div></div>'
+      + '<div class="walk-stage"><div class="walk-slide wkslide-' + s.kind + '" key="' + i + '">' + walkSlideHtml(s, _walk.week) + '</div></div>'
       + '<div class="walk-bar"><button type="button" class="walk-prev" onclick="SOC.walkNav(-1)"' + (i === 0 ? ' disabled' : '') + ' aria-label="Previous slide">' + ic('chevron', 20, 2.4) + '</button>'
       + '<div class="walk-dots">' + dots + '</div><div class="walk-count">' + (i + 1) + ' / ' + slides.length + '</div>'
       + '<button type="button" class="walk-next" onclick="SOC.walkNav(1)"' + (i === slides.length - 1 ? ' disabled' : '') + ' aria-label="Next slide">' + ic('chevron', 20, 2.4) + '</button></div>';
-    if (s.kind === 'figure') walkFigWire();
+    if (s.kind === 'model') { try { initTopicModels(); } catch (e) {} }
+    try { sessionStorage.setItem(WKKEY, JSON.stringify({ w: _walk.week, i: _walk.i })); } catch (e) {}
   }
   function walkKey(e) {
     if (!_walk) return;
@@ -7008,6 +7033,7 @@
     var ov = document.getElementById('walk-overlay');
     if (ov) ov.remove();
     document.removeEventListener('keydown', walkKey, true);
+    try { sessionStorage.removeItem(WKKEY); } catch (e) {}
   }
   function walkthroughsPage() {
     var ws = [];
@@ -8177,6 +8203,7 @@
   render();
   try { if (location.search) history.replaceState(null, '', location.pathname + location.hash); } catch (e) {}
   if (routePart0) scrollWeekPart(routePart0);
+  try { var __wk = JSON.parse(sessionStorage.getItem(WKKEY) || 'null'); if (__wk && __wk.w) { walkOpen(cleanWeek(__wk.w) || __wk.w); if (_walk && __wk.i) { _walk.i = Math.max(0, Math.min(_walk.slides.length - 1, __wk.i)); walkMount(); } } } catch (e) {}
 
   /* Reading Supports boot: apply saved settings, keep them across renders, stop speech on navigation */
   try {
