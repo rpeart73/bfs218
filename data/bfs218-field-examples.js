@@ -3,6 +3,18 @@
    fluidly in the vocabulary of the program itself, never templated; every empirical claim cited. */
 window.BFS218_FIELD_EXAMPLES = {
   'Health and Wellness': {
+    10: {
+      'An algorithmic gate decides at scale and in an instant': 'Triage scores, transplant eligibility rankings, prior-authorization algorithms: your field\'s gates decide in milliseconds what committees once weighed for weeks. Scale changes the ethics: one biased human gatekeeper harms a caseload, one biased scoring rule harms a population, silently and simultaneously. Gatekeeping review must now happen at the algorithm, because that is where the deciding moved.',
+      'A tool sold as help can still harm': 'Prior-authorization automation is sold to health systems as faster approvals; in practice it can mass-produce denials at a speed no appeals process matches. The Week 2 referral score already taught the mechanism. In your field the question for any helpful gate is: what is its denial rate, for whom, and who reviews the noes?',
+      'Inequality lives within and without the algorithm': 'A perfectly fair triage algorithm still operates inside unequal arrival: who reached the ED late because of work, transit, or distrust earned by history. Fixing the model without seeing the surrounding inequality treats the gate as the whole building. Clinical judgment has always known the difference; keep knowing it when the gate is code.',
+      'A ranking is a gate too': 'Wait-list positions, specialist queue ordering, discharge priority: rankings feel softer than denials, but position in a queue is access with a timestamp. When an algorithm orders the list, it is deciding who deteriorates while waiting. Audit rankings with the same rigor as refusals; in medicine, later is an outcome.',
+    },
+    9: {
+      'Help can be how harm survives': 'Wellness apps, adherence trackers, and mental-health chatbots deliver genuine help while building intimate records: sleep, mood, medication, crisis moments. The help is why the record exists; the record is what travels to insurers, employers, or courts. In your field the caring surface and the data funnel are the same product, so evaluate both before recommending one to a patient.',
+      'The benevolence trap': 'The trap in health care sounds like this: the tool helps patients, so questioning it harms patients. That framing ends the audit before it starts. Your training says otherwise: every intervention, however kind, gets evaluated for adverse effects. Extend pharmacovigilance thinking to helpful software and the trap loses its grip.',
+      'Raising Robots connects disposability to race': 'Care robotics is marketed for the patients the system finds expensive: the elderly, the chronically ill, the isolated. The reading\'s warning lands here: automation aimed where people have been made disposable delivers a cheaper version of presence to exactly those whose presence was already discounted. Ask who gets the robot and who still gets the human.',
+      'Will the fix fix it?': 'Health systems love a technical fix: an app for missed appointments whose real cause is transit and shift work. The fix works on the symptom the dashboard can see. Your discipline already asks about root causes in clinical reasoning; apply the same differential to digital fixes before prescribing them at scale.',
+    },
     8: {
       'Indigenous data sovereignty': 'Health data about Indigenous communities has repeatedly been collected without benefit flowing back, which is why data sovereignty is a clinical governance issue in Canada: who holds the diabetes registry, who approves the research, who owns the sample. Working respectfully means treating community authority over health data as a precondition of care partnerships, not a courtesy.',
       'OCAP: Ownership, Control, Access, Possession': 'OCAP, developed by First Nations, sets the standard your health information practice must know: First Nations own their data, control how it is collected, access it on their terms, and possess it physically. A hospital dashboard on First Nations health that the nation cannot access or govern fails OCAP even if the analytics are excellent.',
@@ -45,6 +57,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Business': {
+    10: {
+      'An algorithmic gate decides at scale and in an instant': 'Credit approvals, tenant screening, insurance quotes: gates your industry once staffed now decide instantly at population scale. The efficiency is the pitch; the risk is that one flawed threshold replicates across every applicant simultaneously. Gate governance, thresholds, appeal paths, disparate-impact monitoring, is now a core management competency.',
+      'A tool sold as help can still harm': 'Applicant-screening tools promise to help HR handle volume; set carelessly, they reject at scale for proxies no manager would defend aloud: employment gaps, postal codes, keyword mismatches. Helpful to the funnel and harmful to the pool can be the same tool. Read vendor claims as marketing until the adverse-impact numbers arrive.',
+      'Inequality lives within and without the algorithm': 'Even a debiased lending model prices loans inside a world of unequal collateral, inherited wealth, and thin files. The algorithm can be clean and the outcome gap persist, because the gap walked in the door with the applicants. Strategy that only audits the model mistakes the scoreboard for the game.',
+      'A ranking is a gate too': 'Search placement, seller ratings, feed position: commerce runs on rankings, and page two is a locked door with extra steps. When your platform\'s ranking decides which businesses get discovered, ranking criteria are market access policy. Publish them, audit them, and expect to defend them.',
+    },
+    9: {
+      'Help can be how harm survives': 'Free tools are your industry\'s oldest funnel: the helpful service that prices its help in data. Loyalty programs perfected it long before apps: discounts for dossiers. When your firm offers help, know precisely what the help collects, because the liability and the trust damage arrive with the breach, not the launch.',
+      'The benevolence trap': 'Corporate benevolence, financial wellness programs, employee assistance apps, free credit scores, buys audit immunity: who criticizes a benefit? The manager\'s discipline is to evaluate benevolent products exactly like revenue products: what data, what secondary uses, what happens to the person who opts out.',
+      'Raising Robots connects disposability to race': 'Automation lands first on the roles the org chart already undervalues: frontline, contracted, racialized workforces absorb the pilot programs and the layoffs. The reading\'s point for management: automate the task, not the dignity, and notice whose jobs get called redundant fastest and why.',
+      'Will the fix fix it?': 'Businesses buy fixes for symptoms the metrics surface: churn tools for churn caused by pricing, engagement tools for disengagement caused by workload. The fix moves the number; the cause compounds. Before funding the tool, write down the problem statement without naming any technology; if you cannot, you are buying a symptom patch.',
+    },
     8: {
       'Indigenous data sovereignty': 'Businesses partnering with Indigenous communities, resource projects, tourism, procurement, increasingly meet data sovereignty as a contract term: community data stays under community governance. Firms that treat this as friction misread it; it is the data equivalent of land rights, and partnership means building it into the data architecture from day one.',
       'OCAP: Ownership, Control, Access, Possession': 'Read OCAP as a governance framework the way you read financial controls: ownership, control, access, and possession each have operational meaning for databases, dashboards, and cloud contracts. If your analytics vendor cannot support community-held data, the procurement decision is where OCAP compliance is won or lost.',
@@ -87,6 +111,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Law, Administration and Public Safety': {
+    10: {
+      'An algorithmic gate decides at scale and in an instant': 'Bail recommendations, visa triage, benefits fraud flags: state gates now fire at machine speed, and each instant decision carries state power. Administrative law grew up reviewing human discretion; your generation must extend its safeguards, reasons, review, appeal, to decisions that take four milliseconds.',
+      'A tool sold as help can still harm': 'Case-prioritization tools help clear backlogs, and quietly decide whose file waits. In justice contexts, waiting is punishment served before verdict. The COMPAS lesson generalizes: helpful throughput tools need the same procedural scrutiny as the decisions they accelerate.',
+      'Inequality lives within and without the algorithm': 'A recalibrated risk tool still scores people produced by unequal policing, housing, and schooling. Fixing the instrument without naming the field it measures launders structure into individual risk. Your field\'s honest position: the score describes the system\'s history with the person, not the person.',
+      'A ranking is a gate too': 'Patrol priority lists, inspection queues, watchlist tiers: rankings that allocate state attention are gates for the people ranked. Being tenth on a list nobody may see is a legal status without a hearing. Records law and due process must reach the queue, because the queue is the decision.',
+    },
+    9: {
+      'Help can be how harm survives': 'Diversion apps, ankle monitors marketed as alternatives to custody, wellness checks by algorithm: help formatted as supervision. The record each helpful contact creates feeds the risk systems you studied in Week 6. In your field, help that generates enforcement data is enforcement with better branding; classify it accordingly.',
+      'The benevolence trap': 'Public safety pitches surveillance as protection, and questioning protection sounds like endangering the public. That is the trap operating at policy scale. The administrator\'s counter is proportionality review: benefits claimed, burdens measured, and the burden ledger read by demographic before the benevolent tool renews.',
+      'Raising Robots connects disposability to race': 'Robotics enters policing and corrections aimed at populations already treated as manageable risks rather than people: patrol robots in poor neighbourhoods, automated monitoring for those who cannot refuse. Disposability logic decides the deployment map. Your generation writes those procurement justifications; write them with this reading open.',
+      'Will the fix fix it?': 'Body cameras were the fix that would fix accountability; the footage governance fights showed the fix inherits the system it enters. Technical fixes to institutional problems reroute discretion rather than removing it. Ask of every reform tool: which human decision does it actually constrain, and who controls the exceptions?',
+    },
     8: {
       'Indigenous data sovereignty': 'Justice data about Indigenous people has been collected relentlessly and governed externally, feeding over-representation statistics that then justify more surveillance. Data sovereignty reverses the flow: Indigenous governance over data about Indigenous people. For your field it means information-sharing agreements are treaty-adjacent documents; draft them that way.',
       'OCAP: Ownership, Control, Access, Possession': 'OCAP has direct public-administration application: any program serving First Nations that warehouses its data outside community control is offside the standard. Learn to read data-sharing clauses for the four principles; public servants who can operationalize OCAP are the ones communities can work with.',
@@ -129,6 +165,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Information Technology': {
+    10: {
+      'An algorithmic gate decides at scale and in an instant': 'You will build the gates: rate limiters, fraud checks, eligibility APIs, moderation filters. At scale, your threshold is a policy governing millions per hour, and the appeal path you forget to build is a denial with no exit. Gate code deserves the review rigor of payment code; it moves something scarcer than money: access.',
+      'A tool sold as help can still harm': 'Spam filters that eat legitimate mail from certain domains, safety classifiers that over-flag minority dialects: helpful classifiers harm through their false positives, and false positives cluster. Ship classifiers with per-group error dashboards and a human path out, or the help becomes an unappealable wall.',
+      'Inequality lives within and without the algorithm': 'Debiasing the model does not debias the inputs\' world: thin credit files, sparse rural data, devices that undersample dark skin. Some inequity is in the weights; more is in the pipeline and the world it samples. Fairness work that stops at the model card has audited one layer of a stack.',
+      'A ranking is a gate too': 'Every recommender and search system you build is a gate wearing a leaderboard costume: position decides visibility, visibility decides existence. Ranking functions are access-allocation functions; test them for demographic skew the way you load-test them, before launch and after drift.',
+    },
+    9: {
+      'Help can be how harm survives': 'Free tiers, helpful SDKs, convenient logins: your industry\'s growth model packages collection as assistance. You will build helpful features whose telemetry outlives their usefulness. The engineering discipline is data minimization at design time, because whatever the helpful feature collects, the roadmap will eventually monetize.',
+      'The benevolence trap': 'Accessibility features, safety scanning, parental controls: benevolent categories that expand scope with the least review, because who audits the child-safety feature? You do. Benevolent scope creep is still scope creep; the threat model does not care about the feature\'s intentions, and neither should the review.',
+      'Raising Robots connects disposability to race': 'Automation projects target the tasks and workers the org has already devalued: support queues offshore, content moderation, warehouse floors, work disproportionately done by racialized workers who then train their replacements. When you build the automation, you inherit a question about whose labour it erases and on what terms.',
+      'Will the fix fix it?': 'Your field ships fixes for its own harms: bias patches, safety layers, moderation filters. Some help; none substitutes for the upstream decision they wrap. A toxicity filter on a model trained on toxic data is a bandage with the wound underneath. Fix at the layer where the harm enters, or the fix is UI.',
+    },
     8: {
       'Indigenous data sovereignty': 'For IT, data sovereignty is an architecture requirement: residency, governance, and access control defined by the community the data describes. Cloud-by-default breaks it; sovereignty-by-design means the nation can hold its own keys, host its own instance, and revoke access. Build for that and the politics and the architecture align.',
       'OCAP: Ownership, Control, Access, Possession': 'OCAP translates cleanly into your vocabulary: ownership is licensing, control is admin rights, access is authenticated interfaces on community terms, possession is physical hosting. If you can design multi-tenant systems, you can design OCAP-compliant ones; the hard part is accepting that the community is root.',
@@ -171,6 +219,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Education, Community and Social Services': {
+    10: {
+      'An algorithmic gate decides at scale and in an instant': 'Program eligibility screens, gifted cutoffs, benefit determinations: your field\'s gates decide childhoods at scale. A biased cutoff in one district\'s screener sorts thousands of children identically and invisibly. Gate review is child advocacy now: know the threshold, the data behind it, and the appeal route for every screen your agency runs.',
+      'A tool sold as help can still harm': 'The exam-grading algorithm was sold as fairness for students who could not sit exams, and it capped futures by school history. Helpful intent, harmful gate. Your professional reflex should be the Ofqual question: when this helpful tool is wrong, who does it fail, and how would we even know?',
+      'Inequality lives within and without the algorithm': 'A fair admissions formula still admits students shaped by unequal schools, housing, and safety. The formula\'s fairness cannot repair its inputs\' history, and pretending it can converts structural inequity into individual scores. Your field\'s answer is wraparound: fix gates and fund the conditions before them.',
+      'A ranking is a gate too': 'Waitlists for childcare, housing, and services are rankings that decide family stability. When algorithms order them, prioritization criteria become social policy in a spreadsheet. Communities deserve to know the criteria; workers deserve authority to escalate the cases the formula cannot see.',
+    },
+    9: {
+      'Help can be how harm survives': 'Helping systems document, and documentation is the double edge: the tutoring platform that maps a child\'s struggles, the benefits portal that logs a family\'s crisis timeline. Help that records can become records that harm when they travel to other systems. Your data-sharing choices decide whether help stays help.',
+      'The benevolence trap': 'Nobody audits programs for children, seniors, or the vulnerable as hard as they audit profit centres, and vendors know it: benevolent framing sells surveillance-heavy edtech and case-management tools past review. Your field\'s guardianship duty includes auditing the kind-looking systems hardest, precisely because no one else will.',
+      'Raising Robots connects disposability to race': 'Automated instruction and robo-companions get piloted on the students and seniors the system funds least: under-resourced schools, understaffed care. The reading names the pattern: automation as the cheaper substitute for people society already shortchanges. Advocacy means asking who gets the screen and who still gets the teacher.',
+      'Will the fix fix it?': 'Your field drowns in fixes: apps for engagement, dashboards for attendance, portals for parents who need housing. Each fix mistakes the visible symptom for the operative cause. Community practice already knows the counter-question, what does this family actually need, and it applies unchanged to every proposed platform.',
+    },
     8: {
       'Indigenous data sovereignty': 'Education and child-welfare systems hold painful histories of data used against Indigenous families, from residential school records to over-reporting. Data sovereignty in your field means community authority over what is collected about their children and how it travels. The file you open today should be governable by the nation tomorrow.',
       'OCAP: Ownership, Control, Access, Possession': 'OCAP gives your agencies a concrete standard: does the community own the program data, control the evaluation design, access the results first, and hold the records? Funding reports that extract community data without returning governance fail the standard your partnerships should be written to.',
@@ -213,6 +273,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Media and Communications': {
+    10: {
+      'An algorithmic gate decides at scale and in an instant': 'Moderation queues, monetization eligibility, feed insertion: platform gates decide at publish speed which voices reach which publics. One classifier update demonetizes a genre overnight. Media policy now lives in threshold configs, and covering platforms means covering their gates as institutions.',
+      'A tool sold as help can still harm': 'Brand-safety tools protect advertisers and defund coverage of the very communities most covered by hard news: keywords like racism flag the journalism about it. Helpful to the buyer, harmful to the beat. Your industry\'s economics are being tuned by classifiers; report on the tuning.',
+      'Inequality lives within and without the algorithm': 'A fair feed still distributes attention inside unequal media ownership, language dominance, and connectivity. Platform fairness cannot repair spectrum history. Analysis worth publishing holds both: the algorithm\'s measurable skew and the structural distribution it operates within.',
+      'A ranking is a gate too': 'Trending lists and search results are editorial pages assembled by objective functions: position confers legitimacy, absence confers silence. Rankings gate the public agenda. Auditing them, by outlet, language, and community, is press criticism for the algorithmic age, and it is your beat now.',
+    },
+    9: {
+      'Help can be how harm survives': 'Helpful platforms built the surveillance economy: free hosting, free analytics, free reach, priced in behavioural data. Media professionals live inside that trade. Covering it, and choosing your own toolchain, both require reading the help\'s invoice: what the audience pays in data for what you publish free.',
+      'The benevolence trap': 'Safety and integrity teams do real good and provide unbeatable framing: moderation expansions ship under child-safety banners no one debates. Your beat is asking the unaskable anyway: what does the benevolent system also enable, and who audited it? The trap only works on those who accept the frame.',
+      'Raising Robots connects disposability to race': 'Automation reached media through its margins first: wire rewrites, translation, moderation, the piecework disproportionately done by precarious and global-south workers. AI anchors and synthetic voices extend the line. The labour story inside the AI story is the one your industry keeps missing about itself.',
+      'Will the fix fix it?': 'Fact-check labels, deepfake detectors, provenance stamps: your industry\'s fixes for a trust collapse with structural causes. Use them, and report their limits: a label cannot repair an incentive. The fix-versus-cause distinction is a story structure your audience needs weekly.',
+    },
     8: {
       'Indigenous data sovereignty': 'Media holds decades of footage, photos, and coverage of Indigenous communities gathered on unequal terms, now feeding archives and training sets. Data sovereignty reaches the newsroom: community authority over historical material, consent frameworks for reuse, and Indigenous-led media controlling their own archives.',
       'OCAP: Ownership, Control, Access, Possession': 'Apply OCAP to content: who owns the interview tape, who controls the edit and reuse, who accesses the raw material, who possesses the archive. Indigenous media organizations already model the answers. For everyone else, the licensing meeting is where the principles become practice.',
@@ -255,6 +327,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Engineering Technology': {
+    10: {
+      'An algorithmic gate decides at scale and in an instant': 'Automated inspection passes or fails at line speed; access-control systems admit or deny at door speed. Gates in engineering are throughput components with social payloads: a biased detector at scale rejects the same class of inputs everywhere at once. Specify gates with error budgets per class, not just per unit.',
+      'A tool sold as help can still harm': 'Driver-assist systems marketed as safety can under-detect the pedestrians their training data thinned, help for those inside the envelope, hazard for those outside it. Engineering already refuses aggregate-only safety claims for materials; refuse them for perception systems too.',
+      'Inequality lives within and without the algorithm': 'A calibrated sensor still operates in an unequally built world: streetlights, road quality, and housing stock differ by neighbourhood, and detection performance rides on those conditions. System performance is environment-dependent, and environments carry history. Site surveys are fairness instruments.',
+      'A ranking is a gate too': 'Maintenance priority queues and infrastructure investment rankings decide which neighbourhoods\' systems fail first. An asset-management algorithm ordering repairs by asset value quietly ranks people by property. Engineering economics needs an equity term, because the queue is where deferred maintenance becomes distributed harm.',
+    },
+    9: {
+      'Help can be how harm survives': 'Assistive and monitoring systems share hardware: fall detection is presence detection, energy-saving sensors are occupancy logs. The helpful spec and the surveillance spec differ mainly in retention and access. Engineers set both; when you design the helpful mode, design the data boundary that keeps it helpful.',
+      'The benevolence trap': 'Safety systems enjoy benevolent immunity in review: who pushes back on safety? Yet safety instrumentation defines what gets watched. Your discipline\'s answer is scope rigor: instrument for the stated hazard, minimize beyond it, and let the safety case, not the sensor catalogue, set the coverage.',
+      'Raising Robots connects disposability to race': 'Industrial automation lands hardest where labour was already cheapened, and the geography of cheapened labour is racialized. The engineering brief rarely says so; the deployment map does. Reading Raising Robots as an engineer means seeing the workforce assumptions inside the automation ROI.',
+      'Will the fix fix it?': 'Engineering knows retrofits: a fix bolted onto a flawed design carries the flaw forward. Software fixes for social problems behave the same: the algorithmic patch inherits the institution\'s load paths. Ask the retrofit question, does this address the failure mode or its symptom, before signing the change order.',
+    },
     8: {
       'Indigenous data sovereignty': 'Infrastructure projects on Indigenous lands generate data, environmental sensors, surveys, monitoring feeds, and sovereignty extends to it: the nation\'s land, the nation\'s data. Engineering agreements now routinely include data governance; treat the telemetry plan as part of the consultation, because it is.',
       'OCAP: Ownership, Control, Access, Possession': 'For engineers OCAP is a requirements set: who owns the monitoring data, who controls the sensor network, who can access the dashboards, where the historian database physically lives. Design the SCADA architecture so the community can hold possession, and the principle becomes a deployment diagram.',
@@ -297,6 +381,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Science': {
+    10: {
+      'An algorithmic gate decides at scale and in an instant': 'Peer-review triage, grant pre-screening, admissions filters: science\'s own gates are automating. A desk-rejection model trained on past acceptance learns the field\'s historical tastes, including its exclusions, and applies them at submission volume. The scientific community should instrument its own gates first.',
+      'A tool sold as help can still harm': 'Literature-recommendation and citation tools help navigate volume while narrowing what gets seen, compounding the visibility of the already-cited. Helpful to the reader, harmful to the field\'s periphery. Use them knowing their objective; breadth remains a manual discipline.',
+      'Inequality lives within and without the algorithm': 'Debias the diagnostic model and the clinic\'s patients still arrive shaped by exposure, housing, and access, inequality outside the algorithm that no reweighting reaches. Stratified science must model context, not just adjust for it, or the residual gap gets misread as biology.',
+      'A ranking is a gate too': 'Journal rankings, h-indices, leaderboards for models and labs: science runs on rankings that gate careers and funding. Metrics optimize what they measure and starve what they cannot. Treating rankings as gates makes metric design a matter of research integrity, which it is.',
+    },
+    9: {
+      'Help can be how harm survives': 'Helpful research infrastructure, biobanks, registries, citizen-science apps, accumulates the very data whose misuse this course maps. The help recruits participation; governance decides whether participation stays safe. Consent that covered the help rarely covers the afterlife of the dataset; design for the afterlife.',
+      'The benevolence trap': 'Research framed as benefiting a community can deflect scrutiny of its methods, the trap operating inside science itself. The correction is structural, community oversight with authority, because benevolent intent has historically coexisted with extractive practice, and the record says trust the structure, not the intent.',
+      'Raising Robots connects disposability to race': 'Lab automation and crowd-sourced annotation rest on hidden human labour, often low-paid workers labelling data, and that labour is globally racialized. The scientific product looks automated; its supply chain is people. Methods sections should be able to say who did the labelling and on what terms.',
+      'Will the fix fix it?': 'Science\'s fixes, better calibration, bigger cohorts, debiasing methods, are necessary and insufficient: they repair the instrument while the sampling economy that skewed it persists. Both layers are scientific work. Report the fix and the structural gap it does not close; that honesty is the discipline.',
+    },
     8: {
       'Indigenous data sovereignty': 'Science\'s record with Indigenous communities includes samples and data taken for one purpose and used for others, which is why sovereignty frameworks now govern serious research. The operational rule: community authority is part of methods, stated in the protocol, not an acknowledgment paragraph at the end.',
       'OCAP: Ownership, Control, Access, Possession': 'OCAP reshapes research design: data ownership negotiated before collection, community control over secondary use, access agreements with teeth, possession options including community-held repositories. Ethics boards increasingly expect it; scientists who internalize it early will simply be better collaborators.',
@@ -339,6 +435,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Aviation': {
+    10: {
+      'An algorithmic gate decides at scale and in an instant': 'The check-in system\'s document check, the API screening decision, the e-gate match: aviation\'s gates fire per passenger per second, and a threshold error propagates through every airport running the same system. Your industry certifies components; extend certification thinking to decision thresholds.',
+      'A tool sold as help can still harm': 'Automated rebooking helps thousands in a disruption and quietly orders who gets the last seats: loyalty tier, fare class, and whatever proxies ride along. Helpful triage is still triage. Know the rebooking hierarchy your employer runs, because gate agents inherit its arguments.',
+      'Inequality lives within and without the algorithm': 'A fair screening model still operates on unequal documents: passport power, name transliterations, records shaped by where someone was born. The algorithm inherits geopolitics at the API. Screening fairness in aviation is bounded by the unfairness of the credentials it reads.',
+      'A ranking is a gate too': 'Standby lists, upgrade queues, slot allocations: aviation ranks constantly, and position is access. When algorithms order the lists, the ordering criteria deserve publication and audit, because the queue at gate B23 is a tiny model of the week\'s whole argument.',
+    },
+    9: {
+      'Help can be how harm survives': 'Passenger-assistance tech, accessibility apps, unaccompanied-minor tracking, medical-clearance systems, collects the most sensitive traveller data in the terminal. The help is real; the profile persists. Aviation privacy practice means the assistance record does not become a screening input downstream.',
+      'The benevolence trap': 'Safety and security justify almost anything in aviation, which is why benevolent framing needs the industry\'s own discipline: the safety case. Demand evidence that each helpful measure produces its claimed benefit, and measure its burden distribution, before it becomes permanent architecture nobody can question.',
+      'Raising Robots connects disposability to race': 'Automation in aviation lands first on ground crew, cleaning, and service roles, the airport\'s most racialized workforces, while the flight deck automates last. The pattern is the reading\'s: disposability decides the sequence. Workforce transition planning is where the industry\'s values become checkable.',
+      'Will the fix fix it?': 'Aviation trusts fixes because its engineering fixes work. Social fixes differ: a bias-audited screening algorithm still sits inside watchlists and redress systems that generate the disparity. Root-cause analysis, your industry\'s own method, says fix the system that produces the signal, not only the component that scores it.',
+    },
     8: {
       'Indigenous data sovereignty': 'Northern and remote aviation serves many Indigenous communities, and the routes generate data: passenger flows, medevac patterns, supply metrics. Sovereignty means that data about a community\'s lifeline belongs in its governance conversations, especially when route decisions get made on it.',
       'OCAP: Ownership, Control, Access, Possession': 'Where carriers partner with First Nations, community-owned airlines exist across the North, OCAP frames the data side of the partnership: the nation\'s ownership of ridership and service data, control over its use in planning, access without gatekeeping, possession where feasible. Partnership rhetoric is testable in the data clauses.',
@@ -381,6 +489,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Hospitality and Tourism': {
+    10: {
+      'An algorithmic gate decides at scale and in an instant': 'Booking engines gate at scale: instant accept or decline, price shown or hidden, ID verification passed or escalated. A biased rule in the engine declines the same guests at every property simultaneously. Revenue systems are gate systems; audit them like the front door they are.',
+      'A tool sold as help can still harm': 'Fraud-prevention tools protect revenue and, tuned carelessly, hold deposits longest for the same names and postcodes. The helpful shield becomes a patterned wall. The Airbnb study showed discretion\'s bias; automation without audit merely industrializes it.',
+      'Inequality lives within and without the algorithm': 'A fair pricing algorithm sells rooms in an unequal world: who can travel, whose documents pass borders, whose neighbourhoods reviews trust. The platform can be clean and the market still skewed. Hospitality strategy that ignores the surrounding inequality mistakes its funnel for the world.',
+      'A ranking is a gate too': 'Page-one placement is occupancy; page three is vacancy. Ranking algorithms gate which properties, and which hosts, get to exist commercially, and ranking criteria trained on biased review histories inherit the bias. Marketplace governance is your industry\'s zoning law.',
+    },
+    9: {
+      'Help can be how harm survives': 'Personalization is help that never forgets: preference profiles, special-requests histories, accessibility notes. Guests trade intimacy for service, and the profile outlives the stay. Your industry\'s promise of anticipatory care depends on treating those records as confidences, not assets; retention policy is hospitality too.',
+      'The benevolence trap': 'Guest-safety framing sells lobby analytics and staff bodycams past scrutiny: who argues with safety? The operator\'s discipline is the same as the course\'s: benefits stated, burdens measured, and the measure read for which guests and staff carry the watching.',
+      'Raising Robots connects disposability to race': 'Service robots debut in the roles the industry pays least, housekeeping carts, room service runners, roles held disproportionately by racialized and immigrant workers. Automation aimed at disposable labour is the reading\'s thesis in a hotel corridor. The staffing plan is where your values get operationalized.',
+      'Will the fix fix it?': 'Hospitality buys fixes for review scores: chatbots for understaffing, apps for broken processes. The score moves; the guest experience does not. Your field\'s own wisdom, fix the kitchen, not the menu photos, is the week\'s concept in industry language.',
+    },
     8: {
       'Indigenous data sovereignty': 'Indigenous tourism is among the sector\'s fastest-growing segments, and its data, visitor analytics, cultural content, booking flows, belongs under Indigenous governance. Operators partnering with nations should expect data terms alongside revenue terms; sovereignty covers the analytics dashboard, not just the experience design.',
       'OCAP: Ownership, Control, Access, Possession': 'Applied to tourism partnerships, OCAP asks: who owns the visitor data for experiences on nation territory, who controls how cultural content is digitized and recommended, who can access the platform metrics, where is it all stored? Write the answers into the operating agreement, not the goodwill.',
@@ -423,6 +543,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Creative Arts, Animation and Design': {
+    10: {
+      'An algorithmic gate decides at scale and in an instant': 'Portfolio platforms, festival submission filters, content moderation on creative work: the industry\'s gates automate, and a classifier\'s taste rejects at upload speed. When the gate learned from past acceptance, it gates toward the past. Creative careers now route through thresholds; artists deserve to see them.',
+      'A tool sold as help can still harm': 'Auto-tagging and discovery features help audiences find work while misfiling the work that does not match learned categories: art from underrepresented traditions tagged wrong, shadow-ranked, or flagged. Helpful infrastructure with narrow training curates by error. Metadata justice is a real design brief.',
+      'Inequality lives within and without the algorithm': 'A fair recommendation model still promotes inside an industry of unequal access: who could afford the software, the school, the unpaid internship that built the portfolio. The feed\'s fairness cannot repair the pipeline\'s economics. Critique both layers; design for the one you can reach.',
+      'A ranking is a gate too': 'Trending pages and marketplace rankings decide which styles reproduce: what ranks gets commissioned, what gets commissioned trains the next model. Ranking is curatorial power at scale, exercised by an objective function. Ask of any platform you build or feed: what does its number one teach the next generation to make?',
+    },
+    9: {
+      'Help can be how harm survives': 'Creative tools help by watching: cloud suites logging every edit, AI assistants training on your drafts. The help is real and the harvest is the business model. Working artists now read tool licences the way they read contracts, because the helpful feature\'s data clause decides who profits from your process.',
+      'The benevolence trap': 'Accessibility presets, content-safety filters, wellness modes: benevolent features that also standardize expression toward what the filter can approve. Question them anyway. Design history says the unquestioned benevolent default becomes the aesthetic ceiling; your job includes testing the ceiling.',
+      'Raising Robots connects disposability to race': 'Generative tools automate first the creative labour the industry already outsourced cheaply: junior illustration, localization, stock work, fields where racialized and global-south artists earn entry. The reading reframes the disruption debate: whose rung on the ladder did the automation remove?',
+      'Will the fix fix it?': 'The industry\'s fixes, opt-out lists, content credentials, watermarking, patch symptoms of an unconsented training economy. Use them and say plainly what they do not fix. Your practice can model the honest caption: this image\'s provenance is knowable; the model\'s training set is not.',
+    },
     8: {
       'Indigenous data sovereignty': 'Cultural expressions are data now: patterns, songs, and stories get scanned, scraped, and trained on. Sovereignty extends to the archive and the model: Indigenous communities\' authority over how their visual culture enters datasets. For working artists, provenance diligence on training data is respect made operational.',
       'OCAP: Ownership, Control, Access, Possession': 'OCAP thinking maps onto creative assets: who owns the scans of cultural works, who controls derivative use, who accesses the source files, who possesses the archive. Studios collaborating with Indigenous creators should be able to answer all four before the first asset is committed.',
@@ -465,6 +597,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Fashion and Esthetics': {
+    10: {
+      'An algorithmic gate decides at scale and in an instant': 'Buy-plan algorithms, influencer-matching platforms, casting databases: your industry\'s gates now decide instantly which faces, bodies, and lines enter the market. One threshold in a casting tool filters thousands of portfolios identically. The gate deserves the scrutiny once aimed at a single gatekeeper\'s taste.',
+      'A tool sold as help can still harm': 'Fit-prediction tools help reduce returns and quietly exclude bodies outside their training curve, recommending against sizes the model never learned. Helpful for logistics, harmful for the customer told nothing fits. Demand fit models trained across the clientele the brand claims.',
+      'Inequality lives within and without the algorithm': 'A debiased recommendation engine still sells inside beauty economics: whose features fashion historically priced as aspirational, who could afford the products that built the purchase history. The algorithm reflects the industry that trained it; changing the industry remains the larger design project.',
+      'A ranking is a gate too': 'Trend forecasts and bestseller rankings gate next season: what ranks gets reordered, what does not disappears from the data forever. The assortment loop from Week 3 is a ranking gate on repeat. Merchandisers who see rankings as gates can plan against the loop instead of inside it.',
+    },
+    9: {
+      'Help can be how harm survives': 'Skin diaries, hair-health trackers, virtual consultations: intimate help building intimate datasets. A client\'s insecurities, conditions, and photos sit in vendor clouds. Esthetics runs on trust at skin distance, so the data promise is part of the treatment; know where the app sends what the chair hears.',
+      'The benevolence trap': 'Inclusive-beauty tech markets itself as the corrective, shade-matching for everyone, and the framing deflects the audit: inclusive compared to what, tested on whom? Benevolent branding is a claim, not a validation. Hold the inclusive tool to the same skin-deep testing as any other.',
+      'Raising Robots connects disposability to race': 'Automation reaches your industry through its most precarious tiers: nail techs, braiders, salon assistants, workforces largely racialized and immigrant, now competing with booking algorithms and robo-manicures pitched as hygiene upgrades. Whose craft gets called replaceable is the reading\'s question at the salon door.',
+      'Will the fix fix it?': 'A wider shade range fixes the wall, not the buyer\'s plan, the campaign archive, or the algorithm trained on last decade\'s sales. Product fixes without pipeline fixes relapse next season. Your merchandising instinct already knows: one SKU is a gesture; the assortment system is the policy.',
+    },
     8: {
       'Indigenous data sovereignty': 'Fashion has a long ledger of taking Indigenous design without consent, and digitization raises the stakes: patterns in databases, motifs in training sets. Data sovereignty extends the design-appropriation conversation to datasets: communities\' authority over how their visual heritage is digitized, licensed, and modelled.',
       'OCAP: Ownership, Control, Access, Possession': 'For collaborations with Indigenous designers and communities, OCAP frames the digital side: ownership of the pattern files, control over reproduction, access to sales data for community-linked lines, possession of the digital archive. The moodboard credits are not enough; the data terms are the respect.',
@@ -507,6 +651,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Liberal Arts and University Transfers': {
+    10: {
+      'An algorithmic gate decides at scale and in an instant': 'Admissions filters, scholarship screens, plagiarism flags: the university\'s own gates automate, and your file meets them before any human does. The scholarly response is the archive\'s question at machine speed: who built the gate, on what records, reviewable by whom? Institutional critique now requires reading thresholds.',
+      'A tool sold as help can still harm': 'Advising algorithms that nudge students toward likely-success courses help retention metrics and quietly track students away from ambition, replicating past patterns of who succeeded where. Helpful analytics can be soft streaming. The humanities question cuts through: likely according to whose history?',
+      'Inequality lives within and without the algorithm': 'This distinction is a thesis engine: within the algorithm lives measurable bias; without it lives the world that produced the training data. Papers that hold both, the model\'s error and the structure\'s history, avoid the twin traps of technical solutionism and pure abstraction. That balance is the course\'s intellectual signature.',
+      'A ranking is a gate too': 'University rankings gate applications, funding, and self-image; citation rankings gate careers. Academia\'s own leaderboards are the concept in the mirror. Analyzing a ranking you live inside, its criteria, its feedback loops, its exclusions, is the most honest essay this week offers.',
+    },
+    9: {
+      'Help can be how harm survives': 'Benevolence with a ledger is an old story your disciplines document: missions, philanthropy, aid, each helping and holding power at once. Helpful technology is the newest chapter. The analytic move transfers directly: follow what the help creates, records, dependencies, obligations, and who holds them.',
+      'The benevolence trap': 'The trap is rhetorical, and rhetoric is your training: benevolent framing forecloses critique by making the critic the villain. Name the move in essays the way you name any fallacy, then evaluate the system on its effects. The course\'s outcome lens is your discipline\'s argument analysis applied to infrastructure.',
+      'Raising Robots connects disposability to race': 'Disposability is a concept with a bibliography: whose labour, time, and lives institutions treat as expendable. The reading connects it to automation; your transfer disciplines, sociology, history, philosophy, hold the lineage. Strong essays place the robot in that lineage rather than treating it as unprecedented.',
+      'Will the fix fix it?': 'Reform versus transformation is a canonical debate, prison reform, welfare reform, and this week states its algorithmic case. The essay question writes itself: under what conditions does a technical fix entrench the system it patches? Bring evidence from one domain you know and this course\'s cases.',
+    },
     8: {
       'Indigenous data sovereignty': 'Data sovereignty joins a lineage your disciplines study: repatriation of remains and artifacts, control of archives, language reclamation. Data is the newest object of the same struggle over who holds and interprets a people\'s record. Framing it that way turns this week into a strong comparative essay.',
       'OCAP: Ownership, Control, Access, Possession': 'OCAP rewards close reading as a governance text authored by First Nations: four principles that reallocate archival power. Compare it to the archival standards your disciplines inherited, and the essay writes itself: who may know, who may hold, who may speak from the record.',
