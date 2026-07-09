@@ -6914,7 +6914,7 @@
     if (!d) return [];
     var s = [];
     s.push({ kind: 'cover', title: weekTitle(w), question: (d.guiding && d.guiding[0]) || journeyQ(w), lead: firstSentence(d.overview || '') });
-    try { if (window.BFS218_HOLO && window.BFS218_HOLO.supports) { var _vs = visualSpec(w, d); if (_vs && window.BFS218_HOLO.supports(_vs.kind)) s.push({ kind: 'model', week: w }); } } catch (e) {}
+    try { var _cc = (typeof courseCode === 'function') ? courseCode() : ''; var _HOLO = _cc && (typeof window !== 'undefined') && window[_cc + '_HOLO']; if (_HOLO && _HOLO.supports && typeof visualSpec === 'function') { var _vs = visualSpec(w, d); if (_vs && _HOLO.supports(_vs.kind)) s.push({ kind: 'model', week: w }); } } catch (e) {}
     (d.concepts || []).forEach(function (c, ci) {
       s.push({ kind: 'concept', h: c.h, body: c.body, cite: c.cite });
       var fig = walkFig(w, ci);
