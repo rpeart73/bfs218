@@ -2132,6 +2132,7 @@
     var title = (D.course && (D.course.name || D.course.code)) || 'Your course';
     var ctaLabel = started ? ('Resume Week ' + cur) : ('Start Week ' + (ws[0] || 1));
     var hero = '<section class="jhero jfade" style="margin-bottom:26px">' + heroArt()
+      + '<img class="home-hero-img" src="images/hero.jpg" alt="' + esc(title) + '" loading="lazy" onerror="this.remove()">'
       + '<div style="position:relative;">'
       + '<div class="mono" style="font-size:.75rem;letter-spacing:.08em;color:var(--red);font-weight:600;margin-bottom:12px">SENECA POLYTECHNIC &middot; FALL 2026</div>'
       + '<h1 class="jhero-title" style="font-size:2.5rem;line-height:1.1;font-weight:600;margin:0 0 14px;letter-spacing:0">' + esc(title) + '</h1>'
@@ -4280,6 +4281,7 @@
     var sub = opt.sub || d.overview || '';
     var q = opt.question === false ? '' : (opt.question || journeyQ(w));
     return '<section id="wk-ov" class="node jhero jfade wk-hero2">'
+      + '<img class="wk-hero-img" src="images/weeks/week' + (w < 10 ? '0' : '') + w + '.jpg" alt="' + esc(weekTitle(w)) + '" loading="lazy" onerror="this.remove()">'
       + '<div class="wk-hero-main"><div class="mono wk-hero-kicker">WEEK ' + w + ' | ' + esc(weekDate(w)) + ' | ' + esc(opt.label || 'WEEKLY MODULE') + '</div>'
       + '<h1>' + esc(opt.title || weekTitle(w)) + '</h1>'
       + (sub ? '<p>' + esc(sub) + '</p>' : '')
@@ -4477,8 +4479,8 @@
     var d = weekData(w) || {};
     var ws = journeyWeeks(), idx = ws.indexOf(w), prev = idx > 0 ? ws[idx - 1] : null, next = idx < ws.length - 1 ? ws[idx + 1] : null;
     var isFinal = (next == null);
-    var hero = '<section id="wk-ov" class="node jhero jfade" style="margin:0 0 16px"><div style="position:relative">'
-      + '<div class="mono" style="font-size:.7rem;letter-spacing:.08em;color:var(--red);font-weight:700;margin-bottom:8px">WEEK ' + w + ' · ' + esc(weekDate(w)) + ' · ' + (isFinal ? 'FINAL WEEK' : 'CAPSTONE WEEK') + '</div>'
+    var hero = '<section id="wk-ov" class="node jhero jfade" style="margin:0 0 16px">' + '<img class="wk-hero-img" src="images/weeks/week' + (w < 10 ? '0' : '') + w + '.jpg" alt="' + esc(weekTitle(w)) + '" loading="lazy" onerror="this.remove()">' + '<div style="position:relative">'
+      + '<div class="mono" style="font-size:.7rem;letter-spacing:.08em;color:var(--red);font-weight:700;margin-bottom:8px">WEEK ' + w + ' · ' + esc(weekDate(w)) + ' · ' + (isFinal ? 'FINAL WEEK' : 'FINAL PROJECT WEEK') + '</div>'
       + '<h1 style="font-size:2rem;line-height:1.12;font-weight:700;margin:0 0 12px;color:var(--ink)">' + esc(weekTitle(w)) + '</h1>'
       + (d.overview ? '<p style="font-size:1.04rem;line-height:1.6;color:var(--ink);margin:0 0 4px;">' + esc(d.overview) + '</p>' : '')
       + '<div style="font-size:1.02rem;font-weight:600;color:var(--ink);border-left:3px solid var(--red);padding-left:14px;margin:16px 0">No new readings or teaching material this week. This time is yours: focus on your work' + (isFinal ? ' and close out the course. Nothing is due.' : '. Your final project is due this week.') + '</div>'
