@@ -78,6 +78,22 @@
   .home-intro details[open] summary::before{transform:rotate(90deg)}
   .home-about-body{padding-top:8px}
   .home-about-body h3{font-size:1rem;margin:12px 0 6px;color:var(--ink)}
+  .kd-mon{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;color:var(--ink-faint);font-weight:700;margin:16px 0 6px;padding-top:10px;border-top:1px solid var(--soft)}
+  .kd-mon:first-child{margin-top:0;border-top:none;padding-top:0}
+  .kd-row{display:flex;gap:14px;align-items:flex-start;padding:7px 0}
+  .kd-date{flex:none;width:50px;text-align:center;background:#F2F4F7;border-radius:10px;padding:6px 0;line-height:1.05}
+  .kd-date.kd-past{background:#EDEFF2}
+  .kd-date .kd-day{display:block;font-size:1.15rem;font-weight:700;color:var(--ink)}
+  .kd-date .kd-mo{display:block;font-size:.6rem;letter-spacing:.06em;color:var(--ink-faint);text-transform:uppercase}
+  .kd-items{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;padding-top:2px}
+  .kd-item{display:flex;align-items:baseline;gap:9px;font-size:.94rem;line-height:1.4;color:var(--ink)}
+  .kd-item .kd-dot{flex:none;width:8px;height:8px;border-radius:50%;margin-top:6px;background:#9aa3af}
+  .kd-due .kd-dot{background:var(--red)}.kd-due .kd-t{font-weight:600}
+  .kd-ms .kd-dot{background:#1B2A4A}
+  .kd-item em{font-style:normal;color:var(--ink-faint);font-size:.86rem}
+  .kd-due em{color:var(--red);font-weight:600}
+  .kd-rowpast{opacity:.5}
+
   .jnow{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;text-align:left;border:1px solid var(--border);border-left:4px solid var(--red);background:linear-gradient(135deg,#fff,#fff7f6);border-radius:12px;padding:14px 18px;margin:0 0 18px;cursor:pointer}
   .jnow:hover{background:#fff1ef}
   .jnow-l{display:flex;flex-direction:column;gap:3px;min-width:0}
@@ -470,7 +486,7 @@
 <script src="./data/bfs218-holo.js?v=4"></script>
 <script src="./data/videos.js?v=3"></script>
 <script src="./data/bfs218-walkfigs.js?v=1"></script>
-<script src="./app.js?v=235"></script>
+<script src="./app.js?v=236"></script>
 <script defer src="assets/img-viewer.js?v=1"></script>
 </body>
 </html>
