@@ -3,6 +3,18 @@
    fluidly in the vocabulary of the program itself, never templated; every empirical claim cited. */
 window.BFS218_FIELD_EXAMPLES = {
   'Health and Wellness': {
+    12: {
+      'Accountability is a stack, not a patch': 'Health care already runs accountability as a stack: licensure, hospital policy, provincial regulation, malpractice law, coroner review. Algorithmic tools must slot into every layer, procurement standards, clinical governance, incident reporting for model failures, not just receive a vendor\'s bias audit. When the risk score errs, the accountability question is the chart review question: which layer should have caught it?',
+      'AI governance and its gaps': 'Health AI regulation is arriving unevenly: devices with diagnostic claims face approval pathways while wellness apps and admin algorithms, the referral scores, the schedulers, mostly do not. The gap is exactly where this course\'s cases live. Clinicians who can name the unregulated layer are the safety system until policy catches up.',
+      'Techno-racism as a human rights issue': 'Framing algorithmic harm as a rights issue changes your field\'s tools: a biased triage system becomes a discrimination complaint, engaging human rights codes and health equity mandates, not just a quality metric. Rights framing gives patients standing; clinical advocacy means knowing when to reach for it.',
+      'Building justice in from the start': 'Your field\'s version of justice-by-design is protocol-stage equity: diverse validation cohorts required before deployment, community review boards for community-facing tools, equity endpoints in the pilot design. Retrofitting fairness after rollout is the clinical equivalent of consenting after the procedure.',
+    },
+    11: {
+      'Design justice': 'Design justice in health means the people most affected lead the design: patients co-designing the portal, communities governing the screening criteria, disabled users setting accessibility requirements rather than reviewing them at the end. Your field has a head start, patient-centred care, if it extends the principle from the bedside to the build.',
+      'Abolitionist tools': 'An abolitionist tool in health care reduces the need for the harmful system rather than optimizing it: community health workers instead of better risk-flagging, supervised consumption data governed by users instead of surveillance dressed as outreach. Ask of each tool: does it shrink the harm or manage it more efficiently?',
+      'Reform versus real repair': 'Recalibrating the biased referral algorithm is reform; repairing means changing what the system spends on whom, the inequity the algorithm learned from. Both matter, and your field confuses them constantly: a fairer score over the same underfunding is a better-lit waiting room. Name which one a proposal actually is.',
+      'Centring Black youth as innovators': 'Black youth are already health innovators: peer mental-health networks, harm-reduction practices, community wellness content that reaches where clinics do not. Centring them means funding and credentialing that expertise, not consulting it. Your future teams should include the innovators the system currently studies.',
+    },
     10: {
       'An algorithmic gate decides at scale and in an instant': 'Triage scores, transplant eligibility rankings, prior-authorization algorithms: your field\'s gates decide in milliseconds what committees once weighed for weeks. Scale changes the ethics: one biased human gatekeeper harms a caseload, one biased scoring rule harms a population, silently and simultaneously. Gatekeeping review must now happen at the algorithm, because that is where the deciding moved.',
       'A tool sold as help can still harm': 'Prior-authorization automation is sold to health systems as faster approvals; in practice it can mass-produce denials at a speed no appeals process matches. The Week 2 referral score already taught the mechanism. In your field the question for any helpful gate is: what is its denial rate, for whom, and who reviews the noes?',
@@ -57,6 +69,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Business': {
+    12: {
+      'Accountability is a stack, not a patch': 'Corporate accountability is already layered, board oversight, audit, regulation, liability, and algorithmic decisions belong in every layer: model inventories at the board, algorithmic impact in the audit plan, vendor accountability in contracts. A one-time bias audit is a patch; a standing line item in enterprise risk is a stack.',
+      'AI governance and its gaps': 'Canada\'s evolving AI rules and the EU\'s risk-based regime are landing on business first: hiring tools, credit models, and profiling face the earliest obligations. The strategic read: compliance is the floor, and the gaps, unregulated internal tools, procurement pass-throughs, are where reputational risk lives. Govern past the statute.',
+      'Techno-racism as a human rights issue': 'Human rights law reaches business through employment and service provision: a discriminatory screening tool violates rights codes exactly as a discriminatory manager does, with the vendor contract as no defence. Pricing that risk means treating rights compliance as a specification your systems must meet, not a litigation surprise.',
+      'Building justice in from the start': 'Justice from the start is cheapest: fairness requirements in the RFP, adverse-impact testing in the pilot, exit clauses tied to audit results. Retrofit costs, re-procurement, remediation, reputation, dwarf design-stage diligence. This is the rare ethics lesson that reads fluently in ROI.',
+    },
+    11: {
+      'Design justice': 'Design justice inverts your field\'s user research: affected communities as design authorities, not personas. For product teams it is a governance change, who holds veto, who profits, and firms experimenting with community ownership and co-op platform models are running the business case now. Study them like any other model innovation.',
+      'Abolitionist tools': 'Benjamin asks for tools that dismantle harmful systems, and business has examples: credit unions that replaced predatory lenders, worker co-ops that replaced exploitative staffing models. The abolitionist question for an entrepreneur: which extractive system does your product make unnecessary, rather than merely undercut?',
+      'Reform versus real repair': 'Corporate reform is the diversity report; repair is changing who owns, decides, and profits. A debiased hiring tool inside an unchanged promotion pipeline is reform performing repair. Managers who can tell the difference spend budgets where the structure moves.',
+      'Centring Black youth as innovators': 'Black youth set consumer culture\'s direction while capturing little of its value, your industry monetizes their innovation daily. Centring them as innovators is a business-model question: equity stakes, credited collaboration, and pipelines into decision roles, not campaign features during heritage months.',
+    },
     10: {
       'An algorithmic gate decides at scale and in an instant': 'Credit approvals, tenant screening, insurance quotes: gates your industry once staffed now decide instantly at population scale. The efficiency is the pitch; the risk is that one flawed threshold replicates across every applicant simultaneously. Gate governance, thresholds, appeal paths, disparate-impact monitoring, is now a core management competency.',
       'A tool sold as help can still harm': 'Applicant-screening tools promise to help HR handle volume; set carelessly, they reject at scale for proxies no manager would defend aloud: employment gaps, postal codes, keyword mismatches. Helpful to the funnel and harmful to the pool can be the same tool. Read vendor claims as marketing until the adverse-impact numbers arrive.',
@@ -111,6 +135,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Law, Administration and Public Safety': {
+    12: {
+      'Accountability is a stack, not a patch': 'Your field wrote the accountability stack: charter scrutiny, judicial review, oversight bodies, records law. The week\'s demand is jurisdiction: pull algorithmic decisions fully inside that stack, disclosure of tools in proceedings, reviewability of scores, oversight access to models. A vendor NDA is not a legal privilege; treat it accordingly.',
+      'AI governance and its gaps': 'Policing and border tools often sit in governance gaps: procured quietly, piloted without frameworks, excluded from privacy regimes built for filing cabinets. Public administrators inherit the gap: your procurement signature is the de facto regulation until statutes arrive. Sign like a regulator.',
+      'Techno-racism as a human rights issue': 'Canadian human rights frameworks and Charter equality rights apply squarely to algorithmic state action: R. v. Le brought context in; the next decade brings the tools in. Practitioners fluent in both discrimination law and system behaviour will write that jurisprudence, possibly from your seat.',
+      'Building justice in from the start': 'Justice from the start for public systems is procedural: algorithmic impact assessments before procurement, affected-community consultation with authority, sunset clauses forcing re-justification. The administrative state knows how to build gates; this week says build them where the algorithms enter.',
+    },
+    11: {
+      'Design justice': 'Design justice for public systems means those most policed and processed help design the alternatives: community-led safety programs, participatory budget processes, co-designed complaint systems with teeth. Legitimacy, your field\'s scarcest resource, is exactly what co-design manufactures.',
+      'Abolitionist tools': 'Abolitionist tools in your field replace enforcement functions with community capacity: violence-interruption programs, crisis-response teams without police, restorative processes. Studying them is not radicalism; it is evidence review of what reduces harm. The professional question is what each tool makes unnecessary.',
+      'Reform versus real repair': 'Your field has run decades of reform, training, oversight boards, tech upgrades, while core disparities persisted, which is Benjamin\'s distinction empirically. Repair reallocates function and power: what tasks leave enforcement entirely. Public administrators will draft those reallocations; know the difference on paper.',
+      'Centring Black youth as innovators': 'Black youth lead the most effective safety innovation in their communities: mutual-aid networks, de-escalation practice, documentation strategies. The system usually meets them as data points. Centring them means resourcing their leadership in safety design, the opposite of consulting them about their surveillance.',
+    },
     10: {
       'An algorithmic gate decides at scale and in an instant': 'Bail recommendations, visa triage, benefits fraud flags: state gates now fire at machine speed, and each instant decision carries state power. Administrative law grew up reviewing human discretion; your generation must extend its safeguards, reasons, review, appeal, to decisions that take four milliseconds.',
       'A tool sold as help can still harm': 'Case-prioritization tools help clear backlogs, and quietly decide whose file waits. In justice contexts, waiting is punishment served before verdict. The COMPAS lesson generalizes: helpful throughput tools need the same procedural scrutiny as the decisions they accelerate.',
@@ -165,6 +201,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Information Technology': {
+    12: {
+      'Accountability is a stack, not a patch': 'You know stacks: accountability composes like infrastructure, code review, audit logs, incident response, compliance, governance. A fairness metric without logging, appeal routes, and ownership is a patch pretending to be architecture. Design the accountability path the way you design the data path, end to end.',
+      'AI governance and its gaps': 'Regulation is arriving with requirements that read like tickets: risk classification, documentation, human oversight, logging. The gaps are technical reality: rules written for models, applied to pipelines; audits of artifacts, not drift. Engineers who can operationalize governance, evals, model cards, audit APIs, own the next decade\'s infrastructure layer.',
+      'Techno-racism as a human rights issue': 'Rights framing changes your requirements source: discrimination law becomes a spec, and a demographic error gap becomes a legal exposure, not a backlog item. Build the evidence layer, per-group performance, decision logs, because rights claims are adjudicated on exactly the records you choose to keep or skip.',
+      'Building justice in from the start': 'You already shifted security and privacy left; fairness is the same movement: requirements-stage constraints, design-stage threat modelling with affected users, CI checks on demographic performance, launch gates with sign-off. Justice-by-design is just engineering discipline pointed at a new failure class.',
+    },
+    11: {
+      'Design justice': 'Design Justice is literally a design methodology with principles you can adopt this term: community control of process, accessibility as default, harm-modelling with the affected group at the table. It slots into agile the way security review did: a discipline that changes who signs off.',
+      'Abolitionist tools': 'Abolitionist tech exists as a developer movement: consentful tech, community-owned platforms, tools that starve surveillance rather than optimize it. The engineering translation: sometimes the ethical feature is refusal, the data not collected, the integration not built. Deletion is a deliverable.',
+      'Reform versus real repair': 'Bias mitigation on a harmful application is reform at the model layer; repair asks whether the application should exist. Fairness-aware predictive policing is the canonical example: cleaner math, same function. The senior-engineer question is scope: are we fixing the model or laundering the mandate?',
+      'Centring Black youth as innovators': 'Black technologists have driven platform culture and technique while being under-hired by the firms profiting from it. Centring Black youth as innovators is a talent thesis: fund, hire, and credit at the source of the innovation. For you it is also a peer question: whose projects get called genius in your cohort?',
+    },
     10: {
       'An algorithmic gate decides at scale and in an instant': 'You will build the gates: rate limiters, fraud checks, eligibility APIs, moderation filters. At scale, your threshold is a policy governing millions per hour, and the appeal path you forget to build is a denial with no exit. Gate code deserves the review rigor of payment code; it moves something scarcer than money: access.',
       'A tool sold as help can still harm': 'Spam filters that eat legitimate mail from certain domains, safety classifiers that over-flag minority dialects: helpful classifiers harm through their false positives, and false positives cluster. Ship classifiers with per-group error dashboards and a human path out, or the help becomes an unappealable wall.',
@@ -219,6 +267,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Education, Community and Social Services': {
+    12: {
+      'Accountability is a stack, not a patch': 'Your systems answer to boards, ministries, ombudspersons, and communities, and the tools deciding on children must answer through the same stack: school boards approving algorithmic tools publicly, appeal routes parents can actually use, incident reporting when screens misfire. One vendor audit is not accountability; a parent\'s working appeal is.',
+      'AI governance and its gaps': 'Edtech and social-service tools sit in a striking gap: systems affecting children face lighter algorithmic scrutiny than systems affecting credit. Procurement is the gap-filler your sector controls: demand evidence, evaluation rights, and exit clauses, because the vendor\'s pilot deck is not a governance framework.',
+      'Techno-racism as a human rights issue': 'Education and services are rights domains already, and algorithmic streaming, biased proctoring, and discriminatory screens are rights violations in new packaging. Framing them that way unlocks the machinery your sector knows: complaints, accommodations, systemic reviews. Teach students the framing too; it is civic literacy.',
+      'Building justice in from the start': 'Your field\'s design-stage justice is co-development: tools built with educators, families, and youth before procurement, equity review before pilot, and the affected community holding evaluation power. The sector\'s own principle, nothing about us without us, is the entire specification.',
+    },
+    11: {
+      'Design justice': 'Design justice is community work\'s native method finally named for systems: families co-designing the intake, youth co-governing the program, disability communities authoring the accommodations. Your field already believes nothing about us without us; this week extends it to databases and eligibility rules.',
+      'Abolitionist tools': 'Abolitionist tools in your field reduce the systems that process people: family support that prevents the removal, housing-first that ends the shelter loop, school supports that replace suspension. The measure of a tool is caseload it prevents, not caseload it manages better.',
+      'Reform versus real repair': 'Your sector reforms perpetually, new screeners, new frameworks, while the families cycle. Repair changes conditions: income, housing, care. A better risk tool over the same poverty is reform doing repair\'s paperwork. Practitioners who name the difference protect their programs from becoming the patch.',
+      'Centring Black youth as innovators': 'Black youth innovate survival and community daily, mutual aid, peer support, cultural production, and services typically meet them as risk categories. Centring them means program design where they hold authorship and budget, the pedagogy your field already preaches, applied to power.',
+    },
     10: {
       'An algorithmic gate decides at scale and in an instant': 'Program eligibility screens, gifted cutoffs, benefit determinations: your field\'s gates decide childhoods at scale. A biased cutoff in one district\'s screener sorts thousands of children identically and invisibly. Gate review is child advocacy now: know the threshold, the data behind it, and the appeal route for every screen your agency runs.',
       'A tool sold as help can still harm': 'The exam-grading algorithm was sold as fairness for students who could not sit exams, and it capped futures by school history. Helpful intent, harmful gate. Your professional reflex should be the Ofqual question: when this helpful tool is wrong, who does it fail, and how would we even know?',
@@ -273,6 +333,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Media and Communications': {
+    12: {
+      'Accountability is a stack, not a patch': 'Media accountability is layered, editorial standards, press councils, defamation law, platform policy, and algorithmic distribution needs the full stack: ranking transparency under press-council-style review, moderation appeals with teeth, platform decisions covered as institutional acts. A transparency report is a patch; enforceable standards with independent review are the stack.',
+      'AI governance and its gaps': 'Platform governance is your beat\'s live constitutional moment: online-harms bills, transparency mandates, election rules, all drafted around the systems this course analyzed. The gaps, private thresholds, unauditable feeds, are precisely where journalism operates: making the ungoverned visible until governance arrives.',
+      'Techno-racism as a human rights issue': 'Rights framing gives your coverage its stakes: discriminatory moderation and ad delivery engage rights law, not just platform policy, and the HUD action against ad targeting showed the framework has teeth. Covering algorithmic harm as rights journalism, with the legal machinery in frame, is the assignment this week sets.',
+      'Building justice in from the start': 'Justice from the start for media systems: equity review before the recommender launches, affected communities in the design of moderation policy, provenance standards built into publishing tools. Your industry rebuilt itself around digital once; this week argues the next rebuild should carry justice in the architecture.',
+    },
+    11: {
+      'Design justice': 'Design justice for media: the communities covered and moderated co-design the systems that cover and moderate them, community editorial boards with authority, moderation policy written with the moderated. Legitimacy is your industry\'s crisis; co-design is its most credible answer.',
+      'Abolitionist tools': 'Abolitionist media tools dismantle extractive attention infrastructure: platforms owned by their communities, recommendation systems accountable to publics, archives governed by the documented. Some exist small; covering them seriously, and building on them, is media work aligned with this week.',
+      'Reform versus real repair': 'Reform is a platform transparency report; repair is changed ownership and governance of the means of distribution. Media history read one way is the long fight over exactly that. When covering platform fixes, file them accurately: most are reform, and your audience should know the category.',
+      'Centring Black youth as innovators': 'Black youth invent the internet\'s culture, formats, dances, language, that platforms and brands monetize upstream. The credit rarely survives the scaling. Centring innovators is a sourcing standard: name the originators, platform them directly, and treat cultural attribution as fact-checking, because it is.',
+    },
     10: {
       'An algorithmic gate decides at scale and in an instant': 'Moderation queues, monetization eligibility, feed insertion: platform gates decide at publish speed which voices reach which publics. One classifier update demonetizes a genre overnight. Media policy now lives in threshold configs, and covering platforms means covering their gates as institutions.',
       'A tool sold as help can still harm': 'Brand-safety tools protect advertisers and defund coverage of the very communities most covered by hard news: keywords like racism flag the journalism about it. Helpful to the buyer, harmful to the beat. Your industry\'s economics are being tuned by classifiers; report on the tuning.',
@@ -327,6 +399,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Engineering Technology': {
+    12: {
+      'Accountability is a stack, not a patch': 'Engineering accountability is already a stack: codes, standards, professional seals, inspection regimes, liability. Algorithmic components need the same chain: who seals a perception system, which standard covers demographic performance, what inspection regime catches drift. Until standards mature, the engineer\'s seal is the stack; understand what you are signing.',
+      'AI governance and its gaps': 'Standards bodies are drafting AI rules the way they once drafted electrical codes, and the interim gap is familiar: technology deployed ahead of its code. Your profession\'s history says the code arrives after the failures unless engineers front-run it. Contributing field evidence to standards work is this week\'s professional action.',
+      'Techno-racism as a human rights issue': 'Rights framing converts a demographic performance gap from a tolerance issue into a legal duty: infrastructure that systematically under-serves protected groups engages rights law like a barrier engages accessibility codes. Engineers already build to rights-derived codes daily; this extends the familiar duty to algorithmic behaviour.',
+      'Building justice in from the start': 'Safety-by-design is your profession\'s founding lesson, bought with disasters; justice-by-design is the same lesson arriving early for once. Demographic requirements at spec, validation across populations before deployment, monitoring after: the discipline exists, the application is the only novelty.',
+    },
+    11: {
+      'Design justice': 'Design justice enters engineering as expanded requirements authority: the community hosting the infrastructure helps set the spec, accessibility and error-burden are first-class constraints, and acceptance includes the affected users\' sign-off. It is stakeholder engineering with the power turned on.',
+      'Abolitionist tools': 'For engineers, abolitionist tools de-instrument harm: designing systems that cannot retain what shouldn\'t be kept, sensors that measure the hazard without watching the people. Data minimization is your profession\'s abolitionist practice: engineering the surveillance out at the spec.',
+      'Reform versus real repair': 'Retrofit versus redesign is your native version of this distinction: reform patches the failing component, repair changes the design basis. A fairer algorithm on infrastructure serving unequal neighbourhoods is a component patch. Engineers know patched designs fail again; apply the knowledge socially.',
+      'Centring Black youth as innovators': 'Engineering\'s pipeline discards Black youth early through gatekeeping math and unpaid pathways, then calls the field\'s homogeneity a talent shortage. Centring innovators means recognizing engineering practice where it already happens, repair cultures, maker scenes, modding communities, and building credentialed routes from there.',
+    },
     10: {
       'An algorithmic gate decides at scale and in an instant': 'Automated inspection passes or fails at line speed; access-control systems admit or deny at door speed. Gates in engineering are throughput components with social payloads: a biased detector at scale rejects the same class of inputs everywhere at once. Specify gates with error budgets per class, not just per unit.',
       'A tool sold as help can still harm': 'Driver-assist systems marketed as safety can under-detect the pedestrians their training data thinned, help for those inside the envelope, hazard for those outside it. Engineering already refuses aggregate-only safety claims for materials; refuse them for perception systems too.',
@@ -381,6 +465,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Science': {
+    12: {
+      'Accountability is a stack, not a patch': 'Science\'s accountability stack, ethics boards, peer review, replication, retraction, must now process algorithmic instruments: models as methods requiring review, training data as materials requiring disclosure, demographic validity as a reviewable claim. A model card in the appendix is a patch; review standards that reject unstratified validation are the stack.',
+      'AI governance and its gaps': 'Research AI largely escapes the governance landing on commerce: models deployed as science face peer review, not regulation, and peer review rarely audits pipelines. The gap is the discipline\'s to close: journals and funders setting algorithmic transparency requirements are the field\'s regulators. Support the ones that do.',
+      'Techno-racism as a human rights issue': 'When scientific tools inform decisions on health, migration, or policing, their errors become rights matters, and the scientist\'s validation data becomes evidence. Rights framing raises the stakes of methods: demographic validity is not a limitations paragraph; it is the difference between science and testimony against someone.',
+      'Building justice in from the start': 'Justice from the start in research design: representative cohorts as a validity requirement, community governance where data describes communities, stratified endpoints pre-registered. The apparatus exists, protocols, review, registration; this week routes equity through it rather than around it.',
+    },
+    11: {
+      'Design justice': 'Design justice for science is community-based participatory research with authority attached: communities setting questions, governing data, co-authoring outputs. It converts subjects into scientists, which history shows improves both the ethics and the questions.',
+      'Abolitionist tools': 'Abolitionist science dismantles extractive research patterns: open community-governed datasets replacing proprietary capture, citizen science with ownership, repatriated collections. The test: does the method leave the studied community with more capacity and control than before?',
+      'Reform versus real repair': 'Reform in science is better consent forms; repair is changed authorship, funding flows, and agenda-setting power. Diversifying cohorts without diversifying who directs the labs reforms the sample while preserving the structure. Both layers are empirical objects; study them as such.',
+      'Centring Black youth as innovators': 'Black youth practice science constantly, environmental monitoring of their own neighbourhoods, health advocacy, data activism, usually uncredentialed and uncited. Centring them means pathways that credit that practice as science, because the field\'s questions improve when its questioners change.',
+    },
     10: {
       'An algorithmic gate decides at scale and in an instant': 'Peer-review triage, grant pre-screening, admissions filters: science\'s own gates are automating. A desk-rejection model trained on past acceptance learns the field\'s historical tastes, including its exclusions, and applies them at submission volume. The scientific community should instrument its own gates first.',
       'A tool sold as help can still harm': 'Literature-recommendation and citation tools help navigate volume while narrowing what gets seen, compounding the visibility of the already-cited. Helpful to the reader, harmful to the field\'s periphery. Use them knowing their objective; breadth remains a manual discipline.',
@@ -435,6 +531,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Aviation': {
+    12: {
+      'Accountability is a stack, not a patch': 'Aviation\'s accountability stack is the world\'s benchmark: certification, SMS, incident investigation, international standards. The week\'s demand is inclusion: screening algorithms and biometric systems inside the same stack, certified performance envelopes, mandatory occurrence reporting for algorithmic failures, investigation access to models. If it decides on passengers, it belongs in the SMS.',
+      'AI governance and its gaps': 'Aviation regulates aircraft algorithms rigorously and passenger-processing algorithms barely: the autopilot faces certification the watchlist matcher never meets. That asymmetry is the governance gap in your terminal. Industry professionals can name it precisely, and naming it in safety language is how it gets fixed.',
+      'Techno-racism as a human rights issue': 'International aviation runs on rights instruments already, accessibility, non-discrimination in carriage. Algorithmic screening that burdens travellers by ethnicity engages those instruments squarely. Framing checkpoint disparities as rights issues moves them from customer service complaints to compliance obligations, which is where they change.',
+      'Building justice in from the start': 'Aviation never bolts safety on after delivery; requirements lead. Apply the doctrine: demographic performance requirements in screening procurement, redress mechanisms designed before deployment, burden metrics in the acceptance tests. Justice-by-design is just airworthiness thinking for the passenger-processing stack.',
+    },
+    11: {
+      'Design justice': 'Design justice in aviation means the communities under flight paths, in fenceline neighbourhoods, and dependent on remote routes get design authority in noise, siting, and service decisions, not comment periods after the decision. The industry consults; justice redistributes the pen.',
+      'Abolitionist tools': 'The abolitionist question lands on screening: which security functions could community trust and better process design make unnecessary, rather than automate harder? Redress systems that actually clear names shrink the watchlist harm; that is the direction the concept points in your industry.',
+      'Reform versus real repair': 'Reform is a fairer matching algorithm at the e-gate; repair is fixing the watchlist governance and redress failures that make matching consequential. Aviation loves component upgrades; this week distinguishes upgrading the component from repairing the system it serves.',
+      'Centring Black youth as innovators': 'Aviation\'s diversity programs recruit; centring innovators would credential differently: flight pathways priced out of reach are a design choice, not a given. Black youth run drone businesses, plane-spotting networks, and aviation content channels now; the industry that sees them as innovators gets the next generation first.',
+    },
     10: {
       'An algorithmic gate decides at scale and in an instant': 'The check-in system\'s document check, the API screening decision, the e-gate match: aviation\'s gates fire per passenger per second, and a threshold error propagates through every airport running the same system. Your industry certifies components; extend certification thinking to decision thresholds.',
       'A tool sold as help can still harm': 'Automated rebooking helps thousands in a disruption and quietly orders who gets the last seats: loyalty tier, fare class, and whatever proxies ride along. Helpful triage is still triage. Know the rebooking hierarchy your employer runs, because gate agents inherit its arguments.',
@@ -489,6 +597,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Hospitality and Tourism': {
+    12: {
+      'Accountability is a stack, not a patch': 'Hospitality answers to health codes, labour law, licensing, brand standards, and platform terms; algorithmic guest-screening and pricing belong in that stack: audit rights in franchise agreements, algorithmic conduct in brand standards, platform accountability in destination policy. A vendor\'s fairness page is a patch; a standard with inspections is a stack.',
+      'AI governance and its gaps': 'Your industry\'s algorithms, pricing, screening, ranking, sit largely outside arriving AI rules aimed at higher-stakes domains, which makes self-governance the operative layer: platform policies, brand standards, destination regulations. The operators who set them now will set them for everyone; be in that room.',
+      'Techno-racism as a human rights issue': 'Service refusal law long predates algorithms: rights codes govern who can be denied a room. An algorithmic decline is a service refusal with a log file, and the log file is discoverable. Framing screening disparities as rights matters puts them where hospitality law already knows how to work.',
+      'Building justice in from the start': 'Justice from the start in hospitality tech: fairness clauses in the platform contract, disparate-impact testing before the fraud model goes live, guest-appeal routes designed at build. The industry that perfected service recovery can design so the recovery is rarely needed; that is this week\'s standard.',
+    },
+    11: {
+      'Design justice': 'Design justice for hospitality: the workers who run the service and the communities that host the tourism co-design the systems, scheduling algorithms negotiated with housekeeping, destination platforms governed with residents. The industry sells place and labour; justice gives both a seat at the design table.',
+      'Abolitionist tools': 'Abolitionist thinking in your industry targets its extractive systems: platforms that strip-mine neighbourhoods for short-term stays, scheduling software that makes hours unlivable. Tools that return governance, community caps co-set with residents, worker-controlled scheduling, dismantle the harm rather than smoothing it.',
+      'Reform versus real repair': 'Reform is bias training for front desks; repair is changing who owns the properties and platforms extracting from tourist economies. Community-owned tourism, Indigenous-led operations, worker co-op hotels are repair with room keys. Know which one a corporate responsibility deck is offering.',
+      'Centring Black youth as innovators': 'Black youth drive travel culture, the content, the aesthetics, the destinations trending, while the industry\'s ownership stays closed to them. Centring innovators means investment and ownership routes: the creators marketing your destinations should hold equity in them.',
+    },
     10: {
       'An algorithmic gate decides at scale and in an instant': 'Booking engines gate at scale: instant accept or decline, price shown or hidden, ID verification passed or escalated. A biased rule in the engine declines the same guests at every property simultaneously. Revenue systems are gate systems; audit them like the front door they are.',
       'A tool sold as help can still harm': 'Fraud-prevention tools protect revenue and, tuned carelessly, hold deposits longest for the same names and postcodes. The helpful shield becomes a patterned wall. The Airbnb study showed discretion\'s bias; automation without audit merely industrializes it.',
@@ -543,6 +663,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Creative Arts, Animation and Design': {
+    12: {
+      'Accountability is a stack, not a patch': 'Creative industries have accountability layers, credits, licensing, unions, standards bodies, and AI production needs them extended: training-data provenance in the credits, model disclosure in the deliverables, union language on synthetic performance. A tool\'s opt-out form is a patch; provenance in the pipeline contract is the stack.',
+      'AI governance and its gaps': 'Copyright and performer-rights fights are writing your field\'s AI governance in real time, and the gaps are where working artists live: style mimicry, training on scraped portfolios, synthetic voices. Watch the cases, and set studio policy ahead of them; the house rules you draft now are the interim law of your shop.',
+      'Techno-racism as a human rights issue': 'When creative AI erases or caricatures, the harm is representational, and rights frameworks increasingly recognize it: discriminatory outputs in commercial work engage the same codes as discriminatory casting. The portfolio question becomes a compliance question, which is leverage your ethics arguments never had.',
+      'Building justice in from the start': 'Justice from the start in creative pipelines: consent-based sourcing before the moodboard, representation review before render, credit and compensation designed into the workflow. Your industry knows pre-production is where everything is decided; this week just adds justice to the pre-production checklist.',
+    },
+    11: {
+      'Design justice': 'Design justice is your discipline\'s ethics stated as method: those who live the consequences co-author the design. Costanza-Chock\'s framework came from design practice; adopt its principles in your process work, community sign-off, accessibility as default, harm review with those depicted, and your portfolio becomes an argument.',
+      'Abolitionist tools': 'Abolitionist tools in creative tech dismantle extractive infrastructure: consent-based training datasets, artist-owned platforms, licences that keep cultural work under community control. Building them is design work of the highest difficulty, which makes them exactly the brief for ambitious portfolios.',
+      'Reform versus real repair': 'Reform is adding diverse presets to the same extractive tool; repair is changing who owns the pipeline and the archive. Your industry performs reform beautifully, campaigns, showcases, months, while ownership stays put. Train your eye to ask where the rights and revenue land.',
+      'Centring Black youth as innovators': 'Black youth invent the visual and sonic languages your industry sells: styles born in bedrooms become global aesthetics with the credit detached. Centring innovators is citational practice with contracts: name, pay, and platform the source. In your own work, the reference list is a justice document.',
+    },
     10: {
       'An algorithmic gate decides at scale and in an instant': 'Portfolio platforms, festival submission filters, content moderation on creative work: the industry\'s gates automate, and a classifier\'s taste rejects at upload speed. When the gate learned from past acceptance, it gates toward the past. Creative careers now route through thresholds; artists deserve to see them.',
       'A tool sold as help can still harm': 'Auto-tagging and discovery features help audiences find work while misfiling the work that does not match learned categories: art from underrepresented traditions tagged wrong, shadow-ranked, or flagged. Helpful infrastructure with narrow training curates by error. Metadata justice is a real design brief.',
@@ -597,6 +729,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Fashion and Esthetics': {
+    12: {
+      'Accountability is a stack, not a patch': 'Fashion answers to consumer-safety law, labour standards, advertising codes; its algorithms, sizing, screening, recommendation, need the same layered accountability: demographic performance in supplier terms, algorithmic claims under advertising standards, audit rights in platform deals. One inclusive campaign is a patch; a testable standard across the assortment system is a stack.',
+      'AI governance and its gaps': 'Beauty tech\'s claims, skin analysis, shade matching, fit prediction, sit in a regulatory blind spot between cosmetics rules and software. The gap means the industry\'s own standards decide: retailers demanding validation across skin tones and bodies before shelf placement are the operative regulators. Buying power is governance; use it.',
+      'Techno-racism as a human rights issue': 'Service and retail discrimination are classic rights territory, and algorithmic versions inherit the framework: a scanner that cannot serve deep skin tones is a denial of service with a firmware version. Rights framing moves shade equity from brand values to compliance, where budgets actually respond.',
+      'Building justice in from the start': 'Justice from the start in your industry is a sourcing and validation rule: no tool or line ships without testing across the full range of skin, hair, and body it claims to serve, with the range defined by the clientele, not the training set. Fit sessions taught fashion this discipline; extend it to the algorithms.',
+    },
+    11: {
+      'Design justice': 'Design justice for fashion: design with the bodies and communities the industry serves, disabled customers co-designing adaptive lines, textured-hair professionals authoring the tools, not focus-grouping them. The fit session becomes a governance session; that is the shift this week names.',
+      'Abolitionist tools': 'Abolitionist tools in your industry dismantle its exclusion machinery: open-source fit standards owned by no brand, community-governed beauty archives, supply chains transparent to the worker level. Ask of an innovation: does it end an exclusion or make exclusion more comfortable?',
+      'Reform versus real repair': 'An extended shade range is reform; repair is Black-owned brands holding shelf power, textured-hair education mandatory in schools, and the archive rebuilt. The industry\'s inclusion campaigns are reform\'s showroom. Repair shows up in ownership tables and curriculum, where your career choices can reach.',
+      'Centring Black youth as innovators': 'Your industry\'s trend engine runs on Black youth innovation, streetwear, nail art, hair culture, monetized fastest by everyone but the innovators. Centring them means credit, contracts, and creative direction, and for you as a professional, refusing the moodboard that samples without sourcing.',
+    },
     10: {
       'An algorithmic gate decides at scale and in an instant': 'Buy-plan algorithms, influencer-matching platforms, casting databases: your industry\'s gates now decide instantly which faces, bodies, and lines enter the market. One threshold in a casting tool filters thousands of portfolios identically. The gate deserves the scrutiny once aimed at a single gatekeeper\'s taste.',
       'A tool sold as help can still harm': 'Fit-prediction tools help reduce returns and quietly exclude bodies outside their training curve, recommending against sizes the model never learned. Helpful for logistics, harmful for the customer told nothing fits. Demand fit models trained across the clientele the brand claims.',
@@ -651,6 +795,18 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Liberal Arts and University Transfers': {
+    12: {
+      'Accountability is a stack, not a patch': 'Political theory gives you the vocabulary: accountability as layered institutions, not singular acts. Benjamin\'s stack claim is an institutional-design argument, checks distributed across law, oversight, community power, and it invites the comparative essay: how did societies build stacks for past technologies, and what failed when they patched instead?',
+      'AI governance and its gaps': 'Governance gaps are your disciplines\' classic object: law lagging technology, regulation captured, rights unevenly enforced. The AI case offers living material, statutes drafted now, cases filed now. A policy-analysis essay written this term is scholarship on a moving target, which is the most instructive kind.',
+      'Techno-racism as a human rights issue': 'Framing matters is a humanities thesis, and this week is its case study: calling algorithmic harm a rights violation summons courts, treaties, and remedies that quality discourse never could. Trace how framing changed outcomes in earlier movements, and evaluate the strategy\'s prospects here. That comparison is transfer-level analysis.',
+      'Building justice in from the start': 'Design-stage justice restates an old philosophical claim: values enter artifacts at creation, not application. From Winner\'s bridges through this course, the argument has an unusually complete arc. The closing essay writes itself: what would it mean, institutionally, to take that claim seriously?',
+    },
+    11: {
+      'Design justice': 'Design justice gives your disciplines a living framework to analyze and to test: participation as epistemology, the claim that affected communities know things designers cannot. Compare it with standpoint theory in your essays, then evaluate a real system against its principles; theory examined in application is transfer-level work.',
+      'Abolitionist tools': 'Abolition has an intellectual history your courses cover, from slavery abolition through prison abolition, and Benjamin extends it to technology. The conceptual question is generative: what does it mean to abolish a tool rather than a law or an institution? That essay engages the whole course.',
+      'Reform versus real repair': 'Reform versus transformation structures every social movement debate you will study. This week supplies the technological case with unusual clarity: the fixed algorithm inside the unfixed institution. Use it as the concrete anchor whenever the older debates go abstract.',
+      'Centring Black youth as innovators': 'Innovation\'s historiography has an authorship problem your disciplines can document: whose inventions enter the record as genius and whose as folk practice. Centring Black youth as innovators is a citational and archival argument, exactly the work humanities methods exist to do.',
+    },
     10: {
       'An algorithmic gate decides at scale and in an instant': 'Admissions filters, scholarship screens, plagiarism flags: the university\'s own gates automate, and your file meets them before any human does. The scholarly response is the archive\'s question at machine speed: who built the gate, on what records, reviewable by whom? Institutional critique now requires reading thresholds.',
       'A tool sold as help can still harm': 'Advising algorithms that nudge students toward likely-success courses help retention metrics and quietly track students away from ambition, replicating past patterns of who succeeded where. Helpful analytics can be soft streaming. The humanities question cuts through: likely according to whose history?',
