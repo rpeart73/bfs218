@@ -76,7 +76,6 @@ window.SENECA_PROGRAMS = {
   "Library and Information Technician",
   "Mental Health Intervention",
   "Non-Profit and Social Sector Management (Graduate Certificate)",
-  "Police Foundations",
   "Social Service Worker",
   "Social Service Worker (Accelerated)",
   "Social Service Worker - Gerontology",

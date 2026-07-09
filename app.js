@@ -4783,6 +4783,103 @@
     ctx.label = label;
     return ctx;
   }
+  function pfFirst(s) {
+    var t = String(s || '').split(',')[0].trim();
+    return t.replace(/^an? /, '');
+  }
+  function pfLast(s) {
+    var parts = String(s || '').split(',');
+    var t = (parts[parts.length - 1] || '').trim().replace(/^and /, '');
+    return t || 'the people the process misses';
+  }
+  function pfPair(s) {
+    var parts = String(s || '').split(',').map(function (x) { return x.trim(); }).filter(Boolean);
+    return parts.slice(0, 2).join(' and ').replace(/ and and /, ' and ');
+  }
+  function areaCaseQuestions(area, o, name) {
+    var d = pfFirst(o.decision), pl = pfPair(o.place), pe = pfLast(o.people), pr = pfFirst(o.pressure), st = pfFirst(o.setting);
+    var BY = {
+      'Business': [
+        'A ' + d + ' fires during ' + pr + ' in ' + name + '. Whose file does it land on, what history set the threshold, and who signs off without ever seeing the person?',
+        'Walk the exception path: once someone is flagged inside ' + pl + ', how many steps until a human with authority reviews it, and what would that human need to overturn it?',
+        'If you pulled this process\u2019s outcomes by demographic the way you pull results by region, what pattern would you expect, and what would you do the day the pattern confirmed?',
+        'What would ' + pe + ' say the process feels like from their side, and where could their evidence enter before the ' + d + ' becomes policy?'
+      ],
+      'Health and Wellness': [
+        'It is ' + pr + ' and a ' + d + ' decides before you do. Which patient does it see accurately, which one does it misread, and what in its calibration history explains the difference?',
+        'Chart the moment: inside ' + pl + ', where does the score\u2019s output become your documentation, and what happens downstream to whatever you write next?',
+        'Who on your unit can override the ' + d + ', on what evidence, in how much time, and does ' + pe + ' ever learn an override was possible?',
+        'If this tool were a medication, what would its monograph say about populations it was never trialled on, and would you still administer it unmonitored?'
+      ],
+      'Law, Administration and Public Safety': [
+        'A ' + d + ' shapes the first contact during ' + pr + '. What record trained it, who entered that record, and could the person in front of you contest any of it in real time?',
+        'Follow the file through ' + pl + ': at which step does the score stop being a suggestion and start being the reason, and who is accountable at that step?',
+        'Apply R. v. Le\u2019s logic here: how does this same procedure land differently across the communities you serve, and what would your documentation need to show to make that reviewable?',
+        'What lawful path exists for ' + pe + ' to challenge the outcome, how long does it take, and what does that delay cost them meanwhile?'
+      ],
+      'Information Technology': [
+        'The ' + d + ' ships inside ' + pl + ' with a threshold someone set under ' + pr + '. Where is that threshold in the repo, who last touched it, and what test would catch its skew?',
+        'Trace one false positive end to end: what did the user see, what did the logs keep, and could support reverse it without an engineer?',
+        'Slice this system\u2019s error rates by population: which slice was never in the fixtures, and what would a regression test for ' + pe + ' actually assert?',
+        'If you inherited this pipeline tomorrow, what provenance questions would you file before trusting its training data, and who could even answer them?'
+      ],
+      'Education, Community and Social Services': [
+        'A ' + d + ' meets a child\u2019s file during ' + pr + '. What did the instrument assume about a normal family, and which of your actual families does that assumption turn into paperwork problems?',
+        'Inside ' + pl + ', what does the flag make the next adult expect before they meet the person, and what could you write instead that would change that expectation?',
+        'Who explains the decision to ' + pe + ', in what language, with what real chance of reversing it before it shapes services?',
+        'If you disaggregated this program\u2019s outcomes by the families it claims to serve, what pattern do you already suspect, and what would you owe the families if you found it?'
+      ],
+      'Engineering Technology': [
+        'The ' + d + ' was set against a reference case that is not everyone. Under ' + pr + ', who falls outside the tested envelope of ' + pl + ', and what failure mode do they experience first?',
+        'Read the validation record like a stress report: which populations, conditions, and edge geometries were actually tested, and what does the silence in the matrix tell you?',
+        'A demographic performance gap shows up in the field data for ' + st + ': write the root-cause chain from spec to harm, and mark the step where an engineer\u2019s signature could have stopped it.',
+        'What would it cost to widen the envelope for ' + pe + ' now versus at design time, and who is currently paying the difference?'
+      ],
+      'Science': [
+        'The ' + d + ' rests on a sampling frame someone chose. Under ' + pr + ', which population\u2019s data is thinnest in ' + pl + ', and what does the method report as fact anyway?',
+        'Stratify the error: if the result holds on average and fails for ' + pe + ', what is the honest limitations paragraph, and where else has that paragraph been missing?',
+        'Trace provenance like materials: what archive fed this instrument, who assembled it, under what consent, and what does that history predict about its blind spots?',
+        'Design the follow-up study that the affected community would co-govern: what changes first, the question, the cohort, or the authorship?'
+      ],
+      'Aviation': [
+        'A ' + d + ' fires at the checkpoint during ' + pr + '. Which traveller absorbs the friction, what upstream data put them there, and what does redress actually require of them?',
+        'Treat the pattern like an occurrence: the same ' + d + ' keeps flagging the same demographics across ' + pl + '. Write the report: probable cause, contributing factors, corrective action.',
+        'Where in the passenger-processing stack could ' + pe + ' see, contest, or correct the record that keeps routing them to secondary?',
+        'If this system faced certification like an instrument, what demographic performance envelope would it have to publish, and would it pass?'
+      ],
+      'Hospitality and Tourism': [
+        'A ' + d + ' quietly decides a guest\u2019s welcome during ' + pr + '. What does their arrival feel like, step by step, and at which step could staff still change the outcome?',
+        'Audit the algorithmic guest journey through ' + pl + ' the way you would mystery-shop the human one: where does suspicion enter, and on what data?',
+        'Which repeat friction would ' + pe + ' report if anyone asked, and why has no dashboard asked?',
+        'Write the service-recovery protocol for an algorithmic decline: who apologizes, who overrides, and what changes so it stops recurring?'
+      ],
+      'Creative Arts, Animation and Design': [
+        'The ' + d + ' inside ' + pl + ' has a learned taste. Put your own work through it: whose faces, bodies, and styles does it handle worst, and what does it quietly do to them?',
+        'Under ' + pr + ', the default renders and nobody checks. What ships, who is erased or distorted in the final frame, and who approves it without noticing?',
+        'Trace one asset\u2019s provenance: what archive taught the tool its defaults, and what would consent-based sourcing have changed about this exact output?',
+        'Design the pipeline test that protects ' + pe + ': what does it check, at which stage, and what happens when it fails?'
+      ],
+      'Fashion and Esthetics': [
+        'A ' + d + ' meets a real client in ' + st + ' during ' + pr + '. Which skin, hair, or body does it read confidently, whom does it misread, and what does the client walk away believing about themselves?',
+        'Follow the assortment loop through ' + pl + ': what was never stocked, so never sold, so never forecast, and which client keeps arriving to find themselves missing?',
+        'What would ' + pe + ' tell you the tools get wrong, and where in the buying or treatment workflow could their answer change the range?',
+        'Write the validation standard you would demand before this tool touches a chair: tested on whom, verified how, refused when?'
+      ],
+      'Liberal Arts and University Transfers': [
+        'Read the ' + d + ' as a text: who is its implied subject, what archive is its author, and what does it assume a normal case looks like inside ' + pl + '?',
+        'Under ' + pr + ', the system\u2019s classification becomes the record. Trace how that record will be cited later as if it were neutral observation, and name the move.',
+        'Whose testimony would count as evidence against this process, in what forum, and why is ' + pe + ' the least likely to be heard there?',
+        'Place this mechanism in a lineage you have studied: what older practice does it continue, what changed with automation, and what does the continuity argument require you to prove?'
+      ],
+      'Media and Communications': [
+        'A ' + d + ' decides reach during ' + pr + '. Who was shown the story, who never saw it, and what would the delivery data reveal that the content analytics hide?',
+        'Cover this system as an institution: who sets its thresholds inside ' + pl + ', under what review, and what is your lede when the pattern lands on ' + pe + '?',
+        'Trace one moderation decision end to end: what got flagged, by what training history, appealable to whom, and what did the silence cost the creator meanwhile?',
+        'If this platform published its ranking criteria the way mastheads publish standards, what would the first correction have to be?'
+      ]
+    };
+    return BY[area] || null;
+  }
   function programSpecificProfile(L) {
     if (!L || !L.program) return null;
     var name = L.program, area = L.area || programAreaForName(name) || '', p = name.toLowerCase();
@@ -4793,7 +4890,7 @@
       o.interface = o.interface || ('The course themes show up in ' + name + ' when a routine tool, record, or standard looks neutral but sorts people unevenly.');
       o.practice = o.practice || ('For ' + name + ', put each week beside the program tools, records, standards, clients, and decisions you are learning to handle. Ask who benefits, who carries risk, and who can challenge a bad outcome.');
       o.focus = o.focus || ('For this program, pay close attention to the systems, records, standards, people, and decision points that shape everyday work in ' + name + '.');
-      o.caseQuestions = o.caseQuestions || [
+      o.caseQuestions = o.caseQuestions || areaCaseQuestions(area, o, name) || [
         'Which tool, record, standard, client interaction, or professional judgment would shape the first decision in ' + name + '?',
         'Who is easiest for that process to see, and who becomes an exception, a delay, or a problem to manage?',
         'What evidence from affected people would change the decision before it becomes routine?',
@@ -5093,7 +5190,7 @@
         'How would you report uncertainty so the method does not hide its limits?'
       ];
     }
-    return [
+    return areaCaseQuestions(L && L.area, ctx, ctx.label) || [
       'Which tool, record, standard, client interaction, or professional judgment would shape the first decision in ' + ctx.label + '?',
       'Who is easiest for that process to see, and who becomes an exception, a delay, or a problem to manage?',
       'What evidence from affected people would change the decision before it becomes routine?',
