@@ -2945,7 +2945,7 @@
     var inner = '<p class="wk-hint">These are the week\'s big ideas, explained. Read them to understand the argument; this is what your discussions and written work draw on.</p>' + d.concepts.map(function (c) {
       var fe = '';
       var fer = fieldExampleFor(w, c.h);
-      if (fer) fe = '<div class="wk-concept" style="border-left:4px solid #B02318;padding-left:12px;margin-top:8px"><h3 style="font-size:.95rem">In your program: ' + esc(fer.label) + '</h3><p>' + esc(fer.text) + '</p></div>';
+      if (fer) fe = '<div class="wk-concept" style="border-left:4px solid #B02318;padding-left:12px;margin-top:8px"><div class="mono" style="font-size:.64rem;letter-spacing:.08em;color:#B02318;font-weight:700;margin-bottom:3px">IN ' + esc(fer.label).toUpperCase() + '</div><p style="margin:0">' + esc(fer.text) + '</p></div>';
       return '<div class="wk-concept"><h3>' + esc(c.h) + '</h3><p>' + esc(c.body) + ' <span class="wk-cite">(' + esc(c.cite) + ')</span></p></div>' + fe;
     }).join('');
     return '<section id="wk-con" class="node"><h2 class="wk-sec">Key concepts</h2>' + inner + '</section>';
@@ -4171,11 +4171,11 @@
     var concepts = sec('con', 'Key concepts', '<p class="wk-hint">These are the week\'s big ideas, explained. Read them to understand the argument; this is what your discussions and written work draw on.</p>' + d.concepts.map(function (c) {
       var fe = '';
       var fer = fieldExampleFor(w, c.h);
-      if (fer) fe = '<div class="wk-concept" style="border-left:4px solid #B02318;padding-left:12px;margin-top:8px"><h3 style="font-size:.95rem">In your program: ' + esc(fer.label) + '</h3><p>' + esc(fer.text) + '</p></div>'; return '<div class="wk-concept"><h3>' + esc(c.h) + '</h3><p>' + esc(c.body) + ' <span class="wk-cite">(' + esc(c.cite) + ')</span></p></div>' + fe; }).join('') + fldEg);
+      if (fer) fe = '<div class="wk-concept" style="border-left:4px solid #B02318;padding-left:12px;margin-top:8px"><div class="mono" style="font-size:.64rem;letter-spacing:.08em;color:#B02318;font-weight:700;margin-bottom:3px">IN ' + esc(fer.label).toUpperCase() + '</div><p style="margin:0">' + esc(fer.text) + '</p></div>'; return '<div class="wk-concept"><h3>' + esc(c.h) + '</h3><p>' + esc(c.body) + ' <span class="wk-cite">(' + esc(c.cite) + ')</span></p></div>' + fe; }).join('') + fldEg);
     var terms = sec('term', 'Key terms', '<p class="wk-hint">These are the precise vocabulary. Learn them to speak and write accurately; they feed the flashcards and Knowledge Check.</p>' + d.terms.map(function (t) {
       var te = '';
       var ter = fieldExampleFor(w, 'term:' + t.term);
-      if (ter) te = '<div style="border-left:4px solid #B02318;padding:6px 0 6px 12px;margin:6px 0 2px"><b style="font-size:.85rem">In your program: ' + esc(ter.label) + '</b><p style="margin:4px 0 0;font-size:.9rem;line-height:1.55">' + esc(ter.text) + '</p></div>';
+      if (ter) te = '<div style="border-left:4px solid #B02318;padding:6px 0 6px 12px;margin:6px 0 2px"><div class="mono" style="font-size:.64rem;letter-spacing:.08em;color:#B02318;font-weight:700;margin-bottom:3px">IN ' + esc(ter.label).toUpperCase() + '</div><p style="margin:0;font-size:.9rem;line-height:1.55">' + esc(ter.text) + '</p></div>';
       return '<div class="wk-term"><b>' + esc(t.term) + '</b>: ' + esc(t.def) + ' <span class="wk-cite">(' + esc(t.cite) + ')</span>' + te + '</div>'; }).join(''));
     var readingsInner = d.readings.map(function (r) { var resolves = (typeof rec === 'function') && r.id && rec(r.id); var tail = resolves ? '<button onclick="SOC.read(\'' + r.id + '\')" class="wk-scope">' + esc(r.scope || 'Open the reading') + ' &#8599;</button>' : (r.url ? '<a href="' + r.url + '" target="_blank" rel="noopener" class="wk-scope">' + esc(r.scope || 'Open the reading') + ' &#8599;</a>' : (r.scope ? '<div class="wk-scope" style="background:none;border:none;color:var(--ink-faint);padding:6px 0;cursor:default">' + esc(r.scope) + '</div>' : '')); return '<div class="wk-read"><div class="ref">' + r.apa + '</div>' + tail + '</div>'; }).join('')
       + weekNoteBox(w, 'readings', 'Readings Notes', 'After the reading or Reading Rescue, write the one idea you want to remember and where you saw it.');
