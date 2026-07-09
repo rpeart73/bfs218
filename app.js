@@ -4135,7 +4135,14 @@
         var ff = String(state.programViewField || state.careerField || '').trim();
         if (ff && fexs && fexs[ff] && fexs[ff][w] && fexs[ff][w][c.h]) fe = '<div class="wk-concept" style="border-left:4px solid #B02318;padding-left:12px;margin-top:8px"><h3 style="font-size:.95rem">In your program: ' + esc(ff) + '</h3><p>' + esc(fexs[ff][w][c.h]) + '</p></div>';
       } catch (efx) {} return '<div class="wk-concept"><h3>' + esc(c.h) + '</h3><p>' + esc(c.body) + ' <span class="wk-cite">(' + esc(c.cite) + ')</span></p></div>' + fe; }).join('') + fldEg);
-    var terms = sec('term', 'Key terms', '<p class="wk-hint">These are the precise vocabulary. Learn them to speak and write accurately; they feed the flashcards and Knowledge Check.</p>' + d.terms.map(function (t) { return '<div class="wk-term"><b>' + esc(t.term) + '</b>: ' + esc(t.def) + ' <span class="wk-cite">(' + esc(t.cite) + ')</span></div>'; }).join(''));
+    var terms = sec('term', 'Key terms', '<p class="wk-hint">These are the precise vocabulary. Learn them to speak and write accurately; they feed the flashcards and Knowledge Check.</p>' + d.terms.map(function (t) {
+      var te = '';
+      try {
+        var tfx = window.BFS218_FIELD_EXAMPLES;
+        var tf = String(state.programViewField || state.careerField || '').trim();
+        if (tf && tfx && tfx[tf] && tfx[tf][w] && tfx[tf][w][t.term]) te = '<div style="border-left:4px solid #B02318;padding:6px 0 6px 12px;margin:6px 0 2px"><b style="font-size:.85rem">In your program: ' + esc(tf) + '</b><p style="margin:4px 0 0;font-size:.9rem;line-height:1.55">' + esc(tfx[tf][w][t.term]) + '</p></div>';
+      } catch (etx) {}
+      return '<div class="wk-term"><b>' + esc(t.term) + '</b>: ' + esc(t.def) + ' <span class="wk-cite">(' + esc(t.cite) + ')</span>' + te + '</div>'; }).join(''));
     var readingsInner = d.readings.map(function (r) { var resolves = (typeof rec === 'function') && r.id && rec(r.id); var tail = resolves ? '<button onclick="SOC.read(\'' + r.id + '\')" class="wk-scope">' + esc(r.scope || 'Open the reading') + ' &#8599;</button>' : (r.url ? '<a href="' + r.url + '" target="_blank" rel="noopener" class="wk-scope">' + esc(r.scope || 'Open the reading') + ' &#8599;</a>' : (r.scope ? '<div class="wk-scope" style="background:none;border:none;color:var(--ink-faint);padding:6px 0;cursor:default">' + esc(r.scope) + '</div>' : '')); return '<div class="wk-read"><div class="ref">' + r.apa + '</div>' + tail + '</div>'; }).join('')
       + weekNoteBox(w, 'readings', 'Readings Notes', 'After the reading or Reading Rescue, write the one idea you want to remember and where you saw it.');
     var rescue = readingRescueSection(w, d);
