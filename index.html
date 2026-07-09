@@ -83,7 +83,7 @@
   .kd-link:hover .kd-t{text-decoration:underline}
   .kd-go{margin-left:auto;color:var(--ink-faint);font-weight:700;flex:none;align-self:center}
   .cal-link{appearance:none;-webkit-appearance:none;border-top:0;border-left:0;cursor:pointer;font:inherit;color:inherit;text-align:left;width:100%;text-decoration:none}
-  .cal-due.cal-link:hover{background:#f7dcd9}.cal-op.cal-link:hover{background:#e6ebf3}
+  .cal-due.cal-link:hover{background:#f7dcd9}.cal-open.cal-link:hover{background:#e6ebf3}
   .phone-sub{display:inline-flex;align-items:center;gap:8px;font-size:.92rem;font-weight:700;color:#fff;background:#1B2A4A;border-radius:10px;padding:11px 20px;text-decoration:none}
   .phone-sub:hover{background:#24365c}
   .kd-add{display:flex;align-items:center;gap:7px;margin:4px 0 2px;font-size:.75rem;color:var(--ink-faint);flex-wrap:wrap}
@@ -93,7 +93,7 @@
   .cal-legend{display:flex;flex-wrap:wrap;gap:16px;margin:0 0 6px;font-size:.82rem;color:var(--ink-dim)}
   .cal-lg{display:inline-flex;align-items:center;gap:7px}
   .cal-sw{width:13px;height:13px;border-radius:4px;flex:none}
-  .cal-sw-due{background:var(--red)}.cal-sw-ms{background:#1B2A4A}.cal-sw-op{background:#EEF1F5;border:1px solid #cdd3dc}.cal-sw-study{background:#dbe4f2}
+  .cal-sw-due{background:var(--red)}.cal-sw-class{background:#1B2A4A}.cal-sw-open{background:#EEF1F5;border:1px solid #cdd3dc}.cal-sw-study{background:#dbe4f2}
   .cal-grids{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:20px;margin:16px 0 26px}
   .cal-month{border:1px solid #DEE3EA;border-radius:14px;overflow:hidden;background:#fff}
   .cal-mhead{background:#1B2A4A;color:#fff;font-weight:600;font-size:.95rem;padding:10px 14px}
@@ -105,8 +105,8 @@
   .cal-blank{background:#FAFBFC}
   .cal-tag{font-size:.58rem;line-height:1.12;font-weight:700;border-radius:5px;padding:2px 4px;color:#1B2A4A;background:#EEF1F5}
   .cal-due{background:#FBECEB}.cal-due .cal-num{color:var(--red)}.cal-due .cal-tag{background:var(--red);color:#fff}
-  .cal-ms .cal-tag{background:#1B2A4A;color:#fff}.cal-ms .cal-num{color:#1B2A4A}
-  .cal-op .cal-tag{background:#EEF1F5;color:#1B2A4A}
+  .cal-class .cal-tag{background:#1B2A4A;color:#fff}.cal-class .cal-num{color:#1B2A4A}
+  .cal-open .cal-tag{background:#EEF1F5;color:#1B2A4A}
   .cal-study{background:#F3F6FB}.cal-study .cal-tag{background:#dbe4f2;color:#1B2A4A}
   .cal-today{outline:2px solid var(--red);outline-offset:-2px}
   .due-wrap{margin:0 0 18px}
@@ -134,7 +134,7 @@
   .kd-item{display:flex;align-items:baseline;gap:9px;font-size:.94rem;line-height:1.4;color:var(--ink)}
   .kd-item .kd-dot{flex:none;width:8px;height:8px;border-radius:50%;margin-top:6px;background:#9aa3af}
   .kd-due .kd-dot{background:var(--red)}.kd-due .kd-t{font-weight:600}
-  .kd-ms .kd-dot{background:#1B2A4A}
+  .kd-class .kd-dot{background:#1B2A4A}
   .kd-item em{font-style:normal;color:var(--ink-faint);font-size:.86rem}
   .kd-due em{color:var(--red);font-weight:600}
   .kd-rowpast{opacity:.5}
@@ -531,7 +531,7 @@
 <script src="./data/bfs218-holo.js?v=4"></script>
 <script src="./data/videos.js?v=3"></script>
 <script src="./data/bfs218-walkfigs.js?v=1"></script>
-<script src="./app.js?v=247"></script>
+<script src="./app.js?v=248"></script>
 <script defer src="assets/img-viewer.js?v=1"></script>
 </body>
 </html>

@@ -5654,17 +5654,18 @@
       + '</div>';
   }
   function keyDatesList() {
+    /* schema: [label, subtext, category, assignmentIndex?]  category = 'due' | 'open' | 'class' (finalized ASYNC due dates) */
     return [
-      { d: '2026-09-08', it: [['Term begins', 'Week 1 starts', 'ms']] },
-      { d: '2026-09-14', it: [['Map Exchange opens', '', 'op', 0]] },
-      { d: '2026-09-28', it: [['Coded Encounter opens', '', 'op', 1]] },
-      { d: '2026-10-19', it: [['Canadian Case File opens', '', 'op', 2]] },
-      { d: '2026-10-26', it: [['Study Week', 'Oct 26 to 30. No classes, no new work.', 'ms']] },
+      { d: '2026-09-08', it: [['First day of classes', '', 'class']] },
+      { d: '2026-09-14', it: [['Map Exchange opens', '', 'open', 0]] },
+      { d: '2026-09-28', it: [['Coded Encounter opens', '', 'open', 1]] },
+      { d: '2026-10-19', it: [['Canadian Case File opens', '', 'open', 2]] },
+      { d: '2026-10-26', it: [['Study Week', 'Oct 26 to 30. No classes.', 'class']] },
       { d: '2026-10-30', it: [['Map Exchange checkpoint', 'due', 'due', 0], ['Coded Encounter', 'due', 'due', 1], ['Canadian Case File', 'due', 'due', 2]] },
-      { d: '2026-11-23', it: [['Design the Repair opens', '', 'op', 3]] },
-      { d: '2026-12-07', it: [['Personal Cartography opens', 'your final project', 'op', 4]] },
+      { d: '2026-11-23', it: [['Design the Repair opens', '', 'open', 3]] },
+      { d: '2026-12-07', it: [['Personal Cartography opens', 'your final project', 'open', 4]] },
       { d: '2026-12-11', it: [['Design the Repair', 'due', 'due', 3], ['Map Exchange final close', 'due', 'due', 0], ['Personal Cartography', 'due', 'due', 4]] },
-      { d: '2026-12-16', it: [['Last day of the term', '', 'ms']] }
+      { d: '2026-12-16', it: [['Last day of classes', 'Nothing is due this week.', 'class']] }
     ];
   }
   var KD_MON = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -5711,21 +5712,23 @@
       + '<p style="font-size:.8rem;color:var(--ink-faint);margin:9px 0 0;line-height:1.5">This adds every deadline at once and keeps them updated if a date ever changes. It works with Apple Calendar and Google Calendar. You can also add one date at a time with the Google, Apple, or Outlook links beside each due date below.</p>'
       + '</section>';
   }
-  function keyDatesRows() {
+  function keyDatesRows(cats) {
     var K = keyDatesList(), out = '', curMon = '';
     var todayIso = '';
     try { var t = new Date(); todayIso = t.getFullYear() + '-' + ('0' + (t.getMonth() + 1)).slice(-2) + '-' + ('0' + t.getDate()).slice(-2); } catch (e) {}
     K.forEach(function (row) {
+      var rowItems = cats ? row.it.filter(function (x) { return cats.indexOf(x[2]) >= 0; }) : row.it;
+      if (!rowItems.length) return;
       var parts = row.d.split('-'), mi = parseInt(parts[1], 10) - 1, day = parseInt(parts[2], 10), mon = KD_MON[mi];
       if (mon !== curMon) { out += '<div class="kd-mon">' + mon + '</div>'; curMon = mon; }
       var past = todayIso && row.d < todayIso;
       var badge = '<div class="kd-date' + (past ? ' kd-past' : '') + '"><span class="kd-day">' + day + '</span><span class="kd-mo">' + mon.slice(0, 3) + '</span></div>';
-      var items = row.it.map(function (x) {
+      var items = rowItems.map(function (x) {
         var inner = '<span class="kd-dot"></span><span class="kd-t">' + esc(x[0]) + (x[1] ? ' <em>' + esc(x[1]) + '</em>' : '') + '</span>';
         if (x[3] != null) return '<a href="?screen=assignment-details&asg=' + x[3] + '" target="_blank" rel="noopener" class="kd-item kd-' + x[2] + ' kd-link" aria-label="Open the ' + esc(x[0]) + ' assignment in a new tab">' + inner + '<span class="kd-go" aria-hidden="true">&#8599;</span></a>';
         return '<div class="kd-item kd-' + x[2] + '">' + inner + '</div>';
       }).join('');
-      var dueItems = row.it.filter(function (x) { return x[2] === 'due'; });
+      var dueItems = rowItems.filter(function (x) { return x[2] === 'due'; });
       var add = '';
       if (dueItems.length) {
         var names = dueItems.map(function (x) { return x[0]; }).join(', ');
@@ -5740,23 +5743,29 @@
   function keyDatesCompact() { return '<div class="kd-list">' + keyDatesRows() + '</div>'; }
   function keyDatesCalendar() {
     return '<section class="node kd-cal" aria-label="Key dates for this course">'
-      + '<div class="mono" style="font-size:.7rem;letter-spacing:.08em;color:var(--red);font-weight:700;margin-bottom:4px">KEY DATES</div>'
-      + '<h2 class="wk-sec" style="margin:0 0 4px">Everything due, at a glance</h2>'
-      + '<p style="font-size:.9rem;line-height:1.55;color:var(--ink-dim);margin:0 0 14px">You do not need to add anything to a calendar app to see this. Red means a due date. Blackboard remains the official word on dates.</p>'
-      + '<div class="kd-list">' + keyDatesRows() + '</div>'
+      + '<div class="mono" style="font-size:.7rem;letter-spacing:.08em;color:var(--red);font-weight:700;margin-bottom:4px">DUE DATES</div>'
+      + '<h2 class="wk-sec" style="margin:0 0 4px">What you hand in, and when</h2>'
+      + '<p style="font-size:.9rem;line-height:1.55;color:var(--ink-dim);margin:0 0 12px">There are two due dates. Roughly half of the work is due at the first, half at the second. Nothing is due in the final week. These are the asynchronous due dates.</p>'
+      + '<div class="kd-list">' + keyDatesRows(['due']) + '</div>'
+      + '<h2 class="wk-sec" style="margin:24px 0 4px">When each assignment opens on Blackboard</h2>'
+      + '<p style="font-size:.85rem;line-height:1.5;color:var(--ink-faint);margin:0 0 10px">These are opening dates, not deadlines.</p>'
+      + '<div class="kd-list">' + keyDatesRows(['open']) + '</div>'
+      + '<h2 class="wk-sec" style="margin:24px 0 4px">The class schedule</h2>'
+      + '<p style="font-size:.85rem;line-height:1.5;color:var(--ink-faint);margin:0 0 10px">The shape of the term. Nothing here is due.</p>'
+      + '<div class="kd-list">' + keyDatesRows(['class']) + '</div>'
       + '</section>';
   }
   function calEventsByIso() {
     var K = keyDatesList(), map = {};
     K.forEach(function (row) {
       var dues = row.it.filter(function (x) { return x[2] === 'due'; });
-      var ms = row.it.filter(function (x) { return x[2] === 'ms'; });
-      var ops = row.it.filter(function (x) { return x[2] === 'op'; });
+      var cls = row.it.filter(function (x) { return x[2] === 'class'; });
+      var ops = row.it.filter(function (x) { return x[2] === 'open'; });
       var asg = row.it.filter(function (x) { return x[3] != null; }).map(function (x) { return x[3]; });
       var idx = asg.length === 1 ? asg[0] : (asg.length > 1 ? -1 : null);
       if (dues.length) map[row.d] = { kind: 'due', label: dues.length > 1 ? (dues.length + ' assignments due') : dues[0][0] + ' due', idx: idx };
-      else if (ms.length) map[row.d] = { kind: 'ms', label: ms[0][0], idx: null };
-      else if (ops.length) map[row.d] = { kind: 'op', label: ops[0][0], idx: idx };
+      else if (cls.length) map[row.d] = { kind: 'class', label: cls[0][0], idx: null };
+      else if (ops.length) map[row.d] = { kind: 'open', label: ops[0][0], idx: idx };
     });
     ['2026-10-26', '2026-10-27', '2026-10-28', '2026-10-29'].forEach(function (d) { map[d] = { kind: 'study', label: 'Study Week' }; });
     return map;
@@ -5788,8 +5797,8 @@
   function calendarLegend() {
     return '<div class="cal-legend">'
       + '<span class="cal-lg"><span class="cal-sw cal-sw-due"></span>Due date</span>'
-      + '<span class="cal-lg"><span class="cal-sw cal-sw-ms"></span>Course milestone</span>'
-      + '<span class="cal-lg"><span class="cal-sw cal-sw-op"></span>Assignment opens</span>'
+      + '<span class="cal-lg"><span class="cal-sw cal-sw-open"></span>Assignment opens</span>'
+      + '<span class="cal-lg"><span class="cal-sw cal-sw-class"></span>Class schedule</span>'
       + '<span class="cal-lg"><span class="cal-sw cal-sw-study"></span>Study Week</span>'
       + '</div>';
   }
@@ -5801,7 +5810,7 @@
     return '<div class="rise cal-page">'
       + '<div class="mono" style="font-size:.7rem;letter-spacing:.08em;color:var(--red);font-weight:700;margin-bottom:4px">CALENDAR</div>'
       + '<h1 style="font-size:1.9rem;line-height:1.15;font-weight:600;margin:0 0 8px;color:var(--ink)">Every date that matters</h1>'
-      + '<p style="font-size:1rem;line-height:1.6;color:var(--ink-dim);margin:0 0 20px;max-width:70ch">This is the full course calendar. Red days are due dates. Click any assignment to open its page in a new tab. You do not need to add anything to a calendar app to use it. Blackboard remains the official word on dates, and nothing here should ever be a surprise.</p>'
+      + '<p style="font-size:1rem;line-height:1.6;color:var(--ink-dim);margin:0 0 20px;max-width:70ch">This calendar keeps two things clearly apart: the red days when you hand something in, and the class schedule in navy (first day of classes, Study Week, and last day of classes). These are the asynchronous due dates. Click any assignment to open its page in a new tab. Blackboard remains the official word on dates, and nothing here should ever be a surprise.</p>'
       + phoneReminders()
       + calendarBody()
       + '</div>';
