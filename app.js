@@ -2138,7 +2138,11 @@
       + '<h1 class="jhero-title" style="font-size:2.5rem;line-height:1.1;font-weight:600;margin:0 0 14px;letter-spacing:0">' + esc(title) + '</h1>'
       + '</div></section>';
     var spineHead = '<div style="display:flex;align-items:baseline;gap:12px;margin:0 0 16px;flex-wrap:wrap"><h2 style="font-size:1.375rem;font-weight:600;margin:0;color:var(--ink)">Your journey</h2><span style="font-size:.875rem;color:var(--ink-faint)">' + ws.length + ' weeks, in course order</span></div>';
-    return '<div class="rise">' + hero + homeIntroCollapsible() + compassPanel() + lensHomeIntro() + spineHead + journeyStations(cur) + '</div>';
+    var cw = courseWeekByDate();
+    var doneN = ws.filter(function (x) { return weekHasWork(x); }).length;
+    var thisWeek = '<button type="button" class="jnow" onclick="SOC.station(' + cw.week + ')"><div class="jnow-l"><span class="mono jnow-tag">' + (cw.phase === 'before' ? 'COURSE BEGINS' : (cw.phase === 'after' ? 'FINAL WEEK' : 'THIS WEEK')) + '</span><b>Week ' + cw.week + ': ' + esc(weekTitle(cw.week)) + '</b><span class="jnow-date">' + esc(weekDate(cw.week)) + '</span></div><span class="jnow-go">Open' + ic('chevron', 16, 2.4) + '</span></button>';
+    var meter = '<div class="jprog"><div class="jprog-bar"><span style="width:' + Math.round(100 * doneN / (ws.length || 1)) + '%"></span></div><span class="jprog-txt">' + doneN + ' of ' + ws.length + ' weeks started</span></div>';
+    return '<div class="rise">' + hero + homeIntroCollapsible() + compassPanel() + lensHomeIntro() + thisWeek + spineHead + meter + journeyStations(cw.week) + '</div>';
   }
   function journeyStations(cur) {
     var ws = journeyWeeks();
@@ -2153,8 +2157,8 @@
         + '<div style="display:flex;align-items:flex-start;gap:16px">'
         + '<span class="jdot" style="display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;flex:none;border-radius:12px;background:' + (isCur ? 'var(--red)' : '#1B2A4A') + ';color:#fff;font-family:var(--mono);font-size:1.0625rem;font-weight:600">' + w + '</span>'
         + '<div style="flex:1;min-width:0">'
-        + '<div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:3px">' + (isCur ? '<span class="mono" style="font-size:.625rem;font-weight:700;letter-spacing:.06em;color:#B02318;background:#F6E3E1;padding:2px 8px;border-radius:999px">YOU ARE HERE</span>' : '') + lensCardBadge(w) + '<span class="mono" style="font-size:.66rem;color:var(--ink-faint);letter-spacing:.03em">' + esc(weekDate(w)) + '</span></div>'
-        + (weekHasWork(w) ? '<span class="mono" style="font-size:.625rem;font-weight:700;letter-spacing:.06em;color:#2c6b3f;background:#E9EFE7;border:1px solid #9CC4A8;border-radius:999px;padding:2px 8px">IN PROGRESS</span>' : '')
+        + '<div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:3px">' + (isCur ? '<span class="mono" style="font-size:.625rem;font-weight:700;letter-spacing:.06em;color:#B02318;background:#F6E3E1;padding:2px 8px;border-radius:999px">THIS WEEK</span>' : '') + lensCardBadge(w) + '<span class="mono" style="font-size:.66rem;color:var(--ink-faint);letter-spacing:.03em">' + esc(weekDate(w)) + '</span></div>'
+        + (weekDone(w) ? '<span class="mono" style="font-size:.625rem;font-weight:700;letter-spacing:.06em;color:#15603a;background:#DFF0E5;border:1px solid #7dbd97;border-radius:999px;padding:2px 8px">DONE</span>' : (weekHasWork(w) ? '<span class="mono" style="font-size:.625rem;font-weight:700;letter-spacing:.06em;color:#2c6b3f;background:#E9EFE7;border:1px solid #9CC4A8;border-radius:999px;padding:2px 8px">IN PROGRESS</span>' : ''))
         + '<h3 style="font-size:1.0625rem;font-weight:600;margin:0 0 2px;color:var(--ink)">' + esc(weekTitle(w)) + '</h3>'
         + '<p style="font-size:.9375rem;line-height:1.5;color:var(--ink-dim);margin:0 0 8px">' + esc(journeyQ(w)) + '</p>' + lensCardLine(w)
         + '<div style="display:flex;align-items:center;gap:7px;font-size:.75rem;color:var(--ink-faint)"><span style="display:inline-flex;color:#6B7280">' + ic('book', 13) + '</span>' + esc(note) + '<span style="margin:0 4px">&middot;</span><span style="color:var(--red);font-weight:600">Open &rarr;</span></div>'
@@ -4472,6 +4476,17 @@
     return '(activity not started yet)';
   }
   var WEEK_DATES = { 1: 'Week of Sept 8', 2: 'Week of Sept 14', 3: 'Week of Sept 21', 4: 'Week of Sept 28', 5: 'Week of Oct 5', 6: 'Week of Oct 13', 7: 'Week of Oct 19', 8: 'Week of Nov 2', 9: 'Week of Nov 9', 10: 'Week of Nov 16', 11: 'Week of Nov 23', 12: 'Week of Nov 30', 13: 'Week of Dec 7', 14: 'Week of Dec 14' };
+  var WEEK_START = { 1: '2026-09-08', 2: '2026-09-14', 3: '2026-09-21', 4: '2026-09-28', 5: '2026-10-05', 6: '2026-10-13', 7: '2026-10-19', 8: '2026-11-02', 9: '2026-11-09', 10: '2026-11-16', 11: '2026-11-23', 12: '2026-11-30', 13: '2026-12-07', 14: '2026-12-14' };
+  function courseWeekByDate() {
+    try {
+      var today = new Date(); today.setHours(0, 0, 0, 0);
+      if (today < new Date('2026-09-08T00:00:00')) return { week: 1, phase: 'before' };
+      var cur = 1;
+      for (var w = 1; w <= 14; w++) { if (WEEK_START[w] && today >= new Date(WEEK_START[w] + 'T00:00:00')) cur = w; }
+      return { week: cur, phase: today > new Date('2026-12-20T00:00:00') ? 'after' : 'during' };
+    } catch (e) { return { week: 1, phase: 'before' }; }
+  }
+  function weekDone(w) { try { return !!(state.wkReflect && String(state.wkReflect[w] || '').trim()); } catch (e) { return false; } }
   var STUDY_WEEK_DATE = 'Oct 26 to 30';
   var WORK_WEEKS = [13, 14];
   function weekDate(w) { return WEEK_DATES[w] || ''; }
