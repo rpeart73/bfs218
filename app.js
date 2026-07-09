@@ -5679,6 +5679,7 @@
     return { d: dates[0], names: byDate[dates[0]], days: kdDaysUntil(dates[0]) };
   }
   function dueReminderStrip() {
+    if (state.screen === 'calendar') return '';
     var nd = nextDue(); if (!nd) return '';
     var lead = nd.days <= 0 ? 'Due today' : nd.days === 1 ? 'Due tomorrow' : nd.days <= 21 ? ('Due in ' + nd.days + ' days') : 'Next due';
     var urgent = nd.days <= 7 ? ' due-strip-urgent' : '';
