@@ -2914,6 +2914,19 @@
       return '<div class="wk-model-step"><div class="mono">STEP ' + (i + 1) + '</div><h3>' + esc(c[0]) + '</h3><p>' + esc(c[1]) + '</p></div>';
     }).join('') + '</div>';
   }
+  function conceptsSectionFor(w, d) {
+    if (!d || !d.concepts || !d.concepts.length) return '';
+    var inner = '<p class="wk-hint">These are the week\'s big ideas, explained. Read them to understand the argument; this is what your discussions and written work draw on.</p>' + d.concepts.map(function (c) {
+      var fe = '';
+      try {
+        var fexs = window.BFS218_FIELD_EXAMPLES;
+        var ff = String(state.programViewField || state.careerField || '').trim();
+        if (ff && fexs && fexs[ff] && fexs[ff][w] && fexs[ff][w][c.h]) fe = '<div class="wk-concept" style="border-left:4px solid #B02318;padding-left:12px;margin-top:8px"><h3 style="font-size:.95rem">In your program: ' + esc(ff) + '</h3><p>' + esc(fexs[ff][w][c.h]) + '</p></div>';
+      } catch (e) {}
+      return '<div class="wk-concept"><h3>' + esc(c.h) + '</h3><p>' + esc(c.body) + ' <span class="wk-cite">(' + esc(c.cite) + ')</span></p></div>' + fe;
+    }).join('');
+    return '<section id="wk-con" class="node"><h2 class="wk-sec">Key concepts</h2>' + inner + '</section>';
+  }
   function audioPackSection(w) {
     var AU = window.BFS218_AUDIO || {};
     var ep = AU[w];
@@ -4411,7 +4424,7 @@
     var rail = '<aside class="wk-rail"><div class="wk-railbox"><div class="wk-railh">IN THIS WEEK</div>'
       + [['ov', 'This week'], ['path', 'Your learning path'], ['vid', 'This week in 80 seconds'], ['visual', 'A Visual Overview']].concat(d.activity ? [['do', 'Your capstone']] : []).concat([['reflect', 'Reflection'], ['notes', 'Generate notes']]).map(function (it) { return '<a href="#wk-' + it[0] + '"><span class="s"></span>' + it[1] + '</a>'; }).join('')
       + '<div class="wk-railt">' + ic('clock', 12) + ' No new material</div></div></aside>';
-    return '<div class="rise">' + mobileWeekActions(w, d, { activityLabel: 'Capstone' }) + hero + path + '<div class="wk-grid"><section>' + audioPk + vid + visual + act + reflect + notes + navRow + '</section>' + rail + '</div></div>';
+    return '<div class="rise">' + mobileWeekActions(w, d, { activityLabel: 'Capstone' }) + hero + path + '<div class="wk-grid"><section>' + audioPk + conceptsSectionFor(w, d) + vid + visual + act + reflect + notes + navRow + '</section>' + rail + '</div></div>';
   }
   var OVERVIEW_WEEK = 1;
   function overviewPage(w) {
@@ -4433,7 +4446,7 @@
     var rail = '<aside class="wk-rail"><div class="wk-railbox"><div class="wk-railh">IN THIS WEEK</div>'
       + [['ov', 'Overview'], ['path', 'Your learning path'], ['how', 'How this course works'], ['visual', 'A Visual Overview']].map(function (it) { return '<a href="#wk-' + it[0] + '"><span class="s"></span>' + it[1] + '</a>'; }).join('')
       + '<div class="wk-railt">' + ic('clock', 12) + ' Overview, no readings</div></div></aside>';
-    return '<div class="rise">' + mobileWeekActions(w, d, { reflect: false }) + hero + path + '<div class="wk-grid"><section>' + audioPk + how + visual + beginRow + '</section>' + rail + '</div></div>';
+    return '<div class="rise">' + mobileWeekActions(w, d, { reflect: false }) + hero + path + '<div class="wk-grid"><section>' + audioPk + conceptsSectionFor(w, d) + how + visual + beginRow + '</section>' + rail + '</div></div>';
   }
   var STUDY_WEEK = 7;
   function studyWeekPage(w) {
