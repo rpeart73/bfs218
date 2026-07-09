@@ -5685,8 +5685,7 @@
       + '<span class="due-strip-date">' + esc(kdMonthDay(nd.d)) + '</span>'
       + '<button type="button" id="due-toggle" class="due-strip-cta" onclick="SOC.toggleDue()" aria-expanded="' + (open ? 'true' : 'false') + '" aria-controls="due-panel">' + (open ? 'Hide dates' : 'See all dates') + '</button>'
       + '</div>'
-      + '<div class="due-panel" id="due-panel"' + (open ? '' : ' hidden') + '>' + keyDatesCompact()
-      + '<div style="margin-top:12px"><button type="button" class="due-open-cal" onclick="SOC.go(\'calendar\')">Open the full calendar</button></div></div>'
+      + '<div class="due-panel" id="due-panel"' + (open ? '' : ' hidden') + '>' + calendarBody() + '</div>'
       + '</div>';
   }
   function keyDatesRows() {
@@ -5764,15 +5763,16 @@
       + '<span class="cal-lg"><span class="cal-sw cal-sw-study"></span>Study Week</span>'
       + '</div>';
   }
-  function calendarPage() {
+  function calendarBody() {
     var grids = [8, 9, 10, 11].map(function (m) { return calMonthGrid(2026, m); }).join('');
+    return calendarLegend() + '<div class="cal-grids">' + grids + '</div>' + keyDatesCalendar();
+  }
+  function calendarPage() {
     return '<div class="rise cal-page">'
       + '<div class="mono" style="font-size:.7rem;letter-spacing:.08em;color:var(--red);font-weight:700;margin-bottom:4px">CALENDAR</div>'
       + '<h1 style="font-size:1.9rem;line-height:1.15;font-weight:600;margin:0 0 8px;color:var(--ink)">Every date that matters</h1>'
       + '<p style="font-size:1rem;line-height:1.6;color:var(--ink-dim);margin:0 0 20px;max-width:70ch">This is the full course calendar. Red days are due dates. You do not need to add anything to a calendar app to use it. Blackboard remains the official word on dates, and nothing here should ever be a surprise.</p>'
-      + calendarLegend()
-      + '<div class="cal-grids">' + grids + '</div>'
-      + keyDatesCalendar()
+      + calendarBody()
       + '</div>';
   }
   function assignmentsData() {
