@@ -5683,16 +5683,12 @@
     var nd = nextDue(); if (!nd) return '';
     var lead = nd.days <= 0 ? 'Due today' : nd.days === 1 ? 'Due tomorrow' : nd.days <= 21 ? ('Due in ' + nd.days + ' days') : 'Next due';
     var urgent = nd.days <= 7 ? ' due-strip-urgent' : '';
-    var open = !!state.dueExpanded;
-    return '<div class="due-wrap">'
-      + '<div class="due-strip' + urgent + '">'
+    return '<div class="due-wrap"><button type="button" class="due-strip' + urgent + '" onclick="SOC.go(\'calendar\')" aria-label="Next due date. Opens the calendar page.">'
       + '<span class="due-strip-dot" aria-hidden="true"></span>'
-      + '<button type="button" class="due-strip-main" onclick="SOC.toggleDue()" aria-expanded="' + (open ? 'true' : 'false') + '" aria-controls="due-panel"><strong>' + esc(lead) + ':</strong> ' + esc(nd.names.join(', ')) + '</button>'
+      + '<span class="due-strip-main"><strong>' + esc(lead) + ':</strong> ' + esc(nd.names.join(', ')) + '</span>'
       + '<span class="due-strip-date">' + esc(kdMonthDay(nd.d)) + '</span>'
-      + '<button type="button" id="due-toggle" class="due-strip-cta" onclick="SOC.toggleDue()" aria-expanded="' + (open ? 'true' : 'false') + '" aria-controls="due-panel">' + (open ? 'Hide dates' : 'See all dates') + '</button>'
-      + '</div>'
-      + '<div class="due-panel" id="due-panel"' + (open ? '' : ' hidden') + '>' + calendarBody() + '</div>'
-      + '</div>';
+      + '<span class="due-strip-cta">See all dates <span aria-hidden="true">&#8594;</span></span>'
+      + '</button></div>';
   }
   function keyDatesRows() {
     var K = keyDatesList(), out = '', curMon = '';
@@ -8049,14 +8045,6 @@
     week: function (w) { if (state.screen !== 'library' || state.activeWeek !== w) rememberPrevious(); state.activeWeek = (state.activeWeek === w) ? null : w; state.savedView = false; state.screen = 'library'; focusTarget = 'soc-main'; render(); topScroll(); },
     clearFilters: function () { state.activeTypes = []; state.activeWeek = null; state.search = ''; state.savedView = false; render(); },
     dismissIntro: function () { state.introOpen = false; persist(); render(); },
-    toggleDue: function () {
-      state.dueExpanded = !state.dueExpanded;
-      var pnl = document.getElementById('due-panel'), btn = document.getElementById('due-toggle'), mb = document.querySelector('.due-strip-main');
-      if (pnl) pnl.hidden = !state.dueExpanded;
-      var lbl = state.dueExpanded ? 'Hide dates' : 'See all dates', ax = state.dueExpanded ? 'true' : 'false';
-      if (btn) { btn.textContent = lbl; btn.setAttribute('aria-expanded', ax); }
-      if (mb) mb.setAttribute('aria-expanded', ax);
-    },
     save: function (id) { var a = state.saved, i = a.indexOf(id); var msg; if (i >= 0) { a.splice(i, 1); msg = 'Removed from saved.'; } else { a.push(id); msg = 'Saved to your shelf.'; } persist(); flash(msg); },
     compare: function (id) { var a = state.compareIds, i = a.indexOf(id); if (i >= 0) { a.splice(i, 1); persist(); flash('Removed from compare.'); } else { if (a.length >= 3) { flash('Compare holds three at a time.'); return; } a.push(id); persist(); flash('Added to compare.'); } render(); },
     synCopy: function () {
