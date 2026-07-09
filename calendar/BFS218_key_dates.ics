@@ -10,6 +10,11 @@ DTSTART;VALUE=DATE:20260914
 DTEND;VALUE=DATE:20260915
 SUMMARY:BFS218: Map Exchange opens on Blackboard
 DESCRIPTION:Details and submission on Blackboard. Guidance on the companion site: https://rpeart73.github.io/bfs218/?screen=assignments
+BEGIN:VALARM
+TRIGGER:-P2D
+ACTION:DISPLAY
+DESCRIPTION:BFS218 deadline in 2 days
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bfs218-2@rpeart73.github.io
@@ -18,6 +23,11 @@ DTSTART;VALUE=DATE:20261030
 DTEND;VALUE=DATE:20261031
 SUMMARY:BFS218: Map Exchange (Checkpoint due by October 30\, 2026)
 DESCRIPTION:Details and submission on Blackboard. Guidance on the companion site: https://rpeart73.github.io/bfs218/?screen=assignments
+BEGIN:VALARM
+TRIGGER:-P2D
+ACTION:DISPLAY
+DESCRIPTION:BFS218 deadline in 2 days
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bfs218-3@rpeart73.github.io
@@ -26,6 +36,11 @@ DTSTART;VALUE=DATE:20261211
 DTEND;VALUE=DATE:20261212
 SUMMARY:BFS218: Map Exchange (Final close due by December 11\, 2026)
 DESCRIPTION:Details and submission on Blackboard. Guidance on the companion site: https://rpeart73.github.io/bfs218/?screen=assignments
+BEGIN:VALARM
+TRIGGER:-P2D
+ACTION:DISPLAY
+DESCRIPTION:BFS218 deadline in 2 days
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bfs218-4@rpeart73.github.io
@@ -34,6 +49,11 @@ DTSTART;VALUE=DATE:20260928
 DTEND;VALUE=DATE:20260929
 SUMMARY:BFS218: Coded Encounter opens on Blackboard
 DESCRIPTION:Details and submission on Blackboard. Guidance on the companion site: https://rpeart73.github.io/bfs218/?screen=assignments
+BEGIN:VALARM
+TRIGGER:-P2D
+ACTION:DISPLAY
+DESCRIPTION:BFS218 deadline in 2 days
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bfs218-5@rpeart73.github.io
@@ -42,6 +62,11 @@ DTSTART;VALUE=DATE:20261030
 DTEND;VALUE=DATE:20261031
 SUMMARY:BFS218: Coded Encounter (Due by October 30\, 2026)
 DESCRIPTION:Details and submission on Blackboard. Guidance on the companion site: https://rpeart73.github.io/bfs218/?screen=assignments
+BEGIN:VALARM
+TRIGGER:-P2D
+ACTION:DISPLAY
+DESCRIPTION:BFS218 deadline in 2 days
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bfs218-6@rpeart73.github.io
@@ -50,6 +75,11 @@ DTSTART;VALUE=DATE:20261019
 DTEND;VALUE=DATE:20261020
 SUMMARY:BFS218: Canadian Case File opens on Blackboard
 DESCRIPTION:Details and submission on Blackboard. Guidance on the companion site: https://rpeart73.github.io/bfs218/?screen=assignments
+BEGIN:VALARM
+TRIGGER:-P2D
+ACTION:DISPLAY
+DESCRIPTION:BFS218 deadline in 2 days
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bfs218-7@rpeart73.github.io
@@ -58,6 +88,11 @@ DTSTART;VALUE=DATE:20261030
 DTEND;VALUE=DATE:20261031
 SUMMARY:BFS218: Canadian Case File (Due by October 30\, 2026)
 DESCRIPTION:Details and submission on Blackboard. Guidance on the companion site: https://rpeart73.github.io/bfs218/?screen=assignments
+BEGIN:VALARM
+TRIGGER:-P2D
+ACTION:DISPLAY
+DESCRIPTION:BFS218 deadline in 2 days
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bfs218-8@rpeart73.github.io
@@ -66,6 +101,11 @@ DTSTART;VALUE=DATE:20261123
 DTEND;VALUE=DATE:20261124
 SUMMARY:BFS218: Design the Repair opens on Blackboard
 DESCRIPTION:Details and submission on Blackboard. Guidance on the companion site: https://rpeart73.github.io/bfs218/?screen=assignments
+BEGIN:VALARM
+TRIGGER:-P2D
+ACTION:DISPLAY
+DESCRIPTION:BFS218 deadline in 2 days
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bfs218-9@rpeart73.github.io
@@ -74,6 +114,11 @@ DTSTART;VALUE=DATE:20261211
 DTEND;VALUE=DATE:20261212
 SUMMARY:BFS218: Design the Repair (Due by December 11\, 2026)
 DESCRIPTION:Details and submission on Blackboard. Guidance on the companion site: https://rpeart73.github.io/bfs218/?screen=assignments
+BEGIN:VALARM
+TRIGGER:-P2D
+ACTION:DISPLAY
+DESCRIPTION:BFS218 deadline in 2 days
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bfs218-10@rpeart73.github.io
@@ -82,6 +127,11 @@ DTSTART;VALUE=DATE:20261207
 DTEND;VALUE=DATE:20261208
 SUMMARY:BFS218: Personal Cartography opens on Blackboard
 DESCRIPTION:Details and submission on Blackboard. Guidance on the companion site: https://rpeart73.github.io/bfs218/?screen=assignments
+BEGIN:VALARM
+TRIGGER:-P2D
+ACTION:DISPLAY
+DESCRIPTION:BFS218 deadline in 2 days
+END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:bfs218-11@rpeart73.github.io
@@ -90,5 +140,10 @@ DTSTART;VALUE=DATE:20261211
 DTEND;VALUE=DATE:20261212
 SUMMARY:BFS218: Personal Cartography (Due by December 11\, 2026)
 DESCRIPTION:Details and submission on Blackboard. Guidance on the companion site: https://rpeart73.github.io/bfs218/?screen=assignments
+BEGIN:VALARM
+TRIGGER:-P2D
+ACTION:DISPLAY
+DESCRIPTION:BFS218 deadline in 2 days
+END:VALARM
 END:VEVENT
 END:VCALENDAR

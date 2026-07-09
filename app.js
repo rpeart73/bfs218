@@ -1408,6 +1408,7 @@
     if (state.screen === 'videos') return 'Videos and Podcasts';
     if (state.screen === 'glossary') return 'Glossary';
     if (state.screen === 'cards') return 'Concept Flashcards';
+    if (state.screen === 'calendar') return 'Calendar and Due Dates';
     if (state.screen === 'assignments' || state.screen === 'starter') return 'Starting Your Assignment';
     if (state.screen === 'career') return 'Career Choices';
     if (state.screen === 'activity') return 'Activity';
@@ -5690,6 +5691,26 @@
       + '<span class="due-strip-cta">See all dates <span aria-hidden="true">&#8594;</span></span>'
       + '</button></div>';
   }
+  var WEBCAL = 'webcal://rpeart73.github.io/bfs218/calendar/BFS218_key_dates.ics';
+  function kdPad2(n) { return (n < 10 ? '0' : '') + n; }
+  function kdIsoPlus1(iso) { var p = iso.split('-'); var dt = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2] + 1)); return dt.getUTCFullYear() + '-' + kdPad2(dt.getUTCMonth() + 1) + '-' + kdPad2(dt.getUTCDate()); }
+  function kdIcsEsc(s) { return String(s).replace(/([,;\\])/g, '\\$1').replace(/\n/g, '\\n'); }
+  function addCalUrls(iso, title, details) {
+    var d0 = iso.replace(/-/g, ''), d1 = kdIsoPlus1(iso).replace(/-/g, '');
+    var g = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(title) + '&dates=' + d0 + '/' + d1 + '&details=' + encodeURIComponent(details);
+    var o = 'https://outlook.office.com/calendar/0/deeplink/compose?path=/calendar/action/compose&rru=addevent&subject=' + encodeURIComponent(title) + '&startdt=' + iso + '&enddt=' + kdIsoPlus1(iso) + '&allday=true&body=' + encodeURIComponent(details);
+    var ics = 'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//BFS218//Companion//EN\r\nCALSCALE:GREGORIAN\r\nBEGIN:VEVENT\r\nUID:' + d0 + '-bfs218@rpeart73.github.io\r\nDTSTART;VALUE=DATE:' + d0 + '\r\nDTEND;VALUE=DATE:' + d1 + '\r\nSUMMARY:' + kdIcsEsc(title) + '\r\nDESCRIPTION:' + kdIcsEsc(details) + '\r\nBEGIN:VALARM\r\nTRIGGER:-P2D\r\nACTION:DISPLAY\r\nDESCRIPTION:' + kdIcsEsc(title) + '\r\nEND:VALARM\r\nEND:VEVENT\r\nEND:VCALENDAR';
+    return { g: g, o: o, a: 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics) };
+  }
+  function phoneReminders() {
+    return '<section class="node phone-rem">'
+      + '<div class="mono" style="font-size:.7rem;letter-spacing:.08em;color:var(--red);font-weight:700;margin-bottom:4px">REMINDERS</div>'
+      + '<h2 class="wk-sec" style="margin:0 0 4px">Get these on your phone</h2>'
+      + '<p style="font-size:.9rem;line-height:1.55;color:var(--ink-dim);margin:0 0 12px">One tap adds the deadlines to your own phone calendar, with a reminder two days before. Nothing is downloaded, and nothing about you is stored here.</p>'
+      + '<a href="' + WEBCAL + '" class="phone-sub">Subscribe on your phone <span aria-hidden="true">&#8594;</span></a>'
+      + '<p style="font-size:.8rem;color:var(--ink-faint);margin:9px 0 0;line-height:1.5">This adds every deadline at once and keeps them updated if a date ever changes. It works with Apple Calendar and Google Calendar. You can also add one date at a time with the Google, Apple, or Outlook links beside each due date below.</p>'
+      + '</section>';
+  }
   function keyDatesRows() {
     var K = keyDatesList(), out = '', curMon = '';
     var todayIso = '';
@@ -5704,7 +5725,15 @@
         if (x[3] != null) return '<a href="?screen=assignment-details&asg=' + x[3] + '" target="_blank" rel="noopener" class="kd-item kd-' + x[2] + ' kd-link" aria-label="Open the ' + esc(x[0]) + ' assignment in a new tab">' + inner + '<span class="kd-go" aria-hidden="true">&#8599;</span></a>';
         return '<div class="kd-item kd-' + x[2] + '">' + inner + '</div>';
       }).join('');
-      out += '<div class="kd-row' + (past ? ' kd-rowpast' : '') + '">' + badge + '<div class="kd-items">' + items + '</div></div>';
+      var dueItems = row.it.filter(function (x) { return x[2] === 'due'; });
+      var add = '';
+      if (dueItems.length) {
+        var names = dueItems.map(function (x) { return x[0]; }).join(', ');
+        var title = 'BFS218: ' + (dueItems.length > 1 ? (dueItems.length + ' assignments due') : (dueItems[0][0] + ' due'));
+        var u = addCalUrls(row.d, title, names + '. Details on Blackboard and the BFS218 companion site.');
+        add = '<div class="kd-add"><span class="kd-add-lbl">Remind me:</span> <a href="' + u.g + '" target="_blank" rel="noopener">Google</a> <a href="' + u.a + '">Apple</a> <a href="' + u.o + '" target="_blank" rel="noopener">Outlook</a></div>';
+      }
+      out += '<div class="kd-row' + (past ? ' kd-rowpast' : '') + '">' + badge + '<div class="kd-items">' + items + add + '</div></div>';
     });
     return out;
   }
@@ -5715,7 +5744,6 @@
       + '<h2 class="wk-sec" style="margin:0 0 4px">Everything due, at a glance</h2>'
       + '<p style="font-size:.9rem;line-height:1.55;color:var(--ink-dim);margin:0 0 14px">You do not need to add anything to a calendar app to see this. Red means a due date. Blackboard remains the official word on dates.</p>'
       + '<div class="kd-list">' + keyDatesRows() + '</div>'
-      + (typeof ICS_PATH === 'string' && ICS_PATH ? '<div style="margin-top:14px"><a href="' + ICS_PATH + '" download style="font-size:.8rem;font-weight:600;color:#1B2A4A;background:#fff;border:1px solid #1B2A4A;border-radius:9px;padding:7px 13px;text-decoration:none">Prefer reminders on your phone? Add these dates</a></div>' : '')
       + '</section>';
   }
   function calEventsByIso() {
@@ -5774,6 +5802,7 @@
       + '<div class="mono" style="font-size:.7rem;letter-spacing:.08em;color:var(--red);font-weight:700;margin-bottom:4px">CALENDAR</div>'
       + '<h1 style="font-size:1.9rem;line-height:1.15;font-weight:600;margin:0 0 8px;color:var(--ink)">Every date that matters</h1>'
       + '<p style="font-size:1rem;line-height:1.6;color:var(--ink-dim);margin:0 0 20px;max-width:70ch">This is the full course calendar. Red days are due dates. Click any assignment to open its page in a new tab. You do not need to add anything to a calendar app to use it. Blackboard remains the official word on dates, and nothing here should ever be a surprise.</p>'
+      + phoneReminders()
       + calendarBody()
       + '</div>';
   }
