@@ -2974,6 +2974,9 @@
     var V = window.BFS218_VISUALS || {};
     var vw = V.weeks && V.weeks[w];
     if (vw && vw.activity && vw.activity.modelKind && d && d.activity && d.activity.screen) {
+      return '';
+    }
+    if (false) {
       return '<section id="wk-visual" class="node"><h2 class="wk-sec">A Visual Overview</h2>'
         + '<div class="wk-visual-card"><b>' + esc(spec.title) + '</b>'
         + '<p>' + esc(spec.scene) + '</p>'
@@ -4203,7 +4206,7 @@
     var kcR = kcSection(w);
     var kc = kcR.html, kcItems = kcR.items;
     var rail = '<aside class="wk-rail"><div class="wk-railbox"><div class="wk-railh">IN THIS WEEK</div>'
-      + [['ov', 'Overview'], ['path', 'Your learning path']].concat(assignmentTiming ? [['asg', 'Assignment dates']] : []).concat([['vid', 'This week in 80 seconds']]).concat([['pre', 'Before you begin'], ['learn', 'Purpose'], ['out', 'Learning outcomes'], ['gq', 'Guiding questions']]).concat(audioPk ? [['audio', 'Listen to this week']] : []).concat(programLens ? [['lens', 'For your program']] : []).concat([['con', 'Key concepts'], ['term', 'Key terms'], ['read', 'Readings']]).concat([['visual', 'A Visual Overview']]).concat(d.deck ? [['watch', 'Walkthrough']] : []).concat(programCase ? [['case', 'Case study']] : []).concat([['do', 'The activity'], ['reflect', 'Reflection']]).concat(sg ? [['sg', 'Study Guide']] : []).concat(kcItems.length ? [['kc', 'Knowledge Check']] : []).concat([['notes', 'Generate notes']]).map(function (it) { return '<a href="#wk-' + it[0] + '"><span class="s"></span>' + it[1] + '</a>'; }).join('')
+      + [['ov', 'Overview'], ['path', 'Your learning path']].concat(assignmentTiming ? [['asg', 'Assignment dates']] : []).concat([['vid', 'This week in 80 seconds']]).concat([['pre', 'Before you begin'], ['learn', 'Purpose'], ['out', 'Learning outcomes'], ['gq', 'Guiding questions']]).concat(audioPk ? [['audio', 'Listen to this week']] : []).concat(programLens ? [['lens', 'For your program']] : []).concat([['con', 'Key concepts'], ['term', 'Key terms'], ['read', 'Readings']]).concat(visual ? [['visual', 'A Visual Overview']] : []).concat(d.deck ? [['watch', 'Walkthrough']] : []).concat(programCase ? [['case', 'Case study']] : []).concat([['do', 'The activity'], ['reflect', 'Reflection']]).concat(sg ? [['sg', 'Study Guide']] : []).concat(kcItems.length ? [['kc', 'Knowledge Check']] : []).concat([['notes', 'Generate notes']]).map(function (it) { return '<a href="#wk-' + it[0] + '"><span class="s"></span>' + it[1] + '</a>'; }).join('')
       + '<div class="wk-railt">' + ic('clock', 12) + ' ' + esc(d.time.split('(')[0].trim()) + '</div></div></aside>';
     var collBar = '<div class="wk-coll-bar" role="group" aria-label="Section display controls"><button type="button" onclick="SOC.wkCollAll(' + w + ',1)">Collapse all sections</button><button type="button" onclick="SOC.wkCollAll(' + w + ',0)">Expand all</button><span>Weeks start folded so you can see the whole map. Open just what you need; sections fold again when you leave the week.</span></div>';
     return '<div class="rise wk-page">' + mobileWeekActions(w, d) + hero + path + '<div class="wk-grid"><section>' + collBar + assignmentTiming + vid + pre + purpose + outcomes + guiding + audioPk + programLens + concepts + terms + readings + visual + watch + programCase + act + reflect + sg + kc + notes + navRow + '</section>' + rail + '</div></div>';
@@ -4813,6 +4816,11 @@
     var parts = String(s || '').split(',').map(function (x) { return x.trim(); }).filter(Boolean);
     return parts.slice(0, 2).join(' and ').replace(/ and and /, ' and ');
   }
+  function pfHash(s) {
+    var h = 0; s = String(s || '');
+    for (var i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
+    return Math.abs(h);
+  }
   function areaCaseQuestions(area, o, name) {
     var d = pfFirst(o.decision), pl = pfPair(o.place), pe = pfLast(o.people), pr = pfFirst(o.pressure), st = pfFirst(o.setting);
     var BY = {
@@ -4895,7 +4903,196 @@
         'If this platform published its ranking criteria the way mastheads publish standards, what would the first correction have to be?'
       ]
     };
-    return BY[area] || null;
+    var base = BY[area] || null;
+    if (!base) return null;
+    var ALT = {
+      'Business': [
+        [
+          'Sit with the person on the wrong side of the ' + d + ': what do they receive, a letter, a hold, a silence, and what would they have to gather to fight it?',
+          'Your manager asks why the numbers dipped in one segment. The honest answer runs through ' + pl + '. Draft the two sentences you would actually say.',
+          'Find the oldest assumption still alive inside this workflow: what year does it come from, and what did the business look like then?',
+          'If ' + pe + ' designed the exception process themselves, what is the first step they would delete?'
+        ],
+        [
+          'Reconstruct the decision from the log alone: could an auditor tell why the ' + d + ' fired, or only that it did? What is missing from the record?',
+          'Price the error: one wrongful flag inside ' + pl + ', multiplied across a quarter. Who absorbs that cost today, the firm or the flagged?',
+          'Which incentive in this process rewards speed over scrutiny, and what would have to change in the bonus math for scrutiny to win?',
+          'Write the memo line that would make ' + pr + ' a trigger for review instead of a reason to skip it.'
+        ]
+      ],
+      'Health and Wellness': [
+        [
+          'Follow one patient through a shift where the ' + d + ' misreads them: chart the three moments a human could have caught it, and what each would have needed to notice.',
+          'What does the patient hear when the number disagrees with their body, and who in the room is trained to believe which?',
+          'Your preceptor trusts the tool completely. Compose the question you could ask that respects them and still opens the audit.',
+          'Where does ' + pe + ' appear in the validation study, if at all? Go look; write down what you find.'
+        ],
+        [
+          'Treat the score like a colleague: what is its scope of practice, who supervises it, and what happens when it exceeds both?',
+          'Map the data trail from bedside to dashboard through ' + pl + ': at which hop does context get stripped, and who reads the stripped version?',
+          'A near-miss review lands on your desk during ' + pr + ': write the contributing-factors line that names the tool without blaming the nurse.',
+          'What consent did the patient actually give for this measurement, and what is being done with it that they never heard about?'
+        ]
+      ],
+      'Law, Administration and Public Safety': [
+        [
+          'Cross-examine the ' + d + ' as if it were a witness: what did it observe, what did it infer, what is hearsay from its training data?',
+          'The person flagged inside ' + pl + ' asks you directly: what is this based on? Give the answer you could defend to a supervisor and to them.',
+          'Which part of this process would collapse if disclosure were mandatory, and what does that tell you about the part?',
+          'Write the policy sentence that would give ' + pe + ' a route to correction that does not require a lawyer.'
+        ],
+        [
+          'Run the counterfactual: same facts, no score. What would the officer, clerk, or adjudicator have done, and why did the score change it?',
+          'Under ' + pr + ', discretion narrows. Where exactly does the tool absorb the discretion, and who owns the outcome now?',
+          'Take one week of decisions through ' + pl + ' and sort them: score-confirmed, score-overridden, score-unquestioned. What does the third pile tell you?',
+          'What would a Le-style contextual analysis add to this process, and which paragraph of your report would carry it?'
+        ]
+      ],
+      'Information Technology': [
+        [
+          'Write the incident ticket for a harm with no crash: what is the severity, what is the repro, and who gets paged when the victim is a demographic?',
+          'The PM wants the ' + d + ' threshold lowered to hit a KPI during ' + pr + '. Write your comment on that PR.',
+          'Which dashboard would show this system quietly failing ' + pe + ', and does that dashboard exist? If not, that is the sprint.',
+          'Trace one label back through ' + pl + ' to the human who created it: what were they paid, what were they told, what did they assume?'
+        ],
+        [
+          'Read the system like an attacker who wants unfairness: where is the cheapest place to make it discriminate, and is anyone watching that surface?',
+          'Diff the docs against the deployment: what does the model card claim that the logs cannot verify?',
+          'You inherit this code with no handover. What test do you write first to learn who it fails?',
+          'The vendor calls the bias fixed. Design the two-week check that would make you believe them, or not.'
+        ]
+      ],
+      'Education, Community and Social Services': [
+        [
+          'Sit in the parent seat: the ' + d + ' has flagged your child and the meeting is tomorrow. What do you not know, and who could have told you sooner?',
+          'Find the moment the number became the narrative in one file you know: which sentence did it write, and who signed it?',
+          'What does pushing back look like from inside your role during ' + pr + ', concretely, without losing the placement or the job?',
+          'Design the one question every intake through ' + pl + ' should ask that none currently does.'
+        ],
+        [
+          'Take the tool\u2019s vendor page into supervision: which promise would your families laugh at, and what does that tell the procurement committee?',
+          'Whose language does the system speak, literally: which of your families signs forms they cannot read, and what has that already cost them?',
+          'Track one child\u2019s flag across agencies through ' + pl + ': who saw it, what did each add, and where could it have been retired?',
+          'Write the strengths-based sentence that could sit beside the risk score in the same file, and would survive an audit.'
+        ]
+      ],
+      'Engineering Technology': [
+        [
+          'Do the tolerance stack on people: each subsystem within spec, whose use case falls outside the stack-up, and where did their margin go?',
+          'The field data disagrees with the lab data for ' + pe + '. Which instrument do you trust, and what does the discrepancy tell you about the test plan?',
+          'Draft the requirement line that was missing: measurable, testable, and covering the population the ' + d + ' currently fails.',
+          'What would preventive maintenance look like for fairness on ' + pl + ': what drifts, on what schedule, checked by whom?'
+        ],
+        [
+          'Reverse-engineer the assumption: given how this system fails, reconstruct the test population it was built on.',
+          'Under ' + pr + ', someone signs the acceptance anyway. Write the dissent memo you would want on record, in three sentences.',
+          'Which cheaper sensor, dataset, or shortcut created this exposure, and what did the savings actually buy?',
+          'Spec the recall criteria: what measured gap on ' + pe + ' would trigger one, and why is that number not already in the contract?'
+        ]
+      ],
+      'Science': [
+        [
+          'Referee your own field: the paper validates the ' + d + ' on aggregate metrics during ' + pr + '. Write the review comment that blocks publication until it stratifies.',
+          'What would a replication in a different population cost, and what is the field currently spending on not knowing?',
+          'Trace the citation chain: who first normalized this baseline in ' + pl + ', and does anyone cite the limitation or only the convenience?',
+          'Design the smallest experiment that would surface the gap for ' + pe + ', cheap enough that no one can refuse it.'
+        ],
+        [
+          'Treat the dataset as a field site: who gatekept entry, what was recorded as noise, and whose absence is load-bearing?',
+          'The instrument disagrees with the community\u2019s lived report. Write the research question that takes both seriously.',
+          'Which grant incentive keeps this blind spot funded, and what would the program officer need to hear to move it?',
+          'Pre-register your own bias: before running it, write down which result would surprise you and why.'
+        ]
+      ],
+      'Aviation': [
+        [
+          'Fly the passenger\u2019s leg: from curb to gate, log every automated decision that touched them, and mark the two they never saw.',
+          'The ' + d + ' alarms on the same profile again during ' + pr + '. Write the ASRS-style report: what happened, what usually happens, what should happen.',
+          'What does just-culture reporting look like for algorithmic screening: who can file without career risk, and where does the report go?',
+          'Which airport in the network would show the pattern first for ' + pe + ', and why does the data never get pooled?'
+        ],
+        [
+          'Run the checklist discipline on the checkpoint: what is the challenge-and-response for a machine decision, and who is pilot-in-command of it?',
+          'Compare the redress queue to the maintenance backlog: which gets cleared faster inside ' + pl + ', and what does the difference say about priorities?',
+          'What would a line operations safety audit find if it shadowed the ' + d + ' for a week?',
+          'Draft the crew briefing line that tells staff what to do when the system flags someone the officer would not have.'
+        ]
+      ],
+      'Hospitality and Tourism': [
+        [
+          'Replay the stay from the declined side: the booking that never confirmed, the deposit that doubled. Write the review they never posted.',
+          'Front desk, 11 pm, ' + pr + ': the system says no and the guest is standing there. Script the sixty seconds that follow, both ways.',
+          'Which loyalty tier would this friction be intolerable for, and why is it tolerable below it?',
+          'Mystery-shop your own stack in ' + pl + ': book as two different profiles and log where the journeys split.'
+        ],
+        [
+          'Cost the suspicion: every extra verification for ' + pe + ' is seconds, staff time, and a story told to friends. Put numbers on one month of it.',
+          'The ' + d + ' protects revenue; who protects the guest it misjudges, and is that role staffed tonight?',
+          'Trace one flag across brands: does it travel with the guest, and who could see it, dispute it, delete it?',
+          'Write the standard-operating line that turns an automated decline into a human welcome without breaking compliance.'
+        ]
+      ],
+      'Creative Arts, Animation and Design': [
+        [
+          'Storyboard the failure: panel one, the subject; panel two, what the ' + d + ' saw; panel three, what shipped. Caption each honestly.',
+          'Open your own portfolio through ' + pl + ': which piece would the tool have altered, and would you have caught it on deadline?',
+          'Whose reference images are missing from your studio\u2019s library, and what does every render inherit from that absence?',
+          'Design the credit line for training data: what would honest provenance look like on the final frame?'
+        ],
+        [
+          'Brief the tool as a junior artist: what taste did it arrive with during ' + pr + ', and what would you have to unteach first?',
+          'Find the default you have been compensating for by hand: what does the workaround cost per project, and who never learned it?',
+          'A client asks for everyone in the campaign. Audit ' + pl + ' for where everyone quietly narrows.',
+          'What would ' + pe + ' see in your output that the crit room misses, and how do you get them into the room?'
+        ]
+      ],
+      'Fashion and Esthetics': [
+        [
+          'Stand at the counter with the client the ' + d + ' cannot read: what happens in the next ninety seconds, and what does she buy instead, nothing?',
+          'Pull last season\u2019s sell-through for the shades that were never displayed at eye level: what did placement decide before demand could?',
+          'Which certification, school unit, or trade test still teaches the default body inside ' + pl + ', and what would updating it cost?',
+          'Write the product brief line that makes coverage across ' + pe + ' a launch requirement, not a line extension.'
+        ],
+        [
+          'Reverse the flow: start from the client the industry calls niche during ' + pr + ' and design the range outward from her.',
+          'The rep says the tool is inclusive now. Which three clients from your own chair would you test it on before believing it?',
+          'Trace one trend the forecast missed because the data never saw its community: where did it live before the industry noticed?',
+          'What does the return rate hide inside ' + pl + ': who stopped returning because they stopped buying?'
+        ]
+      ],
+      'Liberal Arts and University Transfers': [
+        [
+          'Periodize the ' + d + ': what did this decision look like in 1950, 1990, and now, and what actually changed besides the interface?',
+          'Write the footnote the system cannot: what context about ' + pe + ' would change the reading of its output entirely?',
+          'Whose account survives in the record produced by ' + pl + ', and what genre is that record, testimony, surveillance, or bureaucracy?',
+          'Translate the concept across two of your disciplines: what does this mechanism gain and lose in each vocabulary?'
+        ],
+        [
+          'Read the interface as rhetoric: what does its confidence perform during ' + pr + ', and on whom does the performance work?',
+          'Find the archive behind the archive: what collection, census, or ledger ultimately feeds this system, and who compiled it, under what power?',
+          'Draft the seminar question that would make a defender of this system say something falsifiable.',
+          'What would count as evidence that the pattern ended, and who gets to certify it?'
+        ]
+      ],
+      'Media and Communications': [
+        [
+          'Pitch the story twice: once as a tech piece about the ' + d + ', once as a story about ' + pe + '. Which desk buys which, and what dies in the difference?',
+          'FOI the threshold: draft the exact records request that would surface how ' + pl + ' decides, and predict the denial.',
+          'Your own outlet uses the same stack during ' + pr + ': write the disclosure sentence that should sit under the story.',
+          'Find the source the algorithm silenced: whose reach dropped when the model changed, and what were they saying?'
+        ],
+        [
+          'Fact-check the feed itself: sample fifty items and code who is shown as threat, victim, expert. Publish the method with the count.',
+          'The platform offers you the data under embargo. What conditions do you accept, refuse, and counter, and why?',
+          'Write the correction the recommender owes: what would making the harmed audience whole even look like in distribution terms?',
+          'Which beat reporter had this story five years early and was not believed, and what does that say about your desk\u2019s sourcing?'
+        ]
+      ]
+    };
+    var alts = ALT[area];
+    if (!alts) return base;
+    var pick = pfHash(name) % (alts.length + 1);
+    return pick === 0 ? base : alts[pick - 1];
   }
   function programSpecificProfile(L) {
     if (!L || !L.program) return null;
@@ -5272,6 +5469,11 @@
     var focus = lensProgramFocus(L);
     var code = (D.course && D.course.code) || '';
     var frame = lensProgramCaseFrame(code, L, ctx, topic, profile, focus, w);
+    var pc = window.BFS218_PROGRAM_CASES && L && L.program && window.BFS218_PROGRAM_CASES[L.program];
+    if (pc) {
+      if (pc.s) frame.intro = pc.s;
+      if (pc.q && pc.q.length) frame.questions = pc.q;
+    }
     var nodes = frame.nodes;
     var label = L.program || L.area;
     var diagram = nodes.map(function (n, i) {
@@ -5295,6 +5497,11 @@
     var focus = lensProgramFocus(L);
     var code = (D.course && D.course.code) || '';
     var frame = lensProgramCaseFrame(code, L, ctx, topic, profile, focus, w);
+    var pc = window.BFS218_PROGRAM_CASES && L && L.program && window.BFS218_PROGRAM_CASES[L.program];
+    if (pc) {
+      if (pc.s) frame.intro = pc.s;
+      if (pc.q && pc.q.length) frame.questions = pc.q;
+    }
     var label = L.program || L.area;
     var qGrid = function (title, questions) {
       return '<div style="margin-top:14px"><div class="mono" style="font-size:.62rem;letter-spacing:.06em;color:var(--red);font-weight:700;margin-bottom:8px">' + title + '</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px">'
@@ -5322,6 +5529,11 @@
     var focus = lensProgramFocus(L);
     var code = (D.course && D.course.code) || '';
     var frame = lensProgramCaseFrame(code, L, ctx, topic, profile, focus, w);
+    var pc = window.BFS218_PROGRAM_CASES && L && L.program && window.BFS218_PROGRAM_CASES[L.program];
+    if (pc) {
+      if (pc.s) frame.intro = pc.s;
+      if (pc.q && pc.q.length) frame.questions = pc.q;
+    }
     var label = L.program || L.area;
     var lead = 'Read this week as a field systems check. In ' + label + ', the week matters when ' + ctx.decision + ' becomes a default inside ' + ctx.place + '.';
     if (code === 'PSY355') lead = 'Read this week as a field rehearsal, not a generic psychology unit. In ' + label + ', the week matters when ' + ctx.pressure + ' and the first interpretation of a client, learner, patient, teammate, or system problem starts to shape the response.';
