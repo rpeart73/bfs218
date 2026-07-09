@@ -30,5 +30,6 @@
   <rect x="378" y="290" width="262" height="70" rx="10" fill="#DA291C"/>
   <text x="398" y="331" font-size="16" font-weight="700" fill="#ffffff">Default discrimination</text>
 
-  <text x="40" y="406" font-size="13" fill="#666">When you meet a Canadian system, ask which dimension is at work, who is harmed, and whether any law holds it accountable.</text>
+  <text x="40" y="396" font-size="13" fill="#666">When you meet a Canadian system, ask which dimension is at work,</text>
+  <text x="40" y="416" font-size="13" fill="#666">who is harmed, and whether any law holds it accountable.</text>
 </svg>

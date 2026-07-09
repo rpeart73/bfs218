@@ -1297,6 +1297,32 @@
       + steps.map(function (s) { return '<li style="font-size:.96rem;line-height:1.55;color:var(--ink-dim);padding-left:4px">' + esc(s) + '</li>'; }).join('')
       + '</ol></section>';
   }
+  function homeIntroCollapsible() {
+    var code = courseCode() || 'this course';
+    var name = String(state.studentName || '').trim();
+    var days = Object.keys((state.visits && state.visits.days) || {}).length;
+    var touched = Object.keys((state.visits && state.visits.weeks) || {}).length;
+    var isNew = !name && touched === 0 && days <= 1;
+    var steps = [
+      'Start with the current week\'s learning pathway.',
+      'Review the guiding questions and key concepts.',
+      'Open the assigned readings and media.',
+      'Use the walkthroughs and self-checks to prepare for class and assessments.',
+      'Use Blackboard for official announcements, assignment submission, discussions, grades, and course records.'
+    ];
+    return '<section class="node home-intro" aria-label="About this companion website" style="border-left:4px solid var(--red);border-radius:0 14px 14px 0;margin-bottom:16px">'
+      + '<div class="mono" style="font-size:.7rem;letter-spacing:.08em;color:var(--red);font-weight:700;margin-bottom:8px">COMPANION WEBSITE</div>'
+      + '<p style="font-size:1rem;line-height:1.6;color:var(--ink);margin:0"><strong>Learn and prepare here. Use Blackboard to submit work, get your grades, and read official announcements.</strong></p>'
+      + '<details class="home-about"' + (isNew ? ' open' : '') + '>'
+      + '<summary>What this site is for, and how to use it</summary>'
+      + '<div class="home-about-body">'
+      + '<p style="font-size:.96rem;line-height:1.6;color:var(--ink);margin:0 0 10px">This instructor-created companion website supports weekly learning in ' + esc(code) + '. Students use this site for weekly learning pathways, readings, key concepts, walkthroughs, and study supports. Blackboard remains the official Seneca course platform for announcements, assignment submission, grades, discussions, course records, and required administrative functions.</p>'
+      + '<h3>How to use this site</h3>'
+      + '<ol style="display:grid;gap:8px;margin:0;padding-left:22px">'
+      + steps.map(function (s) { return '<li style="font-size:.93rem;line-height:1.5;color:var(--ink-dim);padding-left:4px">' + esc(s) + '</li>'; }).join('')
+      + '</ol></div></details>'
+      + '</section>';
+  }
   function bbDiagramHtml() {
     var code = courseCode() || 'this course';
     var svg = '<svg viewBox="0 0 760 260" role="img" aria-labelledby="bbd-t bbd-d" style="width:100%;height:auto;display:block;max-width:760px">'
@@ -2107,12 +2133,9 @@
       + '<div style="position:relative;">'
       + '<div class="mono" style="font-size:.75rem;letter-spacing:.08em;color:var(--red);font-weight:600;margin-bottom:12px">SENECA POLYTECHNIC &middot; FALL 2026</div>'
       + '<h1 class="jhero-title" style="font-size:2.5rem;line-height:1.1;font-weight:600;margin:0 0 14px;letter-spacing:0">' + esc(title) + '</h1>'
-      + '<p style="font-size:1.0625rem;line-height:1.6;color:var(--ink-dim);margin:0 0 24px;">' + esc(journeyIntro()) + '</p>'
-      + '<button class="jhero-cta" onclick="SOC.station(' + (cur || (ws[0] || 1)) + ')">' + ctaLabel + ic('chevron', 18, 2.4) + '</button>'
-      + (started ? '' : '<div style="margin-top:14px;font-size:.8125rem;color:var(--ink-faint)">' + ws.length + ' weeks in this course</div>')
       + '</div></section>';
     var spineHead = '<div style="display:flex;align-items:baseline;gap:12px;margin:0 0 16px;flex-wrap:wrap"><h2 style="font-size:1.375rem;font-weight:600;margin:0;color:var(--ink)">Your journey</h2><span style="font-size:.875rem;color:var(--ink-faint)">' + ws.length + ' weeks, in course order</span></div>';
-    return '<div class="rise">' + hero + institutionalNoticeHtml() + howToUseSiteHtml() + compassPanel() + lensHomeIntro() + spineHead + journeyStations(cur) + '</div>';
+    return '<div class="rise">' + hero + homeIntroCollapsible() + compassPanel() + lensHomeIntro() + spineHead + journeyStations(cur) + '</div>';
   }
   function journeyStations(cur) {
     var ws = journeyWeeks();
@@ -6883,52 +6906,108 @@
     if (idx >= sufs.length) return null;
     return 'walkthroughs/' + d.deck + '/images/fig-week' + walkPad(w) + sufs[idx] + '.svg';
   }
+  function walkTheme() { var r = rlState(); return r.walkTheme === 'light' ? 'light' : 'dark'; }
   function walkSlides(w) {
     var d = weekData(w);
     if (!d) return [];
-    var slides = [];
-    slides.push({ kind: 'cover', title: weekTitle(w), question: (d.guiding && d.guiding[0]) || journeyQ(w), lead: firstSentence(d.overview || '') });
-    (d.concepts || []).forEach(function (c, ci) { slides.push({ kind: 'concept', h: c.h, body: c.body, cite: c.cite, fig: walkFig(w, ci) }); });
-    if (d.guiding && d.guiding.length > 1) slides.push({ kind: 'questions', items: d.guiding.slice(0, 4) });
-    slides.push({ kind: 'close', youcan: (d.youcan || []).slice(0, 3), reflect: d.reflectPrompt || '' });
-    return slides;
+    var s = [];
+    s.push({ kind: 'cover', title: weekTitle(w), question: (d.guiding && d.guiding[0]) || journeyQ(w), lead: firstSentence(d.overview || '') });
+    (d.concepts || []).forEach(function (c, ci) {
+      s.push({ kind: 'concept', h: c.h, body: c.body, cite: c.cite });
+      var fig = walkFig(w, ci);
+      if (fig) s.push({ kind: 'figure', src: fig, h: c.h });
+    });
+    if (d.terms && d.terms.length) s.push({ kind: 'terms', items: d.terms.slice(0, 4) });
+    if (d.guiding && d.guiding.length > 1) s.push({ kind: 'questions', items: d.guiding.slice(0, 4) });
+    s.push({ kind: 'close', youcan: (d.youcan || []).slice(0, 3), reflect: d.reflectPrompt || '' });
+    return s;
   }
-  function walkTheme() { var r = rlState(); return r.walkTheme === 'light' ? 'light' : 'dark'; }
-  function walkOverlay() {
-    if (state.walkWeek == null) return '';
-    var w = state.walkWeek, slides = walkSlides(w);
-    if (!slides.length) return '';
-    var i = Math.max(0, Math.min(slides.length - 1, state.walkSlide));
-    var s = slides[i], theme = walkTheme();
-    var figHtml = function (src) { return src ? '<div class="walk-fig"><img src="' + esc(src) + '" alt="" onerror="var b=this.closest(&quot;.walk-fig&quot;);if(b)b.style.display=&quot;none&quot;"></div>' : ''; };
-    var body = '';
+  var _walk = null;
+  function walkSlideHtml(s, w) {
     if (s.kind === 'cover') {
-      body = '<div class="walk-kicker">WEEK ' + w + ' WALKTHROUGH</div>'
+      return '<div class="walk-kicker">WEEK ' + w + ' WALKTHROUGH</div>'
         + '<h2 class="walk-title">' + esc(s.title) + '</h2>'
         + (s.lead ? '<p class="walk-lead">' + esc(s.lead) + '</p>' : '')
         + '<div class="walk-q"><span>The question this week</span><b>' + esc(s.question) + '</b></div>';
-    } else if (s.kind === 'concept') {
-      body = figHtml(s.fig)
-        + '<div class="walk-kicker">KEY IDEA</div><h2 class="walk-h">' + esc(s.h) + '</h2>'
+    }
+    if (s.kind === 'concept') {
+      return '<div class="walk-kicker">KEY IDEA</div><h2 class="walk-h">' + esc(s.h) + '</h2>'
         + '<p class="walk-body">' + esc(s.body) + '</p>'
         + (s.cite ? '<div class="walk-cite">' + esc(s.cite) + '</div>' : '');
-    } else if (s.kind === 'questions') {
-      body = '<div class="walk-kicker">CARRY THESE QUESTIONS</div><ul class="walk-qlist">' + s.items.map(function (q) { return '<li>' + esc(q) + '</li>'; }).join('') + '</ul>';
-    } else {
-      body = '<div class="walk-kicker">YOU CAN NOW</div><ul class="walk-can">' + (s.youcan || []).map(function (y) { return '<li>' + esc(y) + '</li>'; }).join('') + '</ul>'
-        + (s.reflect ? '<div class="walk-reflect"><span>Then reflect</span><p>' + esc(s.reflect) + '</p></div>' : '')
-        + '<button type="button" class="walk-cta" onclick="SOC.walkGoWeek()">Open Week ' + w + ' in full</button>';
     }
+    if (s.kind === 'figure') {
+      return '<div class="walk-figwrap"><div class="walk-kicker">EXAMINE THE DIAGRAM</div>'
+        + '<p class="walk-figcap">Look closely at how ' + esc(s.h.toLowerCase()) + ' is put together. Drag to move it, use the buttons or scroll to zoom, and rotate it to study each part.</p>'
+        + '<div class="walk-figview"><img class="walk-figimg" src="' + esc(s.src) + '" alt="Diagram for ' + esc(s.h) + '" onerror="var f=this.closest(&quot;.walk-figwrap&quot;);if(f)f.querySelector(&quot;.walk-figview&quot;).innerHTML=&quot;<p style=padding:40px;text-align:center;opacity:.7>The diagram could not load.</p>&quot;"></div>'
+        + '<div class="walk-figctl" role="group" aria-label="Examine controls">'
+        + '<button type="button" onclick="SOC.walkFig(\'zin\')" aria-label="Zoom in">+</button>'
+        + '<button type="button" onclick="SOC.walkFig(\'zout\')" aria-label="Zoom out">&#8722;</button>'
+        + '<button type="button" onclick="SOC.walkFig(\'rl\')" aria-label="Rotate left">&#8634;</button>'
+        + '<button type="button" onclick="SOC.walkFig(\'rr\')" aria-label="Rotate right">&#8635;</button>'
+        + '<button type="button" onclick="SOC.walkFig(\'reset\')" aria-label="Reset the view">Reset</button>'
+        + '</div></div>';
+    }
+    if (s.kind === 'terms') {
+      return '<div class="walk-kicker">THE WORDS TO KNOW</div><dl class="walk-terms">' + s.items.map(function (t) { return '<dt>' + esc(t.term) + '</dt><dd>' + esc(t.def) + (t.cite ? ' <i>(' + esc(t.cite) + ')</i>' : '') + '</dd>'; }).join('') + '</dl>';
+    }
+    if (s.kind === 'questions') {
+      return '<div class="walk-kicker">CARRY THESE QUESTIONS</div><ul class="walk-qlist">' + s.items.map(function (q) { return '<li>' + esc(q) + '</li>'; }).join('') + '</ul>';
+    }
+    return '<div class="walk-kicker">YOU CAN NOW</div><ul class="walk-can">' + (s.youcan || []).map(function (y) { return '<li>' + esc(y) + '</li>'; }).join('') + '</ul>'
+      + (s.reflect ? '<div class="walk-reflect"><span>Then reflect</span><p>' + esc(s.reflect) + '</p></div>' : '')
+      + '<button type="button" class="walk-cta" onclick="SOC.walkGoWeek()">Open Week ' + _walk.week + ' in full</button>';
+  }
+  function walkFigApply() {
+    if (!_walk) return;
+    var img = document.querySelector('.walk-figimg');
+    if (img && _walk.fig) img.style.transform = 'translate(' + _walk.fig.tx + 'px,' + _walk.fig.ty + 'px) scale(' + _walk.fig.scale + ') rotate(' + _walk.fig.rot + 'deg)';
+  }
+  function walkFigWire() {
+    var view = document.querySelector('.walk-figview'), img = document.querySelector('.walk-figimg');
+    if (!view || !img) return;
+    _walk.fig = { scale: 1, rot: 0, tx: 0, ty: 0 };
+    var drag = null;
+    view.addEventListener('pointerdown', function (e) { drag = { x: e.clientX - _walk.fig.tx, y: e.clientY - _walk.fig.ty }; try { view.setPointerCapture(e.pointerId); } catch (er) {} view.style.cursor = 'grabbing'; });
+    view.addEventListener('pointermove', function (e) { if (!drag) return; _walk.fig.tx = e.clientX - drag.x; _walk.fig.ty = e.clientY - drag.y; walkFigApply(); });
+    view.addEventListener('pointerup', function () { drag = null; view.style.cursor = 'grab'; });
+    view.addEventListener('wheel', function (e) { e.preventDefault(); _walk.fig.scale = Math.max(0.4, Math.min(6, _walk.fig.scale * (e.deltaY < 0 ? 1.12 : 0.89))); walkFigApply(); }, { passive: false });
+  }
+  function walkMount() {
+    var ov = document.getElementById('walk-overlay');
+    if (!ov || !_walk) return;
+    var slides = _walk.slides, i = Math.max(0, Math.min(slides.length - 1, _walk.i)), s = slides[i];
+    ov.className = 'walk-' + walkTheme();
     var dots = slides.map(function (_, k) { return '<button type="button" class="walk-dot' + (k === i ? ' on' : '') + '" onclick="SOC.walkGoto(' + k + ')" aria-label="Slide ' + (k + 1) + '"></button>'; }).join('');
-    return '<div id="walk-overlay" class="walk-' + theme + '" role="dialog" aria-modal="true" aria-label="Week ' + w + ' walkthrough" tabindex="-1">'
-      + '<button type="button" class="walk-theme" onclick="SOC.walkTheme()" aria-label="Switch background between light and dark">' + (theme === 'dark' ? 'Light background' : 'Dark background') + '</button>'
+    ov.innerHTML = '<button type="button" class="walk-theme" onclick="SOC.walkTheme()" aria-label="Switch background between light and dark">' + (walkTheme() === 'dark' ? 'Light background' : 'Dark background') + '</button>'
       + '<button type="button" class="walk-close" onclick="SOC.walkClose()" aria-label="Close the walkthrough">' + ic('x', 20) + '</button>'
-      + '<div class="walk-stage"><div class="walk-slide walk-anim" key="' + i + '">' + body + '</div></div>'
+      + '<div class="walk-stage"><div class="walk-slide walk-' + s.kind + '" key="' + i + '">' + walkSlideHtml(s, _walk.week) + '</div></div>'
       + '<div class="walk-bar"><button type="button" class="walk-prev" onclick="SOC.walkNav(-1)"' + (i === 0 ? ' disabled' : '') + ' aria-label="Previous slide">' + ic('chevron', 20, 2.4) + '</button>'
-      + '<div class="walk-dots">' + dots + '</div>'
-      + '<div class="walk-count">' + (i + 1) + ' / ' + slides.length + '</div>'
-      + '<button type="button" class="walk-next" onclick="SOC.walkNav(1)"' + (i === slides.length - 1 ? ' disabled' : '') + ' aria-label="Next slide">' + ic('chevron', 20, 2.4) + '</button></div>'
-      + '</div>';
+      + '<div class="walk-dots">' + dots + '</div><div class="walk-count">' + (i + 1) + ' / ' + slides.length + '</div>'
+      + '<button type="button" class="walk-next" onclick="SOC.walkNav(1)"' + (i === slides.length - 1 ? ' disabled' : '') + ' aria-label="Next slide">' + ic('chevron', 20, 2.4) + '</button></div>';
+    if (s.kind === 'figure') walkFigWire();
+  }
+  function walkKey(e) {
+    if (!_walk) return;
+    if (e.key === 'Escape') { e.preventDefault(); SOC.walkClose(); }
+    else if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); SOC.walkNav(1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); SOC.walkNav(-1); }
+  }
+  function walkOpen(w) {
+    walkCloseDom();
+    var slides = walkSlides(w);
+    if (!slides.length) return;
+    _walk = { week: w, i: 0, slides: slides, fig: null };
+    var ov = document.createElement('div');
+    ov.id = 'walk-overlay'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-label', 'Week ' + w + ' walkthrough'); ov.tabIndex = -1;
+    document.body.appendChild(ov);
+    walkMount();
+    ov.focus();
+    document.addEventListener('keydown', walkKey, true);
+  }
+  function walkCloseDom() {
+    var ov = document.getElementById('walk-overlay');
+    if (ov) ov.remove();
+    document.removeEventListener('keydown', walkKey, true);
   }
   function walkthroughsPage() {
     var ws = [];
@@ -7226,7 +7305,7 @@
       + (state.navOpen ? '<button class="soc-mobile-scrim" onclick="SOC.closeNav()" aria-label="Close course navigation"></button>' : '')
       + '<div style="display:flex;flex:1;min-height:0">' + sidebar()
       + '<main id="soc-main" tabindex="-1" class="scrollarea" style="flex:1;min-width:0;overflow:auto;height:calc(100vh - 62px)"><div style="margin:0 auto;padding:30px 30px 110px">' + (['journey','library','station','videos'].indexOf(state.screen) >= 0 ? lensChip() : '') + body() + siteFooter() + '</div></main>'
-      + '</div>' + readerLensOverlay() + rlPanelOverlay() + listenOverlay() + walkOverlay() + toast + '</div>';
+      + '</div>' + readerLensOverlay() + rlPanelOverlay() + listenOverlay() + toast + '</div>';
     if (refocusSearch) {
       var el = document.getElementById('soc-search');
       if (el) { el.focus(); var v = el.value; el.setSelectionRange(v.length, v.length); }
@@ -7798,12 +7877,21 @@
     },
     clearCompare: function () { state.compareIds = []; state.showSynthesis = false; render(); },
     synthesize: function () { state.showSynthesis = true; render(); },
-    playWalk: function (w) { state.walkWeek = cleanWeek(w) || w; state.walkSlide = 0; renderKeepScroll(); setTimeout(function () { var o = document.getElementById('walk-overlay'); if (o) o.focus(); }, 40); },
-    walkNav: function (dir) { var slides = walkSlides(state.walkWeek); state.walkSlide = Math.max(0, Math.min(slides.length - 1, state.walkSlide + dir)); renderKeepScroll(); },
-    walkGoto: function (k) { state.walkSlide = k; renderKeepScroll(); },
-    walkClose: function () { state.walkWeek = null; renderKeepScroll(); },
-    walkGoWeek: function () { var w = state.walkWeek; state.walkWeek = null; SOC.station(w); },
-    walkTheme: function () { var r = rlState(); r.walkTheme = (r.walkTheme === 'light' ? 'dark' : 'light'); persist(); renderKeepScroll(); },
+    playWalk: function (w) { walkOpen(cleanWeek(w) || w); },
+    walkNav: function (dir) { if (!_walk) return; var n = Math.max(0, Math.min(_walk.slides.length - 1, _walk.i + dir)); if (n === _walk.i) return; _walk.i = n; walkMount(); },
+    walkGoto: function (k) { if (!_walk) return; _walk.i = k; walkMount(); },
+    walkClose: function () { walkCloseDom(); _walk = null; },
+    walkGoWeek: function () { var w = _walk && _walk.week; walkCloseDom(); _walk = null; if (w) SOC.station(w); },
+    walkTheme: function () { var r = rlState(); r.walkTheme = (r.walkTheme === 'light' ? 'dark' : 'light'); persist(); walkMount(); },
+    walkFig: function (op) {
+      if (!_walk || !_walk.fig) return;
+      if (op === 'zin') _walk.fig.scale = Math.min(6, _walk.fig.scale * 1.2);
+      else if (op === 'zout') _walk.fig.scale = Math.max(0.4, _walk.fig.scale / 1.2);
+      else if (op === 'rl') _walk.fig.rot -= 90;
+      else if (op === 'rr') _walk.fig.rot += 90;
+      else { _walk.fig = { scale: 1, rot: 0, tx: 0, ty: 0 }; }
+      walkFigApply();
+    },
     hideSynthesis: function () { state.showSynthesis = false; render(); },
     setLens: function (l) { state.lens = l; render(); },
     rcPick: function (id) { state.rcReading = id; state.lens = 'thematic'; persist(); render(); topScroll(); },
@@ -8096,20 +8184,6 @@
     if ('speechSynthesis' in window && window.speechSynthesis.addEventListener) {
       window.speechSynthesis.addEventListener('voiceschanged', function () { if (state.rlPanelOpen) renderKeepScroll(); });
     }
-    document.addEventListener('keydown', function (e) {
-      if (state.walkWeek == null) return;
-      if (e.key === 'Escape') { e.preventDefault(); SOC.walkClose(); }
-      else if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); SOC.walkNav(1); }
-      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); SOC.walkNav(-1); }
-    });
-    var walkTouchX = null;
-    document.addEventListener('touchstart', function (e) { if (state.walkWeek != null && e.touches && e.touches[0]) walkTouchX = e.touches[0].clientX; }, { passive: true });
-    document.addEventListener('touchend', function (e) {
-      if (state.walkWeek == null || walkTouchX == null) return;
-      var dx = (e.changedTouches && e.changedTouches[0] ? e.changedTouches[0].clientX : walkTouchX) - walkTouchX;
-      walkTouchX = null;
-      if (Math.abs(dx) > 45) SOC.walkNav(dx < 0 ? 1 : -1);
-    }, { passive: true });
     var rlSaved = load();
     if (rlSaved && rlSaved.rl && typeof rlSaved.rl === 'object') state.rl = rlSaved.rl;
     rlApply();
