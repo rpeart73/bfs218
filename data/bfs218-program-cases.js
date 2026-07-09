@@ -41,7 +41,7 @@ window.BFS218_PROGRAM_CASES = {
   ]
  },
  "Honours Bachelor of Aviation Technology": {
-  "s": "Your capstone team integrates a vision system for FOD detection on aprons, trained on daytime footage from two southern airports. At the northern test site it flags shadows at dawn and misses debris under sodium lights, and the contractor proposes lowering the confidence threshold globally. You wrote the validation plan; the sign-off meeting is Friday.",
+  "s": "Your final project team integrates a vision system for FOD detection on aprons, trained on daytime footage from two southern airports. At the northern test site it flags shadows at dawn and misses debris under sodium lights, and the contractor proposes lowering the confidence threshold globally. You wrote the validation plan; the sign-off meeting is Friday.",
   "q": [
    "Write the dissent for Friday's sign-off: what does lowering the global confidence threshold do to the northern site's miss rate, in numbers the contractor must answer?",
    "Design the validation matrix the project skipped: which lighting conditions, surfaces, and seasons, at which sites, before the system earns airside deployment?",
@@ -217,7 +217,7 @@ window.BFS218_PROGRAM_CASES = {
   ]
  },
  "Honours Bachelor of Commerce - Business Management": {
-  "s": "Your capstone client's rostering AI schedules by predicted productivity, learned from historical output tagged to workers on visas who could not refuse overtime. The model now expects that output from everyone like them. The client calls it merit-based scheduling and wants a change-management plan, not a model review. The engagement letter is signed.",
+  "s": "Your final project client's rostering AI schedules by predicted productivity, learned from historical output tagged to workers on visas who could not refuse overtime. The model now expects that output from everyone like them. The client calls it merit-based scheduling and wants a change-management plan, not a model review. The engagement letter is signed.",
   "q": [
    "The engagement letter is signed, but scope is argued. Write the paragraph that adds model review to change management, priced, so the client chooses knowingly.",
    "Historical output under coercion is not productivity. Find the operational metric that separates capability from inability to refuse, and rebuild the roster target on it.",
@@ -705,7 +705,7 @@ window.BFS218_PROGRAM_CASES = {
   ]
  },
  "Artificial Intelligence": {
-  "s": "Your capstone team fine-tunes a sentiment model for a client's support tickets. Evaluation looks superb until a teammate runs the slice you never wrote: messages in African American English score angry at twice the base rate, and the client's routing sends angry to the fraud-review queue. The demo is Thursday; the slice test is not on the rubric.",
+  "s": "Your final project team fine-tunes a sentiment model for a client's support tickets. Evaluation looks superb until a teammate runs the slice you never wrote: messages in African American English score angry at twice the base rate, and the client's routing sends angry to the fraud-review queue. The demo is Thursday; the slice test is not on the rubric.",
   "q": [
    "The rubric measures accuracy; the deployment routes people. Write the eval addendum your team ships with the model: which slices, what thresholds, whose sign-off?",
    "Trace the label provenance: who annotated angry in the training corpus, and what dialect exposure did the annotation guidelines assume?",
@@ -1213,7 +1213,7 @@ window.BFS218_PROGRAM_CASES = {
   "q": [
    "You are the requirement the system cannot represent. Document the parsing failure precisely: which rules misfire, and what does the workaround cost you per term?",
    "Interdisciplinarity is the program's promise and the audit's bug. Draft the registrar proposal: how should combined pathways be encoded, approved, and tracked?",
-   "Turn it into scholarship: your degree audit as a case study in classification systems, using this course's frameworks, for your capstone."
+   "Turn it into scholarship: your degree audit as a case study in classification systems, using this course's frameworks, for your final project."
   ]
  },
  "Liberal Arts University Transfer": {

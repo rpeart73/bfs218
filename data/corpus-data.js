@@ -104,7 +104,7 @@ window.BFS218 = {
   "10": "Algorithmic Gatekeeping",
   "11": "Resistance and Abolitionist Tools",
   "12": "Tech Accountability and Policy Futures",
-  "13": "Personal Cartography Capstone, Part 1",
+  "13": "Personal Cartography, Part 1",
   "14": "Personal Cartography Closeout"
  },
  "accessLabels": {
