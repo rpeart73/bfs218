@@ -49,7 +49,12 @@
       var w = cleanWeek(p.get('week') || p.get('w'));
       if (w) return { screen: 'station', week: w, part: cleanWeekPart(p.get('part')) };
       var s = cleanScreen(p.get('screen') || p.get('view'));
-      if (s && s !== 'journey') return { screen: s };
+      if (s && s !== 'journey') {
+        var r = { screen: s };
+        var ai = p.get('asg');
+        if (ai != null && ai !== '' && s === 'assignment-details') r.assignmentIndex = Math.max(0, Math.min(4, Number(ai) || 0));
+        return r;
+      }
     } catch (e) {}
     return null;
   }
@@ -123,8 +128,8 @@
     glossSearch: '',
     auditView: resumeView0 ? (view0.auditView || 'errors') : 'errors',
     visualView: {},
-    assignmentIndex: resumeView0 ? (Number(view0.assignmentIndex) || 0) : 0,
-    assignmentTab: resumeView0 ? cleanAssignmentTab(view0.assignmentTab) : 'story',
+    assignmentIndex: (route0 && route0.assignmentIndex != null) ? route0.assignmentIndex : (resumeView0 ? (Number(view0.assignmentIndex) || 0) : 0),
+    assignmentTab: (route0 && route0.screen === 'assignment-details') ? 'assignments' : (resumeView0 ? cleanAssignmentTab(view0.assignmentTab) : 'story'),
     assignmentFaq: resumeView0 ? (view0.assignmentFaq == null ? null : Number(view0.assignmentFaq)) : null,
     assignmentStarter: (saved0.assignmentStarter && typeof saved0.assignmentStarter === 'object') ? saved0.assignmentStarter : {},
     exp: (saved0.exp && typeof saved0.exp === 'object') ? saved0.exp : {},
@@ -5699,7 +5704,7 @@
       var badge = '<div class="kd-date' + (past ? ' kd-past' : '') + '"><span class="kd-day">' + day + '</span><span class="kd-mo">' + mon.slice(0, 3) + '</span></div>';
       var items = row.it.map(function (x) {
         var inner = '<span class="kd-dot"></span><span class="kd-t">' + esc(x[0]) + (x[1] ? ' <em>' + esc(x[1]) + '</em>' : '') + '</span>';
-        if (x[3] != null) return '<button type="button" class="kd-item kd-' + x[2] + ' kd-link" onclick="SOC.assignPick(' + x[3] + ')" aria-label="Open the ' + esc(x[0]) + ' assignment">' + inner + '<span class="kd-go" aria-hidden="true">&#8594;</span></button>';
+        if (x[3] != null) return '<a href="?screen=assignment-details&asg=' + x[3] + '" target="_blank" rel="noopener" class="kd-item kd-' + x[2] + ' kd-link" aria-label="Open the ' + esc(x[0]) + ' assignment in a new tab">' + inner + '<span class="kd-go" aria-hidden="true">&#8599;</span></a>';
         return '<div class="kd-item kd-' + x[2] + '">' + inner + '</div>';
       }).join('');
       out += '<div class="kd-row' + (past ? ' kd-rowpast' : '') + '">' + badge + '<div class="kd-items">' + items + '</div></div>';
@@ -5747,8 +5752,8 @@
       if (iso === todayIso) cls += ' cal-today';
       var inner = '<span class="cal-num">' + d + '</span>' + tag;
       if (e && e.idx != null) {
-        var oc = e.idx >= 0 ? 'SOC.assignPick(' + e.idx + ')' : "SOC.go('assignment-details')";
-        cells += '<button type="button" class="' + cls + ' cal-link" onclick="' + oc + '" aria-label="Open assignment information">' + inner + '</button>';
+        var href = e.idx >= 0 ? '?screen=assignment-details&asg=' + e.idx : '?screen=assignment-details';
+        cells += '<a href="' + href + '" target="_blank" rel="noopener" class="' + cls + ' cal-link" aria-label="Open assignment information in a new tab">' + inner + '</a>';
       } else {
         cells += '<div class="' + cls + '">' + inner + '</div>';
       }
@@ -5771,7 +5776,7 @@
     return '<div class="rise cal-page">'
       + '<div class="mono" style="font-size:.7rem;letter-spacing:.08em;color:var(--red);font-weight:700;margin-bottom:4px">CALENDAR</div>'
       + '<h1 style="font-size:1.9rem;line-height:1.15;font-weight:600;margin:0 0 8px;color:var(--ink)">Every date that matters</h1>'
-      + '<p style="font-size:1rem;line-height:1.6;color:var(--ink-dim);margin:0 0 20px;max-width:70ch">This is the full course calendar. Red days are due dates. You do not need to add anything to a calendar app to use it. Blackboard remains the official word on dates, and nothing here should ever be a surprise.</p>'
+      + '<p style="font-size:1rem;line-height:1.6;color:var(--ink-dim);margin:0 0 20px;max-width:70ch">This is the full course calendar. Red days are due dates. Click any assignment to open its page in a new tab. You do not need to add anything to a calendar app to use it. Blackboard remains the official word on dates, and nothing here should ever be a surprise.</p>'
       + calendarBody()
       + '</div>';
   }
