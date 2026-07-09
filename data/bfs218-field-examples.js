@@ -3,6 +3,11 @@
    fluidly in the vocabulary of the program itself, never templated; every empirical claim cited. */
 window.BFS218_FIELD_EXAMPLES = {
   'Health and Wellness': {
+    4: {
+      'Default discrimination': 'For decades, kidney function was estimated with an equation that automatically adjusted results upward for Black patients, a race coefficient built into the default calculation. The setting made Black patients\' kidneys look healthier than they were, delaying specialist referrals and transplant eligibility, until clinicians forced its removal in 2021. Nobody at the bedside chose it; the default chose for them, which is exactly what this concept names (Vyas et al., 2020).',
+      'Is the glitch systemic?': 'When a pulse oximeter reads high on dark skin or a risk score under-refers Black patients, the incident report is tempted to call it a device quirk. Ask Benjamin\'s question in clinical language: is this a one-off malfunction, or does it repeat wherever this calibration population and this proxy variable were used? If it repeats, it is not a glitch; it is the design performing to spec, and it needs a recall, not a patch.',
+      'Design as worldbuilding': 'Every intake form and EHR dropdown builds a world: which genders exist, which family structures count, which languages the portal speaks, whose pain descriptions map onto the checkboxes. A patient whose reality does not fit the form gets documented wrong, and wrong documentation compounds into wrong care. Chart design is care design.',
+    },
     2: {
       'Critical race theory (CRT)': 'CRT gives you a clinical question to carry on every placement: when a protocol, triage scale, or eligibility screen looks objective, ask whose bodies it was validated on and who it routinely under-serves. Pain assessment is the classic case: studies keep finding Black patients\' pain rated lower and treated less aggressively under the same presentations. The tool feels neutral at the bedside; the pattern only appears when you look at outcomes across the patient panel, which is exactly where CRT trains your eyes to go.',
       'The New Jim Code as applied critical race theory': 'Your field is being sold precision medicine, AI triage, and predictive early-warning scores as the objective upgrade to messy human judgment. The New Jim Code names the trap: the cost-proxy referral score you met above arrived wrapped in exactly that promise. When the next clinical decision-support tool reaches your unit, the question is not whether it is modern but whether its training data carries the old chart.',
@@ -11,6 +16,11 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Business': {
+    4: {
+      'Default discrimination': 'In the classic field experiment, identical resumes were sent with different names: applications under Emily and Greg received about fifty percent more callbacks than the same qualifications under Lakisha and Jamal. No screening policy mentioned race; the default image of a professional did the sorting. Every hiring funnel you will manage inherits that default unless you design against it (Bertrand and Mullainathan, 2004).',
+      'Is the glitch systemic?': 'When the quarterly numbers show one branch, one demographic, one postal code persistently underperforming in approvals or promotions, the comfortable read is noise. Benjamin\'s question is the auditor\'s question: does the anomaly recur under the same process? A repeating anomaly is not variance; it is a control failure, and in your field control failures get root-cause analysis, owners, and remediation plans.',
+      'Design as worldbuilding': 'A CRM schema decides what a customer can be: the name fields that reject apostrophes and long surnames, the title dropdowns, the household categories, the credit-history requirement that assumes a banked family. Whoever designs the form designs the market\'s world, and customers who do not fit it become errors, exceptions, and churn statistics.',
+    },
     2: {
       'Critical race theory (CRT)': 'Read your future dashboards with the CRT question: which neutral-looking business rule is doing racial work? Credit scoring is the canonical example: score by postal code, credit history, and employment tenure and you inherit decades of redlining and labour market exclusion without a single discriminatory clause in the policy. The metric is clean; the history inside it is not.',
       'The New Jim Code as applied critical race theory': 'Every vendor deck you will ever see promises objective hiring, unbiased lending, data-driven everything. The Amazon resume ranker above was pitched inside the firm the same way. The New Jim Code is the reminder that innovative and equitable are different claims, and only one of them is in the brochure.',
@@ -19,6 +29,11 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Law, Administration and Public Safety': {
+    4: {
+      'Default discrimination': 'Crime forecasting tools are seeded with historical incident data as their default ground truth. Researchers showed that feeding drug-arrest records into a predictive policing model sent patrols back to the same over-policed neighbourhoods, whose extra patrols then generated the arrests that confirmed the prediction: a feedback loop wearing the costume of objectivity. The default dataset was the decision (Lum and Isaac, 2016).',
+      'Is the glitch systemic?': 'A wrongful facial-recognition arrest gets reported as a technology error, one bad match. Ask the question your field asks of use-of-force incidents: is there a pattern? When the false matches cluster on the same demographic groups the benchmark testing already flagged, the arrest was not a glitch. It was a foreseeable failure deployed anyway, which changes who is accountable.',
+      'Design as worldbuilding': 'Every records management system builds a world: the gang-affiliation field with no removal process, the incident categories that pre-shape the narrative, the address history that turns housing instability into a risk factor. People live inside those schemas for decades. Designing a database in your field is writing policy without a hearing.',
+    },
     2: {
       'Critical race theory (CRT)': 'CRT emerged from legal scholarship, so it speaks your language natively: precedent, facial neutrality, disparate impact. Its core insight for your field is that a rule can be facially neutral and still discriminatory in operation, which is why the law distinguishes intent from impact. Carding, stop-and-frisk thresholds, and bail conditions all pass the neutral-wording test and fail the outcome test.',
       'The New Jim Code as applied critical race theory': 'Predictive policing and risk assessment arrived in your field promising to remove officer bias from the street and judicial bias from the bench. The COMPAS audit above shows what the New Jim Code predicts: the discretion did not disappear, it moved into the training data, where it is harder to cross-examine. Ask of every new tool: who can appeal its output, and with what evidence?',
@@ -27,6 +42,11 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Information Technology': {
+    4: {
+      'Default discrimination': 'Defaults are the most-shipped code you will never review: the training set that came with the tutorial, the pretrained model pulled from a hub, the locale, the test fixtures with their sample names. Each carries assumptions about the normal user. Default discrimination in software is what happens when those assumptions ship unexamined and every non-default user becomes an edge case in production.',
+      'Is the glitch systemic?': 'In 2015 Google Photos auto-labelled Black people as gorillas, and years later the fix on record was still suppressing the label rather than repairing the recognition. Benjamin\'s question is your incident review question: was that a glitch, or the predictable output of a training pipeline that under-sampled Black faces? One-off bugs get patches; systemic ones get postmortems, dataset work, and regression suites. Classifying it wrong closes the ticket and keeps the bug (Simonite, 2018).',
+      'Design as worldbuilding': 'Schemas are worldbuilding you compile: the gender enum, the required surname, the name-length limit that rejects real names, the timezone and character-set defaults that decide whose alphabet renders. When Google Maps read Malcolm X Boulevard as Malcolm Ten, a Roman-numeral default overwrote a community\'s meaning. Your data model is someone\'s lived world, or its denial.',
+    },
     2: {
       'Critical race theory (CRT)': 'For a developer, CRT is a threat model. You already accept that systems fail in ways their designers never intended, and that attackers find the gaps; CRT says inequity works the same way, entering through defaults, training data, and unexamined requirements. Treat neutral as an unverified claim about your system, the way you would treat secure.',
       'The New Jim Code as applied critical race theory': 'The Gender Shades audit above is the New Jim Code in production: products marketed as cutting-edge computer vision, shipping with an accuracy cliff for darker-skinned women that no one had tested for. In your practice the pattern repeats wherever demo data becomes training data. The newest stack can carry the oldest bias, and it ships faster.',
@@ -35,6 +55,11 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Education, Community and Social Services': {
+    4: {
+      'Default discrimination': 'During the 2020 remote bar exams, online proctoring software repeatedly failed to detect darker-skinned test takers, telling them to find better lighting and flagging them for review under the same webcams that passed their lighter-skinned peers. The default face the system expected decided who could sit an exam in peace, a preview of every proctored classroom you will work in (Chin, 2020).',
+      'Is the glitch systemic?': 'When the reading app mispronounces the same students\' names, the attendance system keeps auto-flagging the same families, or the translation line never quite works for one language group, each incident looks small. Ask whether the failures cluster. In your field, a pattern of small failures landing on the same children is not bad luck; it is the system telling you who it was built for.',
+      'Design as worldbuilding': 'An intake form builds the family it expects: two parents, one address, one home language, a landline. Children whose worlds differ arrive pre-marked as exceptions before any worker meets them. Benjamin\'s point lands hardest in social services, where the categories on the form become the case file, and the case file becomes the child\'s institutional reality.',
+    },
     2: {
       'Critical race theory (CRT)': 'In your field the neutral-looking instruments are assessments, attendance policies, and risk screens. CRT asks who each was normed on and who it flags. Standardized tests correlate with family income and neighbourhood resources, then get read as individual merit; a behaviour rubric written for one cultural norm reads other communication styles as defiance. The document is even-handed; the caseload it produces is not.',
       'The New Jim Code as applied critical race theory': 'Adaptive learning platforms, early-warning dropout systems, and child-welfare risk screens all arrive promising to catch problems sooner and fairer. The Ofqual algorithm above shows the New Jim Code in a classroom: modernization that quietly graded students by their school\'s past. When your agency adopts a screening tool, ask what history its training data rewards.',
@@ -43,6 +68,11 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Media and Communications': {
+    4: {
+      'Default discrimination': 'Defaults decide who broadcasts well: auto-exposure balanced for light skin, auto-captions trained on one accent, recommendation cold-starts that assume a default viewer, comment filters that flag African American English as toxicity at higher rates. No editor chooses any of it, which is the point: in algorithmic media the defaults are the editorial policy nobody signed.',
+      'Is the glitch systemic?': 'When creators from the same communities keep reporting suppressed reach, demonetization, or misfiring moderation, platforms answer with the word error. Your field\'s verification instincts apply: one account is an anecdote, a corpus is a finding. Benjamin\'s question is the journalist\'s follow-up: does the error repeat, whom does it repeat on, and what does the pattern say the system was optimized for?',
+      'Design as worldbuilding': 'Every feed algorithm, style guide, CMS category, and caption default builds a public: whose speech is legible, whose names are spellable, whose stories fit the content types. Media has always built worlds; the difference now is that the worldbuilding is compiled and scaled. Reading a platform\'s defaults is reading its theory of who the audience is.',
+    },
     2: {
       'Critical race theory (CRT)': 'Media studies and CRT share a founding move: representation is structure, not accident. Whose stories get commissioned, whose faces train the recommendation engine, whose dialects the caption system can hear: each looks like an editorial or technical detail and functions as a filter on who is publicly legible. The ad-delivery skew above is the measurable edge of that filter.',
       'The New Jim Code as applied critical race theory': 'Programmatic advertising, engagement optimization, and AI-assisted editing are sold to your field as reaching the right audience efficiently. The New Jim Code asks who the optimizer learned to consider the right audience for housing, for jobs, for news itself. Distribution is now algorithmic, which means the old gatekeeping did not die; it compiled.',
@@ -51,6 +81,11 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Engineering Technology': {
+    4: {
+      'Default discrimination': 'The viral demonstrations of automatic soap dispensers and faucets that respond to light hands and ignore dark ones are a compact engineering lesson: an infrared sensor tuned on reflective skin, tested on the team that built it, shipped worldwide. Nothing in the requirements said exclude; the calibration default did it silently, at scale, in hospital washrooms and airport terminals alike (Fussell, 2017).',
+      'Is the glitch systemic?': 'Your discipline already refuses the glitch excuse: a part that fails repeatedly under the same load is not unlucky, it is under-specified. Hold sensing and biometric systems to the same standard. If the failure reproduces under known conditions, dark skin, low contrast, non-default bodies, it is a design defect with a traceable cause, and calling it a glitch is skipping the failure analysis.',
+      'Design as worldbuilding': 'Every fixture, seat, sensor, and interface embeds an assumed user: their height, grip, skin reflectance, hearing range. Standards call this the default human, and history has drawn that human narrowly. Engineering as worldbuilding means the tested envelope is a decision about who the built world welcomes, and widening the envelope is design work, not accommodation.',
+    },
     2: {
       'Critical race theory (CRT)': 'Engineering hides its social choices inside specifications. CRT teaches you to read a spec sheet the way you read a stress analysis: where were the assumptions set, and who falls outside the tested envelope? A calibration population is a design decision about whose bodies the device must work for, as the pulse oximeter case above makes concrete.',
       'The New Jim Code as applied critical race theory': 'Sensors, biometrics, and automated inspection are sold to your field as removing human error. The New Jim Code warns that they can automate a narrower error instead: a device validated on one population fails silently on another while wearing the authority of instrumentation. Newer does not mean better characterized; ask for the validation data\'s demographics like you ask for its tolerances.',
@@ -59,6 +94,11 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Science': {
+    4: {
+      'Default discrimination': 'Dermatology AI is only as broad as its atlas, and the field\'s image datasets skew heavily toward light skin, so diagnostic models perform measurably worse on dark skin, where melanoma is already detected later. The default archive, decades of textbook and clinic photography, became the training distribution, and the model inherited its gaps as if they were biology (Daneshjou et al., 2022).',
+      'Is the glitch systemic?': 'A model that misclassifies one image is noise; a model that misclassifies one population is a sampling result. Benjamin\'s question restates a principle your methods training already contains: before dismissing an outlier, test whether it is structure. Stratify the error, and if the failure concentrates where the training data thinned, report it as a limitation of the evidence base, not a fluke of the instrument.',
+      'Design as worldbuilding': 'Choosing a reference population, an ontology, a variable coding is building the world your results describe. When race enters a dataset as an unexamined default variable, models learn it as if it were mechanism rather than history. Study design in your field is worldbuilding with error bars: the categories you set upstream become the facts everyone cites downstream.',
+    },
     2: {
       'Critical race theory (CRT)': 'CRT applied to science asks who counts as baseline. The GWAS reference gap above is one instance of a wider pattern: normal ranges, reference values, and cohort designs built on one population and generalized to all. The scientific claim looks universal; the sampling frame is not. Methodological rigor and this critique are the same skill: interrogate the sample.',
       'The New Jim Code as applied critical race theory': 'Precision medicine, big-data epidemiology, and AI-assisted diagnostics promise to replace crude categories with individualized truth. The New Jim Code predicts what the reference-panel problem confirms: models built on skewed cohorts deliver their precision unevenly, and the rhetoric of personalization hides whose data the model personalizes from.',
@@ -67,6 +107,11 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Aviation': {
+    4: {
+      'Default discrimination': 'Airport body scanners were tuned to a default body, and travellers who differ trigger anomalies: investigations found Black women disproportionately pulled aside for hair pat-downs because the millimetre-wave systems kept flagging natural hairstyles the algorithm had not been designed around. The checkpoint applied one procedure to everyone and still searched some passengers far more, because the default did the selecting (Medina and Cahn, 2019).',
+      'Is the glitch systemic?': 'Aviation never accepts glitch as a final classification: every recurring anomaly gets a root cause. Extend that discipline to screening technology. If the same scanner alarm keeps firing on the same hairstyles, prosthetics, or head coverings, that is not random secondary selection; it is a repeatable failure mode of the equipment, and your field already owns the vocabulary for what happens next.',
+      'Design as worldbuilding': 'Aircraft cabins, evacuation models, checkpoint flows, and crew equipment are all built around reference bodies and reference behaviours. Those defaults decide who fits the seat, whose prosthetic confuses the scanner, whose infant carrier fails the gate check. Design in aviation is worldbuilding under certification: whatever body the standard imagines becomes the body the system serves best.',
+    },
     2: {
       'Critical race theory (CRT)': 'Aviation trusts procedure, which is exactly why CRT matters here: a screening procedure applied identically can still land unevenly, as the face-matching error rates above show. Your field\'s own safety culture already accepts that a system can fail without any individual failing; CRT extends that systems thinking from mechanical failure to human sorting at the checkpoint and the gate.',
       'The New Jim Code as applied critical race theory': 'Biometric boarding, automated risk-flagging, and e-gates are marketed as frictionless, modern travel. The New Jim Code asks who absorbs the friction that did not disappear: the passenger whose face false-matches, whose name resembles a watchlist entry, whose secondary screening becomes routine. The efficiency is real and so is its uneven price.',
@@ -75,6 +120,11 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Hospitality and Tourism': {
+    4: {
+      'Default discrimination': 'Think of everything a property leaves on default: the voice assistant that only reliably parses one accent, the smart-room sensors tuned like the infrared taps that ignore darker hands, the booking engine whose name fields reject apostrophes and long surnames, the loyalty tiers built on spending histories that mirror old exclusions. No manager decides to discriminate; the property\'s defaults quietly decide which guest the hotel was built to recognize.',
+      'Is the glitch systemic?': 'Service recovery treats one bad stay as an incident. But when the same guest demographics keep hitting the same friction, ID checks that take longer, room assignments that skew, payment holds that trigger more often, the incidents are a pattern. Your field already tracks repeat complaints as an operations signal; Benjamin\'s question just asks you to read that dashboard for who the system keeps failing.',
+      'Design as worldbuilding': 'A property management system builds the guest it expects: party size, family shape, dietary categories, languages the confirmation email speaks. Guests outside that imagined world arrive as exceptions needing workarounds, and every workaround is friction that reads as unwelcome. In hospitality, the database is the front desk\'s imagination; design it wider and the welcome gets wider.',
+    },
     2: {
       'Critical race theory (CRT)': 'Hospitality runs on discretion: who gets the upgrade, the late checkout, the benefit of the doubt at the front desk. CRT points out that discretion aggregates into structure, as the Airbnb acceptance-rate study above measured. No single decline is a policy; a platform full of them is. Your field\'s neutral-looking systems are ratings, no-show flags, and guest-risk notes, each carrying whatever bias fed it.',
       'The New Jim Code as applied critical race theory': 'Dynamic pricing, guest-scoring, and automated fraud flags reach your industry as revenue optimization. The New Jim Code asks which guests the optimizer learned to distrust. A chargeback-risk model trained on past disputes can quietly re-price or decline the same communities hosts were already declining, now with a dashboard\'s authority.',
@@ -83,6 +133,11 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Creative Arts, Animation and Design': {
+    4: {
+      'Default discrimination': 'A Black researcher\'s head vanished when Zoom\'s virtual background treated his face as background, and the thumbnail crop of the tweet about it then centred his white colleague: two stacked defaults, each trained to detect a default face, failing in public. Your tools carry the same inheritance in their auto-exposure, skin-smoothing, and face detection; left on default, they art-direct against some subjects (Dickey, 2020).',
+      'Is the glitch systemic?': 'When a render engine, auto-mask, or beauty filter keeps failing on dark skin or textured hair, the release notes will call each case an edge case. Run the artist\'s test: reproduce it. If the failure returns every time the subject does, it is not an edge case, it is the tool\'s learned aesthetic, and your pipeline either corrects for it or endorses it.',
+      'Design as worldbuilding': 'Character rigs, colour scripts, stock libraries, and font stacks all encode a default world: whose hair physics exist, whose skin tones have swatches, whose names render. Benjamin\'s worldbuilding is literal in your field; you build worlds for a living. The question is whether the defaults you inherit get to decide who exists in them.',
+    },
     2: {
       'Critical race theory (CRT)': 'Your discipline inherited technical standards calibrated to light skin, from film stock and studio lighting to default colour pipelines, and those defaults now live inside the tools. CRT for a designer means seeing the default as a decision: every preset, rig, and reference library encodes whose face, hair, and skin the tool considers normal, as the photo-crop audit above demonstrated in production.',
       'The New Jim Code as applied critical race theory': 'Generative tools and smart features arrive promising to democratize creation. The New Jim Code asks what the model considers beautiful, professional, or default, because it learned those categories from datasets with a history. When the tool autocompletes a face, a hairstyle, or a skin tone, it is quoting its training data; your job is to notice whose archive it quotes.',
@@ -91,6 +146,11 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Fashion and Esthetics': {
+    4: {
+      'Default discrimination': 'Default discrimination is your industry\'s oldest open secret made algorithmic: nude as one beige, shade ranges that stop at medium, sizing graded from a single fit model, and now virtual try-on and skin-analysis tools trained on the same narrow archive. The harm needs no hostile designer, only a product team that never questions whose skin and body the default was set to.',
+      'Is the glitch systemic?': 'When the foundation-matching app keeps reading deep skin tones as shadows, or the try-on model distorts on fuller bodies, each support ticket looks like a bug. Ask whether the failures map onto who was missing from the training images and the fit sessions. If they do, the app is not glitching; it is faithfully reproducing the industry archive it learned from.',
+      'Design as worldbuilding': 'A size chart, a shade naming system, a trend forecast, a campaign casting brief: each builds a world with a default body and face at its centre. Esthetics is worldbuilding on skin. Benjamin\'s question for your practice is whose features the default flatters, whose require correction, and who wrote that hierarchy into the product line.',
+    },
     2: {
       'Critical race theory (CRT)': 'Your industry\'s neutral-looking systems are shade ranges, sample sizes, undertone charts, and now the recommendation algorithms trained on all of the above. CRT asks whose skin and body each standard was built around. Nude that matches one skin tone, foundation lines that stop at medium, sizing built on one fit model: none of it announces exclusion, all of it operationalizes a default customer.',
       'The New Jim Code as applied critical race theory': 'AI stylists, skin-analysis apps, and virtual try-on arrive as personalization for everyone. The algorithmic beauty contest above shows the New Jim Code in your industry\'s own vocabulary: a system trained on a narrow archive of faces crowned that archive as beauty itself, with the confidence of software. Ask every beauty-tech tool: personalized from whose data?',
@@ -99,6 +159,11 @@ window.BFS218_FIELD_EXAMPLES = {
     }
   },
   'Liberal Arts and University Transfers': {
+    4: {
+      'Default discrimination': 'Notice how often the everyday tools of scholarship treat one world as normal: the spellchecker that redlines non-Anglo names, the citation manager that mangles diacritics, the transcription tool that garbles accented speech, the library search tuned to English keywords. Each is a default nobody defends and everybody inherits, and together they tax some students\' work with constant small corrections the default user never pays.',
+      'Is the glitch systemic?': 'The Malcolm Ten error is a perfect seminar case: funny as a glitch, damning as a pattern. Your training in close reading applies: a single misreading is an accident, but a system that reliably misreads one community\'s naming conventions is expressing its archive. Benjamin\'s question is source criticism aimed at software: ask what the error reveals about what the system was taught to consider normal.',
+      'Design as worldbuilding': 'The humanities have long argued that categories build worlds: archives decide what survives, canons decide what counts, forms decide what can be said. Database design is the newest chapter of that old story. When you meet a dropdown that cannot hold a real identity, read it the way you read any text: as an argument about whose world is the default.',
+    },
     2: {
       'Critical race theory (CRT)': 'CRT began as scholarship you can read and argue with: Crenshaw and colleagues showing that law\'s formal neutrality could coexist with durable racial hierarchy. As a transfer student you will meet its method across disciplines: take an institution\'s self-description, hold it against its measurable effects, and treat the gap as the object of study. The speech-recognition disparity above is that method applied to language technology.',
       'The New Jim Code as applied critical race theory': 'Universities themselves adopt the tools this course studies: plagiarism detectors, proctoring software, auto-transcription, admissions analytics, each introduced as modernization. The New Jim Code gives you the scholarly question to bring to seminar: when an institution automates a judgment, which historical pattern does the automation inherit, and who bears the error?',
