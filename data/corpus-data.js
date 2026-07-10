@@ -358,6 +358,32 @@ window.BFS218 = {
    "fulltext": true
   },
   {
+   "id": "koenecke2020",
+   "eye": "western",
+   "type": "Article",
+   "access": "open",
+   "title": "Racial Disparities in Automated Speech Recognition",
+   "authors": "Allison Koenecke, Andrew Nam, Emily Lake, Joe Nudell, Minnie Quartey, Zion Mengesha, Connor Toups, John R. Rickford, Dan Jurafsky and Sharad Goel",
+   "year": 2020,
+   "themes": [
+    "bias",
+    "facial"
+   ],
+   "origin": "United States",
+   "len": "~20 min read",
+   "diff": 2,
+   "week": 5,
+   "abstract": "Koenecke and colleagues tested five leading automated speech recognition systems, from Amazon, Apple, Google, IBM, and Microsoft, on matched recordings of Black and white speakers. The systems misrecognized Black speakers about twice as often, with an average word error rate of 0.35 for Black speakers against 0.19 for white speakers, and the gap held even when Black and white speakers said the exact same words. The authors trace the gap to acoustic models trained on too little Black speech, not to anything about how the speakers talk. The study extends the coded gaze from what a system sees to what it hears, and shows language minorities being shut out of voice-driven tools.",
+   "coreIdea": "Automated speech recognition misrecognizes Black speakers about twice as often as white speakers, so the coded gaze fails by ear as well as by eye.",
+   "doi": "10.1073/pnas.1915768117",
+   "url": "https://www.pnas.org/doi/10.1073/pnas.1915768117",
+   "related": [
+    "buolamwini2018",
+    "benjamin2019"
+   ],
+   "fulltext": true
+  },
+  {
    "id": "opc2021",
    "assigned": "Findings summary",
    "eye": "western",
@@ -480,6 +506,32 @@ window.BFS218 = {
    "fulltext": true
   },
   {
+   "id": "nagra2016",
+   "eye": "western",
+   "type": "Article",
+   "access": "open",
+   "title": "Crossing Borders and Managing Racialized Identities: Experiences of Security and Surveillance Among Young Canadian Muslims",
+   "authors": "Baljit Nagra and Paula Maurutto",
+   "year": 2016,
+   "themes": [
+    "surveillance",
+    "policing"
+   ],
+   "origin": "Canada",
+   "len": "~40 min read",
+   "diff": 2,
+   "week": 6,
+   "abstract": "Baljit Nagra and Paula Maurutto interviewed young Canadian Muslims about how they move through airports, borders, and everyday security checks. Their participants describe being pulled aside, questioned, and watched as a matter of routine, treated as a possible security risk because of their faith rather than anything they had done. The article shows how security practices after 9/11, from watchlists to border risk-flagging, turn a whole community into a category to be managed, and how young Muslims end up managing how they look and speak just to move through a checkpoint. It grounds the Canadian week in the lived experience of a community on the receiving end of security surveillance.",
+   "coreIdea": "Border and security systems in Canada treat young Muslims as a security category to be watched, a burden they carry regardless of anything they have done.",
+   "doi": "10.29173/cjs23031",
+   "url": "https://journals.library.ualberta.ca/cjs/index.php/CJS/article/view/23031",
+   "related": [
+    "robertson2020",
+    "molnar2023"
+   ],
+   "fulltext": true
+  },
+  {
    "id": "mohamed2020",
    "video": {
     "yt": "Kc0tsGxgMPA",
@@ -538,7 +590,7 @@ window.BFS218 = {
    "id": "devlin2023",
    "video": {
     "yt": "0PqrZ2lqT70",
-    "title": "Kate Crawford: Mapping Planetary AI",
+    "title": "Related talk: Kate Crawford on mapping planetary AI",
     "channel": "State Library Victoria",
     "scholar": "Kate Crawford"
    },
