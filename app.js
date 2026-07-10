@@ -5662,9 +5662,9 @@
       { d: '2026-09-08', it: [['First day of classes', '', 'class']] },
       { d: '2026-09-14', it: [['Map Exchange opens', '', 'open', 0]] },
       { d: '2026-09-28', it: [['Coded Encounter opens', '', 'open', 1]] },
-      { d: '2026-10-19', it: [['Canadian Case File opens', '', 'open', 2]] },
+      { d: '2026-10-05', it: [['Canadian Case File opens', '', 'open', 2]] },
+      { d: '2026-10-25', it: [['Map Exchange checkpoint', 'due', 'due', 0], ['Coded Encounter', 'due', 'due', 1], ['Canadian Case File', 'due', 'due', 2]] },
       { d: '2026-10-26', it: [['Study Week', 'Oct 26 to 30. No classes.', 'class']] },
-      { d: '2026-11-02', it: [['Map Exchange checkpoint', 'due', 'due', 0], ['Coded Encounter', 'due', 'due', 1], ['Canadian Case File', 'due', 'due', 2]] },
       { d: '2026-11-23', it: [['Design the Repair opens', '', 'open', 3]] },
       { d: '2026-12-07', it: [['Personal Cartography opens', 'your final project', 'open', 4]] },
       { d: '2026-12-11', it: [['Design the Repair', 'due', 'due', 3], ['Map Exchange final close', 'due', 'due', 0], ['Personal Cartography', 'due', 'due', 4]] },
@@ -5825,12 +5825,12 @@
         title: 'Map Exchange',
         short: 'Share one located observation each week',
         weight: '20 marks (20%)',
-        timing: 'Ongoing Weeks 2-12. Graded at the November 2 checkpoint and again at the end of Week 13.',
+        timing: 'Ongoing Weeks 2-12. Graded at the October 25 checkpoint and again at the end of Week 13.',
         opens: 'Starts Week 2',
         release: '2026-09-14',
-        due: 'Checkpoint due by November 2, 2026. Final close due by December 11, 2026.',
+        due: 'Checkpoint due by October 25, 2026. Final close due by December 11, 2026.',
         sectionDue: {
-          async: 'Checkpoint due by November 2, 2026; final close due by December 11, 2026.',
+          async: 'Checkpoint due by October 25, 2026; final close due by December 11, 2026.',
           sync: 'Weekly Weeks 2 to 12; closes in Week 12.'
         },
         purpose: 'This assignment builds the habit that makes the rest of the course possible: noticing how ordinary digital systems shape people differently.',
@@ -5868,12 +5868,12 @@
         title: 'Coded Encounter',
         short: 'Break down one encounter with techno-racism',
         weight: '20 marks (20%)',
-        timing: 'Opened on Blackboard in Week 4. Due Monday, November 2, right after Study Week.',
+        timing: 'Opened on Blackboard in Week 4. Due Sunday, October 25, the night before Study Week.',
         opens: 'Week 4',
         release: '2026-09-28',
-        due: 'Due by November 2, 2026.',
+        due: 'Due by October 25, 2026.',
         sectionDue: {
-          async: 'Due by November 2, 2026.',
+          async: 'Due by October 25, 2026.',
           sync: 'Due in Week 4.'
         },
         purpose: 'This assignment teaches you to slow down one real digital encounter and prove how the mechanism works with artifacts.',
@@ -5911,12 +5911,12 @@
         title: 'Canadian Case File',
         short: 'Investigate one real Canadian system',
         weight: '20 marks (20%)',
-        timing: 'Opened on Blackboard after Week 6. Due Monday, November 2, right after Study Week.',
-        opens: 'After Week 6',
-        release: '2026-10-19',
-        due: 'Due by November 2, 2026.',
+        timing: 'Opened on Blackboard at the start of Week 5. Due Sunday, October 25, the night before Study Week.',
+        opens: 'Week 5',
+        release: '2026-10-05',
+        due: 'Due by October 25, 2026.',
         sectionDue: {
-          async: 'Due by November 2, 2026.',
+          async: 'Due by October 25, 2026.',
           sync: 'Due in Week 8.'
         },
         purpose: 'This assignment moves from personal observation to a public Canadian system so your analysis is grounded in documented evidence.',
@@ -6899,7 +6899,7 @@
     return '<section class="asg-hero ' + esc(extraClass || '') + '"><div class="mono">' + esc(label) + '</div><h1>' + esc(title) + '</h1><p>' + esc(text) + '</p></section>';
   }
   function assignmentSummaryPanel() {
-    return '<section class="asg-summary" aria-label="Assignment overview"><div><span>5 assignments</span><b>Each is worth 20%</b><small>Together they build one Personal Cartography.</small></div><div><span>Asynchronous section</span><b>Two deadlines</b><small>First half due November 2, the Monday after Study Week; second half due December 11.</small></div><div><span>Synchronous section</span><b>Week-by-week due dates</b><small>Coded Encounter Week 4; Canadian Case File Week 8; Design the Repair Week 12; final project December 7.</small></div></section>';
+    return '<section class="asg-summary" aria-label="Assignment overview"><div><span>5 assignments</span><b>Each is worth 20%</b><small>Together they build one Personal Cartography.</small></div><div><span>Asynchronous section</span><b>Two deadlines</b><small>First half due Sunday, October 25, before Study Week; second half due December 11.</small></div><div><span>Synchronous section</span><b>Week-by-week due dates</b><small>Coded Encounter Week 4; Canadian Case File Week 8; Design the Repair Week 12; final project December 7.</small></div></section>';
   }
   function assignmentSelectedContext() {
     var items = assignmentsData();
