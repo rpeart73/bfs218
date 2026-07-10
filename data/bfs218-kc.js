@@ -897,7 +897,7 @@ window.BFS218_KC = {
       options: ['Changing the defaults, data, and assumptions that caused it', 'Firing one employee and moving on', 'Adding a label that says the product is fair', 'Waiting because there was no intent'],
       answer: 0, why: 'Because the harm lives in the defaults, the remedy is to change those defaults rather than to find a single culprit or restate neutrality.', diff: 2 },
     { q: 'Who developed default discrimination as a dimension of the New Jim Code?',
-      options: ['Ruha Benjamin', 'Sasha Costanza-Chock', 'Thomas King', 'Shawn Singh'],
+      options: ['Ruha Benjamin', 'Sasha Costanza-Chock', 'Joy Buolamwini', 'Shawn Singh'],
       answer: 0, why: 'Default discrimination is one of the four dimensions Ruha Benjamin sets out in Race After Technology.', diff: 1 },
     { q: 'Default discrimination fits the course’s shift from intent to outcome because it shows what?',
       options: ['A system can discriminate through its defaults with no one intending it', 'Only intended harms count as discrimination', 'Outcomes never matter, only intentions', 'Defaults are always chosen to harm on purpose'],
@@ -1272,7 +1272,7 @@ window.BFS218_KC = {
       answer: 0, why: 'Week 7 gathers the four dimensions and the course’s core concepts into a single framework, the anatomy of techno-racism, rather than introducing something unrelated.', diff: 3 }
   ]);
 
-  /* ---- WEEK 8 : Indigenous Data Sovereignty (King; Smillie-Adjarkwa; Mohamed, Png, Isaac) ---- */
+  /* ---- WEEK 8 : Indigenous Data Sovereignty (FNIGC/OCAP; GIDA/CARE; Mohamed, Png, Isaac; Smillie-Adjarkwa) ---- */
   add(8, [
     { kind: 'scenario', diff: 3,
       q: 'An outside university team collects health data about a First Nation and stores it on the university’s servers, deciding on its own how the data will be used. Which OCAP principles are most clearly at stake?',
@@ -1326,19 +1326,6 @@ window.BFS218_KC = {
         1: 'If people cannot get online at all, the quality of algorithms is beside the point; access comes first.',
         2: 'The divide runs along specific lines such as income, geography, and race, so it is not equal for everyone.',
         3: 'Reaching health information online is exactly the kind of access she studies.' } },
-    { kind: 'scenario', diff: 3,
-      q: 'Thomas King argues that stories are how people make and hold their world. In a unit on Indigenous data sovereignty, why is that claim placed next to questions about data?',
-      options: [
-        'Because control over narrative, like control over data, is a form of power over how a community is known',
-        'Because stories are only entertainment set apart from real life',
-        'Because data and stories have nothing to do with each other',
-        'Because King argues communities should not tell their own stories' ],
-      answer: 0,
-      why: 'King holds that whoever controls the story holds real power, and the course connects control over narrative to control over data: both shape how a community is known and governed.',
-      whyWrong: {
-        1: 'King specifically rejects the idea that stories are mere entertainment; he calls them the means by which people make and hold their world.',
-        2: 'The course places them together precisely because both narrative and data are forms of power.',
-        3: 'King treats telling one’s own story as a source of power, not something to avoid.' } },
     { kind: 'match', mgroup: 'w8m', mlabel: 'Match each idea to what it names.', diff: 2,
       q: 'Indigenous data sovereignty', answer: 0,
       options: [
@@ -1374,9 +1361,6 @@ window.BFS218_KC = {
     { type: 'short', diff: 3,
       q: 'In two or three sentences, explain how the OCAP principles turn Indigenous data sovereignty from a general idea into a concrete practice.',
       model: 'Indigenous data sovereignty is the principle that a community has the right to govern data about itself. OCAP makes that concrete by naming four things a community should hold: ownership of its information, control over how data is collected and used, access to data about itself, and possession or stewardship of that data. Together they give a practical test for any project: if an outside body owns, controls, or holds the data instead of the community, the practice falls short of sovereignty.' },
-    { type: 'short', diff: 2,
-      q: 'King says whoever controls the story holds power. In your own words, connect that idea to why a community would want to govern its own data.',
-      model: 'A strong answer explains that both stories and data decide how a community is understood and acted upon by others. If outsiders control the narrative or the data, they shape decisions about the community without the community’s authority. Governing its own data, like telling its own story, lets a community hold power over how it is known, which is the link King’s argument draws.' }
   ]);
 
   /* ---- WEEK 9 : Technological Benevolence (Benjamin, dimension 4) ---- */

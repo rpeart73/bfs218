@@ -669,73 +669,6 @@ window.BFS218_MC = {
    "diff": 1
   }
  ],
- "king2003": [
-  {
-   "q": "What is King's central claim about stories in The Truth About Stories?",
-   "options": [
-    "Stories are how people make and hold their world, so who controls the story holds power",
-    "Stories are harmless entertainment with no real effect",
-    "Stories should be replaced by data",
-    "Stories only matter once they are written down and archived"
-   ],
-   "answer": 0,
-   "why": "King argues that stories are the means by which people make and hold their world, which is why narrative carries real power.",
-   "skill": "argument",
-   "diff": 1
-  },
-  {
-   "q": "Why does BFS218 read King in the Indigenous data sovereignty week?",
-   "options": [
-    "To ground the idea that control over narrative, like control over data, is a form of power",
-    "To teach students to write fiction",
-    "To provide a lighter reading before the heavier legal material",
-    "To compare two search engines"
-   ],
-   "answer": 0,
-   "why": "The course reads the first lecture for the power of stories, connecting control over narrative to control over data.",
-   "skill": "significance",
-   "diff": 3
-  },
-  {
-   "q": "What distinction in King's background does the source note?",
-   "options": [
-    "He was the first lecturer of Native descent in the CBC Massey Lectures",
-    "He founded the first Indigenous-owned television network in Canada",
-    "He never published any fiction",
-    "He worked only in computer science"
-   ],
-   "answer": 0,
-   "why": "The Massey Lectures note that King is the first Massey lecturer of Native descent.",
-   "skill": "context",
-   "diff": 1
-  },
-  {
-   "q": "How does King describe what stories actually are?",
-   "options": [
-    "The means by which people make, hold, and pass on their world, not entertainment set apart from real life",
-    "A pleasant distraction with no bearing on real life",
-    "A record of past events that must stay fixed in order to remain true",
-    "A replacement for data and record-keeping"
-   ],
-   "answer": 0,
-   "why": "King argues that stories are not entertainment set apart from real life but the means by which people make, hold, and pass on their world.",
-   "skill": "argument",
-   "diff": 2
-  },
-  {
-   "q": "In which lecture series did King deliver The Truth About Stories?",
-   "options": [
-    "A university computer-science seminar",
-    "A TED conference keynote",
-    "The CBC Massey Lectures",
-    "A parliamentary committee hearing"
-   ],
-   "answer": 2,
-   "why": "The abstract identifies King as the first lecturer of Native descent in the CBC Massey Lectures.",
-   "skill": "context",
-   "diff": 1
-  }
- ],
  "devlin2023": [
   {
    "q": "What is Devlin's central argument about inequality in AI?",
@@ -755,7 +688,7 @@ window.BFS218_MC = {
    "options": [
     "Petra Molnar's border research",
     "Ruha Benjamin's Race After Technology",
-    "Thomas King's Massey Lectures",
+    "Sasha Costanza-Chock's Design Justice",
     "Safiya Umoja Noble's Algorithms of Oppression"
    ],
    "answer": 3,
@@ -794,7 +727,7 @@ window.BFS218_MC = {
    "options": [
     "A facial-recognition vendor's technical manual",
     "The Oxford Handbook of Internet Studies",
-    "The CBC Massey Lectures",
+    "The Cambridge Handbook of Artificial Intelligence",
     "The Handbook of Gender, Communication, and Women's Human Rights"
    ],
    "answer": 3,
