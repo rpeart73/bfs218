@@ -2,62 +2,99 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline'; img-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
-<meta name="theme-color" content="#DA291C">
+<meta name="theme-color" content="#0E1420">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BFS218: choose your section</title>
 <meta name="description" content="BFS218 at Seneca Polytechnic runs in two sections with two course sites. Choose the asynchronous self-paced site or the synchronous live-class companion site.">
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="stylesheet" href="./fonts/fonts.css">
 <style>
-  :root{--red:#DA291C;--dark:#961A13;--ink:#15171C;--dim:#474C57;--faint:#6B7280;--border:#DEE3EA;--page:#F7F8FA}
+  :root{--ink:#F4F6FA;--dim:#AAB4C6;--faint:#76819A;--red:#E4392B;--dark:#B0261B;--line:rgba(244,246,250,.09);--card:#141C2C;--ground:#0E1420}
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'IBM Plex Sans',system-ui,Arial,sans-serif;background:var(--page);color:var(--ink);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px 20px}
-  .wrap{max-width:880px;width:100%}
-  .brand{display:flex;align-items:center;gap:14px;margin:0 0 26px}
-  .brand img{height:34px;display:block}
-  .kicker{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:.72rem;font-weight:700;letter-spacing:.09em;color:var(--red);margin:0 0 10px}
-  h1{font-size:2.1rem;line-height:1.1;font-weight:700;letter-spacing:-.01em;margin:0 0 10px}
-  .lede{font-size:1.05rem;line-height:1.6;color:var(--dim);margin:0 0 26px}
-  .cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  @media (max-width:680px){.cards{grid-template-columns:1fr}}
-  a.card{display:block;background:#fff;border:1px solid var(--border);border-radius:16px;padding:26px 26px 24px;text-decoration:none;color:var(--ink);transition:box-shadow .15s, transform .15s}
-  a.card:hover{box-shadow:0 10px 30px rgba(21,23,28,.10);transform:translateY(-2px)}
-  a.card:focus-visible{outline:3px solid var(--red);outline-offset:3px}
-  .card.async{border-top:5px solid var(--dark)}
-  .card.sync{border-top:5px solid var(--red)}
-  .tag{display:inline-block;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:.68rem;font-weight:700;letter-spacing:.06em;color:#fff;border-radius:999px;padding:5px 12px;margin:0 0 14px}
-  .async .tag{background:var(--dark)}
-  .sync .tag{background:var(--red)}
-  .card h2{font-size:1.35rem;line-height:1.2;font-weight:700;margin:0 0 8px}
-  .card p{font-size:.95rem;line-height:1.55;color:var(--dim);margin:0 0 16px}
-  .go{font-weight:700;font-size:.95rem}
-  .async .go{color:var(--dark)}
-  .sync .go{color:var(--red)}
-  .foot{margin:26px 0 0;font-size:.85rem;line-height:1.6;color:var(--faint)}
+  html,body{min-height:100%}
+  body{font-family:'IBM Plex Sans',system-ui,Arial,sans-serif;background:var(--ground);background-image:radial-gradient(1200px 800px at 70% -10%, #182135 0%, var(--ground) 55%);color:var(--ink);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 22px;position:relative;overflow-x:hidden}
+  .terrain{position:fixed;inset:0;pointer-events:none;opacity:.9}
+  .wrap{max-width:980px;width:100%;position:relative}
+  .kicker{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:.72rem;font-weight:700;letter-spacing:.22em;color:var(--dim);display:flex;align-items:center;gap:14px;margin:0 0 22px}
+  .kicker::after{content:"";flex:1;height:1px;background:var(--line)}
+  h1{font-size:clamp(2.1rem,5.4vw,3.4rem);line-height:1.04;font-weight:700;letter-spacing:-.015em;margin:0 0 10px;text-wrap:balance}
+  .sub{font-size:clamp(1.05rem,2.2vw,1.3rem);font-weight:500;color:var(--dim);margin:0 0 8px}
+  .thesis{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:.8rem;letter-spacing:.14em;font-weight:700;color:var(--faint);margin:22px 0 30px;display:flex;align-items:center;gap:12px}
+  .thesis b{color:var(--ink)}
+  .thesis .rose{flex:none}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media (max-width:720px){.cards{grid-template-columns:1fr}}
+  a.card{display:block;background:linear-gradient(180deg,var(--card),#101827);border:1px solid var(--line);border-radius:18px;padding:28px 28px 24px;text-decoration:none;color:var(--ink);position:relative;overflow:hidden;transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease}
+  a.card::before{content:"";position:absolute;left:0;top:0;right:0;height:4px}
+  a.card.async::before{background:linear-gradient(90deg,var(--dark),transparent 85%)}
+  a.card.sync::before{background:linear-gradient(90deg,var(--red),transparent 85%)}
+  a.card:hover{transform:translateY(-3px);border-color:rgba(244,246,250,.22);box-shadow:0 18px 50px rgba(0,0,0,.45)}
+  a.card:focus-visible{outline:3px solid var(--red);outline-offset:4px}
+  .tag{display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:.66rem;font-weight:700;letter-spacing:.12em;color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:6px 13px;margin:0 0 18px;background:rgba(244,246,250,.04)}
+  .tag i{width:8px;height:8px;border-radius:50%;flex:none}
+  .async .tag i{background:var(--dark)}
+  .sync .tag i{background:var(--red)}
+  .card h2{font-size:1.55rem;line-height:1.15;font-weight:700;margin:0 0 10px;letter-spacing:-.01em}
+  .card p{font-size:.97rem;line-height:1.6;color:var(--dim);margin:0 0 20px}
+  .go{font-weight:700;font-size:.95rem;display:inline-flex;align-items:center;gap:8px}
+  .async .go{color:#F3A093}
+  .sync .go{color:#FF8B7D}
+  .go::after{content:"\2192";transition:transform .18s ease}
+  a.card:hover .go::after{transform:translateX(4px)}
+  .meta{display:flex;gap:20px;flex-wrap:wrap;margin:0 0 20px}
+  .meta div{font-size:.78rem;line-height:1.5;color:var(--faint)}
+  .meta b{display:block;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:.68rem;font-weight:700;letter-spacing:.1em;color:var(--dim)}
+  .foot{margin:30px 0 0;font-size:.83rem;line-height:1.65;color:var(--faint);max-width:none}
+  .foot b{color:var(--dim);font-weight:600}
+  @media (prefers-reduced-motion: reduce){a.card,.go::after{transition:none}a.card:hover{transform:none}}
 </style>
 </head>
 <body>
+<svg class="terrain" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <g fill="none" stroke="rgba(244,246,250,.055)" stroke-width="1.2">
+    <path d="M-100,720 C220,640 380,760 640,700 C900,640 1080,740 1540,660"/>
+    <path d="M-100,780 C240,700 420,820 700,760 C960,705 1140,800 1540,720"/>
+    <path d="M-100,660 C200,590 340,690 600,640 C880,585 1060,675 1540,600"/>
+    <ellipse cx="1150" cy="210" rx="260" ry="110" transform="rotate(-14 1150 210)"/>
+    <ellipse cx="1150" cy="210" rx="190" ry="76" transform="rotate(-14 1150 210)"/>
+    <ellipse cx="1150" cy="210" rx="120" ry="44" transform="rotate(-14 1150 210)"/>
+    <ellipse cx="1150" cy="210" rx="56" ry="18" transform="rotate(-14 1150 210)"/>
+    <ellipse cx="190" cy="150" rx="210" ry="86" transform="rotate(11 190 150)"/>
+    <ellipse cx="190" cy="150" rx="140" ry="52" transform="rotate(11 190 150)"/>
+    <ellipse cx="190" cy="150" rx="70" ry="24" transform="rotate(11 190 150)"/>
+  </g>
+  <g fill="none" stroke-width="1.6" stroke-dasharray="1 7" stroke-linecap="round">
+    <path d="M720,880 C600,760 420,700 300,600" stroke="rgba(176,38,27,.5)"/>
+    <path d="M720,880 C840,760 1030,700 1150,600" stroke="rgba(228,57,43,.5)"/>
+  </g>
+  <g fill="rgba(244,246,250,.12)">
+    <circle cx="300" cy="600" r="3"/><circle cx="1150" cy="600" r="3"/><circle cx="720" cy="880" r="4"/>
+  </g>
+</svg>
 <main class="wrap">
-  <div class="brand"><img src="./seneca-logo.png" alt="Seneca Polytechnic"></div>
-  <div class="kicker">SENECA POLYTECHNIC &middot; FALL 2026</div>
-  <h1>BFS218: Racism and the Digital Age</h1>
-  <p class="lede">This course runs in two sections, and each section has its own site. Pick yours. If you are not sure which section you are in, check your timetable or Blackboard.</p>
+  <div class="kicker">SENECA POLYTECHNIC &middot; FALL 2026 &middot; BFS218</div>
+  <h1>Racism and the Digital Age</h1>
+  <p class="sub">Understanding techno-racism: who digital systems see, sort, and serve.</p>
+  <p class="thesis"><svg class="rose" width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="11" fill="none" stroke="rgba(244,246,250,.25)" stroke-width="1.2"/><path d="M13 3 L15.2 13 L13 23 L10.8 13 Z" fill="#E4392B"/><path d="M3 13 L13 10.8 L23 13 L13 15.2 Z" fill="rgba(244,246,250,.35)"/></svg>ONE COURSE. <b>TWO WAYS THROUGH.</b> PICK YOUR SECTION.</p>
   <div class="cards">
     <a class="card async" href="https://rpeart73.github.io/bfs218-async/">
-      <span class="tag">ASYNCHRONOUS &middot; SELF-PACED</span>
+      <span class="tag"><i></i>ASYNCHRONOUS &middot; SELF-PACED</span>
       <h2>You run this course.</h2>
-      <p>No live classes. The site carries the weekly teaching, and you set the pace between two due-date windows.</p>
-      <span class="go">Enter the asynchronous site &#8594;</span>
+      <p>No live classes. The site carries the weekly teaching, the walkthroughs are your lectures, and you set the pace inside two due-date windows.</p>
+      <div class="meta"><div><b>RHYTHM</b>yours to set</div><div><b>DUE DATES</b>Oct 25 and Dec 11</div><div><b>LECTURES</b>walkthroughs, on demand</div></div>
+      <span class="go">Enter the asynchronous site</span>
     </a>
     <a class="card sync" href="https://rpeart73.github.io/bfs218-sync/">
-      <span class="tag">SYNCHRONOUS &middot; LIVE ONLINE</span>
+      <span class="tag"><i></i>SYNCHRONOUS &middot; LIVE ONLINE</span>
       <h2>Our class meets live.</h2>
-      <p>Weekly live classes. The site is your companion for everything before and after class, with week-by-week due dates.</p>
-      <span class="go">Enter the synchronous site &#8594;</span>
+      <p>Weekly live classes carry the teaching. The site is your companion for everything before and after: prepare, review, practice, keep your notes.</p>
+      <div class="meta"><div><b>RHYTHM</b>weekly live classes</div><div><b>DUE DATES</b>week by week</div><div><b>LECTURES</b>live, together</div></div>
+      <span class="go">Enter the synchronous site</span>
     </a>
   </div>
-  <p class="foot">Blackboard remains the official course platform for announcements, submissions, grades, discussions, and course records. This page only points you to your section's site.</p>
+  <p class="foot"><b>Not sure which section you are in?</b> Check your timetable or Blackboard. Blackboard remains the official course platform for announcements, submissions, grades, and discussions; this page only points you to your section's site.</p>
 </main>
 </body>
 </html>
