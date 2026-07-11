@@ -11,10 +11,12 @@
   var params;
   try { params = new URLSearchParams(location.search || ''); } catch (e) { params = null; }
   var forceChoose = params && (params.has('choose') || params.has('reset'));
+  var devParam = params && params.has('dev');
+  var devOn = false; try { devOn = localStorage.getItem('bfs218.dev') === '1'; } catch (e) {}
 
   if (forceChoose) {
     try { localStorage.removeItem(KEY); } catch (e) {}
-  } else {
+  } else if (!devParam && !devOn) {
     var saved = null;
     try { saved = localStorage.getItem(KEY); } catch (e) {}
     if (saved && SITES[saved]) { location.replace(SITES[saved]); return; }
