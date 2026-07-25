@@ -14,21 +14,34 @@
   var devParam = params && params.has('dev');
   var devOn = false; try { devOn = localStorage.getItem('bfs218.dev') === '1'; } catch (e) {}
 
+  /* Forward everything except this page's own control params to the section site,
+     so deep links like ?week=13 or ?screen=walkthroughs survive the redirect. */
+  var fwd = '';
+  try {
+    var fp = new URLSearchParams(location.search || '');
+    ['choose', 'reset', 'dev'].forEach(function (k) { fp.delete(k); });
+    var qs = fp.toString();
+    fwd = (qs ? '?' + qs : '') + (location.hash || '');
+  } catch (e) { fwd = ''; }
+
   if (forceChoose) {
     try { localStorage.removeItem(KEY); } catch (e) {}
   } else if (!devParam && !devOn) {
     var saved = null;
     try { saved = localStorage.getItem(KEY); } catch (e) {}
-    if (saved && SITES[saved]) { location.replace(SITES[saved]); return; }
+    if (saved && SITES[saved]) { location.replace(SITES[saved] + fwd); return; }
   }
 
   // Save the choice when a card is clicked. No preventDefault: the link still navigates.
   function bind() {
     ['async', 'sync'].forEach(function (val) {
       var el = document.querySelector('.card.' + val);
-      if (el) el.addEventListener('click', function () {
-        try { localStorage.setItem(KEY, val); } catch (e) {}
-      });
+      if (el) {
+        if (fwd) { try { el.href = SITES[val] + fwd; } catch (e) {} }
+        el.addEventListener('click', function () {
+          try { localStorage.setItem(KEY, val); } catch (e) {}
+        });
+      }
     });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind);

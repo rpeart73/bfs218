@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assignment Start Lab | BFS218</title>
+<script>
+(function () {
+  var SITES = {
+    async: 'https://rpeart73.github.io/bfs218-async/assignment-start-lab.html',
+    sync: 'https://rpeart73.github.io/bfs218-sync/assignment-start-lab.html'
+  };
+  var saved = null;
+  try { saved = localStorage.getItem('bfs218.section'); } catch (e) {}
+  if (saved && SITES[saved]) location.replace(SITES[saved]);
+})();
+</script>
+</head>
+<body style="font-family:system-ui,sans-serif;padding:2rem;text-align:center">
+<p>The Assignment Start Lab lives on your section site. Choose yours:</p>
+<p><a href="https://rpeart73.github.io/bfs218-async/assignment-start-lab.html">Asynchronous section lab</a> &middot; <a href="https://rpeart73.github.io/bfs218-sync/assignment-start-lab.html">Synchronous section lab</a></p>
+</body>
+</html>
